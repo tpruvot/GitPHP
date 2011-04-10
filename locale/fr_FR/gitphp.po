@@ -6,11 +6,11 @@
 # Zaran Krleza <zaran.krleza@gmail.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.0\n"
+"Project-Id-Version: GitPHP 0.2.3\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2010-10-04 23:05+0200\n"
-"Last-Translator: Zaran Krleza <zaran.krleza@gmail.com>\n"
+"PO-Revision-Date: 2011-04-10 13:05+0200\n"
+"Last-Translator: Tanguy Pruvot <tanguy.pruvot@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -38,14 +38,14 @@ msgstr "historique"
 #: templates/log.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Tree.class.php:76
 msgid "tree"
-msgstr "arbre"
+msgstr "source"
 
 # Used as link to download a copy of the files in a given commit
 #: templates/tree.tpl templates/search.tpl templates/commit.tpl
 #: templates/taglist.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Snapshot.class.php:76
 msgid "snapshot"
-msgstr "aperçu"
+msgstr "snapshot"
 
 # Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
 #: templates/tag.tpl
@@ -58,13 +58,13 @@ msgstr "objet"
 #: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commit.class.php:79
 msgid "commit"
-msgstr "révision"
+msgstr "commit"
 
 # Used as link to and title for page displaying detailed info about a tag
 #: templates/tag.tpl templates/tagtip.tpl templates/taglist.tpl
 #: include/controller/Controller_Tag.class.php:79
 msgid "tag"
-msgstr "étiquette"
+msgstr "tag"
 
 # Used to label the author of the commit, and as a field to search
 # The author is the person who wrote the changes in the commit
@@ -101,13 +101,13 @@ msgstr "suiv"
 #: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commitdiff.class.php:79
 msgid "commitdiff"
-msgstr "diff révision"
+msgstr "diff"
 
 # Used to label the committer of the commit, and as a field to search
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
-msgstr "réviseur"
+msgstr "committer"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
@@ -215,7 +215,7 @@ msgstr "déplacé depuis %1 avec %2%% de ressemblance"
 #: templates/title.tpl templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:80
 msgid "shortlog"
-msgstr "abrégé"
+msgstr "commits"
 
 # Used as title for and link to log view with full commit messages
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
@@ -243,7 +243,7 @@ msgstr "fichier"
 # Used as title for search page, and also is the label for the search box
 #: templates/header.tpl include/controller/Controller_Search.class.php:90
 msgid "search"
-msgstr "rechercher"
+msgstr "recherche "
 
 # Used as a link to the HEAD of a project for a log or file
 # (note: HEAD is standard git terminology)
@@ -261,7 +261,7 @@ msgstr "Dernière modification %1"
 # Message displayed when there are no commits in the project to display
 #: templates/log.tpl templates/shortloglist.tpl
 msgid "No commits"
-msgstr "Pas de révisions"
+msgstr "Aucun commit"
 
 # Used as link to diff this file version with the current file
 #: templates/history.tpl
@@ -271,12 +271,12 @@ msgstr "diff avec l'actuel"
 # Used as link to and title for page showing all tags in a project
 #: templates/title.tpl include/controller/Controller_Tags.class.php:76
 msgid "tags"
-msgstr "étiquettes"
+msgstr "tags"
 
 # Used as link to and title for page showing all heads in a project
 #: templates/title.tpl include/controller/Controller_Heads.class.php:76
 msgid "heads"
-msgstr "heads"
+msgstr "branches"
 
 # Used when diffing a file, to indicate that it's been deleted
 #: templates/commitdiff.tpl
@@ -307,12 +307,12 @@ msgstr "dernière modification"
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "url de clone"
+msgstr "git en lecture seule"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "url de push"
+msgstr "git en accès complet"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
@@ -644,11 +644,60 @@ msgstr "Chargement des données pour l'annotation…"
 # Used as a label by the language selector drop-down box
 #: templates/header.tpl
 msgid "language:"
-msgstr "langage :"
+msgstr "langue :"
 
 # Used as a button by the language selector drop-down box to set the
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
 msgstr "choisir"
+
+# Caption for the Atom button for a project
+# Atom is a standard web feed format
+#: templates/footer.tpl
+msgid "Atom"
+msgstr "Atom"
+
+# Used as the title of the Atom controller
+# Atom is a standard web feed format
+#: include/controller/Controller_Feed.class.php:90
+msgid "atom"
+msgstr "atom"
+
+# Used as an error message when memcache is turned
+# on without the appropriate PHP extension installed
+#: include/cache/Memcache.class.php:103
+#msgid "The Memcached or Memcache PHP extension is required for Memcache support"
+#msgstr "keep"
+
+# Message when searching the project list, and nothing is found
+# %1: the search string entered
+#: templates/header.tpl templates/projectlist.tpl
+msgid "No matches found for \"%1\""
+msgstr "Aucun résultat trouvé pour \"%1\""
+
+# Label for the field to search the project list
+#: templates/projectlist.tpl
+msgid "Search projects"
+msgstr "Recherche de projets "
+
+# Error message displayed when the git executable isn't found or doesn't work
+# %1$s: the git executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:131
+#, php-format
+msgid ""
+"Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
+"config value."
+msgstr "Impossible de lancer l'exécutable git \"%1$s\". Vous devez définir le paramètre \"%2$s\"."
+
+# Error message displayed when the diff executable isn't found or doesn't work
+# %1$s: the diff executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:135
+#, php-format
+msgid ""
+"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
+"\" config value."
+msgstr "Impossible de lancer l'exécutable diff \"%1$s\". Vous devez définir le paramètre \"%2$s\"."
 
