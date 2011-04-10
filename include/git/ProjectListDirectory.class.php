@@ -80,6 +80,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			$trimlen = strlen($this->projectDir) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
+				if (is_dir($fullPath) && is_dir($fullPath . '/.git'))
+					$fullPath .= '/.git';
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
 					if (is_file($fullPath . '/HEAD')) {
 						$projectPath = substr($fullPath, $trimlen);
