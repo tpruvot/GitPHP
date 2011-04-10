@@ -23,6 +23,12 @@
 //$gitphp_conf['bareonly'] = false;
 
 /*
+ * reposupport
+ * List projects in .repo folders (android source)
+ */
+//$gitphp_conf['reposupport'] = false;
+
+/*
  * recursive listing (ie android repo)
  * Search in subfolders to scan projects list
  */

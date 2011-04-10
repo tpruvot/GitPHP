@@ -40,6 +40,13 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	protected $bareOnly = true;
 
 	/**
+	 * repoSupport
+	 *
+	 * Go inside android source .repo folders
+	 */
+	protected $repoSupport = false;
+
+	/**
 	 * sublevels
 	 *
 	 * Search in subfolders, maximum recursive level
@@ -73,8 +80,9 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 		$Config = GitPHP_Config::GetInstance();
 
-		$this->bareOnly  = $Config->GetValue('bareonly',  true);
-		$this->sublevels = $Config->GetValue('subfolder_levels', 0);
+		$this->bareOnly    = $Config->GetValue('bareonly', true);
+		$this->repoSupport = $Config->GetValue('reposupport', false);
+		$this->sublevels   = $Config->GetValue('subfolder_levels', 0);
 
 		parent::__construct();
 	}
@@ -112,14 +120,14 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				if (!is_dir($fullPath) or $file == '.' or $file == '..')
 					continue;
 
-				elseif ( !$this->bareOnly && $file == '.repo' )
+				elseif ( $this->repoSupport and $file == '.repo' )
 					; // check subfolders
 
 				elseif ( substr($file,-4) != '.git') {
 					// working copy repositories (git clone)
 					if ( !$this->bareOnly && is_dir($fullPath . '/.git') )
 						$fullPath .= '/.git';
-					elseif ($this->curlevel >= $this->sublevels)
+					elseif ($this->curlevel >= $this->sublevels or substr($file,0,1) == '.')
 						continue;
 				}
 
