@@ -196,15 +196,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	private $treeReferenced = false;
 
 	/**
-	 * containingTagReferenced
-	 *
-	 * Stores whether the containing tag has been referenced into a pointer
-	 *
-	 * @access private
-	 */
-	private $containingTagReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -517,7 +508,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		if (!empty($this->committerEpoch))
 			return time() - $this->committerEpoch;
-		
+
 		return '';
 	}
 
@@ -612,11 +603,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$heads = array();
 
-		$projectHeads = $this->GetProject()->GetHeads();
+		$projectRefs = $this->GetProject()->GetRefs('heads');
 
-		foreach ($projectHeads as $head) {
-			if ($head->GetCommit()->GetHash() === $this->hash) {
-				$heads[] = $head;
+		foreach ($projectRefs as $ref) {
+			if ($ref->GetHash() == $this->hash) {
+				$heads[] = $ref;
 			}
 		}
 
@@ -635,11 +626,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$tags = array();
 
-		$projectTags = $this->GetProject()->GetTags();
+		$projectRefs = $this->GetProject()->GetRefs('tags');
 
-		foreach ($projectTags as $tag) {
-			if ($tag->GetCommit()->GetHash() === $this->hash) {
-				$tags[] = $tag;
+		foreach ($projectRefs as $ref) {
+			if ($ref->GetCommit()->GetHash() === $this->hash) {
+				$tags[] = $ref;
 			}
 		}
 
@@ -658,9 +649,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		if (!$this->containingTagRead)
 			$this->ReadContainingTag();
-
-		if ($this->containingTagReferenced)
-			$this->DereferenceContainingTag();
 
 		return $this->containingTag;
 	}
@@ -771,7 +759,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
-	
+
 	/**
 	 * SearchFilenames
 	 *
@@ -836,7 +824,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$args[] = '-e';
 		$args[] = $pattern;
 		$args[] = $this->hash;
-		
+
 		$lines = explode("\n", $exe->Execute(GIT_GREP, $args));
 
 		$results = array();
@@ -978,46 +966,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReferenceContainingTag
-	 *
-	 * Turns the containing tag into a reference pointer
-	 *
-	 * @access private
-	 */
-	private function ReferenceContainingTag()
-	{
-		if ($this->containingTagReferenced)
-			return;
-
-		if (!$this->containingTag)
-			return;
-
-		$this->containingTag = $this->containingTag->GetName();
-
-		$this->containingTagReferenced = true;
-	}
-
-	/**
-	 * DereferenceContainingTag
-	 *
-	 * Turns the containing tag pointer back into an object
-	 *
-	 * @access private
-	 */
-	private function DereferenceContainingTag()
-	{
-		if (!$this->containingTagReferenced)
-			return;
-
-		if (empty($this->containingTag))
-			return;
-
-		$this->containingTag = $this->GetProject()->GetTag($this->containingTag);
-		
-		$this->containingTagReferenced = false;
-	}
-
-	/**
 	 * __sleep
 	 *
 	 * Called to prepare the object for serialization
@@ -1033,10 +981,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->treeReferenced)
 			$this->ReferenceTree();
 
-		if (!$this->containingTagReferenced)
-			$this->ReferenceContainingTag();
-
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'containingTag', 'containingTagRead', 'parentsReferenced', 'treeReferenced', 'containingTagReferenced');
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced');
 		return array_merge($properties, parent::__sleep());
 	}
 

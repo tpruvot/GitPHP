@@ -8,7 +8,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-  <!-- gitphp web interface {$version}, (C) 2006-2010 Christopher Han <xiphux@gmail.com> -->
+  <!-- gitphp web interface {$version}, (C) 2006-2011 Christopher Han <xiphux@gmail.com> -->
   <head>
     <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $actionlocal}/{$actionlocal}{/if}{/if}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -16,12 +16,11 @@
       <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=atom" type="application/atom+xml" />
       <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" type="application/rss+xml" />
     {/if}
+    <link rel="stylesheet" href="css/gitphp.css" type="text/css" />
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
     {if $extracss}
     <style type="text/css">
-    <!--
     {$extracss}
-    -->
     </style>
     {/if}
     {if $javascript}

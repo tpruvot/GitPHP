@@ -116,24 +116,6 @@ class GitPHP_Project
 	protected $readHeadRef = false;
 
 	/**
-	 * heads
-	 *
-	 * Stores the heads for the project
-	 *
-	 * @access protected
-	 */
-	protected $heads = array();
-
-	/**
-	 * readHeads
-	 *
-	 * Stores whether heads have been read yet
-	 *
-	 * @access protected
-	 */
-	protected $readHeads = false;
-
-	/**
 	 * tags
 	 *
 	 * Stores the tags for the project
@@ -143,13 +125,22 @@ class GitPHP_Project
 	protected $tags = array();
 
 	/**
-	 * readTags
+	 * heads
 	 *
-	 * Stores whether tags have been read yet
+	 * Stores the heads for the project
 	 *
 	 * @access protected
 	 */
-	protected $readTags = false;
+	protected $heads = array();
+
+	/**
+	 * readRefs
+	 *
+	 * Stores whether refs have been read yet
+	 *
+	 * @access protected
+	 */
+	protected $readRefs = false;
 
 	/**
 	 * cloneUrl
@@ -259,15 +250,25 @@ class GitPHP_Project
 	public function GetOwner()
 	{
 		if (empty($this->owner) && !$this->readOwner) {
-			$uid = fileowner($this->GetPath());
-			if ($uid > 0) {
-				$data = posix_getpwuid($uid);
-				if (isset($data['gecos']) && !empty($data['gecos'])) {
-					$this->owner = $data['gecos'];
-				} elseif (isset($data['name']) && !empty($data['name'])) {
-					$this->owner = $data['name'];
+
+			$exe = new GitPHP_GitExe($this);
+			$args = array();
+			$args[] = 'gitweb.owner';
+			$this->owner = $exe->Execute(GIT_CONFIG, $args);
+			unset($exe);
+			
+			if (empty($this->owner) && function_exists('posix_getpwuid')) {
+				$uid = fileowner($this->GetPath());
+				if ($uid !== false) {
+					$data = posix_getpwuid($uid);
+					if (isset($data['gecos']) && !empty($data['gecos'])) {
+						$this->owner = $data['gecos'];
+					} elseif (isset($data['name']) && !empty($data['name'])) {
+						$this->owner = $data['name'];
+					}
 				}
 			}
+
 			$this->readOwner = true;
 		}
 	
@@ -694,19 +695,109 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetTags
+	 * GetRefs
 	 *
-	 * Gets list of tags for this project
+	 * Gets the list of refs for the project
 	 *
 	 * @access public
+	 * @param string $type type of refs to get
+	 * @return array array of refs
+	 */
+	public function GetRefs($type = '')
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		if ($type == 'tags') {
+			return $this->tags;
+		} else if ($type == 'heads') {
+			return $this->heads;
+		}
+
+		return array_merge($this->heads, $this->tags);
+	}
+
+	/**
+	 * ReadRefList
+	 *
+	 * Reads the list of refs for this project
+	 *
+	 * @access protected
+	 */
+	public function ReadRefList()
+	{
+		$this->readRefs = true;
+
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--heads';
+		$args[] = '--tags';
+		$args[] = '--dereference';
+		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		foreach ($lines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads)\/([^^]+)(\^{})?$/', $line, $regs)) {
+				try {
+					$key = 'refs/' . $regs[2] . '/' . $regs[3];
+					if ($regs[2] == 'tags') {
+						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
+							$derefCommit = $this->GetCommit($regs[1]);
+							if ($derefCommit && isset($this->tags[$key])) {
+								$this->tags[$key]->SetCommit($derefCommit);
+							}
+								
+						} else if (!isset($this->tags[$key])) {
+							$this->tags[$key] = $this->LoadTag($regs[3], $regs[1]);
+						}
+					} else if ($regs[2] == 'heads') {
+						$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+					}
+				} catch (Exception $e) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * GetTags
+	 *
+	 * Gets list of tags for this project by age descending
+	 *
+	 * @access public
+	 * @param integer $count number of tags to load
 	 * @return array array of tags
 	 */
-	public function GetTags()
+	public function GetTags($count = 0)
 	{
-		if (!$this->readTags)
-			$this->ReadTagList();
+		if (!$this->readRefs)
+			$this->ReadRefList();
 
-		return $this->tags;
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--sort=-creatordate';
+		$args[] = '--format="%(refname)"';
+		if ($count > 0) {
+			$args[] = '--count=' . $count;
+		}
+		$args[] = '--';
+		$args[] = 'refs/tags';
+		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		$tags = array();
+
+		foreach ($lines as $ref) {
+			if (isset($this->tags[$ref])) {
+				$tags[] = $this->tags[$ref];
+			}
+		}
+
+		return $tags;
 	}
 
 	/**
@@ -723,11 +814,13 @@ class GitPHP_Project
 		if (empty($tag))
 			return null;
 
-		if (!isset($this->tags[$tag])) {
-			$this->LoadTag($tag);
+		$key = 'refs/tags/' . $tag;
+
+		if (!isset($this->tags[$key])) {
+			$this->tags[$key] = $this->LoadTag($tag);
 		}
 
-		return $this->tags[$tag];
+		return $this->tags[$key];
 	}
 
 	/**
@@ -739,7 +832,7 @@ class GitPHP_Project
 	 * @param string $tag tag to find
 	 * @return mixed tag object
 	 */
-	private function LoadTag($tag)
+	private function LoadTag($tag, $hash = '')
 	{
 		if (empty($tag))
 			return;
@@ -747,73 +840,49 @@ class GitPHP_Project
 		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
 		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
 		if ($cached) {
-			$this->tags[$tag] = $cached;
+			return $cached;
 		} else {
-			$this->tags[$tag] = new GitPHP_Tag($this, $tag);
+			return new GitPHP_Tag($this, $tag, $hash);
 		}
-	}
-
-	/**
-	 * ReadTagList
-	 *
-	 * Reads tag list
-	 *
-	 * @access protected
-	 */
-	protected function ReadTagList()
-	{
-		$this->readTags = true;
-
-		$exe = new GitPHP_GitExe($this);
-		$args = array();
-		$args[] = '--tags';
-		$args[] = '--dereference';
-		$ret = $exe->Execute(GIT_SHOW_REF, $args);
-		unset($exe);
-
-		$lines = explode("\n", $ret);
-
-		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/([^^]+)(\^{})?$/', $line, $regs)) {
-				try {
-					if ((!empty($regs[3])) && ($regs[3] == '^{}')) {
-						$derefCommit = $this->GetCommit($regs[1]);
-						if ($derefCommit && isset($this->tags[$regs[2]])) {
-							$this->tags[$regs[2]]->SetCommit($derefCommit);
-						}
-							
-					} else if (!isset($this->tags[$regs[2]])) {
-							$this->LoadTag($regs[2]);
-							if (isset($this->tags[$regs[2]])) {
-								$tagHash = $this->tags[$regs[2]]->GetHash();
-								if (empty($tagHash)) {
-									// New non-cached tag object
-									$this->tags[$regs[2]]->SetHash($regs[1]);
-								}
-							}
-					}
-				} catch (Exception $e) {
-				}
-			}
-		}
-
-		uasort($this->tags, array('GitPHP_Tag', 'CompareAge'));
 	}
 
 	/**
 	 * GetHeads
 	 *
-	 * Gets list of heads for this project
+	 * Gets list of heads for this project by age descending
 	 *
 	 * @access public
+	 * @param integer $count number of tags to load
 	 * @return array array of heads
 	 */
-	public function GetHeads()
+	public function GetHeads($count = 0)
 	{
-		if (!$this->readHeads)
-			$this->ReadHeadList();
+		if (!$this->readRefs)
+			$this->ReadRefList();
 
-		return $this->heads;
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--sort=-committerdate';
+		$args[] = '--format="%(refname)"';
+		if ($count > 0) {
+			$args[] = '--count=' . $count;
+		}
+		$args[] = '--';
+		$args[] = 'refs/heads';
+		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		$heads = array();
+
+		foreach ($lines as $ref) {
+			if (isset($this->heads[$ref])) {
+				$heads[] = $this->heads[$ref];
+			}
+		}
+
+		return $heads;
 	}
 
 	/**
@@ -830,48 +899,13 @@ class GitPHP_Project
 		if (empty($head))
 			return null;
 
-		if (!$this->readHeads)
-			$this->ReadHeadList();
+		$key = 'refs/heads/' . $head;
 
-		foreach ($this->heads as $h) {
-			if ($h->GetName() === $head) {
-				return $h;
-			}
-		}
-		
-		return null;
-	}
-
-	/**
-	 * ReadHeadList
-	 *
-	 * Reads head list
-	 *
-	 * @access protected
-	 */
-	protected function ReadHeadList()
-	{
-		$this->readHeads = true;
-
-		$exe = new GitPHP_GitExe($this);
-		$args = array();
-		$args[] = '--heads';
-		$ret = $exe->Execute(GIT_SHOW_REF, $args);
-		unset($exe);
-
-		$lines = explode("\n", $ret);
-
-		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/heads\/(.+)$/', $line, $regs)) {
-				try {
-					$this->heads[] = new GitPHP_Head($this, $regs[2], $regs[1]);
-				} catch (Exception $e) {
-				}
-			}
+		if (!isset($this->heads[$key])) {
+			$this->heads[$key] = new GitPHP_Head($this, $head);
 		}
 
-		usort($this->heads, array('GitPHP_Head', 'CompareAge'));
-
+		return $this->heads[$key];
 	}
 
 	/**
