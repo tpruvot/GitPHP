@@ -36,8 +36,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 * bareOnly
 	 *
 	 * Ignore working git repositories (project/.git)
-	 *
-	 * @access protected
 	 */
 	protected $bareOnly = true;
 
@@ -50,6 +48,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 	/**
 	 * curlevel
+	 *
 	 * Search in subfolders, current recursive level
 	 */
 	protected $curlevel = 0;
@@ -110,39 +109,36 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
-				if (!is_dir($fullPath) || strpos($file,'.') === 0 )
+				if (!is_dir($fullPath) or $file == '.' or $file == '..')
+					continue;
 
-					// skip hidden folders, "." and ".."
-					$fullPath = '';
+				elseif ( !$this->bareOnly && $file == '.repo' )
+					; // check subfolders
 
-				elseif ( strpos($file,'.') === false ) {
-
+				elseif ( substr($file,-4) != '.git') {
 					// working copy repositories (git clone)
-					if ( (!$this->bareOnly) && is_dir($fullPath . '/.git') )
+					if ( !$this->bareOnly && is_dir($fullPath . '/.git') )
 						$fullPath .= '/.git';
 					elseif ($this->curlevel >= $this->sublevels)
-						$fullPath = '';
+						continue;
 				}
 
-				if ($fullPath != '') {
-
-					if (is_file($fullPath . '/HEAD')) {
-						$projectPath = substr($fullPath, $trimlen);
-						try {
-							$proj = new GitPHP_Project($projectPath);
-							$proj->SetCategory(trim(substr($dir, strlen($this->projectDir)), '/'));
-							if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
-								$this->projects[$projectPath] = $proj;
-							}
-						} catch (Exception $e) {
+				if (is_file($fullPath . '/HEAD')) {
+					$projectPath = substr($fullPath, $trimlen);
+					try {
+						$proj = new GitPHP_Project($projectPath);
+						$proj->SetCategory(trim(substr($dir, strlen($this->projectDir)), '/'));
+						if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
+							$this->projects[$projectPath] = $proj;
 						}
-
-					} elseif ($this->curlevel < $this->sublevels) {
-						$this->curlevel++;
-						$this->RecurseDir($fullPath);
-						$this->curlevel--;
+					} catch (Exception $e) {
 					}
+				} elseif ($this->curlevel < $this->sublevels) {
+					$this->curlevel++;
+					$this->RecurseDir($fullPath);
+					$this->curlevel--;
 				}
+
 			}
 			closedir($dh);
 		}
