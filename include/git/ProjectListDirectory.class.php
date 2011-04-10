@@ -22,7 +22,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
  */
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
-	
+
 	/**
 	 * projectDir
 	 *
@@ -30,7 +30,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 *
 	 * @access protected
 	 */
-	protected $projectDir;
+	protected $projectDir = '';
 
 	/**
 	 * bareOnly
@@ -39,16 +39,20 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 *
 	 * @access protected
 	 */
-	protected $bareOnly;
+	protected $bareOnly = true;
 
-        /**
-         * recursive
-         *
-         * Search in subfolders
-         *
-         * @access protected
-         */
-        protected $recursive;
+	/**
+	 * sublevels
+	 *
+	 * Search in subfolders, maximum recursive level
+	 */
+	protected $sublevels = 0;
+
+	/**
+	 * curlevel
+	 * Search in subfolders, current recursive level
+	 */
+	protected $curlevel = 0;
 
 
 	/**
@@ -71,7 +75,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		$Config = GitPHP_Config::GetInstance();
 
 		$this->bareOnly  = $Config->GetValue('bareonly',  true);
-		$this->recursive = $Config->GetValue('recursive', false);
+		$this->sublevels = $Config->GetValue('subfolder_levels', 0);
 
 		parent::__construct();
 	}
@@ -85,7 +89,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-
+		$this->curlevel = 0;
 		$this->RecurseDir($this->projectDir);
 	}
 
@@ -116,11 +120,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 					// working copy repositories (git clone)
 					if ( (!$this->bareOnly) && is_dir($fullPath . '/.git') )
 						$fullPath .= '/.git';
-					elseif (!$this->recursive)
+					elseif ($this->curlevel >= $this->sublevels)
 						$fullPath = '';
 				}
 
 				if ($fullPath != '') {
+
 					if (is_file($fullPath . '/HEAD')) {
 						$projectPath = substr($fullPath, $trimlen);
 						try {
@@ -131,8 +136,11 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 							}
 						} catch (Exception $e) {
 						}
-					} else {
+
+					} elseif ($this->curlevel < $this->sublevels) {
+						$this->curlevel++;
 						$this->RecurseDir($fullPath);
+						$this->curlevel--;
 					}
 				}
 			}
