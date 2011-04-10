@@ -16,6 +16,11 @@
  */
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 
+/*
+ * bareonly
+ * Include working copies (projet/.git) in projects list
+ */
+//$gitphp_conf['bareonly'] = false;
 
 
 /*

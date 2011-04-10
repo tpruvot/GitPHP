@@ -33,6 +33,16 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	protected $projectDir;
 
 	/**
+	 * bareOnly
+	 *
+	 * Ignore working git repositories (project/.git)
+	 *
+	 * @access protected
+	 */
+	protected $bareOnly;
+
+
+	/**
 	 * __construct
 	 *
 	 * constructor
@@ -49,6 +59,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 		$this->projectDir = GitPHP_Util::AddSlash($projectDir);
 
+		$this->bareOnly = GitPHP_Config::GetInstance()->GetValue('bareonly', true);
+
 		parent::__construct();
 	}
 
@@ -61,6 +73,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
+
 		$this->RecurseDir($this->projectDir);
 	}
 
@@ -81,15 +94,21 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
-				// skip "." and ".."
-				if (strpos($file, '.') === 0 or !is_dir($fullPath) )
-					$fullPath = '';
+				if (!is_dir($fullPath) )
 
-				// standard repositories (git clone)
-				elseif (is_dir($fullPath . '/.git') )
-					$fullPath .= '/.git';
+					 $fullPath = '';
 
-				if (!empty($fullPath)) {
+				// skip hidden folders, "." and ".."
+				elseif ( !strpos($file,'.') ) {
+
+					// working copy repositories (git clone)
+					if ( (!$this->bareOnly) && is_dir($fullPath . '/.git') )
+						$fullPath .= '/.git';
+					else
+						$fullPath = '';
+				}
+
+				if ($fullPath != '') {
 					if (is_file($fullPath . '/HEAD')) {
 						$projectPath = substr($fullPath, $trimlen);
 						try {
