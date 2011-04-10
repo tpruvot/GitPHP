@@ -22,6 +22,12 @@
  */
 //$gitphp_conf['bareonly'] = false;
 
+/*
+ * recursive listing (ie android repo)
+ * Search in subfolders to scan projects list
+ */
+//$gitphp_conf['recursive'] = true;
+
 
 /*
  * cache

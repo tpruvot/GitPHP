@@ -41,6 +41,15 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected $bareOnly;
 
+        /**
+         * recursive
+         *
+         * Search in subfolders
+         *
+         * @access protected
+         */
+        protected $recursive;
+
 
 	/**
 	 * __construct
@@ -59,7 +68,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 		$this->projectDir = GitPHP_Util::AddSlash($projectDir);
 
-		$this->bareOnly = GitPHP_Config::GetInstance()->GetValue('bareonly', true);
+		$Config = GitPHP_Config::GetInstance();
+
+		$this->bareOnly  = $Config->GetValue('bareonly',  true);
+		$this->recursive = $Config->GetValue('recursive', false);
 
 		parent::__construct();
 	}
@@ -94,17 +106,17 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
-				if (!is_dir($fullPath) )
+				if (!is_dir($fullPath) || strpos($file,'.') === 0 )
 
-					 $fullPath = '';
+					// skip hidden folders, "." and ".."
+					$fullPath = '';
 
-				// skip hidden folders, "." and ".."
-				elseif ( !strpos($file,'.') ) {
+				elseif ( strpos($file,'.') === false ) {
 
 					// working copy repositories (git clone)
 					if ( (!$this->bareOnly) && is_dir($fullPath . '/.git') )
 						$fullPath .= '/.git';
-					else
+					elseif (!$this->recursive)
 						$fullPath = '';
 				}
 
