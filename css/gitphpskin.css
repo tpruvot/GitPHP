@@ -480,6 +480,12 @@ table.treeTable a.jsTree {
 	color: black;
 }
 
+table.treeTable img.treeSpinner {
+	margin: 0; 
+	margin-left: 2px;
+	height: 12px;
+}
+
 /*
  * Tag view
  */
