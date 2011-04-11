@@ -253,7 +253,8 @@ class GitPHP_Project
 
 			$exe = new GitPHP_GitExe($this);
 			$args = array();
-			$args[] = 'gitweb.owner';
+			//$args[] = 'gitweb.owner';
+			$args[] = 'user.name';
 			$this->owner = $exe->Execute(GIT_CONFIG, $args);
 			unset($exe);
 			
