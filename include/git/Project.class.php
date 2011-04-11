@@ -1186,6 +1186,9 @@ class GitPHP_Project
 		if (!$this->epochRead)
 			$this->ReadEpoch();
 
+		if ($this->epoch == 0)
+			return -1;
+
 		return time() - $this->epoch;
 	}
 
