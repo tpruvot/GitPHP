@@ -351,6 +351,19 @@ class GitPHP_Project
 		if (!$this->readDescription) {
 			$this->description = file_get_contents($this->GetPath() . '/description');
 		}
+
+		if (strpos($this->description,'Unnamed repository') !== false) {
+
+                        $exe = new GitPHP_GitExe($this);
+                        $args = array();
+                        $args[] = 'remote.origin.url';
+                        $this->description = $exe->Execute(GIT_CONFIG, $args);
+                        unset($exe);
+
+			if (empty($this->description)) {
+				$this->description = '-';
+			}
+		}
 		
 		if (($trim > 0) && (strlen($this->description) > $trim)) {
 			return substr($this->description, 0, $trim) . '…';
