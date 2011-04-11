@@ -462,7 +462,8 @@ div.projectSearch {
  */
 table.treeTable td.filesize {
 	/* the file size column */
-	text-align: right; 
+	text-align: right;
+	width: 50px;
 }
 
 table.treeTable td.expander { 
@@ -470,6 +471,14 @@ table.treeTable td.expander {
 	padding-right: 0px; 
 }
 
+table.treeTable td.fileName {
+	color: silver;
+}
+
+table.treeTable a.jsTree {
+	text-decoration: none;
+	color: black;
+}
 
 /*
  * Tag view
