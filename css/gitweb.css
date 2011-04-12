@@ -66,7 +66,7 @@ i {
 }
 
 td, th {
-    padding: 5px;
+    padding: 2px 3px;
 }
 
 .page_nav br {
@@ -188,6 +188,42 @@ a.rss_logo:hover {
     height: 2.5em;
     border-bottom: 1px solid #e1e1e1;
 }
+
+div.index_header {
+    margin-left: 4px;
+}
+
+div.projectSearch {
+    width: 327px;
+    top: 44px;
+    right: 0px;
+    position: absolute;
+    clear: both;
+}
+
+table.projectList {
+    margin-top: 10px;
+}
+
+tr.categoryRow {
+    background: #F0F0F0;
+    border-top: 1px solid #e1e1e1;
+}
+
+tr.projectHeader {
+    background: #F0F0F0;
+    border-top: 1px solid #e1e1e1;
+}
+
+th.categoryName {
+    text-align: left;
+}
+
+td.projectDescription {
+    display: block;
+    overflow-x: hidden;
+}
+
 
 th .header {
     background: transparent;
