@@ -11,6 +11,12 @@
  */
 
 /*
+ * stylesheet
+ * Name of skin (must be in /css folder)
+ */
+//$gitphp_conf['stylesheet'] = "gitweb.css";
+
+/*
  * projectroot
  * Full directory on server where projects are located
  */
