@@ -82,7 +82,7 @@ td, th {
     line-height: 3.4em;
     position: relative;
     padding: 0 2px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .page_header a:link, .page_header a:visited {
@@ -111,8 +111,8 @@ td, th {
 ---------------------------------------------------------------------------- */
 
 .page_footer {
-    height: 115px;
-    line-height: 115px;
+    height: 75px;
+    line-height: 75px;
     background: #4386ba url(gitweb/page_footer.png) repeat-x 0 0;
     padding: 0 30px;
     margin-top: 15px;
@@ -137,9 +137,10 @@ a.rss_logo {
     border-color: #fcc7a5 #7d3302 #3e1a01 #ff954e;
     color: #ffffff;
     background-color: #ff6600;
-    font-weight: bold;
+    font-weight: 400;
     font-family: sans-serif;
-    font-size: 70%;
+    font-size: 100%;
+    zoom: 85%;
     text-align: center;
     text-decoration: none;
     margin-top: 49px;
@@ -203,20 +204,30 @@ th .header {
     background: #eaeaea;
 }
 
-.page_nav,
 .history,
 .list_head,
-.page_path,
+.page_nav,
 .search {
-    background: #f0f0f0;
-    color: #545454;
-    border: 1px solid #d8d8d8;
-    padding: 5px;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 10px auto;
 }
 
-.title {
+div.page_nav {
+    margin-left: 4px;
+}
+
+div.page_path {
+    margin: 15px 2px 0 0;
+}
+
+div.search {
+    margin: 0 auto 10px auto;
+    top: 38px;
+}
+
+div.title {
     padding: 5px;
+    background-color: #F0F0F0;
+    border: 1px solid #D8D8D8;
 }
 
 .projects_list,
@@ -246,6 +257,7 @@ th .header {
 .title_text {
     background: #eaf2f5;
     border: 1px solid #bedce7;
+    border-top: 0;
     padding: 5px;
     margin: 0 auto 0 auto;
 }
@@ -278,6 +290,13 @@ th .header {
     border: 1px solid #d8d8d8;
     padding: 5px;
     margin: 0 auto 15px auto;
+}
+
+div.log_link {
+    width: 180px;
+    padding: 0;
+    margin: -6px 0;
+    zoom: 80%;
 }
 
 /* Refs
@@ -389,6 +408,34 @@ td.error {
 }
 
 
+/*
+ * Diff display
+ */
+div.pre {
+        /* the entire diff output block */
+        font-family: monospace;
+        font-size: 12px;
+}
+
+div.diff_info {
+        /* the from -> to file header */
+        font-family: monospace;
+        color: #000099;
+        background-color: #edece6;
+        font-style: italic;
+}
+
+.diffplus {
+        color: #008800;
+}
+
+.diffminus {
+        color: #cc0000;
+}
+
+.diffat {
+        color: #990099;
+}
 
 
 

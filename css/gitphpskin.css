@@ -466,26 +466,6 @@ table.treeTable td.filesize {
 	width: 50px;
 }
 
-table.treeTable td.expander { 
-	/* the javascript tree expander cell */
-	padding-right: 0px; 
-}
-
-table.treeTable td.fileName {
-	color: silver;
-}
-
-table.treeTable a.jsTree {
-	text-decoration: none;
-	color: black;
-}
-
-table.treeTable img.treeSpinner {
-	margin: 0; 
-	margin-left: 2px;
-	height: 12px;
-}
-
 /*
  * Tag view
  */

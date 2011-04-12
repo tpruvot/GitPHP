@@ -22,7 +22,7 @@
  * (main header with commit message)
  */
 div.title a.title {
-	display: block; 
+	display: inline-block; 
 }
 
 
@@ -111,6 +111,13 @@ td#blameData {
 	white-space: nowrap;
 }
 
+td.ln {
+	padding: 0 12px 0 0;
+}
+
+td.ln a {
+	color: silver;
+}
 
 /*
  * File search view
@@ -118,6 +125,30 @@ td#blameData {
 span.matchline {
 	white-space: pre;
 }
+
+/* To keep between skins
+ */
+
+table.treeTable td.expander {
+        /* the javascript tree expander cell */
+        padding-right: 0px;
+}
+
+table.treeTable td.fileName {
+        color: silver;
+}
+
+table.treeTable a.jsTree {
+        text-decoration: none;
+        color: black;
+}
+
+table.treeTable img.treeSpinner {
+        margin: 0;
+        margin-left: 2px;
+        height: 12px;
+}
+
 
 
 /*
