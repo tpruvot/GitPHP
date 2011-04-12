@@ -36,7 +36,7 @@
       {rdelim}
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
-    <script type="text/javascript" src="js/ext/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/ext/jquery.min.js"></script>
     <script type="text/javascript" src="js/ext/jquery.qtip.min.js"></script>
     {if file_exists('js/tooltips.min.js')}
     <script type="text/javascript" src="js/tooltips.min.js"></script>
