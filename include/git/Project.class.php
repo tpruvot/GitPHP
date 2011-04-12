@@ -225,13 +225,15 @@ class GitPHP_Project
 			throw new Exception(sprintf(__('%1$s is not a git repository'), $project));
 		}
 
-		if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {
+		if (GitPHP_Config::GetInstance()->GetValue('projectroot') != '/') {
+
+			if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) 
 			throw new Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
-		}
+		
 
-		$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
+			$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
-		if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
+			if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0))
 			throw new Exception(sprintf(__('%1$s is outside of the projectroot'), $project));
 		}
 
