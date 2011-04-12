@@ -1374,7 +1374,7 @@ class GeSHi {
                 'delphi' => array('dpk', 'dpr', 'pp', 'pas'),
                 'diff' => array('diff', 'patch'),
                 'dos' => array('bat', 'cmd'),
-                'drupal6' => array('module')
+                'drupal6' => array('module'),
                 'gdb' => array('kcrash', 'crash', 'bt'),
                 'gettext' => array('po', 'pot'),
                 'gml' => array('gml'),
@@ -1400,7 +1400,7 @@ class GeSHi {
                 'oracle10' => array(),
                 'pascal' => array('pas'),
                 'perl' => array('pl', 'pm'),
-                'php' => array('module', 'php', 'php5', 'phtml', 'phps'),
+                'php' => array('php', 'php5', 'phtml', 'phps'),
                 'povray' => array('pov'),
                 'providex' => array('pvc', 'pvx'),
                 'prolog' => array('pl'),
