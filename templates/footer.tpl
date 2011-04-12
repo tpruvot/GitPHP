@@ -16,7 +16,7 @@
       {/if}
     </div>
     <div class="attr_footer">
-    	<a href="http://xiphux.com/programming/gitphp/" target="_blank">GitPHP by Chris Han</a>
+    	<a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP (Tanguy's branch)</a>
     </div>
   </body>
 </html>

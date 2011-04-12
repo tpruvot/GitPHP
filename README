@@ -1,7 +1,18 @@
 About this fork :
 
+Changes made by Tanguy Pruvot (2011) :
+
+New abilities :
 + Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
 + Added ability to autolist subfolders (and set maximum level, to create groups of repositories)
+
+Enhancements :
++ use origin git clone url as description
++ use git user.name as default owner
+
+Addons :
++ Drupal 6 geshi definitions (from Joshua Schroeder)
++ Gitweb blue skin (from gitphp-glip)
 
 TODO :
 
