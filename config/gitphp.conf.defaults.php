@@ -360,26 +360,25 @@ $gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
  */
 $gitphp_conf['geshiroot'] = 'lib/geshi/';
 
-
-/*
- * fixupjs
- * Script added (in Blob and Blame views) at end of html file.
- * Remove all bold text, to fix line numbers height
+/* Script added (in Blob and Blame views) at end of html file.
+ * Remove all bold,italic attributes, to fix line numbers height
  */
 $gitphp_conf['fixupjs'] = <<<EOT
 
-    jQuery('#blobData tr td.de1 pre.de1 span').each( function() {
+    if (!(jQuery.browser.mozilla))
+    jQuery('#blobData').find('pre span').each( function() {
         var el = jQuery(this);
-        if (el.css('font-weight') == 'bold') {
+        if (el.css('font-weight') != 'normal') {
           el.css('font-weight','normal');
-          el.css('text-shadow','1px 0px silver');
+          el.css('text-shadow','silver 1px 1px 1px'); //chrome 11
         }
         if (el.css('font-style') == 'italic') {
           el.css('font-style','normal');
-          el.css('opacity','0.6');
+          el.css('opacity','0.7');
         }
     });
 EOT;
+
 
 /*******************************************************
  * Debugging options
