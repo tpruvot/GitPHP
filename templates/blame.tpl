@@ -58,4 +58,10 @@
   {/if}
  </div>
 
+{if $fixupjs}
+ <script type="text/javascript">
+    {$fixupjs}
+ </script>
+{/if}
+
  {include file='footer.tpl'}

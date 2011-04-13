@@ -207,6 +207,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$geshi->set_overall_id('blobData');
 						$this->tpl->assign('geshiout', $geshi->parse_code());
 						$this->tpl->assign('extracss', $geshi->get_stylesheet());
+						$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
 						$this->tpl->assign('geshi', true);
 						return;
 					}
@@ -215,6 +216,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		$this->tpl->assign('bloblines', $blob->GetData(true));
+
 	}
 
 }
