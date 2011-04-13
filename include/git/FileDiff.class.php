@@ -577,6 +577,12 @@ class GitPHP_FileDiff
 			$tmpdir->RemoveFile($toTmpFile);
 		}
 
+		//check if utf8 is needed
+		$accents = '/[çéèàâïôîûñß]/'; //utf8_decode could be needed if this source is utf8
+		if (preg_match($accents, $this->diffData)) {
+				$this->diffData = utf8_encode($this->diffData);
+		}
+
 		if ($explode)
 			return explode("\n", $this->diffData);
 		else

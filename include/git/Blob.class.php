@@ -115,6 +115,12 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		//check if utf8 is needed
+		$accents = '/[çéèàâïôîûñß]/'; //utf8_decode could be needed if this source is utf8
+		if (preg_match($accents, $this->data)) {
+			$this->data = utf8_encode($this->data);
+		}
+
 		if ($explode)
 			return explode("\n", $this->data);
 		else

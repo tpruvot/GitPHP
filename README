@@ -7,6 +7,7 @@ New abilities :
 + Added ability to autolist subfolders (and set maximum level, to create groups of repositories)
 
 Enhancements :
++ Latin charset support (automatic UTF-8 Conversion on output, if needed)
 + use origin git clone url as description
 + use git user.name as default owner
 + geshi update
