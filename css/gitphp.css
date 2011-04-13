@@ -111,7 +111,7 @@ td#blameData {
 	white-space: nowrap;
 }
 
-td.ln {
+#blobData td.ln {
 	padding: 0 12px 0 0;
 }
 
