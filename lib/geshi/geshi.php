@@ -3495,6 +3495,9 @@ class GeSHi {
             $oolang_spaces = "[\s]*";
             $oolang_before = "";
             $oolang_after = "[a-zA-Z][a-zA-Z0-9_]*";
+
+            $accents=utf8_encode("éèàâî");
+            $oolang_after = "[a-zA-Z][[:alnum:]éèàâî_$accents]*"; //Patch pour les attributs avec Accents ..Libellé par exemple
             if (isset($this->language_data['PARSER_CONTROL'])) {
                 if (isset($this->language_data['PARSER_CONTROL']['OOLANG'])) {
                     if (isset($this->language_data['PARSER_CONTROL']['OOLANG']['MATCH_BEFORE'])) {
