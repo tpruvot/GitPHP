@@ -9,12 +9,17 @@ New abilities :
 Enhancements :
 + use origin git clone url as description
 + use git user.name as default owner
++ geshi update
++ fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
+  made with a new config variable "fixupjs" where we can add a jQuery script
 
 Addons :
 + Drupal 6 geshi definitions (from Joshua Schroeder)
-+ Gitweb blue skin (from gitphp-glip)
++ Gitweb blue skin (based on gitphp-glip, many fixes made... need some css cleanup)
 
 TODO :
+
+- Implement PHP glip as classes, as fallback if git executable not present/usable
 
 - Browse .repo projects to check android platform status
   .repo folder contains all subprojects .git folders
