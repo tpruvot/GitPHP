@@ -49,7 +49,7 @@ div.log_link {
 /*
  * Diff display
  */
-div.pre { 
+.pre { 
 	white-space: pre; 
 }
 
@@ -149,7 +149,18 @@ table.treeTable img.treeSpinner {
         height: 12px;
 }
 
+/*
+ * side-by-side-diff diff
+ */
+table.diffTable {
+	border-spacing:0px;
+	width: 100%;
+	white-space: pre-wrap;
+}
 
+table.diffTable td {
+	width: 50%;
+}
 
 /*
  * Geshi styles
