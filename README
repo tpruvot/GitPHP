@@ -1,8 +1,17 @@
 About this fork :
+=================
+
 
 This fork is based on GitPHP v0.2.3 from http://xiphux.com/programming/gitphp/
 
+The original skin can be seen here : http://gitphp.xiphux.com/
+
+The new one (based on gitphp-glip) is here : http://pruvot.tk/gitphp/
+
+
 Changes made by Tanguy Pruvot (2011) :
+======================================
+
 
 New abilities :
 + Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
@@ -20,7 +29,10 @@ Addons :
 + Drupal 6 geshi definitions (from Joshua Schroeder)
 + Gitweb blue skin (based on gitphp-glip, many fixes made... need some css cleanup)
 
+
+
 TODO :
+======
 
 - Implement PHP glip as classes, as fallback if git executable not present/usable
 
