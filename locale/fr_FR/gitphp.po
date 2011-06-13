@@ -526,8 +526,8 @@ msgstr "Hash non valide %1$s"
 #, php-format
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
-msgstr[0] "il y a %1$d an"
-msgstr[1] "il y a %1$d ans"
+msgstr[0] "%1$d an"
+msgstr[1] "%1$d ans"
 
 # Used to represent an age in months
 # %1$d: the number of months
@@ -535,8 +535,8 @@ msgstr[1] "il y a %1$d ans"
 #, php-format
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
-msgstr[0] "il y a %1$d mois"
-msgstr[1] "il y a %1$d mois"
+msgstr[0] "%1$d mois"
+msgstr[1] "%1$d mois"
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
@@ -544,8 +544,8 @@ msgstr[1] "il y a %1$d mois"
 #, php-format
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
-msgstr[0] "il y a %1$d semaine"
-msgstr[1] "il y a %1$d semaines"
+msgstr[0] "%1$d semaine"
+msgstr[1] "%1$d semaines"
 
 # Used to represent an age in days
 # %1$d: the number of days
@@ -553,8 +553,8 @@ msgstr[1] "il y a %1$d semaines"
 #, php-format
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
-msgstr[0] "il y a %1$d jour"
-msgstr[1] "il y a %1$d jours"
+msgstr[0] "%1$d jour"
+msgstr[1] "%1$d jours"
 
 # Used to represent an age in hours
 # %1$d: the number of hours
@@ -562,8 +562,8 @@ msgstr[1] "il y a %1$d jours"
 #, php-format
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
-msgstr[0] "il y a %1$d heure"
-msgstr[1] "il y a %1$d heures"
+msgstr[0] "%1$d heure"
+msgstr[1] "%1$d heures"
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
@@ -580,8 +580,8 @@ msgstr[1] "il y a %1$d minutes"
 #, php-format
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
-msgstr[0] "il y a %1$d seconde "
-msgstr[1] "il y a %1$d secondes"
+msgstr[0] "%1$d seconde "
+msgstr[1] "%1$d secondes"
 
 # Used to represent a modification time of right now
 #: include/smartyplugins/modifier.agestring.php:51
