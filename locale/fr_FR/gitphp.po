@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.3\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2011-04-10 13:05+0200\n"
+"PO-Revision-Date: 2011-06-14 13:05+0200\n"
 "Last-Translator: Tanguy Pruvot <tanguy.pruvot@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: \n"
@@ -78,6 +78,14 @@ msgstr "auteur"
 #: templates/commitdiff.tpl templates/blob.tpl
 msgid "plain"
 msgstr "brut"
+
+# Used as a link to a side-by-side version of a diff
+msgid "side by side"
+msgstr "face à face"
+
+# Used as a link to a unified version of a diff
+msgid "unified"
+msgstr "unifié"
 
 # Used as a link to the first page in a list of results
 #: templates/search.tpl templates/searchfiles.tpl
