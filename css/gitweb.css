@@ -474,6 +474,21 @@ div.diff_info {
 }
 
 
+.diffTable tr.diff-added td {
+ 	background-color: #C1FFC1;
+}
+ 	 
+.diffTable tr.diff-modified td {
+	background-color: #FFE8A8;
+ }
+ 	 
+.diffTable tr.diff-deleted td {
+ 	background-color: #FFDDDD;
+}
+ 	 
+.diffTable td.diff-left {
+	border-right: 1px solid #d9d8d1;
+}
 
 
 #ajaxedCode h1,#ajaxedCode h2,#ajaxedCode h3,#ajaxedCode h4,#ajaxedCode h5,#ajaxedCode h6{border:0!important;}
