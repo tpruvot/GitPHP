@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_CONTROLLERDIR . 'Controller_DiffBase.class.php');
+
 /**
  * Constants for blobdiff modes
  */
@@ -32,7 +34,7 @@ define('GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 yea
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
+class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 {
 
 	/**
@@ -110,6 +112,8 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
+		parent::ReadQuery();
+
 		if (isset($_GET['h']))
 			$this->params['hash'] = $_GET['h'];
 		if (isset($_GET['hp']))
@@ -160,10 +164,9 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+		parent::LoadHeaders();
 
-			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
+		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
 		}
 	}
