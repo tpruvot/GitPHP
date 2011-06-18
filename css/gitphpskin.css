@@ -400,6 +400,55 @@ table.diffTable td.diff-left {
 	border-right: 1px solid #d9d8d1;
 }
 
+/*
+ * side-by-side commitdiff
+ */
+div.commitDiffSBS
+{
+	width: 100%;
+	border-top: 2px solid #edece6;
+}
+
+div.commitDiffSBS div.SBSTOC
+{
+	float: left;
+	width: 19%;
+	word-wrap: break-word;
+}
+
+div.commitDiffSBS div.SBSTOC a
+{
+	text-decoration: none;
+}
+
+div.commitDiffSBS div.SBSTOC ul
+{
+	margin-left: 8px;
+	padding-left: 8px;
+}
+
+div.commitDiffSBS div.SBSTOC .listcount
+{
+	list-style-type: none;
+}
+
+div.commitDiffSBS div.SBSTOC .activeItem
+{
+	background-color: #edece6;
+}
+
+div.commitDiffSBS .SBSContent
+{
+	float: right;
+	width: 80%;
+	border-left: 1px solid #edece6;
+}
+
+div.commitDiffSBS .SBSFooter
+{
+	clear: both;
+}
+
 
 /*
  * Blob/blame display
