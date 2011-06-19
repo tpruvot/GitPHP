@@ -69,10 +69,6 @@ td, th {
     padding: 2px 3px;
 }
 
-.page_nav br {
-	display: none;
-}
-
 /* Page Header
 ---------------------------------------------------------------------------- */
 
@@ -111,21 +107,21 @@ td, th {
 ---------------------------------------------------------------------------- */
 
 .page_footer {
-    height: 75px;
-    line-height: 75px;
+    height: 43px;
+    line-height: 45px;
     background: #4386ba url(gitweb/page_footer.png) repeat-x 0 0;
     padding: 0 30px;
     margin-top: 15px;
+    clear:both;
 }
 
 .page_footer a {
-    padding-top: 5em;
+    padding-top: 30px;
 }
 
 .page_footer_text {
     color: #fff;
     display: inline;
-    float: left;
 }
 
 a.rss_logo {
@@ -143,7 +139,7 @@ a.rss_logo {
     zoom: 85%;
     text-align: center;
     text-decoration: none;
-    margin-top: 49px;
+    margin-top: 24px;
     margin-left: 5px;
 }
 
@@ -215,6 +211,10 @@ tr.projectHeader {
     border-top: 1px solid #e1e1e1;
 }
 
+tr.projectHeader th {
+    text-align: left;
+}
+
 th.categoryName {
     text-align: left;
 }
@@ -244,11 +244,13 @@ th .header {
 .list_head,
 .page_nav,
 .search {
-    margin: 0 auto 10px auto;
+    margin: 0 auto 6px auto;
 }
 
 div.page_nav {
+    margin-top: -6px;
     margin-left: 4px;
+    line-height: 14px;
 }
 
 div.page_path {
@@ -257,7 +259,7 @@ div.page_path {
 
 div.search {
     margin: 0 auto 10px auto;
-    top: 38px;
+    top: 40px;
 }
 
 div.title {
@@ -341,7 +343,6 @@ div.log_link {
 span.refs span {
     color: #000;
     padding: 0px 4px;
-    font-size: 10px;
     font-weight: normal;
     border: 1px solid;
     background-color: #ffaaff;
