@@ -115,7 +115,7 @@ msgstr "diff"
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
-msgstr "committer"
+msgstr "commit"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
