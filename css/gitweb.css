@@ -305,7 +305,7 @@ div.title {
     border: 1px solid #bedce7;
     border-top: 0;
     padding: 5px;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 8px auto;
 }
 
 .page_body {
@@ -491,6 +491,9 @@ div.diff_info {
 	border-right: 1px solid #d9d8d1;
 }
 
+div.commit_tip {
+	zoom: 80%;
+}
 
 #ajaxedCode h1,#ajaxedCode h2,#ajaxedCode h3,#ajaxedCode h4,#ajaxedCode h5,#ajaxedCode h6{border:0!important;}
 #ajaxedCode h1{font-size:170%!important;border-top:4px solid #aaa!important;padding-top:.5em!important;margin-top:1.5em!important;}

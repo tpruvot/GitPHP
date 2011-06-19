@@ -5,7 +5,7 @@
  *
  *  Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
-<div>
+<div class="commit_tip">
 <nobr>{t}author{/t}: {$commit->GetAuthor()} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
 </nobr>
 <br />

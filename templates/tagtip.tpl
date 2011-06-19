@@ -9,7 +9,7 @@
  * @subpackage Template
  *}
 
-<div>
+<div class="tag_tip">
 <nobr>{t}tag{/t}: {$tag->GetName()}</nobr>
 <br />
 {foreach from=$tag->GetComment() item=line}
