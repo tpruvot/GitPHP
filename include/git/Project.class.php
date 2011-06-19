@@ -269,6 +269,7 @@ class GitPHP_Project
 					} elseif (isset($data['name']) && !empty($data['name'])) {
 						$this->owner = $data['name'];
 					}
+					$this->owner = rtrim($this->owner,',');
 				}
 			}
 
