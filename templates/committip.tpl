@@ -6,9 +6,12 @@
  *  Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
 <div>
-{t}author{/t}: {$commit->GetAuthor()} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+<nobr>{t}author{/t}: {$commit->GetAuthor()} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+</nobr>
 <br />
+<nobr>
 {t}committer{/t}: {$commit->GetCommitter()} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+</nobr>
 <br /><br />
 {foreach from=$commit->GetComment() item=line}
 {$line|escape}<br />

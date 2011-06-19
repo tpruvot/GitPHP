@@ -10,7 +10,7 @@
  *}
 
 <div>
-{t}tag{/t}: {$tag->GetName()}
+<nobr>{t}tag{/t}: {$tag->GetName()}</nobr>
 <br />
 {foreach from=$tag->GetComment() item=line}
 <br />{$line}
