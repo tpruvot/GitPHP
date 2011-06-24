@@ -495,6 +495,57 @@ div.commit_tip {
 	zoom: 80%;
 }
 
+/*
+ * side-by-side commitdiff
+ */
+div.commitDiffSBS
+{
+	width: 100%;
+	border-top: 2px solid #edece6;
+}
+
+div.commitDiffSBS div.SBSTOC
+{
+	float: left;
+	width: 19%;
+	word-wrap: break-word;
+	background-color: #ffffff;
+	border-bottom: 1px solid #edece6;
+}
+
+div.commitDiffSBS div.SBSTOC a
+{
+	text-decoration: none;
+}
+
+div.commitDiffSBS div.SBSTOC ul
+{
+	margin-left: 8px;
+	padding-left: 8px;
+}
+
+div.commitDiffSBS div.SBSTOC .listcount
+{
+	list-style-type: none;
+}
+
+div.commitDiffSBS div.SBSTOC .activeItem
+{
+	background-color: #edece6;
+}
+
+div.commitDiffSBS .SBSContent
+{
+	float: right;
+	width: 80%;
+	border-left: 1px solid #edece6;
+}
+
+div.commitDiffSBS .SBSFooter
+{
+	clear: both;
+}
+
 #ajaxedCode h1,#ajaxedCode h2,#ajaxedCode h3,#ajaxedCode h4,#ajaxedCode h5,#ajaxedCode h6{border:0!important;}
 #ajaxedCode h1{font-size:170%!important;border-top:4px solid #aaa!important;padding-top:.5em!important;margin-top:1.5em!important;}
 #ajaxedCode h1:first-child{margin-top:0!important;padding-top:.25em!important;border-top:none!important;}

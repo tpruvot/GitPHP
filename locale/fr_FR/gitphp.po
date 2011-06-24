@@ -714,5 +714,5 @@ msgstr "Impossible de lancer l'exécutable diff \"%1$s\". Vous devez définir le
 # This will go back to showing all files in the commitdiff
 #: templates/commitdiff.tpl
 msgid "(show all)"
-msgstr "(afficher tout)"
+msgstr "(tous)"
 
