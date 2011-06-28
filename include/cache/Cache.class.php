@@ -140,7 +140,7 @@ class GitPHP_Cache
 
 		$data = $this->tpl->fetch(GitPHP_Cache::Template, $key);
 
-		return unserialize($data);
+		return unserialize(trim($data));
 	}
 
 	/**
