@@ -56,7 +56,6 @@
     {/if}
     {/foreach}
     {/if}
-    {$smarty.capture.header}
   </head>
   <body>
     <div class="page_header">
