@@ -135,12 +135,12 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return false;
 
-		if (!$this->tpl->is_cached(GitPHP_Cache::Template, $key))
+		if (!$this->tpl->isCached(GitPHP_Cache::Template, $key))
 			return false;
 
 		$data = $this->tpl->fetch(GitPHP_Cache::Template, $key);
 
-		return unserialize($data);
+		return unserialize(trim($data));
 	}
 
 	/**
@@ -161,7 +161,7 @@ class GitPHP_Cache
 			return;
 
 		$this->Delete($key);
-		$this->tpl->clear_all_assign();
+		$this->tpl->clearAllAssign();
 		$this->tpl->assign('data', serialize($value));
 
 		// Force it into smarty's cache
@@ -186,7 +186,7 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return false;
 
-		return $this->tpl->is_cached(GitPHP_Cache::Template, $key);
+		return $this->tpl->isCached(GitPHP_Cache::Template, $key);
 	}
 
 	/**
@@ -205,7 +205,7 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return;
 
-		$this->tpl->clear_cache(GitPHP_Cache::Template, $key);
+		$this->tpl->clearCache(GitPHP_Cache::Template, $key);
 	}
 
 	/**
@@ -220,7 +220,7 @@ class GitPHP_Cache
 		if (!$this->enabled)
 			return;
 
-		$this->tpl->clear_all_cache();
+		$this->tpl->clearAllCache();
 	}
 
 	/**

@@ -114,7 +114,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			GitPHP_Log::GetInstance()->SetEnabled(false);
 
 			// XXX: Nasty hack to cache headers
-			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {
+			if (!$this->tpl->isCached('blobheaders.tpl', $this->GetFullCacheKey())) {
 				if (isset($this->params['file']))
 					$saveas = $this->params['file'];
 				else
@@ -146,7 +146,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 			$out = $this->tpl->fetch('blobheaders.tpl', $this->GetFullCacheKey());
 
-			$this->headers = unserialize($out);
+			$this->headers = unserialize(trim($out));
 		}
 
 	}
