@@ -208,7 +208,7 @@ msgstr "diff"
 # %3: the new file mode
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance, mode : %3"
+msgstr "déplacé depuis %1- %2% de concordance, mode : %3"
 
 # Used to indicate a file was moved
 # This string should be HTML safe
@@ -216,7 +216,7 @@ msgstr "déplacé depuis %1 avec %2%% de ressemblance, mode : %3"
 # %2: the similarity as a percent number
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance"
+msgstr "déplacé depuis %1- %2% de concordance"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
