@@ -215,6 +215,10 @@ tr.projectHeader th {
     text-align: left;
 }
 
+tr.projectHeader th.actions {
+    text-align: right;
+}
+
 th.categoryName {
     text-align: left;
 }

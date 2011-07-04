@@ -51,7 +51,7 @@ git source code archive
           <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{t}Owner{/t}</a></th>
          {/if}
         {/if}
-        <th>{t}Actions{/t}</th>
+        <th class="actions">{t}Actions{/t}</th>
       </tr>
     {/if}
 
