@@ -1,3 +1,0 @@
-[submodule "lib/glip"]
-	path = lib/glip
-	url = git://github.com/patrikf/glip.git
