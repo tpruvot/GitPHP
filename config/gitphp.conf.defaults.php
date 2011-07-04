@@ -133,7 +133,10 @@ $gitphp_conf['stylesheet'] = 'gitphpskin.css';
  */
 $gitphp_conf['javascript'] = true;
 
-
+/*
+ * layout tweeks
+ */
+$gitphp_conf['projectlist_show_owner'] = true;
 
 /*********************************************************
  * Features
