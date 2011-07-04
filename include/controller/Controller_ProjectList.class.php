@@ -108,7 +108,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		if (isset($_GET['o']))
 			$this->params['order'] = $_GET['o'];
 		else
-			$this->params['order'] = 'project';
+			$this->params['order'] = GitPHP_Config::GetInstance()->GetValue('projectlist_order');
 		if (isset($_GET['s']))
 			$this->params['search'] = $_GET['s'];
 	}

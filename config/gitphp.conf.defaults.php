@@ -136,7 +136,12 @@ $gitphp_conf['javascript'] = true;
 /*
  * layout tweeks
  */
+
+// project list : show/hide owner column
 $gitphp_conf['projectlist_show_owner'] = true;
+
+// project list sort order : project, age, descr, owner
+$gitphp_conf['projectlist_order'] = 'project';
 
 /*********************************************************
  * Features
