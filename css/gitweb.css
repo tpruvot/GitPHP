@@ -341,6 +341,16 @@ div.log_link {
     zoom: 80%;
 }
 
+/* ShortLog Commit titles */
+
+span.commit_title {
+        font-weight: bold;
+}
+
+span.merge_title {
+        color: #777777;
+}
+
 /* Refs
 ---------------------------------------------------------------------------- */
 
