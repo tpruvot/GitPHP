@@ -54,13 +54,11 @@ class GitPHP_DiffExe
 	 */
 	public function __construct()
 	{
-		$this->binary = GitPHP_Config::GetInstance()->GetValue('diffbin');
-		if (empty($this->binary)) {
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$this->binary = 'C:\\Progra~1\\Git\\bin\\diff.exe';
-			} else {
-				$this->binary = 'diff';
-			}
+		$binary = GitPHP_Config::GetInstance()->GetValue('diffbin');
+		if (empty($binary)) {
+			$this->binary = GitPHP_DiffExe::DefaultBinary();
+		} else {
+			$this->binary = $binary;
 		}
 
 	}
@@ -241,11 +239,10 @@ class GitPHP_DiffExe
 	 */
 	public static function DefaultBinary()
 	{
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		if (GitPHP_Util::IsWindows()) {
 			// windows
 
-			$arch = php_uname('m');
-			if (strpos($arch, '64') !== false) {
+			if (GitPHP_Util::Is64Bit()) {
 				// match x86_64 and x64 (64 bit)
 				// C:\Program Files (x86)\Git\bin\diff.exe
 				return 'C:\\Progra~2\\Git\\bin\\diff.exe';
@@ -256,7 +253,7 @@ class GitPHP_DiffExe
 			}
 		} else {
 			// *nix, just use PATH
-			$this->binary = 'diff';
+			return 'diff';
 		}
 	}
 }
