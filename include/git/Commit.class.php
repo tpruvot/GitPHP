@@ -532,6 +532,22 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * IsMergeCommit
+	 *
+	 * Returns whether this is a merge commit
+	 *
+	 * @access pubilc
+	 * @return boolean true if merge commit
+	 */
+	public function IsMergeCommit()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return count($this->parents) > 1;
+	}
+
+	/**
 	 * ReadData
 	 *
 	 * Read the data for the commit
