@@ -10,7 +10,7 @@
 
 
 /*
- * Base styles 
+ * Base styles
  */
 body {
 	font-family: sans-serif;
@@ -22,12 +22,12 @@ body {
 	color: #000000;
 }
 
-a { 
-	color: #0000cc; 
+a {
+	color: #0000cc;
 }
 
-a:hover, a:visited, a:active { 
-	color: #880000; 
+a:hover, a:visited, a:active {
+	color: #880000;
 }
 
 .empty {
@@ -40,32 +40,32 @@ a:hover, a:visited, a:active {
  * Page header
  * (topmost bar with project link, language bar, etc)
  */
-div.page_header { 
-	height: 25px; 
-	padding: 8px; 
-	font-size: 18px; 
-	font-weight: bold; 
-	background-color: #d9d8d1; 
+div.page_header {
+	height: 25px;
+	padding: 8px;
+	font-size: 18px;
+	font-weight: bold;
+	background-color: #d9d8d1;
 }
 
-div.page_header a:visited, a.header { 
-	color: #0000cc; 
+div.page_header a:visited, a.header {
+	color: #0000cc;
 }
 
-div.page_header a:hover { 
-	color: #880000; 
+div.page_header a:hover {
+	color: #880000;
 }
 
 
 /*
  * Navigation header links
  */
-div.page_nav { 
-	padding: 8px; 
+div.page_nav {
+	padding: 8px;
 }
 
-div.page_nav a:visited { 
-	color: #0000cc; 
+div.page_nav a:visited {
+	color: #0000cc;
 }
 
 
@@ -73,9 +73,9 @@ div.page_nav a:visited {
  * Path header
  * (tree/blob path navigation links)
  */
-div.page_path { 
-	padding: 8px; 
-	border: solid #d9d8d1; 
+div.page_path {
+	padding: 8px;
+	border: solid #d9d8d1;
 	border-width: 0px 0px 1px;
 }
 
@@ -84,9 +84,9 @@ div.page_path {
  * Page footer
  * (footer bar with project description and atom/rss links)
  */
-div.page_footer { 
-	height: 17px; 
-	padding: 4px 8px; 
+div.page_footer {
+	height: 17px;
+	padding: 4px 8px;
 	background-color: #d9d8d1;
 }
 
@@ -95,77 +95,77 @@ div.page_footer {
  * Attribution footer
  * (bottommost footer)
  */
-div.attr_footer { 
-	text-align: center; 
-	padding: 4px 8px; 
-	color: #888888; 
-	font-style: italic; 
+div.attr_footer {
+	text-align: center;
+	padding: 4px 8px;
+	color: #888888;
+	font-style: italic;
 }
 
-div.attr_footer a { 
-	color: #888888; 
-	font-style: italic; 
-	text-decoration: none; 
+div.attr_footer a {
+	color: #888888;
+	font-style: italic;
+	text-decoration: none;
 }
 
-div.attr_footer a:hover { 
-	text-decoration: underline; 
+div.attr_footer a:hover {
+	text-decoration: underline;
 }
 
 
-div.page_footer_text { 
-	float: left; 
+div.page_footer_text {
+	float: left;
 	color: #555555;
-	font-style: italic; 
+	font-style: italic;
 }
 
 
 /*
  * Page body
  */
-div.page_body { 
-	padding: 8px; 
+div.page_body {
+	padding: 8px;
 }
 
 
 /*
  * Table displays
  */
-table { 
-	padding: 8px 4px; 
+table {
+	padding: 8px 4px;
 }
 
-th { 
-	padding: 2px 5px; 
-	font-size: 12px; 
-	text-align: left; 
+th {
+	padding: 2px 5px;
+	font-size: 12px;
+	text-align: left;
 }
 
 tr.light:hover {
 	/* odd rows */
-	background-color: #edece6; 
+	background-color: #edece6;
 }
 
 tr.dark {
 	/* even rows */
-	background-color: #f6f6f0; 
+	background-color: #f6f6f0;
 }
 
-tr.dark:hover { 
-	background-color: #edece6; 
+tr.dark:hover {
+	background-color: #edece6;
 }
 
-td { 
-	padding: 2px 5px; 
-	font-size: 12px; 
+td {
+	padding: 2px 5px;
+	font-size: 12px;
 	vertical-align: top;
 }
 
-td.link { 
+td.link {
 	/* navigation links on the right side of each row */
-	padding: 2px 5px; 
-	font-family: sans-serif; 
-	font-size: 10px; 
+	padding: 2px 5px;
+	font-family: sans-serif;
+	font-size: 10px;
 }
 
 
@@ -188,22 +188,22 @@ div.error {
  */
 a.rss_logo {
 	/* the rss/atom/opml/txt buttons */
-	padding: 3px 0px; 
-	width: 35px; 
+	padding: 3px 0px;
+	width: 35px;
 	line-height: 10px;
-	border: 1px solid; 
+	border: 1px solid;
 	border-color: #fcc7a5 #7d3302 #3e1a01 #ff954e;
-	color: #ffffff; 
+	color: #ffffff;
 	background-color: #ff6600;
-	font-weight: bold; 
-	font-family: sans-serif; 
+	font-weight: bold;
+	font-family: sans-serif;
 	font-size: 10px;
-	text-align: center; 
+	text-align: center;
 	text-decoration: none;
 }
 
-a.rss_logo:hover { 
-	background-color: #ee5500; 
+a.rss_logo:hover {
+	background-color: #ee5500;
 }
 
 span.refs a {
@@ -219,21 +219,21 @@ span.refs a:hover {
 
 span.tag {
 	/* tag badge */
-	padding: 0px 4px; 
-	font-size: 10px; 
+	padding: 0px 4px;
+	font-size: 10px;
 	font-weight: normal;
 	background-color: #ffffaa;
-	border: 1px solid; 
+	border: 1px solid;
 	border-color: #ffffcc #ffee00 #ffee00 #ffffcc;
 }
 
 span.head {
 	/* head badge */
-	padding: 0px 4px; 
-	font-size: 10px; 
+	padding: 0px 4px;
+	font-size: 10px;
 	font-weight: normal;
-	background-color: #aaffaa; 
-	border: 1px solid; 
+	background-color: #aaffaa;
+	border: 1px solid;
 	border-color: #ccffcc #00cc33 #00cc33 #ccffcc;
 }
 
@@ -253,28 +253,28 @@ div.title {
 }
 
 div.title a.title {
-	font-weight: bold; 
-	text-decoration: none; 
+	font-weight: bold;
+	text-decoration: none;
 	color: #000000;
 }
 
-div.title:hover { 
-	background-color: #d9d8d1; 
+div.title:hover {
+	background-color: #d9d8d1;
 }
 
-div.title_text { 
-	padding: 6px 0px; 
-	border: solid #d9d8d1; 
-	border-width: 0px 0px 1px; 
+div.title_text {
+	padding: 6px 0px;
+	border: solid #d9d8d1;
+	border-width: 0px 0px 1px;
 }
 
 
 /*
  * Search box
  */
-div.search { 
-	font-size: 12px; 
-	font-weight: normal; 
+div.search {
+	font-size: 12px;
+	font-weight: normal;
 }
 
 
@@ -292,13 +292,13 @@ div.lang_select {
  */
 span.age {
 	/* Age display by each log commit */
-	font-style: italic; 
+	font-style: italic;
 }
 
 div.log_link {
 	/* Links by each log commit */
-	font-size: 10px; 
-	font-family: sans-serif; 
+	font-size: 10px;
+	font-family: sans-serif;
 	font-style: normal;
 }
 
@@ -308,21 +308,21 @@ div.log_link {
  */
 div.list_head {
 	/* Header above commit's changed files (shows # of changed files) */
-	padding: 6px 8px 4px; 
-	border: solid #d9d8d1; 
-	border-width: 1px 0px 0px; 
-	font-style: italic; 
+	padding: 6px 8px 4px;
+	border: solid #d9d8d1;
+	border-width: 1px 0px 0px;
+	font-style: italic;
 }
 
 a.list {
 	/* Filename in list of changed files */
-	text-decoration: none; 
-	color: #000000; 
+	text-decoration: none;
+	color: #000000;
 }
 
-a.list:hover { 
-	text-decoration: underline; 
-	color: #880000; 
+a.list:hover {
+	text-decoration: underline;
+	color: #880000;
 }
 
 span.commit_title {
@@ -360,16 +360,16 @@ span.latenight {
  */
 div.pre {
 	/* the entire diff output block */
-	font-family: monospace; 
+	font-family: monospace;
 	font-size: 12px;
 }
 
 div.diff_info {
 	/* the from -> to file header */
-	font-family: monospace; 
-	color: #000099; 
-	background-color: #edece6; 
-	font-style: italic; 
+	font-family: monospace;
+	color: #000099;
+	background-color: #edece6;
+	font-style: italic;
 }
 
 .diffplus {
@@ -388,24 +388,72 @@ div.diff_info {
 /*
  * side-by-side-diff diff
  */
-table.diffTable {
+.diffTable {
 	font-family: monospace;
 }
 
-table.diffTable tr.diff-added {
-	background-color: #C1FFC1;
+.diffTable td.diff-left {
+	border-right: 1px solid #d9d8d1;
 }
 
-table.diffTable tr.diff-modified {
-	background-color: #DDEEFF;
+/* Untouched code */
+
+.diffTable tr.light-code:hover td {
+	background-color: #edece6;
+}
+.diffTable tr.dark-code td {
+	background-color: #f9f6f6;
+}
+.diffTable tr.dark-code:hover td {
+	background-color: #edece6;
 }
 
-table.diffTable tr.diff-deleted {
+/* Deleted (red) */
+.diffTable tr.diff-deleted td.diff-left {
 	background-color: #FFDDDD;
 }
+.diffTable tr.diff-deleted td.diff-right {
+	background-color: #ddd;
+}
+.diffTable tr.light-codedel:hover td.diff-left {
+	background-color: #EEBBBB;
+}
+.diffTable tr.dark-codedel td.diff-left {
+	background-color: #FFD5D5;
+}
+.diffTable tr.dark-codedel:hover td.diff-left {
+	background-color: #EEBBBB;
+}
 
-table.diffTable td.diff-left {
-	border-right: 1px solid #d9d8d1;
+/* Added (green) */
+.diffTable tr.diff-added td.diff-left{
+	background-color: #ddd;
+}
+.diffTable tr.diff-added td.diff-right{
+	background-color: #C1FFC1;
+}
+.diffTable tr.light-codeadd:hover td.diff-right {
+	background-color: #B1EFB1;
+}
+.diffTable tr.dark-codeadd td.diff-right {
+	background-color: #B9F9B9;
+}
+.diffTable tr.dark-codeadd:hover td.diff-right {
+	background-color: #B1EFB1;
+}
+
+/* Modified (blue) */
+.diffTable tr.diff-modified td {
+	background-color: #DDEEFF;
+}
+.diffTable tr.light-codemod:hover td {
+	background-color: #CCE0F0;
+}
+.diffTable tr.dark-codemod td {
+	background-color: #D9E9F9;
+}
+.diffTable tr.dark-codemod:hover td {
+	background-color: #CCE0F0;
 }
 
 /*
@@ -465,7 +513,7 @@ div.commitDiffSBS .SBSFooter
  */
 a.linenr {
 	/* Line numbers (non-geshi only) */
-	color: #999999; 
+	color: #999999;
 	text-decoration: none;
 }
 
@@ -476,22 +524,22 @@ table.code td {
 
 table.code td.num {
 	text-align: right;
-	font-family: monospace; 
-	font-size: 12px; 
+	font-family: monospace;
+	font-size: 12px;
 }
 
 table.code td.codeline {
 	padding-left: 5px;
-	font-family: monospace; 
-	font-size: 12px; 
+	font-family: monospace;
+	font-size: 12px;
 }
 
-table.code tr.light:hover { 
-	background-color: #ffffff; 
+table.code tr.light:hover {
+	background-color: #ffffff;
 }
 
-table.code tr.dark:hover { 
-	background-color: #f6f6f0; 
+table.code tr.dark:hover {
+	background-color: #f6f6f0;
 }
 
 td#blameData {
@@ -499,16 +547,16 @@ td#blameData {
 	text-align: left;
 }
 
-td#blameData div.light:hover { 
-	background-color: #edece6; 
+td#blameData div.light:hover {
+	background-color: #edece6;
 }
 
-td#blameData div.dark { 
-	background-color: #f6f6f0; 
+td#blameData div.dark {
+	background-color: #f6f6f0;
 }
 
-td#blameData div.dark:hover { 
-	background-color: #edece6; 
+td#blameData div.dark:hover {
+	background-color: #edece6;
 }
 
 
@@ -517,9 +565,9 @@ td#blameData div.dark:hover {
  */
 div.index_header {
 	/* the customizable info header above the list of projects */
-	border: solid #d9d8d1; 
-	border-width: 0px 0px 1px; 
-	padding: 12px 8px; 
+	border: solid #d9d8d1;
+	border-width: 0px 0px 1px;
+	padding: 12px 8px;
 }
 
 span.agehighlight {
@@ -529,9 +577,9 @@ span.agehighlight {
 
 div.projectSearch {
 	/* the project search box */
-	padding: 8px; 
-	border: solid #d9d8d1; 
-	border-width: 0px 0px 1px; 
+	padding: 8px;
+	border: solid #d9d8d1;
+	border-width: 0px 0px 1px;
 }
 
 .projectName .indent {

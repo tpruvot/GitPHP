@@ -473,7 +473,6 @@ div.diff_info {
         font-family: monospace;
         color: #000099;
         background-color: #edece6;
-        font-style: italic;
 }
 
 .diffplus {
@@ -488,21 +487,78 @@ div.diff_info {
         color: #990099;
 }
 
+/*
+ * side-by-side-diff diff
+ */
+.diffTable {
+	font-family: monospace;
+}
 
-.diffTable tr.diff-added td {
- 	background-color: #C1FFC1;
-}
- 	 
-.diffTable tr.diff-modified td {
-	background-color: #FFE8A8;
- }
- 	 
-.diffTable tr.diff-deleted td {
- 	background-color: #FFDDDD;
-}
- 	 
 .diffTable td.diff-left {
 	border-right: 1px solid #d9d8d1;
+}
+
+/* Untouched code */
+
+.diffTable tr.light-code td {
+	background-color: #fff;
+}
+.diffTable tr.light-code:hover td {
+	background-color: #ededed; 
+}
+.diffTable tr.dark-code td {
+	background-color: #fafafa; 
+}
+.diffTable tr.dark-code:hover td { 
+	background-color: #ededed; 
+}
+
+/* Deleted (red) */
+.diffTable tr.diff-deleted td.diff-left {
+	background-color: #FFDDDD;
+}
+.diffTable tr.diff-deleted td.diff-right {
+	background-color: #ddd;
+}
+.diffTable tr.light-codedel:hover td.diff-left {
+	background-color: #EEBBBB; 
+}
+.diffTable tr.dark-codedel td.diff-left {
+	background-color: #FFD5D5; 
+}
+.diffTable tr.dark-codedel:hover td.diff-left { 
+	background-color: #EEBBBB; 
+}
+
+/* Added (green) */
+.diffTable tr.diff-added td.diff-left{
+	background-color: #ddd;
+}
+.diffTable tr.diff-added td.diff-right{
+	background-color: #C1FFC1;
+}
+.diffTable tr.light-codeadd:hover td.diff-right {
+	background-color: #B1EFB1; 
+}
+.diffTable tr.dark-codeadd td.diff-right {
+	background-color: #B9F9B9; 
+}
+.diffTable tr.dark-codeadd:hover td.diff-right { 
+	background-color: #B1EFB1; 
+}
+
+/* Modified (blue) */
+.diffTable tr.diff-modified td {
+	background-color: #DDEEFF;
+}
+.diffTable tr.light-codemod:hover td {
+	background-color: #CCE0F0; 
+}
+.diffTable tr.dark-codemod td {
+	background-color: #D9E9F9; 
+}
+.diffTable tr.dark-codemod:hover td { 
+	background-color: #CCE0F0; 
 }
 
 div.commit_tip {
@@ -530,6 +586,8 @@ div.commitDiffSBS div.SBSTOC
 div.commitDiffSBS div.SBSTOC a
 {
 	text-decoration: none;
+	font-family: sans-serif;
+	font-size: 10px;
 }
 
 div.commitDiffSBS div.SBSTOC ul
