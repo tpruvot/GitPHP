@@ -498,6 +498,11 @@ div.diff_info {
 	border-right: 1px solid #d9d8d1;
 }
 
+.diffTable td {
+	font-size: 11px;
+	line-height: 11px;
+}
+
 /* Untouched code */
 
 .diffTable tr.light-code td {
