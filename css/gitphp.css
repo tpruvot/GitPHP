@@ -160,6 +160,7 @@ table.diffTable {
 
 table.diffTable td {
 	width: 50%;
+	font-size: 11px;
 }
 
 /*
