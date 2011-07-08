@@ -76,6 +76,25 @@ class GitPHP_TreeDiff implements Iterator
 	protected $dataRead = false;
 
 	/**
+	 * fileStat
+	 *
+	 * Used to preview changes size
+	 * array("file" => array(added, deleted));
+	 *
+	 * @access protected
+	 */
+	protected $fileStat = array();
+
+	/**
+	 * $totalStat
+	 *
+	 * Store total of modified lines
+	 *
+	 * @access protected
+	 */
+	protected $totalStat = -1;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -117,6 +136,13 @@ class GitPHP_TreeDiff implements Iterator
 	 */
 	private function ReadData()
 	{
+		if ($this->totalStat == -1)
+			$this->GetStats();
+
+		if ($this->totalStat > 2000) {
+			//TODO: too big...
+		}
+
 		$this->dataRead = true;
 
 		$this->fileDiffs = array();
@@ -146,7 +172,52 @@ class GitPHP_TreeDiff implements Iterator
 				}
 			}
 		}
+		unset($exe);
+	}
 
+	/**
+	 * GetStats
+	 *
+	 * Reads the tree diff --numstat
+	 *
+	 * @access private
+	 */
+	private function GetStats()
+	{
+		$this->fileStat = array();
+		$this->totalStat = 0;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$args = array();
+
+		$args[] = '--numstat';
+		$args[] = '-r';
+		if ($this->renames)
+			$args[] = '-M';
+
+		if (empty($this->fromHash))
+			$args[] = '--root';
+		else
+			$args[] = $this->fromHash;
+
+		$args[] = $this->toHash;
+
+		//Sample output : (added, deleted, file)
+		//14      0       css/gitweb.css
+		//0       5       doc/AUTHORS
+		//0       124     gitphp.css
+
+		$output = $exe->Execute(GIT_DIFF_TREE, $args);
+		$re_split = "^(\d+)\s+(\d+)\s+(.*)$";
+		if (preg_match_all('/'.$re_split.'/m', $output, $m, PREG_PATTERN_ORDER)) {
+			foreach ($m[3] as $key => $file) {
+				$add = intval($m[1][$key]);
+				$del = intval($m[2][$key]);
+				$this->fileStat[$file] = array($add, $del);
+				$this->totalStat += $add + $del;
+			}
+		}
 		unset($exe);
 	}
 
@@ -274,10 +345,10 @@ class GitPHP_TreeDiff implements Iterator
 	/**
 	 * Count
 	 *
-	 * Gets the number of file changes in this treediff
+	 * Gets the number of changed files in this treediff
 	 *
 	 * @access public
-	 * @return integer count of file changes
+	 * @return integer count of changed files
 	 */
 	public function Count()
 	{
@@ -287,4 +358,19 @@ class GitPHP_TreeDiff implements Iterator
 		return count($this->fileDiffs);
 	}
 
+	/**
+	 * StatCount
+	 *
+	 * Gets the number of line changes in this treediff
+	 *
+	 * @access public
+	 * @return integer count of line changes
+	 */
+	public function StatCount()
+	{
+		if ($this->totalStat == -1)
+			$this->GetStats();
+
+		return $this->totalStat;
+	}
 }
