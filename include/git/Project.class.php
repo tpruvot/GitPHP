@@ -1779,7 +1779,12 @@ class GitPHP_Project
 		if ($dh !== false) {
 			while (($file = readdir($dh)) !== false) {
 				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
-					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+					try {
+						$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+					}
+					catch (Exception $e) {
+					//	echo 'Project '.$this->project.': '.$e;
+					}
 				}
 			}
 		}
