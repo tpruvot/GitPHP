@@ -69,9 +69,30 @@ class GitPHP_Util
 	 * @static
 	 * @return bool true if on 64 bit
 	 */
-	public function Is64Bit()
+	public static function Is64Bit()
 	{
 		return (strpos(php_uname('m'), '64') !== false);
+	}
+
+	/**
+	 * MakeSlug
+	 *
+	 * Turn a string into a filename-friendly slug
+	 *
+	 * @access public
+	 * @param string $str string to slugify
+	 * @static
+	 * @return string slug
+	 */
+	public static function MakeSlug($str)
+	{
+		$from = array(
+			'/'
+		);
+		$to = array(
+			'-'
+		);
+		return str_replace($from, $to, $str);
 	}
 
 }
