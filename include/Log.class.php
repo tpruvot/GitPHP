@@ -179,7 +179,6 @@ class GitPHP_Log
 	public function GetEntries()
 	{
 		$data = array();
-	
 		if ($this->enabled) {
 			$endTime = microtime(true);
 			$endMem = memory_get_usage();

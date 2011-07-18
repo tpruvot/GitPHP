@@ -18,5 +18,10 @@
     <div class="attr_footer">
     	<a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP (Tanguy's branch)</a>
     </div>
+{if $debug}
+    <div class="debug_footer">
+    <!-- keep unclosed for debug log -->
+{else}
   </body>
 </html>
+{/if}

@@ -181,9 +181,11 @@ try {
 
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
+	$log='';
 	foreach ($entries as $logline) {
-		echo "\n" . $logline;
+		$log .= $logline . "\n";
 	}
+	echo trim($log);
 }
 
 ?>
