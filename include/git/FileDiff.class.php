@@ -184,6 +184,10 @@ class GitPHP_FileDiff
 	 */
 	protected $commit;
 
+	/* set from parent TreeDiff --numstat */
+	public $totAdd=0;
+	public $totDel=0;
+
 	/**
 	 * __construct
 	 *

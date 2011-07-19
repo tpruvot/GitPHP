@@ -150,6 +150,24 @@ table.treeTable img.treeSpinner {
 }
 
 /*
+ * Commit view
+ */
+
+td.commit_fadd, td.commit_fdel {
+	font-weight: 400;
+	padding-left:  2px;
+	padding-right: 1px;
+}
+
+td.commit_fadd {
+	color: darkgreen;
+}
+
+td.commit_fdel {
+	color: darkred;
+}
+
+/*
  * side-by-side-diff diff
  */
 table.diffTable {

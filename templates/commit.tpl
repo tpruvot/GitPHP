@@ -77,7 +77,8 @@
    {* Loop and show files changed *}
    {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">
-	 
+         <td class="commit_fadd">{if $diffline->totAdd}+{$diffline->totAdd}{/if}</td>
+         <td class="commit_fdel">{if $diffline->totDel}-{$diffline->totDel}{/if}</td>
        {if $diffline->GetStatus() == "A"}
          <td>
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">

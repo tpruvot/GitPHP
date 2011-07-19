@@ -167,7 +167,14 @@ class GitPHP_TreeDiff implements Iterator
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
 				try {
-					$this->fileDiffs[] = new GitPHP_FileDiff($this->project, $trimmed);
+					$fileDiff = new GitPHP_FileDiff($this->project, $trimmed);
+					$file = $fileDiff->GetFromFile();
+					if (isset($this->fileStat[$file])) {
+						$arStat = $this->fileStat[$file];
+						$fileDiff->totAdd = reset($arStat);
+						$fileDiff->totDel = next($arStat);
+					}
+					$this->fileDiffs[] = $fileDiff;
 				} catch (Exception $e) {
 				}
 			}
