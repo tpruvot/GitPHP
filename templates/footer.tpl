@@ -16,7 +16,7 @@
       {/if}
     </div>
     <div class="attr_footer">
-    	<a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP (Tanguy's branch)</a>
+    	<a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP tpruvot's branch<a> based on <a href="http://gitphp.xiphux.com/">xiphux original version</a>
     </div>
 {if $debug}
     <div class="debug_footer">
