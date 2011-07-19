@@ -459,8 +459,8 @@ class GitPHP_Project
 	{
 		if (!$this->readDescription) {
 			$this->description = file_get_contents($this->GetPath() . '/description');
-		
-			if (strpos($this->description,'Unnamed repository') !== false) {
+
+			if (strpos($this->description,'Unnamed repository; edit this file') !== false) {
 
 				$exe = new GitPHP_GitExe($this);
 				$args = array();
@@ -469,10 +469,16 @@ class GitPHP_Project
 				unset($exe);
 
 				if (empty($this->description)) {
+					$this->GetCloneUrl();
+				}
+
+				if (empty($this->description)) {
 					$this->description = '-';
+				} else {
+					// try to save project description if Unnamed (file may be protected)
+					@ file_put_contents($this->GetPath() . '/description', $this->description);
 				}
 			}
-
 			$this->readDescription = true;
 		}
 
