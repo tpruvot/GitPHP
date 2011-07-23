@@ -5,7 +5,7 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{extends file='main.tpl'}
+{extends file='projectbase.tpl'}
 
 {block name=javascript}
     {if file_exists("js/tree.min.js")}
