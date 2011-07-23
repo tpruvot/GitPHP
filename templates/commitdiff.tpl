@@ -5,7 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='main.tpl'}
+
+{block name=main}
 
  {* Nav *}
  <div class="page_nav">
@@ -111,5 +113,4 @@
 
  </div>
 
- {include file='footer.tpl'}
-
+{/block}
