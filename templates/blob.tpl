@@ -7,6 +7,14 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=css}
+{if $geshicss}
+  <style type="text/css">
+  {$geshicss}
+  </style>
+{/if}
+{/block}
+
 {block name=javascript}
     <script type="text/javascript">
       var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";

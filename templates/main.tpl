@@ -23,11 +23,8 @@
     {/block}
     <link rel="stylesheet" href="css/gitphp.css" type="text/css" />
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
-    {if $extracss}
-    <style type="text/css">
-    {$extracss}
-    </style>
-    {/if}
+    {block name=css}
+    {/block}
     {if $javascript}
     <script type="text/javascript">
       var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
