@@ -13,6 +13,8 @@
 require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Utf8.inc.php');
+
 /**
  * Commit class
  *
@@ -116,8 +118,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			$this->ReadData();
 
 		//check if utf8 is needed
-		$accents = '/[çéèàâïôîûñß]/'; //utf8_decode could be needed if this source is utf8
-		if (preg_match($accents, $this->data)) {
+		if ( !is_utf8($this->data)) {
 			$this->data = utf8_encode($this->data);
 		}
 
