@@ -8,6 +8,9 @@
 {extends file='main.tpl'}
 
 {block name=javascript}
+    <script type="text/javascript">
+      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
+    </script>
     {if file_exists("js/blame.min.js")}
     <script type="text/javascript" src="js/blame.min.js"></script>
     {else}
