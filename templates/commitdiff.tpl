@@ -7,6 +7,14 @@
  *}
 {extends file='main.tpl'}
 
+{block name=javascript}
+    {if file_exists("js/commitdiff.min.js")}
+    <script type="text/javascript" src="js/commitdiff.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/commitdiff.js"></script>
+    {/if}
+{/block}
+
 {block name=main}
 
  {* Nav *}

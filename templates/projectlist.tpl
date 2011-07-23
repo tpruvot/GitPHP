@@ -7,6 +7,14 @@
  *}
 {extends file='main.tpl'}
 
+{block name=javascript}
+    {if file_exists("js/projectsearch.min.js")}
+    <script type="text/javascript" src="js/projectsearch.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/projectsearch.js"></script>
+    {/if}
+{/block}
+
 {block name=main}
 
 <div class="index_header">

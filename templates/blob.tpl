@@ -7,6 +7,14 @@
  *}
 {extends file='main.tpl'}
 
+{block name=javascript}
+    {if file_exists("js/blame.min.js")}
+    <script type="text/javascript" src="js/blame.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/blame.js"></script>
+    {/if}
+{/block}
+
 {block name=main}
 
  <div class="page_nav">

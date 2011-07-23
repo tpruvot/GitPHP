@@ -51,13 +51,8 @@
     {else}
     <script type="text/javascript" src="js/lang.js"></script>
     {/if}
-    {foreach from=$extrascripts item=script}
-    {if file_exists("js/$script.min.js")}
-    <script type="text/javascript" src="js/{$script}.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/{$script}.js"></script>
-    {/if}
-    {/foreach}
+    {block name=javascript}
+    {/block}
     {/if}
   </head>
   <body>
