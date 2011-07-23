@@ -14,6 +14,8 @@ require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'UTF8.inc.php');
+
 /**
  * Commit class
  *
@@ -640,9 +642,8 @@ class GitPHP_FileDiff
 		}
 
 		//check if utf8 is needed
-		$accents = '/[çéèàâïôîûñß]/'; //utf8_decode could be needed if this source is utf8
-		if (preg_match($accents, $this->diffData)) {
-				$this->diffData = utf8_encode($this->diffData);
+		if ( !is_utf8($this->data)) {
+			$this->diffData = utf8_encode($this->diffData);
 		}
 
 		if ($explode)

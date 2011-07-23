@@ -13,7 +13,7 @@
 require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
-require_once(GITPHP_INCLUDEDIR . 'Utf8.inc.php');
+require_once(GITPHP_INCLUDEDIR . 'UTF8.inc.php');
 
 /**
  * Commit class
