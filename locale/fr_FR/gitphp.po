@@ -6,10 +6,10 @@
 # Zaran Krleza <zaran.krleza@gmail.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.3\n"
+"Project-Id-Version: GitPHP 0.2.4\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2011-06-19 19:05+0200\n"
+"PO-Revision-Date: 2011-07-23 14:05+0200\n"
 "Last-Translator: Tanguy Pruvot <tanguy.pruvot@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: \n"
@@ -716,3 +716,10 @@ msgstr "Impossible de lancer l'exécutable diff \"%1$s\". Vous devez définir le
 msgid "(show all)"
 msgstr "(tous)"
 
+# Message displayed when diffing two binary files.
+# %1$s: the filename of the first file
+# %2$s: the filename of the second file
+#: include/git/FileDiff.class.php:810
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
+msgstr "Fichiers %1$s et %2$s différents"
