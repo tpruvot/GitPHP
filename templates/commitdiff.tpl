@@ -5,7 +5,17 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='projectbase.tpl'}
+
+{block name=javascript}
+    {if file_exists("js/commitdiff.min.js")}
+    <script type="text/javascript" src="js/commitdiff.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/commitdiff.js"></script>
+    {/if}
+{/block}
+
+{block name=main}
 
  {* Nav *}
  <div class="page_nav">
@@ -111,5 +121,4 @@
 
  </div>
 
- {include file='footer.tpl'}
-
+{/block}

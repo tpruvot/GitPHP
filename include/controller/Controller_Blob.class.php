@@ -195,8 +195,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 		}
 
-		$this->tpl->assign('extrascripts', array('blame'));
-
 		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
 			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
 			if (class_exists('GeSHi')) {
@@ -212,8 +210,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 						$geshi->set_overall_id('blobData');
 						$this->tpl->assign('geshiout', $geshi->parse_code());
-						$this->tpl->assign('extracss', $geshi->get_stylesheet());
 						$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
+						$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 						$this->tpl->assign('geshi', true);
 						return;
 					}

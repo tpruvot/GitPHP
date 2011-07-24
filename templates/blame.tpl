@@ -5,7 +5,17 @@
  *
  * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='projectbase.tpl'}
+
+{block name=css}
+{if $geshicss}
+  <style type="text/css">
+  {$geshicss}
+  </style>
+{/if}
+{/block}
+
+{block name=main}
 
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
@@ -64,4 +74,4 @@
  </script>
 {/if}
 
- {include file='footer.tpl'}
+{/block}

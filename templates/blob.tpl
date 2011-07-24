@@ -5,7 +5,28 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='projectbase.tpl'}
+
+{block name=css}
+{if $geshicss}
+  <style type="text/css">
+  {$geshicss}
+  </style>
+{/if}
+{/block}
+
+{block name=javascript}
+    <script type="text/javascript">
+      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
+    </script>
+    {if file_exists("js/blame.min.js")}
+    <script type="text/javascript" src="js/blame.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/blame.js"></script>
+    {/if}
+{/block}
+
+{block name=main}
 
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
@@ -64,4 +85,4 @@
  </script>
 {/if}
 
- {include file='footer.tpl'}
+{/block}

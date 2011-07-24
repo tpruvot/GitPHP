@@ -5,7 +5,20 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='main.tpl'}
+
+{block name=javascript}
+    <script type="text/javascript">
+      var GITPHP_RES_NO_MATCHES_FOUND='{t escape=no}No matches found for "%1"{/t}';
+    </script>
+    {if file_exists("js/projectsearch.min.js")}
+    <script type="text/javascript" src="js/projectsearch.min.js"></script>
+    {else}
+    <script type="text/javascript" src="js/projectsearch.js"></script>
+    {/if}
+{/block}
+
+{block name=main}
 
 <div class="index_header">
 {if file_exists('templates/hometext.tpl') }
@@ -113,5 +126,10 @@ git source code archive
 
 </table>
 
-{include file='footer.tpl'}
+{/block}
+
+{block name=footer}
+  <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">{t}OPML{/t}</a>
+  <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">{t}TXT{/t}</a>
+{/block}
 
