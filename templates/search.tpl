@@ -51,10 +51,10 @@
 	  {/if}
         </em>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()}"{/if}><strong>{$result->GetTitle(50)}</strong>
+      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 80}title="{$result->GetTitle()}"{/if}><strong>{$result->GetTitle(80)}</strong>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
-          <br />{$line|highlight:$search:50}
+          <br />{$line|highlight:$search:80}
         {/foreach}
       {/if}
       </td>
