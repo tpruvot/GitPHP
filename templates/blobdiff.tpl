@@ -7,6 +7,12 @@
  *}
 {extends file='projectbase.tpl'}
 
+{if $sidebyside}
+{block name=javascript}
+    <script type="text/javascript" src="js/sidebyside.js"></script>
+{/block}
+{/if}
+
 {block name=main}
 
  <div class="page_nav">
@@ -24,11 +30,25 @@
  {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$blobparent target='blob'}
- 
- <div class="page_body">
+
+ <div class="page_body diff-file">
    <div class="diff_info">
      {* Display the from -> to diff header *}
      {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
+
+     {t}numstat{/t}:<span class="commit_fadd">{if $filediff->totAdd}+{$filediff->totAdd}{/if}</span>
+     <span class="commit_fdel">{if $filediff->totDel}-{$filediff->totDel}{/if}</span>
+
+     {if $sidebyside}
+     <div class="diff-head-links">
+       <a onclick="sbs_toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
+       <a onclick="sbs_toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
+       <a onclick="sbs_toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
+       <a onclick="sbs_toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a> | 
+       <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:first');" href="javascript:void(0)">{t}first diff{/t}</a>
+       <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:last');" href="javascript:void(0)">{t}last diff{/t}</a>
+     </div>
+     {/if}
    </div>
    {if $sidebyside}
    {* Display the sidebysidediff *}

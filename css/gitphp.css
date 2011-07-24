@@ -10,7 +10,7 @@
 
 
 /*
- * Base styles 
+ * Base styles
  */
 .monospace {
 	font-family: monospace;
@@ -22,18 +22,18 @@
  * (main header with commit message)
  */
 div.title a.title {
-	display: inline-block; 
+	display: inline-block;
 }
 
 
 /*
  * Full log view
  */
-div.log_body { 
-	padding: 8px 8px 8px 150px; 
+div.log_body {
+	padding: 8px 8px 8px 150px;
 }
-span.age { 
-	position: relative; 
+span.age {
+	position: relative;
 	float: left;
 	width: 142px;
 }
@@ -41,7 +41,7 @@ div.log_link {
 	margin: -5px 0px;
 	padding: 0px 8px;
 	position: relative;
-	float: left; 
+	float: left;
 	width: 136px;
 }
 
@@ -49,17 +49,17 @@ div.log_link {
 /*
  * Diff display
  */
-.pre { 
-	white-space: pre; 
+.pre {
+	white-space: pre;
 }
 
 
 /*
  * Search box
  */
-div.search { 
-	margin: 4px 8px; 
-	position: absolute; 
+div.search {
+	margin: 4px 8px;
+	position: absolute;
 	top: 56px;
 	right: 12px
 }
@@ -160,16 +160,33 @@ td.commit_fadd, td.commit_fdel {
 }
 
 td.commit_fadd {
-	color: darkgreen;
+	color: darkGreen;
 }
 
 td.commit_fdel {
-	color: darkred;
+	color: darkRed;
 }
 
 /*
- * side-by-side-diff diff
+ * side-by-side diff
  */
+
+div.diff-head-links {
+	text-align: right;
+	width: 450px;
+	height: 11px;
+	right: 0px;
+	float: right;
+	margin-right: 20px;
+	line-height: 14px;
+	font-family: sans-serif;
+	font-style: normal;
+}
+
+div.diff-head-links a {
+	text-decoration: none;
+}
+
 table.diffTable {
 	border-spacing:0px;
 	width: 100%;
@@ -182,12 +199,59 @@ table.diffTable td {
 	line-height: 11px;
 }
 
+table.diffTable td.ln {
+	width: 15px;
+	font-size: 11px;
+	line-height: 11px;
+	color: gray;
+}
+
+table.diffTable td.ln.left {
+	border-right: 1px solid silver;
+}
+table.diffTable td.ln.right {
+	border-left: 1px solid silver;
+}
+
+/* toggle line numbers or side
+ * for copy/paste
+ */
+.diffTable .hidden {
+	visibility: hidden;
+}
+
+table.diffTable td.diff-left,
+table.diffTable td.diff-right {
+	height:11px;
+}
+
+/* source code for white spaces */
+.diff-added span.line,
+.diff-modified span.line {
+	border-right: 1px dotted silver;
+}
+.diffTable span.tab {
+	border-right: 1px dotted silver;
+	background-color: #F0F0F0;
+	opacity: 0.5;
+}
+
 /*
  * side-by-side commitdiff
  */
 div.commitDiffSBS div.SBSTOC .showAll
 {
 	display: none;
+}
+
+li.SBSTOCFile {
+	list-style-type: circle;
+}
+li.SBSTOCFile span.add {
+	color: darkGreen;
+}
+li.SBSTOCFile span.del {
+	color: darkRed;
 }
 
 /*
@@ -213,7 +277,7 @@ div.debug_footer
 	font: normal normal 1em/1.2em monospace;
 	margin: 0;
 	padding: 0;
-	background: none; 
+	background: none;
 	vertical-align: top;
 }
 

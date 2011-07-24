@@ -117,6 +117,9 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('file', $this->params['file']);
 
 		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
+
+		$filediff->GetStats();
+
 		$this->tpl->assign('filediff', $filediff);
 
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {

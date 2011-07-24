@@ -55,10 +55,16 @@
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=snapshot&amp;h={$commit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
+       {assign var=baseurl value=urlencode($project->GetProject())}
+       {assign var=hc value=$commit->GetHash()}
+       {assign var=hp value=$par->GetHash()}
        <tr>
          <td>{t}parent{/t}</td>
-	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$par->GetHash()}" class="list">{$par->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$par->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}&amp;hp={$par->GetHash()}">{t}commitdiff{/t}</a></td>
+	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}" class="list">{$hp}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}">{t}commit{/t}</a> | <a 
+           href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=unified">{t}commitdiff{/t} {t}unified{/t}</a> | <a
+           href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=sidebyside">{t}side by side{/t}</a>
+         </td>
        </tr>
      {/foreach}
    </table>

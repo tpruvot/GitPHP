@@ -13,6 +13,10 @@
     {else}
     <script type="text/javascript" src="js/commitdiff.js"></script>
     {/if}
+
+  {if $sidebyside}
+    <script type="text/javascript" src="js/sidebyside.js"></script>
+  {/if}
 {/block}
 
 {block name=main}
@@ -33,7 +37,7 @@
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
- 
+
  <div class="page_body">
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
@@ -50,14 +54,14 @@
        <li class="listcount">
        {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t} [+/- {$treediff->StatCount()}] <a href="#" class="showAll">{t}(show all){/t}</a></li>
        {foreach from=$treediff item=filediff}
-       <li>
+       <li class="SBSTOCFile">
        <a href="#{$filediff->GetFromHash()}_{$filediff->GetToHash()}" class="SBSTOCItem">
        {if $filediff->GetStatus() == 'A'}
-         {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if} {t}(new){/t}
+         {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a> <span class="add">{t}(new){/t}</span>
        {elseif $filediff->GetStatus() == 'D'}
-         {if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetToFile()}{/if} {t}(deleted){/t}
+         {if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetToFile()}{/if}</a> <span class="del">{t}(deleted){/t}</span>
        {elseif $filediff->GetStatus() == 'M'}
-         {if $filediff->GetFromFile()}
+	 {if $filediff->GetFromFile()}
 	   {assign var=fromfilename value=$filediff->GetFromFile()}
 	 {else}
 	   {assign var=fromfilename value=$filediff->GetFromHash()}
@@ -67,9 +71,10 @@
 	 {else}
 	   {assign var=tofilename value=$filediff->GetToHash()}
 	 {/if}
-	 {$fromfilename}{if $fromfilename != $tofilename} -&gt; {$tofilename}{/if}
+	 {$fromfilename}</a>{if $fromfilename != $tofilename} -&gt; {$tofilename}{/if}
+	 <span class="add">{if $filediff->totAdd}+{$filediff->totAdd}{/if}</span>
+	 <span class="del">{if $filediff->totDel}-{$filediff->totDel}{/if}</span>
        {/if}
-       </a>
        </li>
        {/foreach}
        </ul>
@@ -80,7 +85,7 @@
 
    {* Diff each file changed *}
    {foreach from=$treediff item=filediff}
-     <div class="diffBlob" id="{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
+     <div class="diffBlob diff-file" id="{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
        {assign var=localfromtype value=$filediff->GetFromFileType(1)}
@@ -97,11 +102,22 @@
      {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
        {assign var=localtotype value=$filediff->GetToFileType(1)}
        {$localtotype}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$filediff->GetToHash()}&amp;hb={$commit->GetHash()}{if $filediff->GetToFile()}&amp;f={$filediff->GetToFile()}{/if}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
-
        {if $filediff->GetStatus() == 'A'}
          {t}(new){/t}
        {/if}
      {/if}
+
+     {if $sidebyside and $filediff->GetStatus() == 'M'}
+         <div class="diff-head-links">
+         <a onclick="sbs_toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
+         <a onclick="sbs_toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
+         <a onclick="sbs_toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
+         <a onclick="sbs_toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a> | 
+         <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:first');" href="javascript:void(0)">{t}first diff{/t}</a>
+         <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:last');" href="javascript:void(0)">{t}last diff{/t}</a>
+         </div>
+     {/if}
+
      </div>
      {if $sidebyside}
         {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}

@@ -416,13 +416,13 @@ div.diff_info {
 	background-color: #ddd;
 }
 .diffTable tr.light-codedel:hover td.diff-left {
-	background-color: #EEBBBB;
+	background-color: #F4BFBF;
 }
 .diffTable tr.dark-codedel td.diff-left {
 	background-color: #FFD5D5;
 }
 .diffTable tr.dark-codedel:hover td.diff-left {
-	background-color: #EEBBBB;
+	background-color: #F4BFBF;
 }
 
 /* Added (green) */
@@ -442,18 +442,31 @@ div.diff_info {
 	background-color: #B1EFB1;
 }
 
-/* Modified (blue) */
-.diffTable tr.diff-modified td {
-	background-color: #DDEEFF;
+/* Modified (red/green) */
+.diffTable tr.light-codemod td.diff-left {
+	background-color: #FFDDDD;
 }
-.diffTable tr.light-codemod:hover td {
-	background-color: #CCE0F0;
+.diffTable tr.light-codemod:hover td.diff-left {
+	background-color: #F4BFBF;
 }
-.diffTable tr.dark-codemod td {
-	background-color: #D9E9F9;
+.diffTable tr.dark-codemod td.diff-left {
+	background-color: #FFD5D5;
 }
-.diffTable tr.dark-codemod:hover td {
-	background-color: #CCE0F0;
+.diffTable tr.dark-codemod:hover td.diff-left {
+	background-color: #F4BFBF;
+}
+
+.diffTable tr.light-codemod td.diff-right {
+	background-color: #C1FFC1;
+}
+.diffTable tr.light-codemod:hover td.diff-right {
+	background-color: #B1EFB1;
+}
+.diffTable tr.dark-codemod td.diff-right {
+	background-color: #B9F9B9;
+}
+.diffTable tr.dark-codemod:hover td.diff-right {
+	background-color: #B1EFB1;
 }
 
 /*
