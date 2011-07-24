@@ -27,16 +27,16 @@ Enhancements :
   made with a new config variable "fixupjs" where we can add a jQuery script
 + Show file line changes +/- in Commit view
 + New options to toggle display of owner and for default sort order of project list
++ Side by Side scroll and jumps
 
 Addons :
-+ Gitweb blue skin (based on gitphp-glip, many fixes made... need some css cleanup)
-
++ Gitweb alternative skin, blue (based on gitphp-glip theme, many fixes made... need some css cleanup)
 
 
 TODO :
 ======
 
-- Implement Remote Branch
+- Implement Remote Branches
 
 - Finish .repo projects to check android platform status
   .repo folder contains all subprojects .git folders (in progress)
