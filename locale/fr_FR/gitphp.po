@@ -137,7 +137,7 @@ msgstr[1] "%1 fichiers modifiés :"
 # %2: the mode
 #: templates/commit.tpl
 msgid "new %1 with mode %2"
-msgstr "%1 ajouté avec le mode %2"
+msgstr "%1 ajouté mode : %2"
 
 # Used to indicate a new object was added
 # %1: the type of object
