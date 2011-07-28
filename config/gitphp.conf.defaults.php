@@ -402,14 +402,15 @@ $gitphp_conf['fixupjs'] = <<<EOT
     jQuery('#blobData').find('pre span').each( function() {
         var el = jQuery(this);
         if (el.css('font-weight') != 'normal') {
-          el.css('font-weight','normal');
-          el.css('text-shadow','silver 1px 1px 1px'); //chrome 11
+          el.css({ 'font-weight':'normal',
+                   'text-shadow':'#f0f0f0 1px 1px 1px'
+          }); //chrome line height
         }
         if (el.css('font-style') == 'italic') {
-          el.css('font-style','normal');
-          el.css('opacity','0.7');
+          el.css({ 'font-style':'normal' });
         }
     });
+
 EOT;
 
 
