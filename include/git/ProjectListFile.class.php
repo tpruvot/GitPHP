@@ -72,7 +72,10 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 						}
 						$this->projects[$regs[1]] = $projObj;
 					} catch (Exception $e) {
+						GitPHP_Log::GetInstance()->Log($e->getMessage());
 					}
+				} else {
+					GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $regs[1]));
 				}
 			}
 		}
