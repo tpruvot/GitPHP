@@ -81,8 +81,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		$Config = GitPHP_Config::GetInstance();
 
 		$this->bareOnly    = $Config->GetValue('bareonly', true);
-		$this->repoSupport = $Config->GetValue('reposupport', false);
 		$this->sublevels   = $Config->GetValue('subfolder_levels', 0);
+		$this->repoSupport = $Config->GetValue('reposupport', false);
 
 		parent::__construct();
 	}
