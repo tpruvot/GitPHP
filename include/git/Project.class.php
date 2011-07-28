@@ -1697,10 +1697,15 @@ class GitPHP_Project
 	private function ReadPacks()
 	{
 		$dh = opendir($this->GetPath() . '/objects/pack');
-		if ($dh !== false) {
-			while (($file = readdir($dh)) !== false) {
-				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+		if ($dh === false) {
+			return;
+		}
+		while (($file = readdir($dh)) !== false) {
+			if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+				try {
 					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+				} catch (Exception $e) {
+					GitPHP_Log::GetInstance()->Log($this->project.': error in '.$file);
 				}
 			}
 		}
