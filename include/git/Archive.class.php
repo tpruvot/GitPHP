@@ -122,8 +122,9 @@ class GitPHP_Archive
 	 */
 	public function SetFormat($format)
 	{
-		if ((($format == GITPHP_COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-		    (($format == GITPHP_COMPRESS_GZ) && (!function_exists('gzencode')))) {
+		// TODO re-enable gz and bz2 when I figure out why it's broken with smarty 3
+		if ((($format == GITPHP_COMPRESS_BZ2) && (!function_exists('bzcompress') || true)) ||
+		    (($format == GITPHP_COMPRESS_GZ) && (!function_exists('gzencode') || true))) {
 		    /*
 		     * Trying to set a format but doesn't have the appropriate
 		     * compression function, fall back to tar
@@ -392,7 +393,7 @@ class GitPHP_Archive
 
 		switch ($this->format) {
 			case GITPHP_COMPRESS_BZ2:
-				$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
+				//$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
 				break;
 			case GITPHP_COMPRESS_GZ:
 				$data = gzencode($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
@@ -448,10 +449,11 @@ class GitPHP_Archive
 		// TODO check for git > 1.4.3 for zip
 		$formats[GITPHP_COMPRESS_ZIP] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
 
-		if (function_exists('bzcompress'))
+		// TODO re-enable gz and bz2 when I figure out why it's broken with smarty 3
+		if (function_exists('bzcompress') && false)
 			$formats[GITPHP_COMPRESS_BZ2] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
 
-		if (function_exists('gzencode'))
+		if (function_exists('gzencode') && false)
 			$formats[GITPHP_COMPRESS_GZ] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
 
 		return $formats;
