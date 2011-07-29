@@ -212,6 +212,17 @@ table.diffTable td.ln.left {
 table.diffTable td.ln.right {
 	border-left: 1px solid silver;
 }
+/* side-by-side diffs "a name" */
+table.diffTable td.diff-num {
+	padding:0;
+	margin:0;
+	border: 0;
+	width: 1px;
+}
+table.diffTable td.diff-num a {
+	visibility: hidden;
+	font-size: 0;
+}
 
 /* toggle line numbers or side
  * for copy/paste

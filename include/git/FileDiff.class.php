@@ -190,6 +190,9 @@ class GitPHP_FileDiff
 	public $totAdd=0;
 	public $totDel=0;
 
+	/* count of diff blocs for <a names> */
+	public $diffCount=0;
+
 	/**
 	 * __construct
 	 *
@@ -686,15 +689,13 @@ class GitPHP_FileDiff
 				array("-U0", $this->fromHash,
 					$this->toHash)));
 		}
-
 		unset($exe);
-		$totAdd = 0;
-		$totDel = 0;
 
 		//
 		// parse diffs
 		$diffs = array();
 		$currentDiff = FALSE;
+		$totAdd = 0; $totDel = 0; $idx = 0;
 		foreach($diffLines as $d) {
 			if(strlen($d) == 0)
 				continue;
@@ -745,47 +746,56 @@ class GitPHP_FileDiff
 		//
 		// iterate over diffs
 		$output = array();
-		$lnl = 0; $lnr = 0;
+		$lnl = 0; $lnr = 0; $num = 0;
 		foreach($diffs as $d) {
 			while($lnl+1 < $d['line']) {
 				$h = $blob[$lnl];
 				$lnl ++; $lnr++;
-				$output[] = array('', $h, $h, $lnl, $lnr);
+				$output[] = array('', $h, $h, $lnl, $lnr, FALSE);
 			}
 
 			if(empty($d['left'])) {
 				$mode = 'added';
+				$num++;
 			} elseif(empty($d['right'])) {
 				$mode = 'deleted';
+				$num++;
 			} else {
 				$mode = 'modified';
+				$num++;
 			}
+			$disp_num = $num;
 
-			$cnt = max( count($d['left']), count($d['right']) );
+			$nbl = count($d['left']);
+			$nbr = count($d['right']);
+			$cnt = max( $nbl, $nbr );
 			for($i = 0; $i < $cnt; $i++) {
-				if ($i < count($d['left'])) {
+				if ($i < $nbl) {
 					$left = $d['left'][$i];
 					$disp_l = ++$lnl;
 				} else {
 					$left = FALSE;
 					$disp_l = FALSE;
 				}
-				if ($i < count($d['right'])) {
+				if ($i < $nbr) {
 					$right = $d['right'][$i];
 					$disp_r = ++$lnr;
 				} else {
 					$right = FALSE;
 					$disp_r = FALSE;
 				}
-				$output[] = array($mode, $left, $right, $disp_l, $disp_r);
+				$output[] = array($mode, $left, $right, $disp_l, $disp_r, $disp_num);
+
+				//only set Diff number on first line of diff.
+				$disp_num = FALSE;
 			}
 		}
 
-		while($lnl < count($blob)) {
-			$h = $blob[$lnl];
-			$lnl ++;
-			$output[] = array('', $h, $h, $lnl, $lnl);
+		for($lnl=$lnl; $lnl < count($blob); $lnl++) {
+			$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, $lnl, FALSE);
 		}
+
+		$this->diffCount = $num;
 
 		$this->diffDataSplit = $output;
 		return $output;
