@@ -54,7 +54,7 @@ function sbs_toggleLeft(refElem) {
 		dv.find('td').removeClass('hidden').show();
 		nums.removeClass('hidden').show();
 	} else {
-		dv.find('td.diff-right').addClass('hidden').hide();
+		dv.find('td').addClass('hidden').hide();
 		nums.addClass('hidden').hide();
 		col.removeClass('hidden').show();
 	}
@@ -70,14 +70,14 @@ function sbs_toggleRight(refElem) {
 		dv.find('td').removeClass('hidden').show();
 		nums.removeClass('hidden').show();
 	} else {
-		dv.find('td.diff-left').addClass('hidden').hide();
+		dv.find('td').addClass('hidden').hide();
 		nums.addClass('hidden').hide();
 		col.removeClass('hidden').show();
 	}
 }
 
 /*
- * Scroll to diff in a ScrollPanel
+ * Scroll to diff in a ScrollPanel (not used yet)
  *
  * refElem    source html control (for multiple panels)
  * focusClass target css class to focus ex: tr.diff-focus:last
