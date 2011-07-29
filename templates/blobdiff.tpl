@@ -46,7 +46,7 @@
        <a onclick="sbs_toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
        <a onclick="sbs_toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a> | 
        <a href="#D1">{t}first diff{/t}</a>
-       <a href="#D{$filediff->diffCount}">{t}last diff{/t}</a>
+       <a href="#D{$filediff->diffCount}">{t}last diff{/t}</a> ({$filediff->diffCount})
      </div>
      {/if}
    </div>
