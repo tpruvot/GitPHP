@@ -98,6 +98,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
+		// HACK workaround for strange behavior of CACHING_LIFETIME_SAVED in smarty 3
+		$oldLifetime = GitPHP_Cache::GetObjectCacheInstance()->GetLifetime();
+		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime(GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
+
 		$key = 'projectdir|' . $this->projectDir . '|projectlist|directory';
 		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 		if ($cached && (count($cached) > 0)) {
@@ -105,6 +109,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$this->AddProject($proj);
 			}
 			GitPHP_Log::GetInstance()->Log('Loaded ' . count($this->projects) . ' projects from cache');
+			GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
 			return;
 
 		} elseif (!GitPHP_Cache::GetObjectCacheInstance()->GetEnabled()) {
@@ -142,6 +147,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$this->CacheSaveProjectList();
 			}
 		}
+		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
 	}
 
 	/**
