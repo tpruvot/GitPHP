@@ -107,8 +107,12 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 					$projectPath = substr($fullPath, strlen($projectRoot));
 
 					$projObj = new GitPHP_Project($projectRoot, $projectPath);
+					$projObj->isAndroidRepo = true;
 
 					$remoteName = $repository['remote'];
+					$projObj->repoRemote = $remoteName;
+					$projObj->repoBranch = $repository['revision'];
+
 					$projOwner = $repository['name'];
 					if (!empty($projOwner)) {
 						if (strpos($projOwner,'/') > 0)

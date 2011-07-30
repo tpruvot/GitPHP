@@ -278,7 +278,9 @@ class GitPHP_Project
 	/**
 	 * .repo bare folders (by tpruvot)
 	 */
-	protected $isAndroidRepo = false;
+	public $isAndroidRepo = false;
+	public $repoRemote = "origin";
+	public $repoBranch = "master";
 
 	/**
 	 * __construct
@@ -813,7 +815,9 @@ class GitPHP_Project
 	{
 		$this->readHeadRef = true;
 
-		if ($this->GetCompat()) {
+		if ($this->isAndroidRepo) {
+			$this->ReadHeadCommitRepo();
+		} elseif ($this->GetCompat()) {
 			$this->ReadHeadCommitGit();
 		} else {
 			$this->ReadHeadCommitRaw();
@@ -857,6 +861,25 @@ class GitPHP_Project
 			if (isset($this->heads[$regs[1]])) {
 				$this->head = $this->heads[$regs[1]]->GetHash();
 			}
+		}
+	}
+
+	/**
+	 * ReadHeadCommitRepo
+	 *
+	 * Read head commit for repo (no HEAD)
+	 *
+	 * @access private
+	 */
+	private function ReadHeadCommitRepo()
+	{
+		/* standard pointer to head */
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		$head = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
+		if (is_object($this->remotes[$head])) {
+			$this->head = $this->remotes[$head]->GetHash();
 		}
 	}
 
@@ -1092,7 +1115,7 @@ class GitPHP_Project
 	{
 		$this->readRefs = true;
 
-		if ( is_file($this->GetPath() . '/.repopickle_config') ) {
+		if ( !$this->isAndroidRepo && is_file($this->GetPath() . '/.repopickle_config') ) {
 			//.repo projects doesn't store refs/heads
 			$this->isAndroidRepo = true;
 		}
