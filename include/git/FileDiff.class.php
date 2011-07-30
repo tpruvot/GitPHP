@@ -644,10 +644,10 @@ class GitPHP_FileDiff
 
 		}
 
-		//check if utf8 is needed
-		if ( !is_utf8($this->data)) {
-			$this->diffData = utf8_encode($this->diffData);
-		}
+		//check if utf8 is needed (depends of current LANG env variable)
+		//if ( !is_utf8($this->data)) {
+		//	$this->diffData = utf8_encode($this->diffData);
+		//}
 
 		if ($explode)
 			return explode("\n", $this->diffData);
