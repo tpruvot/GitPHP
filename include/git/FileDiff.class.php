@@ -791,8 +791,9 @@ class GitPHP_FileDiff
 			}
 		}
 
-		for($lnl=$lnl; $lnl < count($blob); $lnl++) {
-			$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, $lnl, FALSE);
+		while ($lnl < count($blob)) {
+			$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, ++$lnr, FALSE);
+			$lnl++;
 		}
 
 		$this->diffCount = $num;
