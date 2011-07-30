@@ -134,8 +134,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				}
 
 				if (is_file($fullPath . '/HEAD')) {
-					GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $fullPath));
 					$projectPath = substr($fullPath, $trimlen);
+					GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $projectPath));
 					try {
 						$proj = new GitPHP_Project($this->projectDir, $projectPath);
 						$proj->SetCategory(trim(substr($dir, strlen($this->projectDir)), '/'));

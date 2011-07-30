@@ -16,6 +16,7 @@ require_once(GITPHP_GITOBJECTDIR . 'ProjectListFile.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListArray.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListArrayLegacy.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListScmManager.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListManifest.class.php');
 
 /**
  * ProjectList class
@@ -67,12 +68,13 @@ class GitPHP_ProjectList
 		if (self::$instance)
 			return;
 
-
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (isset($git_projects)) {
 				if (is_string($git_projects)) {
 					if (function_exists('simplexml_load_file') && GitPHP_ProjectListScmManager::IsSCMManager($git_projects)) {
 						self::$instance = new GitPHP_ProjectListScmManager($git_projects);
+					} elseif (function_exists('simplexml_load_file') && GitPHP_ProjectListManifest::IsRepoManifest($git_projects)) {
+						self::$instance = new GitPHP_ProjectListManifest($git_projects);
 					} else {
 						self::$instance = new GitPHP_ProjectListFile($git_projects);
 					}
@@ -88,6 +90,9 @@ class GitPHP_ProjectList
 
 		if (!self::$instance) {
 
+			if (!isset($git_projects)) {
+				$git_projects = NULL;
+			}
 			$cache = new GitPHP_ProjectListDirCached($git_projects);
 
 			if ($cache->Count()) {
