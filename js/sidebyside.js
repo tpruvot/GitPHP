@@ -115,6 +115,12 @@ function sbs_scrollToDiff(refElem, focusClass) {
 
 $(document).ready(function() {
 
+	var sbsTOC = $('div.commitDiffSBS div.SBSTOC');
+	if (sbsTOC.size() > 0) {
+		//only resize height in blobdiff view
+		return;
+	}
+
 	var h = Math.max(window.innerHeight - 250, 500);
 	jQuery('.scrollPanel')
 	.css('max-height', h.toString() + 'px')
