@@ -999,6 +999,8 @@ class GitPHP_Project
 				}
 			}
 			return null;
+		} else if (strlen($hash) < 40) {
+			$hash = $this->GetFullHash($hash);
 		}
 
 		if (preg_match('/[0-9a-f]{40}/i', $hash)) {
@@ -1877,6 +1879,36 @@ class GitPHP_Project
 	}
 
 /*}}}1*/
+
+	/**
+	 * GetFullHash
+	 *
+	 * Find Hash by abbrev hash
+	 *
+	 * @access public
+	 * @return string(40) full hash
+	 */
+	public function GetFullHash($prefix) {
+
+		$exe = new GitPHP_GitExe($this);
+
+		$args = array();
+		$args[] = '--pretty=format:%H';
+		$args[] = '-1';
+		$args[] = $prefix;
+
+		$revlist = explode("\n", $exe->Execute("log", $args));
+		unset($exe);
+
+		if (empty($revlist)) {
+			//if duplicates or not found
+			return $prefix;
+		}
+
+		$hash = reset($revlist);
+		
+		return $hash;
+	}
 
 /* static utilities {{{1*/
 
