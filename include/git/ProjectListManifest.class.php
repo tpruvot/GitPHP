@@ -70,8 +70,13 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			throw new Exception(sprintf('Could not load Manifest %1$s', $this->projectConfig));
 		}
 
-		//remotes list
-		$remotes = $xml->remote;
+		//remotes list to associative array
+		$remotes = array();
+		foreach ($xml->remote as $k => $remote) {
+			$remoteName = (string) $remote['name'];
+			$remotes[$remoteName] = (array) $remote;
+			$remotes[$remoteName] = $remotes[$remoteName]['@attributes'];
+		}
 
 		//default branch/tag (revision attribute)
 		//        remote (remote attribute)
@@ -100,19 +105,33 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			if (is_file($fullPath . '/HEAD')) {
 				try {
 					$projectPath = substr($fullPath, strlen($projectRoot));
-					GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $projectPath));
 
 					$projObj = new GitPHP_Project($projectRoot, $projectPath);
 
-					$projOwner = trim($repository['name']);
+					$remoteName = $repository['remote'];
+					$projOwner = $repository['name'];
 					if (!empty($projOwner)) {
 						if (strpos($projOwner,'/') > 0)
 							$projOwner = substr($projOwner,0,strpos($projOwner,'/'));
 						$projObj->SetOwner($projOwner);
-						$projObj->SetCategory($repository['remote'].' - '.$projOwner);
+						$projObj->SetCategory($remoteName.' - '.$projOwner);
 					}
 
-					$projObj->SetDescription($repository['remote'].':'.$repository['name']);
+					$projObj->SetDescription($remoteName.':'.$repository['name']);
+
+					//remote url + project name
+					$remoteUrl = @ $remotes[$remoteName]['fetch'];
+					if (!empty($remoteUrl)) {
+						$remoteUrl .= $repository['name'].'.git';
+						$projObj->SetCloneUrl($remoteUrl);
+					}
+
+					//gerrit
+					$remoteUrl = @ $remotes[$remoteName]['review'];
+					if (!empty($remoteUrl)) {
+						$remoteUrl = 'http://'.$remoteUrl.'/#q,project:'.$repository['name'];
+						$projObj->SetBugUrl($remoteUrl);
+					}
 
 					$this->projects[$projPath] = $projObj;
 
@@ -123,6 +142,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
 			}
 		}
+		GitPHP_Log::GetInstance()->Log(sprintf('Found %1$d projects in manifest', count($xml->project)));
 	}
 
 	/**
