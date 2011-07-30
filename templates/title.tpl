@@ -40,6 +40,12 @@
 			{else}
 			  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=heads" class="title">{t}heads{/t}</a>
 			{/if}
+		{elseif $target == 'remotes'}
+			{if $disablelink}
+			  {t}heads{/t}
+			{else}
+			  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=remotes" class="title">{t}heads{/t}</a> (remote)
+			{/if}
 		{else}
 			&nbsp;
 		{/if}

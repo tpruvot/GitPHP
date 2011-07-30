@@ -125,6 +125,15 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			}
 			$this->tpl->assign('headlist', $headlist);
 		}
+
+		$remotelist = $this->project->GetRemotes(6);
+		if ($remotelist) {
+			if (count($remotelist) > 6) {
+				$this->tpl->assign('hasmoreremotes', true);
+				$remotelist = array_slice($remotelist, 0, 6);
+			}
+			$this->tpl->assign('remotelist', $remotelist);
+		}
 	}
 
 }

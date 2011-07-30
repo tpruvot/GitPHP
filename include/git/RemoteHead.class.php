@@ -1,9 +1,10 @@
 <?php
 /**
- * GitPHP Head
+ * GitPHP RemoteHead
  *
- * Represents a single head
+ * Represents a single remote head
  *
+ * @author Tanguy Pruvot <tanguy.pruvot@gmail.com>
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
@@ -13,12 +14,12 @@
 require_once(GITPHP_GITOBJECTDIR . 'Ref.class.php');
 
 /**
- * Head class
+ * RemoteHead class
  *
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Head extends GitPHP_Ref
+class GitPHP_RemoteHead extends GitPHP_Ref
 {
 
 	/**
@@ -42,9 +43,26 @@ class GitPHP_Head extends GitPHP_Ref
 	 * @return mixed head object
 	 * @throws Exception exception on invalid head or hash
 	 */
-	public function __construct($project, $head, $headHash = '', $refDir='heads')
+	public function __construct($project, $head, $headHash = '', $refDir='remotes')
 	{
 		parent::__construct($project, $refDir, $head, $headHash);
+	}
+
+	/*
+	 * GetRemoteName
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function GetRemoteName() {
+		$ref = $this->GetName();
+
+		// exclude branch name
+		$ar = explode('/',$ref);
+		array_pop($ar);
+		$remote = implode('/',$ar);
+
+		return $remote;
 	}
 
 	/**

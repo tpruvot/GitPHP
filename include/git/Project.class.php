@@ -16,6 +16,8 @@ require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 
+require_once(GITPHP_GITOBJECTDIR . 'RemoteHead.class.php');
+
 /**
  * Project class
  *
@@ -164,6 +166,15 @@ class GitPHP_Project
 	protected $heads = array();
 
 	/**
+	 * remotes
+	 *
+	 * Stores the remotes for the project
+	 *
+	 * @access protected
+	 */
+	protected $remotes = array();
+
+	/**
 	 * readRefs
 	 *
 	 * Stores whether refs have been read yet
@@ -263,6 +274,11 @@ class GitPHP_Project
 /*}}}1*/
 
 /* class methods {{{1*/
+
+	/**
+	 * .repo bare folders (by tpruvot)
+	 */
+	protected $isAndroidRepo = false;
 
 	/**
 	 * __construct
@@ -539,7 +555,15 @@ class GitPHP_Project
 
 				$exe = new GitPHP_GitExe($this);
 				$args = array();
-				$args[] = 'remote.origin.url';
+				if (empty($this->remotes)) {
+					$remote = 'origin';
+				} else {
+					//get first remote
+					$rm = reset($this->remotes);
+					$remote = $rm->GetRemoteName();
+				}
+
+				$args[] = 'remote.'.$remote.'.url';
 				$this->description = $exe->Execute(GIT_CONFIG, $args);
 				unset($exe);
 
@@ -1068,7 +1092,12 @@ class GitPHP_Project
 	{
 		$this->readRefs = true;
 
-		if ($this->GetCompat()) {
+		if ( is_file($this->GetPath() . '/.repopickle_config') ) {
+			//.repo projects doesn't store refs/heads
+			$this->isAndroidRepo = true;
+		}
+
+		if ($this->GetCompat() && !$this->isAndroidRepo) {
 			$this->ReadRefListGit();
 		} else {
 			$this->ReadRefListRaw();
@@ -1128,6 +1157,40 @@ class GitPHP_Project
 	{
 		$pathlen = strlen($this->GetPath()) + 1;
 
+		// remotes
+		if ($this->isAndroidRepo ) {
+			$heads = $this->ListDir($this->GetPath() . '/refs/remotes');
+			for ($i = 0; $i < count($heads); $i++) {
+
+				//sample 'gingerbread' content in 'm' folder:
+				//  ref: refs/remotes/github/gingerbread
+				$head = trim(file_get_contents($heads[$i]));
+				if (preg_match('/^ref: (.+)$/', $head, $regs)) {
+					$heads[$i] = $this->GetPath() . "/". $regs[1];
+				}
+
+				$key = trim(substr($heads[$i], $pathlen), "/\\");
+
+				if (isset($this->remotes[$key])) {
+					continue;
+				}
+
+				if (is_file($heads[$i])) {
+					$hash = trim(file_get_contents($heads[$i]));
+					if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+						
+						$head = substr($key, strlen('refs/remotes/'));
+						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
+						
+						//get them as heads until remote list is implemented
+						//$head = substr($key, strlen('refs/remotes/'));
+						//$this->heads[$key] = new GitPHP_Head($this, $head, $hash, 'head');
+					}
+				}
+			}
+			//var_dump($this->remotes);
+		}
+
 		// read loose heads
 		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
 		for ($i = 0; $i < count($heads); $i++) {
@@ -1179,7 +1242,7 @@ class GitPHP_Project
 
 				$lastRef = null;
 
-				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads)\/(.+)$/', $ref, $regs)) {
+				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads|remotes)\/(.+)$/', $ref, $regs)) {
 					// standard tag/head
 					$key = 'refs/' . $regs[2] . '/' . $regs[3];
 					if ($regs[2] == 'tags') {
@@ -1362,6 +1425,78 @@ class GitPHP_Project
 /*}}}2*/
 
 /* head loading methods {{{2*/
+
+	/**
+	 * GetRemotes
+	 *
+	 * Gets list of remotes for this project
+	 *
+	 * @access public
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	public function GetRemotes($count = 0)
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetRemotesGit($count);
+		} else {
+			return $this->GetRemotesRaw($count);
+		}
+	}
+	/**
+	 * GetRemotesGit
+	 *
+	 * Gets the list of sorted heads using the git executable
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetRemotesGit($count = 0)
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '-r';
+		$ret = $exe->Execute('remote', $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		$remotes = array();
+		foreach ($lines as $ref) {
+			if (isset($this->remotes[$ref])) {
+				$remotes[] = $this->remotes[$ref];
+			}
+		}
+		if (($count > 0) && (count($remotes) > $count)) {
+			$remotes = array_slice($remotes, 0, $count);
+		}
+
+		return $remotes;
+	}
+
+	/**
+	 * GetRemotesRaw
+	 *
+	 * Gets the list of sorted heads using raw git objects
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetRemotesRaw($count = 0)
+	{
+		$heads = $this->remotes;
+		usort($heads, array('GitPHP_RemoteHead', 'CompareAge'));
+
+		if (($count > 0) && (count($heads) > $count)) {
+			$heads = array_slice($heads, 0, $count);
+		}
+		return $heads;
+	}
 
 	/**
 	 * GetHeads
