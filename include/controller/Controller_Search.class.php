@@ -145,7 +145,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			switch ($this->params['searchtype']) {
 
 				case GITPHP_SEARCH_COMMIT:
-					$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					if (preg_match('/^([0-9a-f]{5,40})$/i', $this->params['search'], $regs)) {
+						$hash = $this->project->GetFullHash($this->params['search']);
+						$this->params['search'] = $hash;
+					} else {
+						$hash = $co->GetHash();
+					}
+					$results = $this->project->SearchCommit($this->params['search'], $hash, 101, ($this->params['page'] * 100));
 					break;
 
 				case GITPHP_SEARCH_AUTHOR:

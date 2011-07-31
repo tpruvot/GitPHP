@@ -850,7 +850,7 @@ class GitPHP_Project
 	private function ReadHeadCommitRaw()
 	{
 		$head = trim(file_get_contents($this->GetPath() . '/HEAD'));
-		if (preg_match('/^([0-9A-Fa-f]{40})$/', $head, $regs)) {
+		if (preg_match('/^([0-9a-f]{40})$/i', $head, $regs)) {
 			/* Detached HEAD */
 			$this->head = $regs[1];
 		} else if (preg_match('/^ref: (.+)$/', $head, $regs)) {
@@ -1200,7 +1200,7 @@ class GitPHP_Project
 
 				if (is_file($heads[$i])) {
 					$hash = trim(file_get_contents($heads[$i]));
-					if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+					if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
 						
 						$head = substr($key, strlen('refs/remotes/'));
 						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
@@ -1224,7 +1224,7 @@ class GitPHP_Project
 			}
 
 			$hash = trim(file_get_contents($heads[$i]));
-			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+			if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
 				$head = substr($key, strlen('refs/heads/'));
 				$this->heads[$key] = new GitPHP_Head($this, $head, $hash);
 			}
@@ -1240,7 +1240,7 @@ class GitPHP_Project
 			}
 
 			$hash = trim(file_get_contents($tags[$i]));
-			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+			if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
 				$tag = substr($key, strlen('refs/tags/'));
 				$this->tags[$key] = $this->LoadTag($tag, $hash);
 			}
@@ -1253,7 +1253,7 @@ class GitPHP_Project
 			$lastRef = null;
 			foreach ($packedRefs as $ref) {
 
-				if (preg_match('/^\^([0-9A-Fa-f]{40})$/', $ref, $regs)) {
+				if (preg_match('/^\^([0-9a-f]{40})$/i', $ref, $regs)) {
 					// dereference of previous ref
 					if (($lastRef != null) && ($lastRef instanceof GitPHP_Tag)) {
 						$derefCommit = $this->GetCommit($regs[1]);
@@ -1805,7 +1805,7 @@ class GitPHP_Project
 	 */
 	public function GetObject($hash, &$type = 0)
 	{
-		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+		if (!preg_match('/^[0-9a-f]{40}$/i', $hash)) {
 			return false;
 		}
 
@@ -1901,7 +1901,11 @@ class GitPHP_Project
 			$args[] = '--regexp-ignore-case';
 		unset($exe);
 
-		$args[] = '--grep=\'' . $pattern . '\'';
+		// if search for hash, dont use grep
+		if (preg_match('/^([0-9a-f]{40})$/i', $pattern, $regs))
+			$count = 1;
+		else
+			$args[] = '--grep=\'' . $pattern . '\'';
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
 		$len = count($ret);
