@@ -26,30 +26,34 @@ class GitPHP_Cache
 	const Template = 'data.tpl';
 
 	/**
-	 * instance
+	 * objectCacheInstance
 	 *
-	 * Stores the singleton instance
+	 * Stores the singleton instance of the object cache
 	 *
 	 * @access protected
 	 * @static
 	 */
-	protected static $instance;
+	protected static $objectCacheInstance;
 
 	/**
-	 * GetInstance
+	 * GetObjectCacheInstance
 	 *
-	 * Return the singleton instance
+	 * Return the singleton instance of the object cache
 	 *
 	 * @access public
 	 * @static
 	 * @return mixed instance of cache class
 	 */
-	public static function GetInstance()
+	public static function GetObjectCacheInstance()
 	{
-		if (!self::$instance) {
-			self::$instance = new GitPHP_Cache();
+		if (!self::$objectCacheInstance) {
+			self::$objectCacheInstance = new GitPHP_Cache();
+			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
+				self::$objectCacheInstance->SetEnabled(true);
+				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
+			}
 		}
-		return self::$instance;
+		return self::$objectCacheInstance;
 	}
 
 	/**
@@ -80,8 +84,6 @@ class GitPHP_Cache
 	 */
 	public function __construct()
 	{
-		if (GitPHP_Config::GetInstance()->GetValue('objectcache', false))
-			$this->SetEnabled(true);
 	}
 
 	/**
@@ -119,6 +121,38 @@ class GitPHP_Cache
 	}
 
 	/**
+	 * GetLifetime
+	 *
+	 * Gets the cache lifetime
+	 *
+	 * @access public
+	 * @return int cache lifetime in seconds
+	 */
+	public function GetLifetime()
+	{
+		if (!$this->enabled)
+			return false;
+
+		return $this->tpl->cache_lifetime;
+	}
+
+	/**
+	 * SetLifetime
+	 *
+	 * Sets the cache lifetime
+	 *
+	 * @access public
+	 * @param int $lifetime cache lifetime in seconds
+	 */
+	public function SetLifetime($lifetime)
+	{
+		if (!$this->enabled)
+			return;
+
+		$this->tpl->cache_lifetime = $lifetime;
+	}
+
+	/**
 	 * Get
 	 *
 	 * Get an item from the cache
@@ -151,14 +185,21 @@ class GitPHP_Cache
 	 * @access public
 	 * @param string $key cache key
 	 * @param mixed $value value
+	 * @param int $lifetime override the lifetime for this data
 	 */
-	public function Set($key = null, $value = null)
+	public function Set($key = null, $value = null, $lifetime = null)
 	{
 		if (empty($key) || empty($value))
 			return;
 
 		if (!$this->enabled)
 			return;
+
+		$oldLifetime = null;
+		if ($lifetime !== null) {
+			$oldLifetime = $this->tpl->cache_lifetime;
+			$this->tpl->cache_lifetime = $lifetime;
+		}
 
 		$this->Delete($key);
 		$this->tpl->clearAllAssign();
@@ -167,6 +208,10 @@ class GitPHP_Cache
 		// Force it into smarty's cache
 		$tmp = $this->tpl->fetch(GitPHP_Cache::Template, $key);
 		unset($tmp);
+
+		if ($lifetime !== null) {
+			$this->tpl->cache_lifetime = $oldLifetime;
+		}
 	}
 
 	/**
@@ -235,11 +280,11 @@ class GitPHP_Cache
 		if ($this->tpl)
 			return;
 
+		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
+		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
 		$this->tpl->caching = 2;
-
-		$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400);
 
 		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
 		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {

@@ -11,7 +11,6 @@
  */
 
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListDirectory.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'ProjectListDirCached.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListFile.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListArray.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListArrayLegacy.class.php');
@@ -68,6 +67,7 @@ class GitPHP_ProjectList
 		if (self::$instance)
 			return;
 
+
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (isset($git_projects)) {
 				if (is_string($git_projects)) {
@@ -89,19 +89,7 @@ class GitPHP_ProjectList
 		}
 
 		if (!self::$instance) {
-
-			if (!isset($git_projects)) {
-				$git_projects = NULL;
-			}
-			$cache = new GitPHP_ProjectListDirCached($git_projects);
-
-			if ($cache->Count()) {
-				GitPHP_Log::GetInstance()->Log('loaded '.$cache->Count().' projects from cache');
-				self::$instance = $cache;
-			} else {
-				self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-				self::$instance->CacheSaveProjectList();
-			}
+			self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
 		}
 
 		if (isset($git_projects_settings) && !$legacy)
