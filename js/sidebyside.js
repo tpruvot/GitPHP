@@ -8,6 +8,7 @@
  * @subpackage Javascript
  */
 
+var scrollElem;
 
 function sbs_toggleTabs(refElem) {
 	var el = jQuery(refElem);
@@ -93,6 +94,8 @@ function sbs_scrollToDiff(refElem, focusClass) {
 		var elDest = diff.first();
 		var stickToTop = !(focusClass.indexOf('last') > 0);
 
+		var hash = elDest.find('a').attr('name');
+
 		if (stickToTop) {
 			// try to get previous
 			if (elDest.prev('tr').length)
@@ -103,34 +106,72 @@ function sbs_scrollToDiff(refElem, focusClass) {
 				elDest = elDest.next('tr');
 		}
 
+		var targetOffset = elDest.offset().top;
+		var decalY = 200;
+		if (!stickToTop) {
+			decalY = 400;
+		}
+
 		if (el.prop('href')) {
 			//manual call
-			//api.scrollToElement(elDest, stickToTop, 'fast');
+			$(scrollElem).animate({'scrollTop': (targetOffset - decalY)}, 400, function() {
+			//	location.hash = hash;
+			});
 		} else {
 			//init call
-			//api.scrollToElement(elDest, true);
+			$(scrollElem).scrollTop(targetOffset - decalY);
+			//location.hash = hash;
 		}
 	}
+}
+
+// use the first element that is "scrollable"
+function scrollableElement(els) {
+
+	for (var i = 0, argLength = arguments.length; i < argLength; i++) {
+		var el = arguments[i],
+		elem = $(el);
+		if (elem.scrollTop() > 0) {
+			return el;
+		} else {
+			elem.scrollTop(1);
+			var isScrollable = (elem.scrollTop() > 0);
+			elem.scrollTop(0);
+			if (isScrollable) {
+				return el;
+			}
+		}
+	}
+	return [];
 }
 
 $(document).ready(function() {
 
 	var sbsTOC = $('div.commitDiffSBS div.SBSTOC');
-	if (sbsTOC.size() > 0) {
+	if (sbsTOC.size() == 0) {
 		//only resize height in blobdiff view
-		return;
+
+		var h = Math.max(window.innerHeight - 250, 500);
+		jQuery('.scrollPanel')
+			.css('max-height', h.toString() + 'px')
+			.css('overflow', 'auto');
 	}
 
-	var h = Math.max(window.innerHeight - 250, 500);
-	jQuery('.scrollPanel')
-	.css('max-height', h.toString() + 'px')
-	.css('overflow', 'auto');
+	var hash = window.location.hash.replace(/#/,'');
+	if (hash.length) {
+		//if we have a #hash in url, like Line or diff number
+		//let the navigator do his work
+		return;
+	}
 
 	// Scroll to first diff in sidebyside file.
 	var el = jQuery('.scrollPanel');
 	el.each(function() {
 		var dv=jQuery(this).find('.diff-focus:first');
-		sbs_scrollToDiff(dv,'diff-focus:first');
+		scrollElem = scrollableElement('.scrollPanel','html', 'body'); 
+		sbs_scrollToDiff(dv,'.diff-focus:first');
+		//only first...
+		return false;
 	});
 
 });
