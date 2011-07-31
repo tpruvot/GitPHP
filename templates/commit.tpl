@@ -60,7 +60,7 @@
        {assign var=hp value=$par->GetHash()}
        <tr>
          <td>{t}parent{/t}</td>
-	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}" class="list">{$hp}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}" class="list">{$hp}</a></td>
          <td class="link"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}">{t}commit{/t}</a> | <a 
            href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=unified">{t}commitdiff{/t} {t}unified{/t}</a> | <a
            href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=sidebyside">{t}side by side{/t}</a>
@@ -85,15 +85,15 @@
    {* Loop and show files changed *}
    {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">
-         <td class="commit_fadd">{if $diffline->totAdd}+{$diffline->totAdd}{/if}</td>
-         <td class="commit_fdel">{if $diffline->totDel}-{$diffline->totDel}{/if}</td>
+	 <td class="commit_fadd">{if $diffline->totAdd}+{$diffline->totAdd}{/if}</td>
+	 <td class="commit_fdel">{if $diffline->totDel}-{$diffline->totDel}{/if}</td>
        {if $diffline->GetStatus() == "A"}
-         <td>
+	 <td>
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
-         <td>
+	 <td>
 	   <span class="newfile">
 	     {assign var=localtotype value=$diffline->GetToFileType(1)}
 	     [
@@ -101,30 +101,30 @@
 	       {assign var=tomode value=$diffline->GetToModeShort()}
 	       {t 1=$localtotype 2=$tomode}new %1 with mode %2{/t}
 	     {else}
-	     {t 1=$localtotype}new %1{/t}
+	       {t 1=$localtotype}new %1{/t}
 	     {/if}
 	     ]
 	   </span>
 	 </td>
-         <td class="link">
+	 <td class="link">
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
-         {assign var=parent value=$commit->GetParent()}
-         <td>
+	 {assign var=parent value=$commit->GetParent()}
+	 <td>
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
-         <td>
+	 <td>
 	   <span class="deletedfile">
 	     {assign var=localfromtype value=$diffline->GetFromFileType(1)}
 	     [ {t 1=$localfromtype}deleted %1{/t} ]
 	   </span>
 	 </td>
-         <td class="link">
+	 <td class="link">
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=history&amp;h={$parent->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}history{/t}</a>
@@ -132,7 +132,7 @@
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$diffline->GetFromHash()}&amp;f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
-         <td>
+	 <td>
            {if $diffline->GetToHash() != $diffline->GetFromHash()}
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$par->GetHash()}&amp;f={$diffline->GetToFile()}#D1" class="list">
 	       {$diffline->GetToFile()}
@@ -142,15 +142,15 @@
 	       {$diffline->GetToFile()}
 	     </a>
            {/if}
-         </td>
-         <td>
+	 </td>
+	 <td>
 	   {if $diffline->GetFromMode() != $diffline->GetToMode()}
 	     <span class="changedfile">
 	       [
 	       {if $diffline->FileTypeChanged()}
-	     	 {assign var=localfromtype value=$diffline->GetFromFileType(1)}
-	     	 {assign var=localtotype value=$diffline->GetToFileType(1)}
-	         {if $diffline->FileModeChanged()}
+		 {assign var=localfromtype value=$diffline->GetFromFileType(1)}
+		 {assign var=localtotype value=$diffline->GetToFileType(1)}
+		 {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
 		     {assign var=frommode value=$diffline->GetFromModeShort()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
@@ -165,7 +165,7 @@
 		   {t 1=$localfromtype 2=$localtotype}changed from %1 to %2{/t}
 		 {/if}
 	       {else}
-	         {if $diffline->FileModeChanged()}
+		 {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
 		     {assign var=frommode value=$diffline->GetFromModeShort()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
@@ -184,8 +184,8 @@
 	     </span>
 	   {/if}
 	 </td>
-         <td class="link">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
+	 <td class="link">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
 	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$par->GetHash()}&amp;f={$diffline->GetToFile()}#D1">{t}diff{/t}</a>
 	   {/if}
@@ -193,11 +193,11 @@
              | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
-         <td>
+	 <td>
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}" class="list">
 	     {$diffline->GetToFile()}</a>
 	 </td>
-         <td>
+	 <td>
 	   <span class="movedfile">
 	     {capture assign=fromfilelink}
 	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
@@ -213,7 +213,7 @@
 	     ]
 	   </span>
 	 </td>
-         <td class="link">
+	 <td class="link">
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
 	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$par->GetHash()}&amp;f={$diffline->GetToFile()}#D1">{t}diff{/t}</a>
