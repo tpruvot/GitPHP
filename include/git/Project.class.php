@@ -1185,10 +1185,6 @@ class GitPHP_Project
 		// remote heads
 		if ($this->isAndroidRepo ) {
 
-			//use defaut branch set in manifest
-			$default = $this->repoRemote.'/'.$this->repoBranch;
-			$this->remotes['refs/remotes/'.$default] = new GitPHP_RemoteHead($this, $default);
-
 			$heads = $this->ListDir($this->GetPath() . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
 
@@ -1216,15 +1212,26 @@ class GitPHP_Project
 					if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
 						$head = substr($key, strlen('refs/remotes/'));
 						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
+						//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.$head.'='.$hash);
 					} else {
 						$head = substr($key, strlen('refs/remotes/'));
-						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head);
+						if (!array_key_exists($key,$this->remotes)) {
+							$this->remotes[$key] = new GitPHP_RemoteHead($this, $head);
+						}
 					}
 				} else {
 					GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] '.$key.' not found');
 				}
 			}
-			GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches, '.count($heads).' heads');
+
+			//use defaut branch set in manifest
+			$default = $this->repoRemote.'/'.$this->repoBranch;
+			$key = 'refs/remotes/'.$default;
+			if (!array_key_exists($key,$this->remotes)) {
+				$this->remotes[$key] = new GitPHP_RemoteHead($this, $default);
+			}
+
+			//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
 		}
 
 		// read loose heads
