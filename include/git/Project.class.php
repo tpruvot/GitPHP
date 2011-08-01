@@ -880,7 +880,7 @@ class GitPHP_Project
 			$this->ReadRefList();
 
 		$head = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
-		if (is_object($this->remotes[$head])) {
+		if (is_object($this->remotes[$head]) && empty($this->head)) {
 			$this->head = $this->remotes[$head]->GetHash();
 		}
 	}
