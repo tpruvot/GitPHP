@@ -86,7 +86,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		//projects
 		$projects = array();
 		foreach ($xml->project as $k => $node) {
-			$project = (string) $node['path'];
+			$project = (string) $node['name'];
 			$projects[$project] = $node;
 		}
 
@@ -220,7 +220,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		//local projects
 		$projects = array();
 		foreach ($xml->project as $k => $node) {
-			$project = (string) $node['path'];
+			$project = (string) $node['name'];
 			$projects[$project] = $node;
 		}
 		$this->local_projects = $projects;
