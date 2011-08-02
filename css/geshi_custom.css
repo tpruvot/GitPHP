@@ -1,0 +1,8 @@
+/* never use italic for comments */
+
+#blobData .co1,
+#blobData .co2,
+#blobData .coMULTI { 
+	font-style: normal; 
+}
+

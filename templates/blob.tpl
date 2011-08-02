@@ -12,6 +12,12 @@
   <style type="text/css">
   {$geshicss}
   </style>
+  {if file_exists('css/geshi.css')}
+    <link rel="stylesheet" href="css/geshi.css" type="text/css" />
+  {/if}
+  {if file_exists('css/geshi_custom.css')}
+    <link rel="stylesheet" href="css/geshi_custom.css" type="text/css" />
+  {/if}
 {/if}
 {/block}
 
