@@ -255,7 +255,7 @@ abstract class GitPHP_ControllerBase
 			// backwards compatibility
 			$stylesheet = 'gitphpskin.css';
 		}
-		$this->tpl->assign('stylesheet', $stylesheet);
+		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
 		$this->tpl->assign('debug', GitPHP_Config::GetInstance()->GetValue('debug', false));
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));

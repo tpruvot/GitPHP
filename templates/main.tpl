@@ -21,8 +21,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {block name=feeds}
     {/block}
+    {if file_exists('css/gitphp.min.css')}
+    <link rel="stylesheet" href="css/gitphp.min.css" type="text/css" />
+    {else}
     <link rel="stylesheet" href="css/gitphp.css" type="text/css" />
-    <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
+    {/if}
+    {if file_exists("css/$stylesheet.min.css")}
+    <link rel="stylesheet" href="css/{$stylesheet}.min.css" type="text/css" />
+    {else}
+    <link rel="stylesheet" href="css/{$stylesheet}.css" type="text/css" />
+    {/if}
     {block name=css}
     {/block}
     {if $javascript}
