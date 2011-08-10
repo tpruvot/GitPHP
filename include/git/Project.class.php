@@ -918,7 +918,7 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
-		if ($this->GetCompat()) {
+		if ($this->GetCompat() && !$this->isAndroidRepo) {
 			$this->ReadEpochGit();
 		} else {
 			$this->ReadEpochRaw();
@@ -964,7 +964,18 @@ class GitPHP_Project
 			$this->ReadRefList();
 
 		$epoch = 0;
-		foreach ($this->heads as $head) {
+
+		$array = $this->heads;
+		if (empty($array) && $this->isAndroidRepo) {
+			$array = $this->remotes;
+			//only use selected branch if set, faster
+			$selected = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
+			if (array_key_exists($selected, $this->remotes)) {
+				$array = array($this->remotes[$selected]);
+			}
+		}
+
+		foreach ($array as $head) {
 			$commit = $head->GetCommit();
 			if ($commit) {
 				if ($commit->GetCommitterEpoch() > $epoch) {
