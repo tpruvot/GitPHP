@@ -101,6 +101,8 @@ class GitPHP_Project
 	 */
 	protected $category = '';
 
+	public $categoryAge = 0;
+
 /* epoch internal variables {{{2*/
 
 	/**
@@ -2143,7 +2145,7 @@ class GitPHP_Project
 	 */
 	public static function CompareProject($a, $b)
 	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		$catCmp = GitPHP_Project::CompareCategory($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
 
@@ -2163,7 +2165,7 @@ class GitPHP_Project
 	 */
 	public static function CompareDescription($a, $b)
 	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		$catCmp = GitPHP_Project::CompareCategory($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
 
@@ -2183,7 +2185,7 @@ class GitPHP_Project
 	 */
 	public static function CompareOwner($a, $b)
 	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		$catCmp = GitPHP_Project::CompareCategory($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
 
@@ -2203,7 +2205,7 @@ class GitPHP_Project
 	 */
 	public static function CompareAge($a, $b)
 	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		$catCmp = GitPHP_Project::CompareCategoryAge($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
 
@@ -2212,6 +2214,39 @@ class GitPHP_Project
 		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
 
+	/**
+	 * CompareCategory
+	 *
+	 * Compares two projects by category
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareCategory($a, $b)
+	{
+		return strcmp($a->GetCategory(), $b->GetCategory());
+	}
+
+	/**
+	 * CompareCategoryAge
+	 *
+	 * Compares two projects by category age
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareCategoryAge($a, $b)
+	{
+		if ($a->categoryAge === $b->categoryAge)
+			return 0;
+		return ($a->categoryAge < $b->categoryAge ? -1 : 1);
+	}
 /*}}}1*/
 
 }

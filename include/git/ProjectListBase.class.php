@@ -203,6 +203,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 				uasort($this->projects, array('GitPHP_Project', 'CompareOwner'));
 				break;
 			case GITPHP_SORT_AGE:
+				$this->GetCategoryAges();
 				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
 				break;
 			case GITPHP_SORT_PROJECT:
@@ -250,6 +251,28 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * GetCategoryAges
+	 *
+	 * Store project category age
+	 *
+	 * @access protected
+	 */
+	protected function GetCategoryAges()
+	{
+		foreach ($this->projects as $proj) {
+			$cat = $proj->GetCategory();
+			if (isset($ages[$cat]))
+				$ages[$cat] = min($ages[$cat], $proj->GetAge());
+			else
+				$ages[$cat] = $proj->GetAge();
+		}
+		foreach ($this->projects as $proj) {
+			$cat = $proj->GetCategory();
+			$proj->categoryAge = $ages[$cat];
+		}
 	}
 
 	/**
@@ -318,13 +341,5 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		}
 
 		$this->projectSettings = $settings;
-	}
-
-	/** Save and restore project list to prevent parsing directories
-	 */
-	public function CacheSaveProjectList()
-	{
-		$data = serialize($this->projects);
-		return (file_put_contents(GITPHP_CACHE.'ProjectList.dat',$data) > 0);
 	}
 }
