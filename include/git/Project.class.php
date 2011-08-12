@@ -2165,9 +2165,8 @@ class GitPHP_Project
 	 */
 	public static function CompareDescription($a, $b)
 	{
-		$catCmp = GitPHP_Project::CompareCategory($a, $b);
-		if ($catCmp !== 0)
-			return $catCmp;
+		// disable category display on this column sort
+		$b->SetCategory('');
 
 		return strcmp($a->GetDescription(), $b->GetDescription());
 	}
