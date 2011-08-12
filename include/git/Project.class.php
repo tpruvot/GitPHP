@@ -2204,6 +2204,9 @@ class GitPHP_Project
 	 */
 	public static function CompareAge($a, $b)
 	{
+		if ($b->GetCategory() === '' && $a->GetCategory() )
+			return 1;
+
 		$catCmp = GitPHP_Project::CompareCategoryAge($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
@@ -2226,6 +2229,8 @@ class GitPHP_Project
 	 */
 	public static function CompareCategory($a, $b)
 	{
+		if ($b->GetCategory() === '' && $a->GetCategory() )
+			return 1;
 		return strcmp($a->GetCategory(), $b->GetCategory());
 	}
 
