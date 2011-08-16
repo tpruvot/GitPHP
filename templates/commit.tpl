@@ -72,9 +72,11 @@
  <div class="page_body">
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
+   <div class="commit_comment" style="overflow-y: auto; max-height: 30em;">
    {foreach from=$commit->GetComment() item=line}
      {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
    {/foreach}
+   </div>
  </div>
  <div class="list_head">
    {if $treediff->Count() > 10}
