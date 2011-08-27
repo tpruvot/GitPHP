@@ -43,13 +43,14 @@
    {else}
      {t}HEAD{/t}
    {/if}
-
+   {if $blob->GetPath()}
     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$blob->GetPath()}">{t}history{/t}</a>
    {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blame&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()}&amp;hb={$commit->GetHash()}" id="blameLink">{t}blame{/t}</a>{/if}
+   {/if}
    <br />
  </div>
 
- {include file='title.tpl' titlecommit=$commit}
+{include file='title.tpl' titlecommit=$commit}
 
 {include file='path.tpl' pathobject=$blob target='blobplain'}
 
