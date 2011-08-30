@@ -364,6 +364,10 @@ span.latenight {
 	color: #cc0000;
 }
 
+span.signedOffBy {
+	color: gray;
+}
+
 
 /*
  * Diff display
@@ -626,6 +630,10 @@ table.treeTable td.filesize {
 table.tagTable td.link {
 	/* links at the right end of each tag */
 	text-align: right;
+}
+
+span.pgpSig {
+	color: gray;
 }
 
 

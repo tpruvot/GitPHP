@@ -74,7 +74,12 @@
    {assign var=bugurl value=$project->GetBugUrl()}
    <div class="commit_comment" style="overflow-y: auto; max-height: 30em;">
    {foreach from=$commit->GetComment() item=line}
-     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
+     {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
+     <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
+     {else}
+     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}
+     {/if}
+     <br />
    {/foreach}
    </div>
  </div>
