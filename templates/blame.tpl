@@ -69,9 +69,11 @@
  </div>
 
 {if $fixupjs}
- <script type="text/javascript">
+<script type="text/javascript">
+define("jquery", function($) {
     {$fixupjs}
- </script>
+});
+</script>
 {/if}
 
 {/block}

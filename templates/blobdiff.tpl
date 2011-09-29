@@ -9,7 +9,7 @@
 
 {if $sidebyside}
 {block name=javascript}
-    <script type="text/javascript" src="js/sidebyside.js"></script>
+    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="sidebyside" src="js/sidebyside.js"></script>
 {/block}
 {/if}
 

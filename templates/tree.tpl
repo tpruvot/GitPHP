@@ -7,14 +7,6 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascript}
-    {if file_exists("js/tree.min.js")}
-    <script type="text/javascript" src="js/tree.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/tree.js"></script>
-    {/if}
-{/block}
-
 {block name=main}
 
  {* Nav *}

@@ -10,7 +10,7 @@
  */
 
 define(["jquery", "common"], function($) {
-	$(function(){
+	jQuery(function(){
 		var toc = $('div.commitDiffSBS div.SBSTOC');
 		var content = $('div.SBSContent');
 		if ((toc.size() > 0) && (content.size() > 0)) {

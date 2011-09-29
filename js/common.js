@@ -11,7 +11,7 @@
 
 define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
 	function($, getProject, lang, tooltipSnapshot) {
-		$(function() {
+		jQuery(function($) {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
 		});
@@ -20,7 +20,7 @@ define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapsho
 
 			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"],
 				function($, tooltipCommit, tooltipTag) {
-					$(function() {
+					jQuery(function($) {
 						tooltipCommit($('a.commitTip'));
 						tooltipTag($('a.tagTip'));
 					});

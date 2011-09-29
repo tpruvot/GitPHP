@@ -8,14 +8,8 @@
 {extends file='projectbase.tpl'}
 
 {block name=javascript}
-    {if file_exists("js/commitdiff.min.js")}
-    <script type="text/javascript" src="js/commitdiff.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/commitdiff.js"></script>
-    {/if}
-
   {if $sidebyside}
-    <script type="text/javascript" src="js/sidebyside.js"></script>
+    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="sidebyside" src="js/sidebyside.js"></script>
   {/if}
 {/block}
 

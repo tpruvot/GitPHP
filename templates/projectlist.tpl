@@ -8,14 +8,6 @@
 {extends file='main.tpl'}
 
 {block name=javascript}
-    <script type="text/javascript">
-      var GITPHP_RES_NO_MATCHES_FOUND='{t escape=no}No matches found for "%1"{/t}';
-    </script>
-    {if file_exists("js/projectsearch.min.js")}
-    <script type="text/javascript" src="js/projectsearch.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/projectsearch.js"></script>
-    {/if}
 {/block}
 
 {block name=main}

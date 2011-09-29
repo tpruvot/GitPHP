@@ -22,14 +22,6 @@
 {/block}
 
 {block name=javascript}
-    <script type="text/javascript">
-      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
-    </script>
-    {if file_exists("js/blame.min.js")}
-    <script type="text/javascript" src="js/blame.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/blame.js"></script>
-    {/if}
 {/block}
 
 {block name=main}
@@ -88,9 +80,11 @@
  </div>
 
 {if $fixupjs}
- <script type="text/javascript">
+<script type="text/javascript">
+define("jquery", function($) {
     {$fixupjs}
- </script>
+});
+</script>
 {/if}
 
 {/block}
