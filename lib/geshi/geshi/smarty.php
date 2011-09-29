@@ -147,13 +147,13 @@ $language_data = array (
             )
         ),
     'URLS' => array(
-        1 => 'http://smarty.php.net/{FNAMEL}',
-        2 => 'http://smarty.php.net/{FNAMEL}',
-        3 => 'http://smarty.php.net/{FNAMEL}',
-        4 => 'http://smarty.php.net/{FNAMEL}',
-        5 => 'http://smarty.php.net/{FNAMEL}',
+        1 => 'http://www.smarty.net/search?q={FNAMEL}',
+        2 => 'http://www.smarty.net/search?q={FNAMEL}',
+        3 => 'http://www.smarty.net/search?q={FNAMEL}',
+        4 => 'http://www.smarty.net/search?q={FNAMEL}',
+        5 => 'http://www.smarty.net/search?q={FNAMEL}',
         6 => '',
-        7 => 'http://smarty.php.net/{FNAMEL}',
+        7 => 'http://www.smarty.net/search?q={FNAMEL}',
         8 => ''
         ),
     'OOLANG' => true,
