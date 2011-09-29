@@ -22,6 +22,15 @@
 {/block}
 
 {block name=javascript}
+{if $fixupjs}
+<script type="text/javascript">
+require.ready(
+    function($) {
+    {$fixupjs}
+    }
+);
+</script>
+{/if}
 {/block}
 
 {block name=main}
@@ -78,13 +87,5 @@
 </table>
    {/if}
  </div>
-
-{if $fixupjs}
-<script type="text/javascript">
-define("jquery", function($) {
-    {$fixupjs}
-});
-</script>
-{/if}
 
 {/block}
