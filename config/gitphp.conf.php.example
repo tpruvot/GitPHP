@@ -65,7 +65,7 @@
 $gitphp_conf['fixupjs'] = <<<EOT
 
     if (!(jQuery.browser.mozilla))
-    jQuery('#blobData').find('pre span').each( function() {
+    jQuery('pre.de1 span').each( function() {
         var el = jQuery(this);
         if (el.css('font-weight') != 'normal') {
           el.css({ 'font-weight':'normal',
