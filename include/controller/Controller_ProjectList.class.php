@@ -163,6 +163,11 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		$pname = 'projectlist_show_owner';
 		$show_col = GitPHP_Config::GetInstance()->GetValue($pname);
 		$this->tpl->assign('show_owner', $show_col);
+
+		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
+		    (empty($this->params['txt']) || ($this->params['txt'] !== true))) {
+			$this->tpl->assign('extrascripts', 'projectlist');
+		}
 	}
 
 }

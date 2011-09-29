@@ -33,33 +33,43 @@
     {/if}
     {block name=css}
     {/block}
-    {if $javascript}
-    <script type="text/javascript">
-      var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
-      var GITPHP_RES_SNAPSHOT="{t escape='js'}snapshot{/t}";
-      var GITPHP_SNAPSHOT_FORMATS = {ldelim}
-      {foreach from=$snapshotformats key=format item=extension name=formats}
-        "{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
-      {/foreach}
-      {rdelim}
-    </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
-    {if $googlejs}
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/ext/jquery.min.js"></script>
+    {if $extracss}
+    <style type="text/css">
+    {$extracss}
+    </style>
     {/if}
-    <script type="text/javascript" src="js/ext/jquery.qtip.min.js"></script>
-    {if file_exists('js/tooltips.min.js')}
-    <script type="text/javascript" src="js/tooltips.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/tooltips.js"></script>
-    {/if}
-    {if file_exists('js/lang.min.js')}
-    <script type="text/javascript" src="js/lang.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/lang.js"></script>
-    {/if}
+    {if $javascript}
+    <script src="js/ext/require.js"></script>
+    {include file='jsconst.tpl'}
+    <script type="text/javascript">
+    require({ldelim}
+    	baseUrl: 'js',
+	paths: {ldelim}
+	{if $extrascripts}
+	  {if file_exists("js/$extrascripts.min.js")}
+	  	{$extrascripts}: "{$extrascripts}.min",
+	  {/if}
+	{else}
+	  {if file_exists('js/common.min.js')}
+	  	common: "common.min",
+	  {/if}
+	{/if}
+	{if $googlejs}
+		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min'
+	{else}
+		jquery: 'ext/jquery.min'
+	{/if}
+	{rdelim},
+	priority: ['jquery']
+    {rdelim}, [
+    	{if $extrascripts}
+	  '{$extrascripts}'
+	{else}
+	  'common'
+	{/if}
+      ]);
+    </script>
     {block name=javascript}
     {/block}
     {/if}

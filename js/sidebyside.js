@@ -8,6 +8,12 @@
  * @subpackage Javascript
  */
 
+/* TODO: use new format to declare js functions...
+define(["jquery", "modules/sidebyside", "common"], function($, sbsDocumentReady) {
+ ...
+}
+*/
+
 var scrollElem;
 
 function sbs_toggleTabs(refElem) {
@@ -145,7 +151,7 @@ function scrollableElement(els) {
 	return [];
 }
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
 
 	var sbsTOC = $('div.commitDiffSBS div.SBSTOC');
 	if (sbsTOC.size() == 0) {

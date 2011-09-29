@@ -15,6 +15,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
 
 require_once(GITPHP_GITOBJECTDIR . 'RemoteHead.class.php');
 
@@ -282,6 +283,15 @@ class GitPHP_Project
 	 */
 	protected $compat = null;
 
+	/**
+	 * config
+	 *
+	 * Stores the config reader internally
+	 *
+	 * @access protected
+	 */
+	protected $config = null;
+
 /*}}}1*/
 
 /* class methods {{{1*/
@@ -427,10 +437,10 @@ class GitPHP_Project
 	 */
 	protected function ReadOwner()
 	{
-		if ($this->GetCompat()) {
-			$this->ReadOwnerGit();
-		} else {
-			$this->ReadOwnerRaw();
+		if ($this->GetConfig()->HasValue('gitphp.owner')) {
+			$this->owner = $this->GetConfig()->GetValue('gitphp.owner');
+		} else if ($this->GetConfig()->HasValue('gitweb.owner')) {
+			$this->owner = $this->GetConfig()->GetValue('gitweb.owner');
 		}
 
 		if (empty($this->owner) && function_exists('posix_getpwuid')) {
@@ -554,7 +564,9 @@ class GitPHP_Project
 	{
 		if (!$this->readDescription) {
 
-			if (file_exists($this->GetPath() . '/description')) {
+			if ($this->GetConfig()->HasValue('gitphp.description')) {
+				$this->description = $this->GetConfig()->GetValue('gitphp.description');
+			} else if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
 			
 				if (strpos($this->description,'Unnamed repository; edit this file') !== false)
@@ -644,7 +656,15 @@ class GitPHP_Project
 	 */
 	public function GetCategory()
 	{
-		return $this->category;
+		if (!empty($this->category)) {
+			return $this->category;
+		}
+
+		if ($this->GetConfig()->HasValue('gitphp.category')) {
+			return $this->GetConfig()->GetValue('gitphp.category');
+		}
+
+		return '';
 	}
 
 	/**
@@ -676,6 +696,9 @@ class GitPHP_Project
 	{
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
+
+		if ($this->GetConfig()->HasValue('gitphp.cloneurl'))
+			return $this->GetConfig()->GetValue('gitphp.cloneurl');
 
 		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
 		if (!empty($cloneurl))
@@ -714,6 +737,9 @@ class GitPHP_Project
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
 
+		if ($this->GetConfig()->HasValue('gitphp.pushurl'))
+			return $this->GetConfig()->GetValue('gitphp.pushurl');
+
 		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
 		if (!empty($pushurl))
 			$pushurl .= $this->project;
@@ -751,6 +777,10 @@ class GitPHP_Project
 		if ($this->bugUrl != null)
 			return $this->bugUrl;
 
+		if ($this->GetConfig()->HasValue('gitphp.bugurl')) {
+			return $this->GetConfig()->GetValue('gitphp.bugurl');
+		}
+
 		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
 	}
 
@@ -779,6 +809,10 @@ class GitPHP_Project
 	{
 		if ($this->bugPattern != null)
 			return $this->bugPattern;
+
+		if ($this->GetConfig()->HasValue('gitphp.bugpattern')) {
+			return $this->GetConfig()->GetValue('gitphp.bugpattern');
+		}
 
 		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
 	}
@@ -810,7 +844,15 @@ class GitPHP_Project
 	 */
 	public function GetWebsite()
 	{
-		return $this->website;
+		if (!empty($this->website)) {
+			return $this->website;
+		}
+
+		if ($this->GetConfig()->HasValue('gitphp.website')) {
+			return $this->GetConfig()->GetValue('gitphp.website');
+		}
+
+		return null;
 	}
 
 	/**
@@ -1047,6 +1089,10 @@ class GitPHP_Project
 			return $this->compat;
 		}
 
+		if ($this->GetConfig()->HasValue('gitphp.compat')) {
+			return $this->GetConfig()->GetValue('gitphp.compat');
+		}
+
 		return GitPHP_Config::GetInstance()->GetValue('compat', false);
 	}
 
@@ -1064,6 +1110,23 @@ class GitPHP_Project
 	}
 
 /*}}}2*/
+
+	/**
+	 * GetConfig
+	 *
+	 * Gets the config reader instance
+	 *
+	 * @access public
+	 * @return mixed config class
+	 */
+	public function GetConfig()
+	{
+		if (!$this->config) {
+			$this->config = new GitPHP_GitConfig($this);
+		}
+
+		return $this->config;
+	}
 
 /*}}}1*/
 
@@ -1815,6 +1878,7 @@ class GitPHP_Project
 		if ($skip > 0) {
 			$log = array_slice($log, $skip, $count);
 		}
+		usort($log, array('GitPHP_Commit', 'CompareAge'));
 		return $log;
 	}
 
