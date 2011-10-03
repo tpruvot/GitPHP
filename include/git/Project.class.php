@@ -362,9 +362,8 @@ class GitPHP_Project
 
 		if (GitPHP_Config::GetInstance()->GetValue('projectroot') != '/') {
 
-			if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) 
+			if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project))
 			throw new Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
-		
 
 			$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
@@ -460,64 +459,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadOwnerGit
-	 *
-	 * Reads the project owner using the git executable
-	 *
-	 * @access private
-	 */
-	private function ReadOwnerGit()
-	{
-		$exe = new GitPHP_GitExe($this);
-		$args = array();
-		//$args[] = 'gitweb.owner';
-		$args[] = 'user.name';
-		$this->owner = $exe->Execute(GIT_CONFIG, $args);
-		unset($exe);
-	}
-
-	/**
-	 * ReadOwnerRaw
-	 *
-	 * Reads the project owner using the raw config file
-	 *
-	 * @access private
-	 */
-	private function ReadOwnerRaw()
-	{
-		// not worth writing a full config parser right now
-
-		if (!file_exists($this->GetPath() . '/config'))
-			return;
-
-		$configData = explode("\n", file_get_contents($this->GetPath() . '/config'));
-
-		$gitwebSection = false;
-		foreach ($configData as $configLine) {
-			$trimmed = trim($configLine);
-			if (empty($trimmed)) {
-				continue;
-			}
-
-			if (preg_match('/^\[(.+)\]$/', $trimmed, $regs)) {
-				// section header
-				$gitwebSection = ($regs[1] == 'gitweb');
-			} else if ($gitwebSection) {
-				$eq = strpos($trimmed, '=');
-				if ($eq === false) {
-					continue;
-				}
-
-				$key = trim(substr($trimmed, 0, $eq));
-				if ($key == 'owner') {
-					$this->owner = trim(substr($trimmed, $eq+1));
-					break;
-				}
-			}
-		}
-	}
-
-	/**
 	 * SetOwner
 	 *
 	 * Sets the project's owner (from an external source)
@@ -568,18 +509,14 @@ class GitPHP_Project
 				$this->description = $this->GetConfig()->GetValue('gitphp.description');
 			} else if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
-			
+
 				if (strpos($this->description,'Unnamed repository; edit this file') !== false)
 					$this->description = '';
-					
 			} else {
 				$this->description = '';
 			}
 
 			if (empty($this->description)) {
-
-				$exe = new GitPHP_GitExe($this);
-				$args = array();
 
 				if (empty($this->remotes)) {
 					//default is 'origin'
@@ -590,19 +527,19 @@ class GitPHP_Project
 					$remote = $rm->GetRemoteName();
 				}
 
-				$args[] = 'remote.'.$remote.'.url';
-				$this->description = $exe->Execute(GIT_CONFIG, $args);
-				unset($exe);
+				if ($this->GetConfig()->HasValue('remote.'.$remote.'.url')) {
+					$this->description = $this->GetConfig()->GetValue('remote.'.$remote.'.url');
+				}
 
 				if (empty($this->description)) {
-					$this->GetCloneUrl();
+					$this->description = $this->GetCloneUrl();
 				}
 
 				if (empty($this->description)) {
 					$this->description = '-';
 				} else {
-					// try to save project description if Unnamed (file may be protected)
-					@ file_put_contents($this->GetPath() . '/description', $this->description);
+					// save project description if Unnamed
+					$this->GetConfig()->SetValue('gitphp.description',$this->description);
 				}
 			}
 			$this->readDescription = true;
@@ -2209,7 +2146,7 @@ class GitPHP_Project
 		}
 
 		$hash = reset($revlist);
-		
+
 		return $hash;
 	}
 
