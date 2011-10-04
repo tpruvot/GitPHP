@@ -120,6 +120,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				else
 					$saveas = $this->params['hash'] . ".txt";
 
+				$saveas = basename($saveas);
+
 				$headers = array();
 
 				$mime = null;
