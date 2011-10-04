@@ -137,7 +137,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					$mime = $blob->FileMime();
 				}
 
-				if ($mime)
+				if (strpos($mime,"text") === false)
 					$headers[] = "Content-type: " . $mime;
 				else
 					$headers[] = "Content-type: text/plain; charset=UTF-8";
