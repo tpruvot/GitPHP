@@ -722,10 +722,13 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if ($this->LightTag())
-			return $this->GetCommit()->GetCommitterEpoch();
-		else
-			return $this->taggerEpoch;
+		if ($this->LightTag()) {
+			$commit = $this->GetCommit();
+			if (!empty($commit))
+				return $commit->GetCommitterEpoch();
+		}
+
+		return $this->taggerEpoch;
 	}
 
 	/**
