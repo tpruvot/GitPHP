@@ -19,6 +19,8 @@ require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
 
 require_once(GITPHP_GITOBJECTDIR . 'RemoteHead.class.php');
 
+define('GITPHP_ABBREV_HASH_MIN', 7);
+
 /**
  * Project class
  *
@@ -1104,7 +1106,20 @@ class GitPHP_Project
 			$hash = $this->GetFullHash($hash);
 		}
 
-		if (preg_match('/[0-9a-f]{40}/i', $hash)) {
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		if (isset($this->heads['refs/heads/' . $hash]))
+			return $this->heads['refs/heads/' . $hash]->GetCommit();
+
+		if (isset($this->tags['refs/tags/' . $hash]))
+			return $this->tags['refs/tags/' . $hash]->GetCommit();
+
+		if (preg_match('/[0-9A-Fa-f]{4,39}/', $hash)) {
+			$hash = $this->ExpandHash($hash);
+		}
+
+		if (preg_match('/[0-9A-Fa-f]{40}/', $hash)) {
 
 			if (!isset($this->commitCache[$hash])) {
 				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
@@ -1118,15 +1133,6 @@ class GitPHP_Project
 			return $this->commitCache[$hash];
 
 		}
-
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if (isset($this->heads['refs/heads/' . $hash]))
-			return $this->heads['refs/heads/' . $hash]->GetCommit();
-
-		if (isset($this->tags['refs/tags/' . $hash]))
-			return $this->tags['refs/tags/' . $hash]->GetCommit();
 
 		return null;
 	}
@@ -1948,6 +1954,243 @@ class GitPHP_Project
 			}
 		}
 		$this->packsRead = true;
+	}
+
+/*}}}2*/
+
+/* hash management methods {{{2*/
+
+	/**
+	 * AbbreviateHash
+	 *
+	 * Calculates the unique abbreviated hash for a full hash
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	public function AbbreviateHash($hash)
+	{
+		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
+			return $hash;
+		}
+
+		if ($this->GetCompat()) {
+			return $this->AbbreviateHashGit($hash);
+		} else {
+			return $this->AbbreviateHashRaw($hash);
+		}
+	}
+
+	/**
+	 * AbbreviateHashGit
+	 *
+	 * Abbreviates a hash using the git executable
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	private function AbbreviateHashGit($hash)
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '-1';
+		$args[] = '--format=format:%h';
+		$args[] = $hash;
+
+		$abbrevData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		if (empty($abbrevData[0])) {
+			return $hash;
+		}
+		if (substr_compare(trim($abbrevData[0]), 'commit', 0, 6) !== 0) {
+			return $hash;
+		}
+
+		if (empty($abbrevData[1])) {
+			return $hash;
+		}
+
+		return trim($abbrevData[1]);
+	}
+
+	/**
+	 * AbbreviateHashRaw
+	 *
+	 * Abbreviates a hash using raw git objects
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	private function AbbreviateHashRaw($hash)
+	{
+		$abbrevLen = GITPHP_ABBREV_HASH_MIN;
+
+		if ($this->GetConfig()->HasValue('core.abbrev')) {
+			$abbrevLen = max(4, min($this->GetConfig()->GetValue('core.abbrev'), 40));
+		}
+
+		$prefix = substr($hash, 0, $abbrevLen);
+
+		if (!GitPHP_Config::GetInstance()->GetValue('uniqueabbrev', false)) {
+			return $prefix;
+		}
+
+		$hashMap = array();
+
+		$matches = $this->FindHashObjects($prefix);
+		foreach ($matches as $matchingHash) {
+			$hashMap[$matchingHash] = 1;
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		foreach ($this->packs as $pack) {
+			$matches = $pack->FindHashes($prefix);
+			foreach ($matches as $matchingHash) {
+				$hashMap[$matchingHash] = 1;
+			}
+		}
+
+		if (count($hashMap) == 0) {
+			return $hash;
+		}
+
+		if (count($hashMap) == 1) {
+			return $prefix;
+		}
+
+		for ($len = $abbrevLen+1; $len < 40; $len++) {
+			$prefix = substr($hash, 0, $len);
+
+			foreach ($hashMap as $matchingHash => $val) {
+				if (substr_compare($matchingHash, $prefix, 0, $len) !== 0) {
+					unset($hashMap[$matchingHash]);
+				}
+			}
+
+			if (count($hashMap) == 1) {
+				return $prefix;
+			}
+		}
+
+		return $hash;
+	}
+
+	/**
+	 * ExpandHash
+	 *
+	 * Finds the full hash for an abbreviated hash
+	 *
+	 * @param string $abbrevHash abbreviated hash
+	 * @return string full hash
+	 */
+	public function ExpandHash($abbrevHash)
+	{
+		if (!(preg_match('/[0-9A-Fa-f]{4,39}/', $abbrevHash))) {
+			return $abbrevHash;
+		}
+
+		if ($this->GetCompat()) {
+			return $this->ExpandHashGit($abbrevHash);
+		}  else {
+			return $this->ExpandHashRaw($abbrevHash);
+		}
+	}
+
+	/**
+	 * ExpandHashGit
+	 *
+	 * Expands a hash using the git executable
+	 *
+	 * @param string $abbrevHash
+	 * @return string full hash
+	 */
+	private function ExpandHashGit($abbrevHash)
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '-1';
+		$args[] = '--format=format:%H';
+		$args[] = $abbrevHash;
+
+		$fullData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		if (empty($fullData[0])) {
+			return $abbrevHash;
+		}
+		if (substr_compare(trim($fullData[0]), 'commit', 0, 6) !== 0) {
+			return $abbrevHash;
+		}
+
+		if (empty($fullData[1])) {
+			return $abbrevHash;
+		}
+
+		return trim($fullData[1]);
+	}
+
+	/**
+	 * ExpandGitRaw
+	 *
+	 * Expands a hash using raw git objects
+	 *
+	 * @param string $abbrevHash abbreviated hash
+	 * @return string full hash
+	 */
+	private function ExpandHashRaw($abbrevHash)
+	{
+		$matches = $this->FindHashObjects($abbrevHash);
+		if (count($matches) > 0) {
+			return $matches[0];
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		foreach ($this->packs as $pack) {
+			$matches = $pack->FindHashes($abbrevHash);
+			if (count($matches) > 0) {
+				return $matches[0];
+			}
+		}
+
+		return $abbrevHash;
+	}
+
+	/**
+	 * FindHashObjects
+	 *
+	 * Finds loose hash files matching a given prefix
+	 *
+	 * @access private
+	 * @param string $prefix hash prefix
+	 * @return array array of hash objects
+	 */
+	private function FindHashObjects($prefix)
+	{
+		$matches = array();
+		if (empty($prefix)) {
+			return $matches;
+		}
+
+		$subdir = substr($prefix, 0, 2);
+		$fulldir = $this->GetPath() . '/objects/' . $subdir;
+		if (!is_dir($fulldir)) {
+			return $matches;
+		}
+
+		$prefixlen = strlen($prefix);
+		$dh = opendir($fulldir);
+		if ($dh !== false) {
+			while (($file = readdir($dh)) !== false) {
+				$fullhash = $subdir . $file;
+				if (substr_compare($fullhash, $prefix, 0, $prefixlen) === 0) {
+					$matches[] = $fullhash;
+				}
+			}
+		}
+		return $matches;
 	}
 
 /*}}}2*/
