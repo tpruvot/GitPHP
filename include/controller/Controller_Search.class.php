@@ -146,7 +146,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 				case GITPHP_SEARCH_COMMIT:
 					if (preg_match('/^([0-9a-f]{5,40})$/i', $this->params['search'], $regs)) {
-						$hash = $this->project->GetFullHash($this->params['search']);
+						$hash = $this->project->ExpandHash($this->params['search']);
 						$this->params['search'] = $hash;
 					} else {
 						$hash = $co->GetHash();
