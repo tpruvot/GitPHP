@@ -148,7 +148,10 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 					$remoteName = $repository['remote'];
 					$projObj->repoRemote = $remoteName;
-					$projObj->repoBranch = $repository['revision'];
+
+					//revision can be a tag, ignore it
+					if (strpos($repository['revision'],'/tags/') === false)
+						$projObj->repoBranch = $repository['revision'];
 
 					$projOwner = $repository['name'];
 					if (!empty($projOwner)) {
