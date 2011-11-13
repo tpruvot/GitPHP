@@ -56,7 +56,7 @@
 	  {/if}
 	{/if}
 	{if $googlejs}
-		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min'
+		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min'
 	{else}
 		jquery: 'ext/jquery.min'
 	{/if}
