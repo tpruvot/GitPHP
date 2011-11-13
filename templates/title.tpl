@@ -15,14 +15,17 @@
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()|escape}</a>
 		{elseif $target == 'tree'}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$titletree->GetHash()}&amp;hb={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()|escape}</a>
+		{elseif $target == 'summary'}
+			{if $branch}
+			<div class="branch" style="width: 250px; float: right; text-align: right;">{t}branch{/t}: {$branch}</div>
+			{/if}
 		{else}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()|escape}</a>
 		{/if}
 		{include file='refbadges.tpl' commit=$titlecommit}
+
 	{else}
-		{if $target == 'summary'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=summary" class="title">&nbsp;</a>
-		{elseif $target == 'shortlog'}
+		{if $target == 'shortlog'}
 			{if $disablelink}
 			  {t}shortlog{/t}
 			{else}

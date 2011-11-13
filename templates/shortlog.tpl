@@ -40,7 +40,7 @@
    {/if}
  </div>
 
- {include file='title.tpl' target='summary'}
+ {include file='title.tpl' target='summary' titlecommit=$commit}
 
  {include file='shortloglist.tpl' source='shortlog'}
 

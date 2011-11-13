@@ -119,7 +119,11 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('commit', $this->project->GetCommit($this->params['hash']));
 		$this->tpl->assign('head', $this->project->GetHeadCommit());
-		$this->tpl->assign('page',$this->params['page']);
+		$this->tpl->assign('page', $this->params['page']);
+
+		if ($this->project->isAndroidRepo) {
+			$this->tpl->assign('branch', $this->project->repoBranch);
+		}
 
 		$revlist = $this->project->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
 		if ($revlist) {
