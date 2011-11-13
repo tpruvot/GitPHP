@@ -19,6 +19,7 @@
 			{if $branch}
 			<div class="branch" style="width: 250px; float: right; text-align: right;">{t}branch{/t}: {$branch}</div>
 			{/if}
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=heads" class="title">&nbsp;</a>
 		{else}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()|escape}</a>
 		{/if}
