@@ -17,7 +17,7 @@
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$titletree->GetHash()}&amp;hb={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()|escape}</a>
 		{elseif $target == 'summary'}
 			{if $branch}
-			<div class="branch" style="width: 250px; float: right; text-align: right;">{t}branch{/t}: {$branch}</div>
+			{t}repo branch{/t}: <b>{$branch}</b>
 			{/if}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=heads" class="title">&nbsp;</a>
 		{else}

@@ -1312,7 +1312,7 @@ class GitPHP_Project
 
 		// double check...
 		if ($this->isAndroidRepo ) {
-/*
+//
 			$heads = $this->ListDir($this->GetPath() . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
 
@@ -1351,7 +1351,7 @@ class GitPHP_Project
 					GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] '.$key.' not found');
 				}
 			}
-*/
+//
 			//use defaut branch set in manifest, often missing
 			$default = $this->repoRemote.'/'.$this->repoBranch;
 			$key = 'refs/remotes/'.$default;

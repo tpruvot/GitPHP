@@ -138,7 +138,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 			$fullPath = $projectRoot . $projPath;
 			if (!is_file($fullPath . '/HEAD')) {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
+				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projPath));
 			} else {
 				try {
 					$projectPath = substr($fullPath, strlen($projectRoot));
