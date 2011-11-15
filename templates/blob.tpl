@@ -58,9 +58,13 @@ require.ready(
  <div class="page_body">
    {if $datatag}
      {* We're trying to display an image *}
-     <div>
+     <div class="picture">
        <img src="data:{$mime};base64,{$data}" />
      </div>
+   {elseif $picture}
+    <div class="picture">
+      <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
+    </div>
    {elseif $geshi}
      {* We're using the highlighted output from geshi *}
      {$geshiout}

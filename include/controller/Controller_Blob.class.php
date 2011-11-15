@@ -184,6 +184,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
+		$isPicture = false;
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
 			if ($mime) {
@@ -195,6 +196,17 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					return;
 				}
 			}
+
+		}
+
+		// Alternate system to display pictures (not embedded in HTML as base64)
+		require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
+		$mimetype = FileMime($this->params['file'], true);
+		$isPicture = ($mimetype == 'image');
+		if ($isPicture) {
+			$this->tpl->assign('file', $this->params['file']);
+			$this->tpl->assign('picture', $isPicture);
+			return;
 		}
 
 		$this->tpl->assign('extrascripts', 'blob');
