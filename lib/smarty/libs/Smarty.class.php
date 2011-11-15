@@ -260,7 +260,7 @@ class Smarty extends Smarty_Internal_Data {
         $this->config_dir = '.' . DS . 'configs' . DS;
         $this->debug_tpl = 'file:' . SMARTY_DIR . 'debug.tpl';
         if (isset($_SERVER['SCRIPT_NAME'])) {
-            $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
+            $this->assignGlobal('SCRIPT_NAME', str_replace('/index.php','/',$_SERVER['SCRIPT_NAME']));
         }
     }
 
