@@ -70,7 +70,7 @@ $language_data = array (
     'SYMBOLS' => array(
         '(', ')', '[', ']', '{', '}',
         '!', '@', '%', '&', '|', '/',
-        '<', '>',
+        '<', '>', '\\',
         '=', '-', '+', '*',
         '.', ':', ',', ';',
         '$'
@@ -83,17 +83,17 @@ $language_data = array (
         ),
     'STYLES' => array(
         'KEYWORDS' => array(
-            1 => 'color: #666622; font-weight: bold;',
+            1 => 'color: #660000; font-weight: bold;',
             2 => 'color: #990000;',
             //3 => 'color: #000000; font-weight: bold;'
             ),
         'COMMENTS' => array(
-            1 => 'color: #339900; font-style: italic;',
-            2 => 'color: #000099; font-weight: bold;',
+            1 => 'color: #666666;',
+            2 => 'color: #000099;',
             'MULTI' => ''
             ),
         'ESCAPE_CHAR' => array(
-            0 => 'color: #000099; font-weight: bold;'
+            0 => 'color: #000099;'
             ),
         'BRACKETS' => array(  # keep same as symbols so as to make ${} and $() equiv.
             0 => 'color: #004400;'
@@ -105,7 +105,7 @@ $language_data = array (
             0 => 'color: #CC2200;'
             ),
         'SYMBOLS' => array(
-            0 => 'color: #004400;'
+            0 => 'color: #800000; font-weight: bold;'
             ),
         'REGEXPS' => array(
             0 => 'color: #000088; font-weight: bold;',
