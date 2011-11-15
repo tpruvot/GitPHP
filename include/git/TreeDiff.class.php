@@ -12,6 +12,8 @@
 
 require_once(GITPHP_GITOBJECTDIR . 'FileDiff.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
+
 /**
  * TreeDiff class
  *
@@ -169,10 +171,14 @@ class GitPHP_TreeDiff implements Iterator
 				try {
 					$fileDiff = new GitPHP_FileDiff($this->project, $trimmed);
 					$file = $fileDiff->GetFromFile();
-					if (isset($this->fileStat[$file])) {
-						$arStat = $this->fileStat[$file];
-						$fileDiff->totAdd = reset($arStat);
-						$fileDiff->totDel = next($arStat);
+					$mimetype = FileMime($file, true);
+					$fileDiff->isPicture = ($mimetype == 'image');
+					if (!$fileDiff->isPicture) {
+						if (isset($this->fileStat[$file])) {
+							$arStat = $this->fileStat[$file];
+							$fileDiff->totAdd = reset($arStat);
+							$fileDiff->totDel = next($arStat);
+						}
 					}
 					$this->fileDiffs[] = $fileDiff;
 				} catch (Exception $e) {

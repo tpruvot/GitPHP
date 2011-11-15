@@ -36,6 +36,14 @@
      {* Display the from -> to diff header *}
      {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
 
+  {if $picture}
+    </div>
+    <div class="diff_pict">
+      <img class="old" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blobparent->GetHash()}&amp;f={$file}">
+      <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
+
+  {else}
+
      {t}numstat{/t}:<span class="commit_fadd">{if $filediff->totAdd}+{$filediff->totAdd}{/if}</span>
      <span class="commit_fdel">{if $filediff->totDel}-{$filediff->totDel}{/if}</span>
 
@@ -57,6 +65,9 @@
    {* Display the diff *}
    {include file='filediff.tpl' diff=$filediff->GetDiff($file, false, true)}
    {/if}
+
+ {/if}
+
  </div>
 
 {/block}

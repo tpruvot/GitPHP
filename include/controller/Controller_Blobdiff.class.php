@@ -12,6 +12,8 @@
 
 require_once(GITPHP_CONTROLLERDIR . 'Controller_DiffBase.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
+
 /**
  * Blobdiff controller class
  *
@@ -132,6 +134,10 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 
 		$commit = $this->project->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
+
+		$mimetype = FileMime($this->params['file'], true);
+		$filediff->isPicture = ($mimetype == 'image');
+		$this->tpl->assign('picture', $filediff->isPicture);
 
 		$blobparent = $this->project->GetBlob($this->params['hashparent']);
 		$blobparent->SetCommit($commit);

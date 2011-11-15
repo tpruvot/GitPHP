@@ -317,3 +317,16 @@ div.debug_footer
 #blobData td.ln {
 	border-right: 1px solid silver;
 }
+
+/* Pictures */
+div.diff_pict {
+	text-align: center;
+}
+
+div.diff_pict img.old {
+	margin-right: 4px;
+}
+div.diff_pict img.new {
+	margin-left: 4px;
+}
+

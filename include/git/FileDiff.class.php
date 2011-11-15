@@ -15,6 +15,7 @@ require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'UTF8.inc.php');
+require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
 
 /**
  * Commit class
@@ -192,6 +193,9 @@ class GitPHP_FileDiff
 
 	/* count of diff blocs for <a names> */
 	public $diffCount=0;
+
+	/* used for pictures in treediff */
+	public $isPicture=false;
 
 	/**
 	 * __construct
@@ -632,6 +636,10 @@ class GitPHP_FileDiff
 				}
 			}
 
+			// skip diff parsing for pictures
+			$mimetype = FileMime($this->params['file'], true);
+			if ($mimetype == 'image') return "";
+
 			$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
 			if (!empty($fromTmpFile)) {
@@ -880,6 +888,7 @@ class GitPHP_FileDiff
 			}
 			$output .= xdiff_string_diff($fromData, $toData, $context);
 		}
+
 		return $output;
 	}
 

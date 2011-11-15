@@ -119,7 +119,13 @@
      {/if}
 
      </div>
-     {if $sidebyside}
+
+     {if $filediff->isPicture}
+     <div class="diff_pict">
+       <img class="old" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetFromHash()}&amp;f={$filediff->GetFromFile()}">
+       <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetToHash()}&amp;f={$filediff->GetToFile()}">
+     </div>
+     {elseif $sidebyside}
         {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
      {else}
         {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
