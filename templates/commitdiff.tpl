@@ -122,8 +122,12 @@
 
      {if $filediff->isPicture}
      <div class="diff_pict">
-       <img class="old" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetFromHash()}&amp;f={$filediff->GetFromFile()}">
-       <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetToHash()}&amp;f={$filediff->GetToFile()}">
+      {if $filediff->GetStatus() == 'A'}
+       {t}(new){/t}
+      {else}
+       <img class="old" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetFromHash()}&amp;f={$filediff->GetFromFile()}">
+      {/if}
+       <img class="new" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$filediff->GetToHash()}&amp;f={$filediff->GetToFile()}">
      </div>
      {elseif $sidebyside}
         {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}

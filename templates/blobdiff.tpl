@@ -39,8 +39,12 @@
   {if $picture}
     </div>
     <div class="diff_pict">
-      <img class="old" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blobparent->GetHash()}&amp;f={$file}">
-      <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
+     {if $filediff->GetStatus() == 'A'}
+      {t}(new){/t}
+     {else}
+      <img class="old" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blobparent->GetHash()}&amp;f={$file}">
+     {/if}
+      <img class="new" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
 
   {else}
 
