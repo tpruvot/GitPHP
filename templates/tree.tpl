@@ -7,6 +7,16 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=javascriptpaths}
+{if file_exists('js/tree.min.js')}
+GitPHPJSPaths.projectlist = "tree.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+	GitPHPJSModules = ['tree'];
+{/block}
+
+
 {block name=main}
 
  {* Nav *}

@@ -43,32 +43,36 @@
     <script src="js/ext/require.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
-    require({ldelim}
-    	baseUrl: 'js',
-	paths: {ldelim}
-	{if $extrascripts}
-	  {if file_exists("js/$extrascripts.min.js")}
-	  	{$extrascripts}: "{$extrascripts}.min",
-	  {/if}
-	{else}
-	  {if file_exists('js/common.min.js')}
-	  	common: "common.min",
-	  {/if}
-	{/if}
+	var GitPHPJSPaths = {ldelim}
 	{if $googlejs}
-		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
+	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
 	{else}
-		jquery: 'ext/jquery.min'
+	jquery: 'ext/jquery.min'
 	{/if}
-	{rdelim},
-	priority: ['jquery']
-    {rdelim}, [
-    	{if $extrascripts}
-	  '{$extrascripts}'
-	{else}
-	  'common'
+{rdelim};
+	{block name=javascriptpaths}
+	{if file_exists('js/common.min.js')}
+	GitPHPJSPaths.common = "common.min";
 	{/if}
-      ]);
+	{if $extrascripts}
+	 {if file_exists("js/$extrascripts.min.js")}
+		{$extrascripts}: "{$extrascripts}.min",
+	 {/if}
+	{/if}
+	{/block}
+	var GitPHPJSModules = null;
+	{block name=javascriptmodules}
+	GitPHPJSModules = ['common'];
+	{if $extrascripts}
+	'{$extrascripts}'
+	{/if}
+	{/block}
+	require({ldelim}
+	  baseUrl: 'js',
+	  paths: GitPHPJSPaths,
+	  priority: ['jquery']
+	  {rdelim}, GitPHPJSModules
+	);
     </script>
     {block name=javascript}
     {/block}

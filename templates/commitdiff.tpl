@@ -7,10 +7,13 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascript}
-  {if $sidebyside}
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="sidebyside" src="js/sidebyside.js"></script>
-  {/if}
+{block name=javascriptpaths}
+{if file_exists('js/commitdiff.min.js')}
+GitPHPJSPaths.commitdiff = "commitdiff.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+	GitPHPJSModules = ['commitdiff','sidebyside'];
 {/block}
 
 {block name=main}

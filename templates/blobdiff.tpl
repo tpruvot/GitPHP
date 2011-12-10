@@ -8,8 +8,13 @@
 {extends file='projectbase.tpl'}
 
 {if $sidebyside}
-{block name=javascript}
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="sidebyside" src="js/sidebyside.js"></script>
+{block name=javascriptpaths}
+{if file_exists('js/sidebyside.min.js')}
+GitPHPJSPaths.projectlist = "sidebyside.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+	GitPHPJSModules = ['sidebyside'];
 {/block}
 {/if}
 

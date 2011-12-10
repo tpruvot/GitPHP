@@ -21,6 +21,15 @@
 {/if}
 {/block}
 
+{block name=javascriptpaths}
+{if file_exists('js/blob.min.js')}
+GitPHPJSPaths.blob = "blob.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+	GitPHPJSModules = ['blob'];
+{/block}
+
 {block name=javascript}
 {if $fixupjs}
 <script type="text/javascript">
