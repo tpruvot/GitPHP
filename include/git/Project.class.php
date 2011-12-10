@@ -1114,7 +1114,6 @@ class GitPHP_Project
 			return $this->tags['refs/tags/' . $hash]->GetCommit();
 
 		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
-			var_dump($hash);
 			$hash = $this->ExpandHash($hash);
 		}
 
