@@ -321,7 +321,7 @@ div.list_head {
 	padding: 6px 8px 4px;
 	border: solid #d9d8d1;
 	border-width: 1px 0px 0px;
-	font-style: italic;
+	font-weight: bold;
 }
 
 a.list {
