@@ -604,10 +604,14 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		}
 
-		$header = true;
+		$linecount = count($lines);
+		$i = 0;
+		$encoding = null;
 
-		foreach ($lines as $i => $line) {
-			if ($header && preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
+		/* Commit header */
+		for ($i = 0; $i < $linecount; $i++) {
+			$line = $lines[$i];
+			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
 				try {
 					$tree = $this->GetProject()->GetTree($regs[1]);
@@ -617,32 +621,50 @@ class GitPHP_Commit extends GitPHP_GitObject
 					}
 				} catch (Exception $e) {
 				}
-			} else if ($header && preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
+			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Parent */
 				try {
 					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
 				} catch (Exception $e) {
 				}
-			} else if ($header && preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* author data */
 				$this->author = $regs[1];
 				$this->authorEpoch = $regs[2];
 				$this->authorTimezone = $regs[3];
-			} else if ($header && preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if (preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* committer data */
 				$this->committer = $regs[1];
 				$this->committerEpoch = $regs[2];
 				$this->committerTimezone = $regs[3];
-			} else {
-				/* commit comment */
-				$header = false;
-				$trimmed = trim($line);
-				if (empty($this->title) && (strlen($trimmed) > 0))
-					$this->title = $trimmed;
-				if (!empty($this->title)) {
-					if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
-						$this->comment[] = $trimmed;
+			} else if (preg_match('/^encoding (.+)$/', $line, $regs)) {
+				$gitEncoding = trim($regs[1]);
+				if ((strlen($gitEncoding) > 0) && function_exists('mb_list_encodings')) {
+					$supportedEncodings = mb_list_encodings();
+					$encIdx = array_search(strtolower($gitEncoding), array_map('strtolower', $supportedEncodings));
+					if ($encIdx !== false) {
+						$encoding = $supportedEncodings[$encIdx];
+					}
 				}
+				$encoding = trim($regs[1]);
+			} else if (strlen($line) == 0) {
+				break;
+			}
+		}
+		
+		/* Commit body */
+		for ($i += 1; $i < $linecount; $i++) {
+			$trimmed = trim($lines[$i]);
+
+			if ((strlen($trimmed) > 0) && (strlen($encoding) > 0) && function_exists('mb_convert_encoding')) {
+				$trimmed = mb_convert_encoding($trimmed, 'UTF-8', $encoding);
+			}
+
+			if (empty($this->title) && (strlen($trimmed) > 0))
+				$this->title = $trimmed;
+			if (!empty($this->title)) {
+				if ((strlen($trimmed) > 0) || ($i < ($linecount-1)))
+					$this->comment[] = $trimmed;
 			}
 		}
 
