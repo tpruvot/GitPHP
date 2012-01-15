@@ -57,6 +57,16 @@ abstract class GitPHP_ControllerBase
 	protected $headers = array();
 
 	/**
+	 * preserveWhitespace
+	 *
+	 * Flag to preserve whitespace in output
+	 * (for non-html output)
+	 *
+	 * @access protected
+	 */
+	protected $preserveWhitespace = false;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -254,7 +264,6 @@ abstract class GitPHP_ControllerBase
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
-		$this->tpl->assign('debug', GitPHP_Config::GetInstance()->GetValue('debug', false));
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('googlejs', GitPHP_Config::GetInstance()->GetValue('googlejs', false));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
@@ -325,6 +334,10 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->clearAllAssign();
 			$this->LoadCommonData();
 			$this->LoadData();
+		}
+
+		if (!$this->preserveWhitespace) {
+			$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
