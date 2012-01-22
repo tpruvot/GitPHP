@@ -89,7 +89,7 @@
          <div>
 	{foreach from=$requestvars key=var item=val}
 	{if $var != "l"}
-	<input type="hidden" name="{$var}" value="{$val}" />
+	<input type="hidden" name="{$var}" value="{$val|escape}" />
 	{/if}
 	{/foreach}
 	<label for="selLang">{t}language:{/t}</label>
