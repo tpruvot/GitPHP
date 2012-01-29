@@ -42,20 +42,20 @@
       {assign var=resultobject value=$result.object}
       {if $resultobject instanceof GitPHP_Tree}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path}" class="list"><strong>{$path}</strong></a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path|escape:'url'}" class="list"><strong>{$path}</strong></a>
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path}">{t}tree{/t}</a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path|escape:'url'}">{t}tree{/t}</a>
 	      </td>
       {else}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$result.object->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path}" class="list"><strong>{$path|highlight:$search}</strong></a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$result.object->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path|escape:'url'}" class="list"><strong>{$path|highlight:$search}</strong></a>
 		  {foreach from=$result.lines item=line name=match key=lineno}
 		    {if $smarty.foreach.match.first}<br />{/if}<span class="matchline">{$lineno}. {$line|highlight:$search:50:true}</span><br />
 		  {/foreach}
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$path}">{t}history{/t}</a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path|escape:'url'}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$path|escape:'url'}">{t}history{/t}</a>
 	      </td>
       {/if}
     </tr>
