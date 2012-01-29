@@ -13,10 +13,7 @@ GitPHPJSPaths.projectlist = "projectlist.min";
 {/if}
 {/block}
 {block name=javascriptmodules}
-	GitPHPJSModules = ['projectlist'];
-{/block}
-
-{block name=javascript}
+GitPHPJSModules = ['projectlist'];
 {/block}
 
 {block name=main}

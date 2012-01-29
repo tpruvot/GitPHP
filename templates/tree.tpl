@@ -9,13 +9,12 @@
 
 {block name=javascriptpaths}
 {if file_exists('js/tree.min.js')}
-GitPHPJSPaths.projectlist = "tree.min";
+GitPHPJSPaths.tree = "tree.min";
 {/if}
 {/block}
 {block name=javascriptmodules}
-	GitPHPJSModules = ['tree'];
+GitPHPJSModules = ['tree'];
 {/block}
-
 
 {block name=main}
 

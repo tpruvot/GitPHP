@@ -3,11 +3,11 @@ About this fork :
 
 
 This fork was based on GitPHP v0.2.3 from http://xiphux.com/programming/gitphp/
-It implements all features of xiphux 0.2.4 and also some future features
+It implements all features of xiphux 0.2.6
 
 The original skin can be seen here : http://gitphp.xiphux.com/
 
-A new one (blue based on gitphp-glip) can be seen here : http://pruvot.tk/gitphp/
+A new one (blue based on gitphp-glip) can be seen here : http://tanguy.ath.cx/gitphp/
 
 
 Changes made by Tanguy Pruvot (2011) :
@@ -23,7 +23,6 @@ Enhancements :
 + Latin charset support (automatic UTF-8 Conversion on output, if needed)
 + use origin git clone url as description
 + use git user.name as default owner
-+ geshi update
 + basic remote support
 + fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
   made with a new config variable "fixupjs" where we can add a jQuery script
@@ -31,9 +30,10 @@ Enhancements :
 + New options to toggle display of owner and for default sort order of project list
 + Side by Side line numbers, Tab/Space display and copy paste
 + Support for shortened hashes and search by commit hash
++ Support pictures diff
 
 Addons :
-+ Gitweb alternative skin, blue (based on gitphp-glip theme, many fixes made... need some css cleanup)
++ Gitweb alternative skin, blue (based on gitphp-glip theme, many fixes made...)
 
 
 TODO :

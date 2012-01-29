@@ -195,7 +195,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	private $treeReferenced = false;
 
-
 	/**
 	 * __construct
 	 *

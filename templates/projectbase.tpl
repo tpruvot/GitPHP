@@ -47,7 +47,7 @@
 {block name=footer}
   <div class="page_footer_text">
   {if $project->GetWebsite()}
-  {$project->GetDescription()}
+  <a href="{$project->GetWebsite()}">{$project->GetDescription()}</a>
   {else}
   {$project->GetDescription()}
   {/if}

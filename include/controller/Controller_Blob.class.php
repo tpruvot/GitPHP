@@ -197,7 +197,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					return;
 				}
 			}
-
 		}
 
 		// Alternate system to display pictures (not embedded in HTML as base64)
@@ -237,7 +236,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		$this->tpl->assign('bloblines', $blob->GetData(true));
-
 	}
 
 }
