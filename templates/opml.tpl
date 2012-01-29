@@ -5,7 +5,7 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-<?xml version="1.0" encoding="utf-8"?>
+{'<?xml version="1.0" encoding="utf-8"?>'}
 <opml version="1.0">
   <head>
     <title>{$pagetitle} OPML Export</title>
