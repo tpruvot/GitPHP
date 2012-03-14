@@ -24,12 +24,12 @@ GitPHPJSPaths.projectlist = "sidebyside.min";
    {include file='nav.tpl' treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=unified">{t}unified{/t}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=unified">{t}unified{/t}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=sidebyside#D1">{t}side by side{/t}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=sidebyside#D1">{t}side by side{/t}</a>
    {/if}
     |
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blobdiff_plain&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;f={$file}">{t}plain{/t}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff_plain&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;f={$file}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -39,7 +39,7 @@ GitPHPJSPaths.projectlist = "sidebyside.min";
  <div class="page_body diff-file">
    <div class="diff_info">
      {* Display the from -> to diff header *}
-     {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
+     {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
 
   {if $picture}
     </div>
@@ -47,9 +47,9 @@ GitPHPJSPaths.projectlist = "sidebyside.min";
      {if $filediff->GetStatus() == 'A'}
       {t}(new){/t}
      {else}
-      <img class="old" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blobparent->GetHash()}&amp;f={$file}">
+      <img class="old" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$blobparent->GetHash()}&amp;f={$file}">
      {/if}
-      <img class="new" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
+      <img class="new" valign="middle" src="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}">
 
   {else}
 

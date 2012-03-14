@@ -11,7 +11,7 @@ Date: {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
 {if $tag}
 X-Git-Tag: {$tag->GetName()}
 {/if}
-X-Git-Url: {scripturl}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}
+X-Git-Url: {scripturl}?p={$project->GetProject('f')}&amp;a=commitdiff&amp;h={$commit->GetHash()}
 Subject: {foreach from=$commit->GetComment() item=line}
 {$line}
 {/foreach}
