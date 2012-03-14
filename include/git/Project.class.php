@@ -335,8 +335,11 @@ class GitPHP_Project
 	 * @access public
 	 * @return string the project
 	 */
-	public function GetProject()
+	public function GetProject($urlencode='')
 	{
+		if ($urlencode == 'f') {
+			return GitPHP_Util::UrlEncodeFilePath($this->project);
+		}
 		return $this->project;
 	}
 

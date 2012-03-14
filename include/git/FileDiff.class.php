@@ -435,10 +435,14 @@ class GitPHP_FileDiff
 	 * @access public
 	 * @return string from file
 	 */
-	public function GetFromFile()
+	public function GetFromFile($urlencode='')
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
+
+		if ($urlencode == 'f') {
+			return GitPHP_Util::UrlEncodeFilePath($this->fromFile);
+		}
 
 		return $this->fromFile;
 	}
@@ -451,10 +455,14 @@ class GitPHP_FileDiff
 	 * @access public
 	 * @return string to file
 	 */
-	public function GetToFile()
+	public function GetToFile($urlencode='')
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
+
+		if ($urlencode == 'f') {
+			return GitPHP_Util::UrlEncodeFilePath($this->toFile);
+		}
 
 		return $this->toFile;
 	}

@@ -47,6 +47,26 @@ class GitPHP_Util
 	}
 
 	/**
+	 * UrlEncodeFilePath
+	 *
+	 * Special escape url function to keep slashes in urls...
+	 *
+	 * @access public
+	 * @static
+	 * @param string $path
+	 * @return string $path encoded
+	 */
+	public static function UrlEncodeFilePath($path)
+	{
+		if (empty($path))
+			return $path;
+
+		$encoded = rawurlencode($path);
+		$encoded = str_replace('%2F', '/', $encoded);
+		return $encoded;
+	}
+
+	/**
 	 * IsWindows
 	 *
 	 * Tests if this is running on windows

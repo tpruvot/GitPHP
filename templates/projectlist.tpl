@@ -81,9 +81,9 @@ git source code archive
 
     <tr class="{cycle values="light,dark"} projectRow">
       <td class="projectName">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
         {if $projecthead}
@@ -104,13 +104,13 @@ git source code archive
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {/if}
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary">{t}summary{/t}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=shortlog">{t}shortlog{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=log">{t}log{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=tree">{t}tree{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=shortlog">{t}shortlog{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=log">{t}log{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=tree">{t}tree{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>
