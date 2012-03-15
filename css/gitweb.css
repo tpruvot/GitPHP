@@ -341,6 +341,26 @@ div.log_link {
 	zoom: 80%;
 }
 
+/* Commit message and signed off / Bug urls */
+
+span.signedOffBy {
+	color: gray;
+}
+
+span.changeId {
+	color: darkGreen;
+}
+
+a.buglink {
+	color: navy;
+	text-decoration: none;
+}
+
+a.buglink:hover {
+	text-decoration: underline;
+	color: darkGreen;
+}
+
 /* ShortLog Commit titles */
 
 span.commit_title {

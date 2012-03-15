@@ -368,6 +368,19 @@ span.signedOffBy {
 	color: gray;
 }
 
+span.changeId {
+	color: #000080;
+}
+
+a.buglink {
+	color: navy;
+	text-decoration: none;
+}
+
+a.buglink:hover {
+	text-decoration: underline;
+	color: #880000;
+}
 
 /*
  * Diff display

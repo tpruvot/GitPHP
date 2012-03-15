@@ -103,6 +103,9 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  */
 //$gitphp_conf['bugpattern'] = '/#([0-9]+)/';
 
+// Gerrit sample :
+$gitphp_conf['bugpattern'] = '/(I[0-9abcdef]{5,40}+)/';
+
 /*
  * bugurl
  * Sets the URL for the bug tracker.  This URL must have
@@ -111,6 +114,9 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  * group.
  */
 //$gitphp_conf['bugurl'] = 'http://localhost/mantis/view.php?id=${1}';
+
+// Gerrit sample :
+$gitphp_conf['bugurl'] = 'https://android-review.googlesource.com/#/q/${1},n,z';
 
 /*
  * self

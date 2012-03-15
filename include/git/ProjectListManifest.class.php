@@ -171,11 +171,11 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 					}
 
 					//gerrit
-					$remoteUrl = @ $remotes[$remoteName]['review'];
+					/* $remoteUrl = @ $remotes[$remoteName]['review'];
 					if (!empty($remoteUrl)) {
-						$remoteUrl = 'http://'.$remoteUrl.'/#q,project:'.$repository['name'];
+						//$remoteUrl .= '/#q,project:'.$repository['name'];
 						$projObj->SetBugUrl($remoteUrl);
-					}
+					} */
 
 					$this->projects[$projPath] = $projObj;
 

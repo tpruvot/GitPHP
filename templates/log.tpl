@@ -75,6 +75,8 @@
      {foreach from=$rev->GetComment() item=line}
        {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
        <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
+       {elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
+       <span class="changeId">{$line|buglink:$bugpattern:$bugurl}</span>
        {else}
        {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}
        {/if}
