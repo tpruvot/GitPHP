@@ -27,11 +27,10 @@ GitPHPJSPaths.projectlist = "blob.min";
 {block name=javascript}
 {if $fixupjs}
 <script type="text/javascript">
-require.ready(
-    function($) {
+require(["jquery"],
+function($) {
     {$fixupjs}
-    }
-);
+});
 </script>
 {/if}
 {/block}
