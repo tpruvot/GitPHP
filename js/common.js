@@ -11,7 +11,7 @@
 
 define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
 	function($, getProject, lang, tooltipSnapshot) {
-		jQuery(function($) {
+		$(function() {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
 		});

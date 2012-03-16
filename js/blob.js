@@ -10,7 +10,7 @@
  */
 
 define(["jquery", "modules/blameasync", "common"], function($, blameAsync) {
-	jQuery(function($) {
+	$(function() {
 		blameAsync.init($('table#blobData'), $('a#blameLink'));
 	});
 });
