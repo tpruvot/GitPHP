@@ -40,7 +40,7 @@
     </style>
     {/if}
     {if $javascript}
-    <script src="js/ext/require.js"></script>
+    <script src="js/ext/require.min.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
 	var GitPHPJSPaths = {ldelim}
