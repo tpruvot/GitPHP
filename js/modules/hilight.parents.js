@@ -22,28 +22,27 @@ define(["jquery"],
 				var jThis = $(this);
 				var jTR = jThis.parents('tr[commit-parents]:first');
 				if (jTR.size()) {
+
 					var jTable = jTR.parents('table:first');
-					var hashes = splitParentHashes(jTR);
-					var tds = [];
-					for (var phash in hashes) {
-						var hash = hashes[phash];
-						jTD = jQuery("td.monospace:contains('" + hash + "')");
-						tds.push(jTD.first());
+					var arHashes = splitParentHashes(jTR);
+					var arParents = [];
+					for (var phash in arHashes) {
+						var hash = arHashes[phash];
+						jTD = jTable.find("td.monospace:contains('" + hash + "')");
+						arParents.push(jTD.parents('tr:first').first());
 					}
-					jTR.data('parents', tds);
+					jTR.data('parents', arParents);
 
 					jTR.mouseenter(function() {
-						if (jQuery(this).data('parents')) {
-							var tds = jQuery(this).data('parents');
-							for (var td in tds)
-								jQuery(tds[td]).css('background-color', '#edece6');
+						var arParents = jQuery(this).data('parents');
+						if (arParents) for (var tr in arParents) {
+							jQuery(arParents[tr]).addClass('hoverParent');
 						}
 					})
 					.mouseleave(function() {
-						if (jQuery(this).data('parents')) {
-							var tds = jQuery(this).data('parents');
-							for (var td in tds)
-								jQuery(tds[td]).css('background-color', '');
+						var arParents = jQuery(this).data('parents');
+						if (arParents) for (var tr in arParents) {
+							jQuery(arParents[tr]).removeClass('hoverParent');
 						}
 					});
 				}
