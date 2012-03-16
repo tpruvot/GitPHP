@@ -55,7 +55,7 @@
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=snapshot&amp;h={$commit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
-       {assign var=baseurl value=urlencode($project->GetProject())}
+       {assign var=baseurl value=$project->GetProject('f')}
        {assign var=hc value=$commit->GetHash()}
        {assign var=hp value=$par->GetHash()}
        <tr>
