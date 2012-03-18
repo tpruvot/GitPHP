@@ -996,16 +996,14 @@ class GitPHP_Project
 			//only use selected branch if set, faster
 			$selected = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
 			if (array_key_exists($selected, $this->remotes)) {
-				$array = array($this->remotes[$selected]);
+				$array = array($selected => $this->remotes[$selected]);
 			}
 		}
 
 		foreach ($array as $head) {
 			$commit = $head->GetCommit();
-			if ($commit) {
-				if ($commit->GetCommitterEpoch() > $epoch) {
-					$epoch = $commit->GetCommitterEpoch();
-				}
+			if ($commit && $commit->GetCommitterEpoch() > $epoch) {
+				$epoch = $commit->GetCommitterEpoch();
 			}
 		}
 		if ($epoch > 0) {
@@ -1105,6 +1103,11 @@ class GitPHP_Project
 				}
 			}
 			return null;
+		} else if (substr_compare($hash, 'refs/remotes/', 0, 13) === 0) {
+			if (!array_key_exists($hash, $this->remotes)) {
+				$this->remotes[$hash] = new GitPHP_RemoteHead($this, $hash);
+			}
+			return $this->remotes[$hash]->GetCommit();
 		}
 
 		if (!$this->readRefs)
@@ -1116,7 +1119,7 @@ class GitPHP_Project
 		if (isset($this->tags['refs/tags/' . $hash]))
 			return $this->tags['refs/tags/' . $hash]->GetCommit();
 
-		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
+		if (strlen($hash < 40) && preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
 			$hash = $this->ExpandHash($hash);
 		}
 
@@ -1132,7 +1135,6 @@ class GitPHP_Project
 			}
 
 			return $this->commitCache[$hash];
-
 		}
 
 		return null;
@@ -1568,21 +1570,24 @@ class GitPHP_Project
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '-r';
-		$ret = $exe->Execute('remote', $args);
+		$ret = $exe->Execute('branch', $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
 
 		$remotes = array();
 		foreach ($lines as $ref) {
-			if (isset($this->remotes[$ref])) {
-				$remotes[] = $this->remotes[$ref];
+			$key = 'refs/remotes/'.trim($ref);
+			if (!isset($this->remotes[$key])) {
+				$this->remotes[$key] = new GitPHP_RemoteHead($this, $key);
 			}
+			$remotes[$key] = $this->remotes[$key];
 		}
+		//to fix...
+		//usort($remotes, array('GitPHP_RemoteHead', 'CompareAge'));
 		if (($count > 0) && (count($remotes) > $count)) {
-			$remotes = array_slice($remotes, 0, $count);
+			$remotes = array_slice($this->remotes, 0, $count);
 		}
-
 		return $remotes;
 	}
 

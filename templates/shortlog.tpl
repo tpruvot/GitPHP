@@ -22,13 +22,13 @@
      {t}HEAD{/t}
    {/if}
      &sdot; 
-   {if $page > 0}
+   {if $page > 0 && $commit}
      <a href="{$baseurl}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page-1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
    {else}
      {t}prev{/t}
    {/if}
      &sdot; 
-   {if $hasmorerevs}
+   {if $hasmorerevs && $commit}
      <a href="{$baseurl}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page+1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="n" title="Alt-n">{t}next{/t}</a>
    {else}
      {t}next{/t}
@@ -37,13 +37,17 @@
    {if $mark}
      {t}selected{/t} &sdot;
      <a href="{$baseurl}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 80}title="{$mark->GetTitle()|htmlspecialchars}"{/if}><strong>{$mark->GetTitle(80)}</strong></a>
+     {if $commit}
      &sdot;
      <a href="{$baseurl}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
+     {/if}
      <br />
    {/if}
  </div>
 
+ {if $commit}
  {include file='title.tpl' target='summary' titlecommit=$commit}
+ {/if}
 
  {include file='shortloglist.tpl' source='shortlog'}
 

@@ -141,6 +141,9 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 		if (strstr($this->refName,'/refs/tags/')) {
 			$this->refName = substr(strstr($this->refName,'/refs/tags/'), 11);
 			$this->refDir = 'tags';
+		} elseif (strstr($this->refName,'/refs/remotes/')) {
+			$this->refDir = 'remotes';
+			$this->refName = substr(strstr($this->refName,'/refs/remotes/'), 14);
 		}
 		return 'refs/' . $this->refDir . '/' . $this->refName;
 	}

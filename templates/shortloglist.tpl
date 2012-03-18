@@ -53,7 +53,7 @@
      <tr><td><em>{t}No commits{/t}</em></td></tr>
    {/foreach}
 
-   {if $hasmorerevs}
+   {if $hasmorerevs && $commit}
      <tr>
      {if $source == 'summary'}
        <td><a href="{$baseurl}&amp;a=shortlog">&hellip;</a></td>

@@ -45,6 +45,7 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 	 */
 	public function __construct($project, $head, $headHash = '', $refDir='remotes')
 	{
+		$head = preg_replace('#^refs/remotes/#', '', $head);
 		parent::__construct($project, $refDir, $head, $headHash);
 	}
 
@@ -78,7 +79,6 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 		if (!$this->commit) {
 			$this->commit = $this->project->GetCommit($this->GetHash());
 		}
-
 		return $this->commit;
 	}
 	
