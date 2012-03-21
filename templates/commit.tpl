@@ -19,7 +19,10 @@
 {else}
 	{include file='title.tpl' titlecommit=$commit titletree=$tree target='tree'}
 {/if}
- 
+
+{assign var="baseurl"
+      value="{$SCRIPT_NAME}?p={$project->GetProject('f')}"
+}
  <div class="title_text">
    {* Commit data *}
    <table cellspacing="0">
@@ -51,19 +54,18 @@
      </tr>
      <tr>
        <td>{t}tree{/t}</td>
-       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=snapshot&amp;h={$commit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a></td>
+       <td class="monospace"><a href="{$baseurl}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
+       <td class="link"><a href="{$baseurl}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}">{t}tree{/t}</a> | <a href="{$baseurl}&amp;a=snapshot&amp;h={$commit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
-       {assign var=baseurl value=$project->GetProject('f')}
        {assign var=hc value=$commit->GetHash()}
        {assign var=hp value=$par->GetHash()}
        <tr>
          <td>{t}parent{/t}</td>
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}" class="list">{$hp}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commit&amp;h={$hp}">{t}commit{/t}</a> | <a 
-           href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=unified">{t}commitdiff{/t} {t}unified{/t}</a> | <a
-           href="{$SCRIPT_NAME}?p={$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=sidebyside">{t}side by side{/t}</a>
+         <td class="monospace"><a href="{$baseurl}&amp;a=commit&amp;h={$hp}" class="list">{$hp}</a></td>
+         <td class="link"><a href="{$baseurl}&amp;a=commit&amp;h={$hp}">{t}commit{/t}</a> | <a 
+           href="{$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=unified">{t}commitdiff{/t} {t}unified{/t}</a> | <a
+           href="{$baseurl}&amp;a=commitdiff&amp;h={$hc}&amp;hp={$hp}&amp;o=sidebyside">{t}side by side{/t}</a>
          </td>
        </tr>
      {/foreach}
@@ -98,7 +100,7 @@
 	 <td class="commit_fdel">{if $diffline->totDel}-{$diffline->totDel}{/if}</td>
        {if $diffline->GetStatus() == "A"}
 	 <td>
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -116,14 +118,14 @@
 	   </span>
 	 </td>
 	 <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}blob{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}blob{/t}</a>
 	    | 
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetFromFile('f')}">{t}plain{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetFromFile('f')}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
 	 {assign var=parent value=$commit->GetParent()}
 	 <td>
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -134,20 +136,20 @@
 	   </span>
 	 </td>
 	 <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}blob{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}blob{/t}</a>
 	    | 
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=history&amp;h={$parent->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}history{/t}</a>
+	   <a href="{$baseurl}&amp;a=history&amp;h={$parent->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}history{/t}</a>
 	    | 
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$diffline->GetFromHash()}&amp;f={$diffline->GetFromFile('f')}">{t}plain{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob_plain&amp;h={$diffline->GetFromHash()}&amp;f={$diffline->GetFromFile('f')}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
 	 <td>
            {if $diffline->GetToHash() != $diffline->GetFromHash()}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
+             <a href="{$baseurl}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {else}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
+             <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {/if}
@@ -194,22 +196,22 @@
 	   {/if}
 	 </td>
 	 <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}blob{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}diff{/t}</a>
+	     | <a href="{$baseurl}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}diff{/t}</a>
 	   {/if}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}history{/t}</a>
-             | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile('f')}">{t}plain{/t}</a>
+	     | <a href="{$baseurl}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}">{t}history{/t}</a>
+             | <a href="{$baseurl}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile('f')}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
 	 <td>
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}" class="list">
 	     {$diffline->GetToFile()}</a>
 	 </td>
 	 <td>
 	   <span class="movedfile">
 	     {capture assign=fromfilelink}
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">{$diffline->GetFromFile()}</a>
+	     <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile('f')}" class="list">{$diffline->GetFromFile()}</a>
 	     {/capture}
 	     [
 	     {assign var=similarity value=$diffline->GetSimilarity()}
@@ -223,11 +225,11 @@
 	   </span>
 	 </td>
 	 <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}blob{/t}</a>
+	   <a href="{$baseurl}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}diff{/t}</a>
+	     | <a href="{$baseurl}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile('f')}">{t}diff{/t}</a>
 	   {/if}
-	    | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile('f')}">{t}plain{/t}</a>
+	    | <a href="{$baseurl}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile('f')}">{t}plain{/t}</a>
 	 </td>
        {/if}
 
