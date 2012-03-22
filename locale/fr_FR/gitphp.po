@@ -662,25 +662,26 @@ msgstr "choisir"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
-#: templates/footer.tpl
+#: templates/projectbase.tpl
 msgid "Atom"
 msgstr "Atom"
 
 # Used as the title of the Atom controller
 # Atom is a standard web feed format
-#: include/controller/Controller_Feed.class.php:90
+#: include/controller/Controller_Feed.class.php:97
 msgid "atom"
 msgstr "atom"
 
 # Used as an error message when memcache is turned
 # on without the appropriate PHP extension installed
-#: include/cache/Memcache.class.php:103
+#: include/smartyplugins/cacheresource.memcache.php:85
 #msgid "The Memcached or Memcache PHP extension is required for Memcache support"
-#msgstr "keep"
+#msgstr ""
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
-#: templates/header.tpl templates/projectlist.tpl
+#: templates/jsconst.tpl
+#: templates/projectlist.tpl
 msgid "No matches found for \"%1\""
 msgstr "Aucun résultat trouvé pour \"%1\""
 
@@ -692,7 +693,7 @@ msgstr "Recherche de projets "
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:131
+#: index.php:140
 #, php-format
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
@@ -702,7 +703,7 @@ msgstr "Impossible de lancer l'exécutable git \"%1$s\". Vous devez définir le 
 # Error message displayed when the diff executable isn't found or doesn't work
 # %1$s: the diff executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:135
+#: index.php:145
 #, php-format
 msgid ""
 "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
@@ -723,3 +724,18 @@ msgstr "(tous)"
 #, php-format
 msgid "Binary files %1$s and %2$s differ"
 msgstr "Fichiers %1$s et %2$s différents"
+
+# Used to label the url of the website of the project
+#: templates/project.tpl
+msgid "website"
+msgstr ""
+
+# This is the name of YOUR language, in your language.
+# Don't just translate the word "English".
+# This will be displayed as a choice in the language picker for your language.
+# You want this in your native language so speakers of your language
+# will recognize it.  For example, a french translation would translate
+# this as "Français".
+#: include/Resource.class.php:121
+msgid "English"
+msgstr "Français"
