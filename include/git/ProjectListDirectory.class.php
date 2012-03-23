@@ -241,7 +241,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	public function CacheSaveProjectList()
 	{
 		$data = serialize($this->projects);
-		return (file_put_contents(CACHE_PROJECTLIST,$data) > 0);
+		if ($data != file_get_contents(CACHE_PROJECTLIST)) {
+			return (file_put_contents(CACHE_PROJECTLIST,$data) > 0);
+		}
+		return true;
 	}
 
 }
