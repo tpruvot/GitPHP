@@ -4,13 +4,14 @@
 #
 # Christopher Han <xiphux@gmail.com>, 2010.
 # Zaran Krleza <zaran.krleza@gmail.com>, 2010.
+# Tanguy Pruvot <tpruvot@github>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.4\n"
+"Project-Id-Version: GitPHP 0.2.6\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2011-07-23 14:05+0200\n"
-"Last-Translator: Tanguy Pruvot <tanguy.pruvot@gmail.com>\n"
+"PO-Revision-Date: 2012-03-25 07:05+0100\n"
+"Last-Translator: Tanguy Pruvot <tpruvot@github>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -115,7 +116,7 @@ msgstr "diff"
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
-msgstr "commit"
+msgstr "utilisateur"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
@@ -223,7 +224,7 @@ msgstr "déplacé depuis %1- %2% de concordance"
 #: templates/title.tpl templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:80
 msgid "shortlog"
-msgstr "commits"
+msgstr "log"
 
 # Used as title for and link to log view with full commit messages
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
@@ -356,7 +357,7 @@ msgstr "Aucun projet trouvé"
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 #: templates/blob.tpl include/controller/Controller_Blame.class.php:79
 msgid "blame"
-msgstr "annoter"
+msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
 #: include/controller/Controller_Rss.class.php:35
@@ -658,7 +659,7 @@ msgstr "langue :"
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
-msgstr "choisir"
+msgstr "Ok"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
@@ -728,7 +729,7 @@ msgstr "Fichiers %1$s et %2$s différents"
 # Used to label the url of the website of the project
 #: templates/project.tpl
 msgid "website"
-msgstr ""
+msgstr "site web"
 
 # This is the name of YOUR language, in your language.
 # Don't just translate the word "English".
