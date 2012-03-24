@@ -116,7 +116,7 @@ $gitphp_conf['bugpattern'] = '/(I[0-9abcdef]{5,40}+)/';
 //$gitphp_conf['bugurl'] = 'http://localhost/mantis/view.php?id=${1}';
 
 // Gerrit sample :
-$gitphp_conf['bugurl'] = 'https://android-review.googlesource.com/#/q/${1},n,z';
+$gitphp_conf['bugurl'] = 'https://android-review.googlesource.com/#q,${1},n,z';
 
 /*
  * self
