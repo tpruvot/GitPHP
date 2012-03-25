@@ -13,7 +13,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
 {/if}
 {/block}
 {block name=javascriptmodules}
-	GitPHPJSModules = ['commitdiff','sidebyside'];
+	GitPHPJSModules = ['commitdiff'];
 {/block}
 
 {block name=main}
@@ -117,13 +117,14 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
 
      {if $sidebyside and $filediff->GetStatus() == 'M'}
          <div class="diff-head-links">
-         <a onclick="sbs_toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
-         <a onclick="sbs_toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
-         <a onclick="sbs_toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
-         <a onclick="sbs_toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a>
-          | <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:first');" href="javascript:void(0)">{t}first diff{/t}</a>
-         <a onclick="sbs_scrollToDiff(this,'tr.diff-focus:last');" href="javascript:void(0)">{t}last diff{/t}</a>
-         <!--<a href="#D{$filediff->diffCount}">{t}last diff{/t}</a> ({$filediff->diffCount})-->
+         <a onclick="toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
+         <a onclick="toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
+         <a onclick="toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
+         <a onclick="toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a>
+          | <a onclick="scrollToDiff(this,'tr.diff-focus:first');" href="javascript:void(0)">{t}first diff{/t}</a>
+         <a onclick="scrollToDiff(this,'tr.diff-focus:last');" href="javascript:void(0)">{t}last diff{/t}</a>
+         <!--<a href="#D{$filediff->diffCount}">{t}last diff{/t}</a>-->
+         (<span class="diff-count">{$filediff->diffCount}</span>)
          </div>
      {/if}
 

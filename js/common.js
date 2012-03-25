@@ -20,7 +20,7 @@ define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapsho
 
 			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag", "modules/hilight.parents"],
 				function($, tooltipCommit, tooltipTag, highlightParents) {
-					jQuery(function($) {
+					$(function() {
 						tooltipCommit($('a.commitTip'));
 						tooltipTag($('a.tagTip'));
 						highlightParents($('a.commitTip'));

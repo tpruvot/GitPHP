@@ -10,7 +10,6 @@
  */
 
 define(["jquery", "modules/geturl", "modules/tooltip.commit"],
-    jQuery(
 	function($, getUrl, tooltipCommit) {
 
 		var blobTable = null;
@@ -86,6 +85,5 @@ define(["jquery", "modules/geturl", "modules/tooltip.commit"],
 			init: init
 		}
 	}
-    )
 );
 

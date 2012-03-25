@@ -9,12 +9,12 @@
 
 {if $sidebyside}
 {block name=javascriptpaths}
-{if file_exists('js/sidebyside.min.js')}
-GitPHPJSPaths.projectlist = "sidebyside.min";
+{if file_exists('js/blobdiff.min.js')}
+	GitPHPJSPaths.commitdiff = "blobdiff.min";
 {/if}
 {/block}
 {block name=javascriptmodules}
-	GitPHPJSModules = ['sidebyside'];
+	GitPHPJSModules = ['blobdiff'];
 {/block}
 {/if}
 
@@ -62,12 +62,14 @@ GitPHPJSPaths.projectlist = "sidebyside.min";
 
      {if $sidebyside}
      <div class="diff-head-links">
-       <a onclick="sbs_toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
-       <a onclick="sbs_toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
-       <a onclick="sbs_toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
-       <a onclick="sbs_toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a> | 
+       <a onclick="toggleTabs(this);" href="javascript:void(0)">{t}toggle tabs{/t}</a>, 
+       <a onclick="toggleNumbers(this);" href="javascript:void(0)">{t}numbers{/t}</a> | 
+       <a onclick="toggleLeft(this);" href="javascript:void(0)">{t}left only{/t}</a>
+       <a onclick="toggleRight(this);" href="javascript:void(0)">{t}right only{/t}</a> | 
        <a href="#D1">{t}first diff{/t}</a>
-       <a href="#D{$filediff->diffCount}">{t}last diff{/t}</a> ({$filediff->diffCount})
+       <a onclick="scrollToDiff(this,'tr.diff-focus:last');" href="javascript:void(0)">{t}last diff{/t}</a>
+       <!-- <a href="#D{$filediff->diffCount}">{t}last diff{/t}</a> -->
+       (<span class="diff-count">{$filediff->diffCount}</span>)
      </div>
      {/if}
    </div>
