@@ -185,7 +185,7 @@ a.rss_logo:hover {
 	border-bottom: 1px solid #e1e1e1;
 }
 
-tr.hoverParent td.monospace {
+tr.hoverParent td a span.commit_title {
 	/* This class is used in shortlog to hilight commit's parents */
 	color: #800;
 }

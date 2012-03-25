@@ -165,7 +165,7 @@ tr.dark:hover {
 	background-color: #edece6;
 }
 
-tr.hoverParent td.monospace {
+tr.hoverParent td a span.commit_title {
 	/* This class is used in shortlog to hilight commit's parents */
 	color: #800;
 }

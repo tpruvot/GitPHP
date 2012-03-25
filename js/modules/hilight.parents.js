@@ -1,13 +1,12 @@
 /*
- * GitPHP Javascript parents tooltip
+ * GitPHP Javascript parents hilight
  * 
- * Hilight parents in short log history
+ * Hilight commit's parents in short log history
  * 
  * @author Tanguy Pruvot <tpruvot@github>
  * @package GitPHP
  * @subpackage Javascript
  */
-
 define(["jquery"],
 	function($) {
 
@@ -33,18 +32,21 @@ define(["jquery"],
 					}
 					jTR.data('parents', arParents);
 
-					jTR.mouseenter(function() {
-						var arParents = jQuery(this).data('parents');
-						if (arParents) for (var tr in arParents) {
-							jQuery(arParents[tr]).addClass('hoverParent');
-						}
-					})
-					.mouseleave(function() {
-						var arParents = jQuery(this).data('parents');
-						if (arParents) for (var tr in arParents) {
-							jQuery(arParents[tr]).removeClass('hoverParent');
-						}
-					});
+					// only hilight merge commits (2 parents)
+					if (arParents.length > 1) {
+						jTR.mouseenter(function() {
+							var arParents = jQuery(this).data('parents');
+							if (arParents) for (var tr in arParents) {
+								jQuery(arParents[tr]).addClass('hoverParent');
+							}
+						})
+						.mouseleave(function() {
+							var arParents = jQuery(this).data('parents');
+							if (arParents) for (var tr in arParents) {
+								jQuery(arParents[tr]).removeClass('hoverParent');
+							}
+						});
+					}
 				}
 			});
 		}
