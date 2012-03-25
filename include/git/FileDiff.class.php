@@ -618,6 +618,7 @@ class GitPHP_FileDiff
 				$fromBlob = $this->GetFromBlob();
 				$fromTmpFile = 'gitphp_' . $pid . '_from';
 				$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
+				unset($fromBlob);
 
 				$fromName = 'a/';
 				if (!empty($file)) {
@@ -633,6 +634,7 @@ class GitPHP_FileDiff
 				$toBlob = $this->GetToBlob();
 				$toTmpFile = 'gitphp_' . $pid . '_to';
 				$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
+				unset($toBlob);
 
 				$toName = 'b/';
 				if (!empty($file)) {
@@ -696,6 +698,7 @@ class GitPHP_FileDiff
 
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);
+		unset($fromBlob);
 
 		$diffLines = '';
 		if (function_exists('xdiff_string_diff')) {
@@ -759,15 +762,24 @@ class GitPHP_FileDiff
 		$this->totAdd = $totAdd;
 		$this->totDel = $totDel;
 
+		// + 10 000 lines file... require to skip unchanged source
+		$big_file = (count($blob) > 10000);
+
 		//
 		// iterate over diffs
 		$output = array();
 		$lnl = 0; $lnr = 0; $num = 0;
 		foreach($diffs as $d) {
+
+			$big_before = $big_after = 15;
+
 			while($lnl+1 < $d['line']) {
-				$h = $blob[$lnl];
-				$lnl ++; $lnr++;
-				$output[] = array('', $h, $h, $lnl, $lnr, FALSE);
+				if (!$big_file || ($lnl+$big_before+1 == $d['line'])) {
+					$h = $blob[$lnl];
+					$output[] = array('', $h, $h, $lnl, $lnr, FALSE);
+					$big_before--;
+				}
+				$lnl++; $lnr++;
 			}
 
 			if(empty($d['left'])) {
@@ -808,7 +820,9 @@ class GitPHP_FileDiff
 		}
 
 		while ($lnl < count($blob)) {
-			$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, ++$lnr, FALSE);
+			if (!$big_file || $big_after-- > 0) {
+				$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, ++$lnr, FALSE);
+			}
 			$lnl++;
 		}
 
@@ -865,6 +879,7 @@ class GitPHP_FileDiff
 			$fromBlob = $this->GetFromBlob();
 			$isBinary = $isBinary || $fromBlob->IsBinary();
 			$fromData = $fromBlob->GetData(false);
+			unset($fromBlob);
 			$fromName = 'a/';
 			if (!empty($file)) {
 				$fromName .= $file;
@@ -878,6 +893,7 @@ class GitPHP_FileDiff
 			$toBlob = $this->GetToBlob();
 			$isBinary = $isBinary || $toBlob->IsBinary();
 			$toData = $toBlob->GetData(false);
+			unset($toBlob);
 			$toName = 'b/';
 			if (!empty($file)) {
 				$toName .= $file;
