@@ -46,7 +46,7 @@ function($) {
    {else}
      {t}HEAD{/t}
    {/if}
-    | blame
+    | {t}blame{/t}
    <br />
  </div>
 
