@@ -111,8 +111,10 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 
 		$blobhash = $co->PathToHash($this->params['file']);
 		$blob = $this->project->GetBlob($blobhash);
-		$blob->SetCommit($co);
-		$blob->SetPath($this->params['file']);
+		if (is_object($blob)) {
+			$blob->SetCommit($co);
+			$blob->SetPath($this->params['file']);
+		}
 		$this->tpl->assign('blob', $blob);
 	}
 
