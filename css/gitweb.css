@@ -190,6 +190,11 @@ tr.hoverParent td a span.commit_title {
 	color: #800;
 }
 
+/* Shortlog History Blocs (clast,cinside,cmerge) */
+tr.clast td {
+        border-bottom: 1px dotted gray;
+}
+
 div.index_header {
 	margin-left: 4px;
 }

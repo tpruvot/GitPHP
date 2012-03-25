@@ -183,6 +183,11 @@ td.link {
 	font-size: 10px;
 }
 
+/* Shortlog History Blocs (clast,cinside,cmerge) */
+tr.clast td {
+        border-bottom: 1px dotted gray;
+}
+
 
 /*
  * Messages

@@ -1719,6 +1719,38 @@ class GitPHP_Project
 /* log methods {{{2*/
 
 	/**
+	 * SetLogGlyph
+	 *
+	 * Add a basic symbol for short log list, to build a basic "bloc-graph"
+	 * Allow to know if the commits are "forward" or from another (merged) branch.
+	 *
+	 * '|' normal commit (follow previous)
+	 * '>' for merges (2 parents)
+	 * 'o' for the last of a bloc (doesn't follow previous commit in table)
+	 */
+	private function SetLogGlyph($log)
+	{
+		$len = count($log);
+		for ($i = 0; $i < $len; ++$i) {
+			$log[$i]->glyph = 'o';
+			$log[$i]->glyphClass = 'clast';
+			if ($i > 0) {
+				$hash = $log[$i]->GetHash();
+				// use end() to check the unique element of $parents array
+				if (count($parents) == 1 && $hash == end($parents)->GetHash()) {
+					$log[$i-1]->glyph = '|';
+					$log[$i-1]->glyphClass = 'cinside';
+				}
+			}
+			$parents = $log[$i]->GetParents();
+			if (count($parents) == 2) {
+				$log[$i]->glyph = '>';
+				$log[$i]->glyphClass = 'cmerge';
+			}
+		}
+	}
+
+	/**
 	 * GetLogHash
 	 *
 	 * Gets log entries as an array of hashes
@@ -1748,10 +1780,12 @@ class GitPHP_Project
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
 		if ($this->GetCompat() || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
-			return $this->GetLogGit($hash, $count, $skip);
+			$log = $this->GetLogGit($hash, $count, $skip);
 		} else {
-			return $this->GetLogRaw($hash, $count, $skip);
+			$log = $this->GetLogRaw($hash, $count, $skip);
 		}
+		$this->SetLogGlyph($log);
+		return $log;
 	}
 
 	/**

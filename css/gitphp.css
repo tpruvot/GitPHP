@@ -330,3 +330,8 @@ div.diff_pict img.new {
 	margin-left: 4px;
 }
 
+/* Generic hide */
+.hidden {
+	display: none;
+}
+
