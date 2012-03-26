@@ -14,7 +14,7 @@
  * stylesheet
  * Name of skin (must be in /css folder)
  */
-//$gitphp_conf['stylesheet'] = "gitweb.css";
+//$gitphp_conf['stylesheet'] = "blueskin.css";
 
 /*
  * projectroot

@@ -1,25 +1,39 @@
-/* Reset
-------------------------------------------------------------------------- */
+/*
+ * GitPHP 0.2.6 alternative blue skin
+ * Based on gitphp-glip project 
+ *
+ *
+ */
 
-/* Based on http://meyerweb.com/eric/tools/css/reset/ */
-/* v1.0 | 20080212 */
-
+/* Reset all CSS Attributes
+ * -------------------------------------------------------------------------
+ * Based on http://meyerweb.com/eric/tools/css/reset/
+ * v2.0 | 20110126
+ * License: none (public domain)
+ */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
 blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
 font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b,
 u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
-caption, tbody, tfoot, thead, tr, th, td {
+caption, tbody, tfoot, thead, tr, th, td, menu, 
+article, aside, canvas, details, embed, figure, figcaption, footer, header,
+hgroup, nav, output, ruby, section, summary, time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
 	outline: 0;
 	font-size: 100%;
 	vertical-align: baseline;
-	background: transparent;
 }
 
-ol, ul { list-style: none; }
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 
+body { line-height: 1; }
+ol, ul { list-style: none; }
 blockquote, q { quotes: none; }
 
 blockquote:before, blockquote:after,
@@ -28,18 +42,10 @@ q:before, q:after {
 	content: none;
 }
 
-:focus { outline: 0; }
-
-ins { text-decoration: none; }
-
-del { text-decoration: line-through; }
-
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-
-a { outline: none; }
 
 /* General
 ---------------------------------------------------------------------------- */
@@ -53,7 +59,7 @@ body {
 }
 
 a:link, a:visited {
-	color: #4183C4;
+	color: #007;
 	text-decoration: none;
 }
 
@@ -79,6 +85,7 @@ td, th {
 	position: relative;
 	padding: 0 2px;
 	margin-bottom: 10px;
+	border-bottom: 1px solid #aaa;
 }
 
 .page_header a:link, .page_header a:visited {
@@ -213,16 +220,21 @@ table.projectList {
 
 tr.categoryRow {
 	background: #F0F0F0;
-	border-top: 1px solid #e1e1e1;
+	border-bottom: 1px solid #D8D8D8;
+}
+
+tr.categoryRow th {
+	padding: 4px;
 }
 
 tr.projectHeader {
 	background: #F0F0F0;
-	border-top: 1px solid #e1e1e1;
+	border-bottom: 1px solid #D8D8D8;
 }
 
 tr.projectHeader th {
 	text-align: left;
+	padding: 4px;
 }
 
 tr.projectHeader th.actions {
@@ -279,7 +291,9 @@ div.search {
 div.title {
 	padding: 5px;
 	background-color: #F0F0F0;
-	border: 1px solid #D8D8D8;
+	border: 0;
+	border-bottom: 1px solid #D8D8D8;
+	margin-top: 6px;
 }
 
 .projects_list,
@@ -344,6 +358,22 @@ div.title {
 	margin: 0 auto 15px auto;
 }
 
+td.projectAge em {
+	font-style: normal;
+	color: #555;
+}
+
+td.projectAge span.agehighlight strong em {
+	font-style: normal;
+	font-weight: normal;
+	color: #070;
+}
+
+td.projectAge span.agehighlight em {
+	font-style: normal;
+	color: #000;
+}
+
 div.log_link {
 	width: 180px;
 	padding: 0;
@@ -373,12 +403,12 @@ a.buglink:hover {
 
 /* ShortLog Commit titles */
 
-span.commit_title {
-	font-weight: bold;
+span.commit_title a {
+	color: #22C;
 }
 
 span.merge_title {
-	color: #77a0a0;
+	color: #68C;
 }
 
 /* Refs
@@ -502,7 +532,9 @@ div.diff_info {
 	/* the from -> to file header */
 	font-family: monospace;
 	color: #000099;
-	background-color: #edece6;
+	background-color: #eee;
+	border-bottom: 1px solid #bbb;
+	padding: 2px;
 }
 
 .diffplus {
