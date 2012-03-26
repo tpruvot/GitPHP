@@ -1,5 +1,5 @@
 # GitPHP Spanish Translation.
-# Copyright (C) YEAR Christopher Han
+# Copyright (C) 2012 Christopher Han
 # This file is distributed under the same license as the GitPHP package.
 #
 #, fuzzy
@@ -11,7 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2012-03-21 20:43-0500\n"
 "Last-Translator: Emilio Lopez <turl@tuxfamily.org>\n"
 "Language-Team: Spanish <turl@tuxfamily.org>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
