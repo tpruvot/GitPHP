@@ -165,20 +165,19 @@ table.treeTable img.treeSpinner {
 }
 
 /*
- * Commit view
+ * Commit view Stats
  */
 
-td.commit_fadd, td.commit_fdel {
-	font-weight: 400;
+.commit_fadd, .commit_fdel {
 	padding-left:  2px;
 	padding-right: 1px;
 }
 
-td.commit_fadd {
+.commit_fadd {
 	color: darkGreen;
 }
 
-td.commit_fdel {
+.commit_fdel {
 	color: darkRed;
 }
 
