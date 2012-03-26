@@ -92,7 +92,7 @@
      {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}
    {/if}
  </div>
- <table cellspacing="0">
+ <table cellspacing="0" class="filelist">
    {* Loop and show files changed *}
    {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">

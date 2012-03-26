@@ -10,7 +10,7 @@
  * @subpackage Template
  *}
 
- <table cellspacing="0">
+ <table cellspacing="0" class="headlist">
    {assign var="baseurl"
          value="{$SCRIPT_NAME}?p={$project->GetProject('f')}"
    }
