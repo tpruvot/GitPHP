@@ -263,14 +263,14 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected function GetCategoryAges()
 	{
 		foreach ($this->projects as $proj) {
-			$cat = $proj->GetCategory();
+			$cat = $proj->GetCategory('none');
 			if (isset($ages[$cat]))
 				$ages[$cat] = min($ages[$cat], $proj->GetAge());
 			else
 				$ages[$cat] = $proj->GetAge();
 		}
 		foreach ($this->projects as $proj) {
-			$cat = $proj->GetCategory();
+			$cat = $proj->GetCategory('none');
 			$proj->categoryAge = $ages[$cat];
 		}
 	}

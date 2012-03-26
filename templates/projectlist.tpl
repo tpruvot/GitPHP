@@ -36,6 +36,7 @@ git source code archive
 </div>
 
 <table cellspacing="0" class="projectList">
+  {assign var=currentcategory value="&nbsp;"}
   {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}
       {* Header *}
@@ -67,9 +68,9 @@ git source code archive
       </tr>
     {/if}
 
-    {if $currentcategory != $proj->GetCategory()}
-      {assign var=currentcategory value=$proj->GetCategory()}
-      {if $currentcategory != ''}
+    {if $currentcategory != $proj->GetCategory('&nbsp;')}
+      {assign var=currentcategory value=$proj->GetCategory('&nbsp;')}
+      {if $currentcategory != "&nbsp;" || $order == "age"}
         <tr class="light categoryRow">
           <th class="categoryName">{$currentcategory}</th>
           <th></th>

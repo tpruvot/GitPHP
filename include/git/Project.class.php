@@ -596,7 +596,7 @@ class GitPHP_Project
 	 * @access public
 	 * @return string category
 	 */
-	public function GetCategory()
+	public function GetCategory($default='')
 	{
 		if (!empty($this->category)) {
 			return $this->category;
@@ -606,7 +606,7 @@ class GitPHP_Project
 			return $this->GetConfig()->GetValue('gitphp.category');
 		}
 
-		return '';
+		return $default;
 	}
 
 	/**
@@ -2497,9 +2497,6 @@ class GitPHP_Project
 	 */
 	public static function CompareAge($a, $b)
 	{
-		if ($b->GetCategory() === '' && $a->GetCategory() )
-			return 1;
-
 		$catCmp = GitPHP_Project::CompareCategoryAge($a, $b);
 		if ($catCmp !== 0)
 			return $catCmp;
@@ -2524,7 +2521,9 @@ class GitPHP_Project
 	{
 		if ($b->GetCategory() === '' && $a->GetCategory() )
 			return 1;
-		return strcmp($a->GetCategory(), $b->GetCategory());
+		if ($a->GetCategory() === '' && $b->GetCategory() )
+			return -1;
+		return strcasecmp($a->GetCategory(''), $b->GetCategory(''));
 	}
 
 	/**
