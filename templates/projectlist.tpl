@@ -63,6 +63,7 @@ git source code archive
          {/if}
         {/if}
         <th class="actions">{t}Actions{/t}</th>
+	<th></th>
       </tr>
     {/if}
 

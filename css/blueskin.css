@@ -1,9 +1,8 @@
 /*
  * GitPHP 0.2.6 alternative blue skin
- * Based on gitphp-glip project 
+ * (c) Tanguy Pruvot 2011-2012
  *
- *
- */
+ ****************************************************************************/
 
 /* Reset all CSS Attributes
  * -------------------------------------------------------------------------
@@ -79,7 +78,7 @@ td, th {
 ---------------------------------------------------------------------------- */
 
 .page_header {
-	background: #cfcfcf url(gitweb/page_header.png) repeat-x 0 0;
+	background: #cfcfcf url(blueskin/page_header.png) repeat-x 0 0;
 	height: 3.4em;
 	line-height: 3.4em;
 	position: relative;
@@ -116,7 +115,7 @@ td, th {
 .page_footer {
 	height: 43px;
 	line-height: 45px;
-	background: #4386ba url(gitweb/page_footer.png) repeat-x 0 0;
+	background: #4386ba url(blueskin/page_footer.png) repeat-x 0 0;
 	padding: 0 30px;
 	margin-top: 15px;
 	clear:both;
@@ -157,49 +156,72 @@ a.rss_logo:hover {
 /* Elements
 ---------------------------------------------------------------------------- */
 
-.project_list,
-.shortlog,
-.tree,
+table.projectList,
+table.shortlog,
+table.headlist,
+table.tree,
+table.tagTable,
+table.filelist,
 .commit_search {
-	margin: 0 auto 15px auto;
-	border: 1px solid #d8d8d8;
+	/* margin: 0 auto 15px auto; */
+	border-right: 1px solid #d8d8d8;
 }
 
-.project_list th,
+table.headlist,
+table.filelist,
+table.shortlog {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 1px;
+}
+
+table.projectList td,
+table.shortlog td,
+table.headlist td,
+table.tree td,
+table.tagTable td,
+table.filelist td {
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
 .shortlog th,
 .tree th,
 .commit_search th {
-	color: #afafaf;
 	font-weight: normal;
 }
 
-.project_list tr,
+.projectList tr,
 .shortlog tr,
 .tree tr,
 .commit_search tr {
 	background: #eaeaea;
-	height: 2.5em;
 	text-align: left;
-	color: #545454;
 }
 
-.project_list tr.dark, .project_list tr.light,
+.projectList tr.dark, .projectList tr.light,
 .shortlog tr.dark, .shortlog tr.light,
 .tree tr.dark, .tree tr.light,
 .commit_search tr.dark, .commit_search tr.light {
-	background: #efefef url(gitweb/table_row.png) repeat-x 0 0;
-	height: 2.5em;
-	border-bottom: 1px solid #e1e1e1;
+	/*height: 2.5em;*/
+	border-bottom: 1px solid #f0f0f0;
 }
 
-tr.hoverParent td a span.commit_title {
+table tr.dark {
+	background: #f3f3f9;
+}
+table tr.light {
+	background: #fafafa;
+}
+
+.shortlog tr.hoverParent td a span.commit_title,
+.shortlog tr.hoverParent td a span.merge_title {
 	/* This class is used in shortlog to hilight commit's parents */
-	color: #800;
+	color: #00C;
 }
 
 /* Shortlog History Blocs (clast,cinside,cmerge) */
-tr.clast td {
-        border-bottom: 1px dotted gray;
+.shortlog tr.clast {
+	border-bottom: 1px dotted silver;
 }
 
 div.index_header {
@@ -218,18 +240,20 @@ table.projectList {
 	margin-top: 10px;
 }
 
-tr.categoryRow {
+.projectList tr.categoryRow,
+.projectList tr.projectHeader {
+	color: #111;
+	text-shadow: #fff -1px -1px;
+	font-family: Helvetica, arial, freesans, clean, sans-serif;
+	font-size: 11pt;
 	background: #F0F0F0;
 	border-bottom: 1px solid #D8D8D8;
+	background: #efefef url(blueskin/table_row.png) repeat-x 0 0;
 }
 
 tr.categoryRow th {
 	padding: 4px;
-}
-
-tr.projectHeader {
-	background: #F0F0F0;
-	border-bottom: 1px solid #D8D8D8;
+	padding-bottom: 2px;
 }
 
 tr.projectHeader th {
@@ -250,7 +274,6 @@ td.projectDescription {
 	overflow-x: hidden;
 }
 
-
 th .header {
 	background: transparent;
 	border: 0;
@@ -267,7 +290,6 @@ th .header {
 }
 
 .history,
-.list_head,
 .page_nav,
 .search {
 	margin: 0 auto 6px auto;
@@ -293,7 +315,6 @@ div.title {
 	background-color: #F0F0F0;
 	border: 0;
 	border-bottom: 1px solid #D8D8D8;
-	margin-top: 6px;
 }
 
 .projects_list,
@@ -341,7 +362,7 @@ div.title {
 	background: #f8f8ff;
 	border: 1px solid #d8d8d8;
 	padding: 5px;
-	margin: 15px auto 15px auto;
+	margin: 15px auto auto auto;
 }
 
 .diff_tree {
@@ -360,18 +381,24 @@ div.title {
 
 td.projectAge em {
 	font-style: normal;
-	color: #555;
+	color: #444;
 }
 
 td.projectAge span.agehighlight strong em {
 	font-style: normal;
 	font-weight: normal;
-	color: #070;
+	color: #292;
 }
 
 td.projectAge span.agehighlight em {
 	font-style: normal;
 	color: #000;
+}
+
+table td em {
+/*	font-family: Helvetica; */
+	font-style: normal;
+	color: #444;
 }
 
 div.log_link {
@@ -403,11 +430,11 @@ a.buglink:hover {
 
 /* ShortLog Commit titles */
 
-span.commit_title a {
+td span.commit_title a {
 	color: #22C;
 }
 
-span.merge_title {
+td span.merge_title {
 	color: #68C;
 }
 
