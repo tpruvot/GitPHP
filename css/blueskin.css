@@ -216,7 +216,12 @@ table tr.light {
 .shortlog tr.hoverParent td a span.commit_title,
 .shortlog tr.hoverParent td a span.merge_title {
 	/* This class is used in shortlog to hilight commit's parents */
-	color: #00C;
+	color: #00F;
+	background-color: #e3e3e3;
+}
+
+.shortlog tr:hover {
+	background-color: #e3e3e3;
 }
 
 /* Shortlog History Blocs (clast,cinside,cmerge) */
@@ -435,7 +440,7 @@ td span.commit_title a {
 }
 
 td span.merge_title {
-	color: #68C;
+	color: #30D;
 }
 
 /* Refs
