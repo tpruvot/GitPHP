@@ -42,6 +42,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
  <div class="page_body">
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
+   {if end($commit->GetComment()) != $commit->GetTitle()}
    {foreach from=$commit->GetComment() item=line}
      {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
      <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
@@ -53,6 +54,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
      <br />
    {/foreach}
    <br />
+   {/if}
 
    {if $sidebyside && ($treediff->Count() > 1)}
     <div class="commitDiffSBS">

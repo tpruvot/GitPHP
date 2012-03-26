@@ -71,6 +71,7 @@
      {/foreach}
    </table>
  </div>
+{if end($commit->GetComment()) != $commit->GetTitle()}
  <div class="page_body">
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
@@ -87,8 +88,9 @@
    {/foreach}
    </div>
  </div>
+{/if}
  <div class="list_head">
-   {if $treediff->Count() > 10}
+   {if $treediff->Count() > 5}
      {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}
    {/if}
  </div>

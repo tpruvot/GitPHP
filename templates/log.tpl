@@ -70,6 +70,7 @@
      <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />
    </div>
    <div class="log_body">
+   {if end($rev->GetComment()) != $rev->GetTitle()}
      {assign var=bugpattern value=$project->GetBugPattern()}
      {assign var=bugurl value=$project->GetBugUrl()}
      {foreach from=$rev->GetComment() item=line}
@@ -85,6 +86,7 @@
      {if count($rev->GetComment()) > 0}
        <br />
      {/if}
+   {/if}
    </div>
  {foreachelse}
    <div class="title">
