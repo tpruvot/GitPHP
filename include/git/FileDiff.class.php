@@ -11,8 +11,9 @@
  */
 
 require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
+
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
 
 require_once(GITPHP_INCLUDEDIR . 'UTF8.inc.php');
 require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
@@ -594,79 +595,13 @@ class GitPHP_FileDiff
 			return;
 		}
 
-		if (function_exists('xdiff_string_diff')) {
+		$this->diffData = $this->GetDiffData(3, true, $file);
 
-			$this->diffData = $this->GetXDiff(3, true, $file);
-
-		} else {
-
-			$tmpdir = GitPHP_TmpDir::GetInstance();
-
-			$pid = 0;
-			if (function_exists('posix_getpid'))
-				$pid = posix_getpid();
-			else
-				$pid = rand();
-
-			$fromTmpFile = null;
-			$toTmpFile = null;
-
-			$fromName = null;
-			$toName = null;
-
-			if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
-				$fromBlob = $this->GetFromBlob();
-				$fromTmpFile = 'gitphp_' . $pid . '_from';
-				$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
-				unset($fromBlob);
-
-				$fromName = 'a/';
-				if (!empty($file)) {
-					$fromName .= $file;
-				} else if (!empty($this->fromFile)) {
-					$fromName .= $this->fromFile;
-				} else {
-					$fromName .= $this->fromHash;
-				}
-			}
-
-			if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
-				$toBlob = $this->GetToBlob();
-				$toTmpFile = 'gitphp_' . $pid . '_to';
-				$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
-				unset($toBlob);
-
-				$toName = 'b/';
-				if (!empty($file)) {
-					$toName .= $file;
-				} else if (!empty($this->toFile)) {
-					$toName .= $this->toFile;
-				} else {
-					$toName .= $this->toHash;
-				}
-			}
-
-			// skip diff parsing for pictures
-			$mimetype = FileMime($this->params['file'], true);
-			if ($mimetype == 'image') return "";
-
-			$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
-
-			if (!empty($fromTmpFile)) {
-				$tmpdir->RemoveFile($fromTmpFile);
-			}
-
-			if (!empty($toTmpFile)) {
-				$tmpdir->RemoveFile($toTmpFile);
-			}
-
+/*		//check if utf8 is needed (depends of current LANG env variable)
+		if ( !is_utf8($this->data) ) {
+			$this->diffData = utf8_encode($this->diffData);
 		}
-
-		//check if utf8 is needed (depends of current LANG env variable)
-		//if ( !is_utf8($this->data)) {
-		//	$this->diffData = utf8_encode($this->diffData);
-		//}
-
+*/
 		if ($explode)
 			return explode("\n", $this->diffData);
 		else
@@ -694,21 +629,11 @@ class GitPHP_FileDiff
 
 		$this->diffDataSplitRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
-
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);
 		unset($fromBlob);
 
-		$diffLines = '';
-		if (function_exists('xdiff_string_diff')) {
-			$diffLines = explode("\n", $this->GetXDiff(0, false));
-		} else {
-			$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
-				array("-U0", $this->fromHash,
-					$this->toHash)));
-		}
-		unset($exe);
+		$diffLines = explode("\n", $this->GetDiffData(0, false));
 
 		//
 		// parse diffs
@@ -716,13 +641,17 @@ class GitPHP_FileDiff
 		$currentDiff = FALSE;
 		$totAdd = 0; $totDel = 0; $idx = 0;
 		foreach($diffLines as $d) {
+			$d = trim($d);
 			if(strlen($d) == 0)
 				continue;
 			switch($d[0]) {
 				case '@':
 					if($currentDiff) {
-						if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0)
-							$currentDiff['line']++; 	// HACK to make added blocks align correctly
+						if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
+							if ($this->UseXDiff()) {
+								$currentDiff['line']++; 	// HACK to make added blocks align correctly
+							}
+						}
 						$diffs[] = $currentDiff;
 					}
 					$comma = strpos($d, ",");
@@ -753,8 +682,11 @@ class GitPHP_FileDiff
 			}
 		}
 		if($currentDiff) {
-			if (empty($currentDiff['left']) && !empty($currentDiff['right']))
-				$currentDiff['line']++; // make added blocks align correctly
+			if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
+				if ($this->UseXDiff()) {
+					$currentDiff['line']++;		// HACK to make added blocks align correctly
+				}
+			}
 			$diffs[] = $currentDiff;
 		}
 
@@ -855,21 +787,18 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetXDiff
+	 * GetDiffData
 	 *
-	 * Get diff using xdiff
+	 * Get diff data
 	 *
 	 * @access private
-	 * @param int $context number of context lines
-	 * @param boolean $header true to include standard diff header
-	 * @param string $file override the file name
-	 * @return string diff content
+	 * @param integer $context number of context lines
+	 * @param boolean $header true to include file header
+	 * @param string $file override file name
+	 * @return string diff data
 	 */
-	private function GetXDiff($context = 3, $header = true, $file = null)
+	private function GetDiffData($context = 3, $header = true, $file = null)
 	{
-		if (!function_exists('xdiff_string_diff'))
-			return '';
-
 		$fromData = '';
 		$toData = '';
 		$isBinary = false;
@@ -910,10 +839,72 @@ class GitPHP_FileDiff
 			if ($header) {
 				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
 			}
-			$output .= xdiff_string_diff($fromData, $toData, $context);
-		}
 
+			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+			if ($diffOutput === false) {
+
+				if ($this->UseXDiff()) {
+					$diffOutput = $this->GetXDiff($fromData, $toData, $context);
+				} else {
+					$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
+				}
+
+				GitPHP_Cache::GetObjectCacheInstance()->Set($cacheKey, $diffOutput);
+			}
+			$output .= $diffOutput;
+
+		}
 		return $output;
+	}
+
+	/**
+	 * GetPhpDiff
+	 *
+	 * Get diff using php-diff
+	 *
+	 * @access private
+	 * @param string $fromData from file data
+	 * @param string $toData to file data
+	 * @param integer $context context lines
+	 * @return string diff content
+	 */
+	private function GetPhpDiff($fromData, $toData, $context = 3)
+	{
+		$options = array('context' => $context);
+
+		$diffObj = new Diff(explode("\n", $fromData), explode("\n", $toData), $options);
+		$renderer = new Diff_Renderer_Text_Unified;
+		return $diffObj->render($renderer);
+	}
+
+	/**
+	 * UseXDiff
+	 *
+	 * Returns whether xdiff should be used
+	 *
+	 * @access private
+	 * @return boolean true if xdiff should be used
+	 */
+	private function UseXDiff()
+	{
+		return function_exists('xdiff_string_diff');
+	}
+
+	/**
+	 * GetXDiff
+	 *
+	 * Get diff using xdiff
+	 *
+	 * @access private
+	 * @param string $fromData from file data
+	 * @param string $toData to file data
+	 * @param integer $context context lines
+	 * @return string diff content
+	 */
+	private function GetXDiff($fromData, $toData, $context = 3)
+	{
+		return xdiff_string_diff($fromData, $toData, $context);
 	}
 
 	/**
@@ -941,5 +932,4 @@ class GitPHP_FileDiff
 	{
 		$this->commit = $commit;
 	}
-
 }
