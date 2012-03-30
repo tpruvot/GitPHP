@@ -15,7 +15,6 @@ require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
 
-require_once(GITPHP_INCLUDEDIR . 'UTF8.inc.php');
 require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
 
 /**
@@ -597,11 +596,6 @@ class GitPHP_FileDiff
 
 		$this->diffData = $this->GetDiffData(3, true, $file);
 
-/*		//check if utf8 is needed (depends of current LANG env variable)
-		if ( !is_utf8($this->data) ) {
-			$this->diffData = utf8_encode($this->diffData);
-		}
-*/
 		if ($explode)
 			return explode("\n", $this->diffData);
 		else
