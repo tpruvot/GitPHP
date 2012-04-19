@@ -103,7 +103,7 @@
       {/block}
     </div>
     <div class="attr_footer">
-    	<a href="http://xiphux.com/programming/gitphp/" target="_blank">GitPHP by Chris Han</a>
+    	<a href="http://www.gitphp.org/" target="_blank">GitPHP by Chris Han</a>
     </div>
   </body>
 </html>
