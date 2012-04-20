@@ -104,12 +104,12 @@
 //	'category' => 'PHP',
 //	'description' => 'GitPHP, a web-based git repository browser in PHP',
 //	'owner' => 'Christopher Han',
-//	'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
+//	'cloneurl' => 'http://git.gitphp.org/gitphp.git',
 //	'pushurl' => '',
 //	'bugpattern' => '/#([0-9]+)/',
-//	'bugurl' => 'http://mantis.xiphux.com/view.php?id=${1}',
+//	'bugurl' => 'http://www.gitphp.org/projects/gitphp/issues/${1}',
 //	'compat' => false,
-//	'website' => 'http://xiphux.com/programming/gitphp/'
+//	'website' => 'http://www.gitphp.org/'
 //);
 //$git_projects_settings['gentoo.git'] = array(
 //	'description' => 'Gentoo portage overlay',
@@ -133,10 +133,10 @@
  * 	category = PHP
  *	description = GitPHP, a web-based git repository browser in PHP
  *	owner = Chris Han
- *	cloneurl = http://git.xiphux.com/php/gitphp.git
+ *	cloneurl = http://git.gitphp.org/gitphp.git
  *	pushurl =
  *	bugpattern = "/#([0-9]+)/"
- *	bugurl = http://mantis.xiphux.com/view.php?id=${1}
+ *	bugurl = http://www.gitphp.org/projects/gitphp/issues/${1}
  *	compat = false
- *	website = http://xiphux.com/programming/gitphp/
+ *	website = http://www.gitphp.org/
  */

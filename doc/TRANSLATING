@@ -54,12 +54,6 @@ msgfmt command:
 
 msgfmt -o locale/en_US/gitphp.mo locale/en_US/gitphp.po
 
-I also have a script in the util directory that you can run from the base
-gitphp directory, which will compile all the locales in the locale
-directory:
-
-./util/msgfmt.sh
-
 
 5. Every now and then, as the project's code changes, new strings will come out
 or strings will be modified, and your translation will be updated.  In this
@@ -80,7 +74,6 @@ After all your updates are done, save and make sure to recompile your mo file.
 
 
 That's all for translation.  As long as your mo file is compiled, it will be
-available as a language choice.  If you email your translation po to me, I can
+available as a language choice.  If you submit your translation po to me, I can
 include it with the official distribution and everyone can benefit from it :)
-
 

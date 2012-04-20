@@ -2,9 +2,8 @@ Installing GitPHP
 
 Minimum requirements:
 git
-diff
 Apache (or other php-compatible webserver)
-PHP
+PHP 5
 
 
 To begin, you need to have your git repositories set up in a directory that the
@@ -17,14 +16,11 @@ like HEAD, COMMIT_EDITMSG, description, etc.
 
 You can make a copy of your bare repository by running:
 
-cd myproject
-cp -r .git /gitprojects/myproject.git
+git clone --bare ~/myproject /gitprojects/myproject.git
 
 Or, a new bare repository can be initialized with:
 
-mkdir mybareproject
-cd mybareproject
-git-init --bare
+git init --bare /gitprojects/mybareproject.git
 
 Once you have your projects in a directory, something like:
 
