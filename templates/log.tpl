@@ -70,10 +70,11 @@
      <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />
    </div>
    <div class="log_body">
-   {if end($rev->GetComment()) != $rev->GetTitle()}
+   {assign var=comment value=$rev->GetComment()}
+   {if end($comment) != $rev->GetTitle()}
      {assign var=bugpattern value=$project->GetBugPattern()}
      {assign var=bugurl value=$project->GetBugUrl()}
-     {foreach from=$rev->GetComment() item=line}
+     {foreach from=$comment item=line}
        {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
        <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
        {elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
