@@ -74,7 +74,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	public function __construct($projectDir)
 	{
-		if (!is_dir($projectDir)) {
+		if (!$this->IsDir($projectDir)) {
 			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
 		}
 
@@ -116,7 +116,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 			// cache project list even if object cache is disabled (too much files)
 			$simpleCache = true;
-			$stat = stat(CACHE_PROJECTLIST);
+			$stat = @ stat(CACHE_PROJECTLIST);
 			if ($stat !== FALSE) {
 				$cache_life = '180';  //caching time, in seconds
 				$filemtime = max($stat['mtime'], $stat['ctime']);
@@ -159,7 +159,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	private function RecurseDir($dir)
 	{
-		if (!(is_dir($dir) && is_readable($dir)))
+		if (!$this->IsDir($dir))
 			return;
 
 		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
@@ -169,7 +169,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
-				if (!is_dir($fullPath) or $file == '.' or $file == '..')
+				if (!$this->IsDir($fullPath) || $file == '.' || $file == '..')
 					continue;
 
 				elseif ( $this->repoSupport and $file == '.repo' )
@@ -177,7 +177,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 				elseif ( substr($file,-4) != '.git') {
 					// working copy repositories (git clone)
-					if ( !$this->bareOnly && is_dir($fullPath . '/.git') )
+					if ( !$this->bareOnly && $this->IsDir($fullPath . '/.git') )
 						$fullPath .= '/.git';
 					elseif ($this->curlevel >= $this->sublevels or substr($file,0,1) == '.')
 						continue;
@@ -193,6 +193,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 							$this->projects[$projectPath] = $proj;
 						}
 					} catch (Exception $e) {
+						GitPHP_Log::GetInstance()->Log(sprintf('Project ignored %1$s', $e->GetMessage()));
 					}
 				} elseif ($this->curlevel < $this->sublevels) {
 					$this->curlevel++;

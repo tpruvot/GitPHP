@@ -68,6 +68,18 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
+	 * IsDir
+	 *
+	 * @access protected
+	 * @return boolean true if folder or a link pointing to a folder
+	 * @param string path to check
+	 */
+	protected function IsDir($dir)
+	{
+		return is_dir($dir) || (is_link($dir) && is_dir("$dir/."));
+	}
+
+	/**
 	 * HasProject
 	 *
 	 * Test if the projectlist contains

@@ -357,7 +357,7 @@ class GitPHP_Project
 		$path = $this->projectRoot . $project;
 		$fullPath = realpath($path);
 
-		if (!is_dir($fullPath)) {
+		if (!is_dir($fullPath . '/.')) {
 			throw new Exception(sprintf(__('%1$s is not a directory'), $project));
 		}
 
@@ -370,10 +370,16 @@ class GitPHP_Project
 			if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project))
 			throw new Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
 
+			// allow /.git parent symlinks
+			$bareOnly = GitPHP_Config::GetInstance()->GetValue('bareonly', true);
+			if (!$bareOnly && substr($path, -4) == '.git') {
+				$path = substr($path, 0, strlen($path)-5);
+			}
+
 			$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
 			if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0))
-			throw new Exception(sprintf(__('%1$s is outside of the projectroot'), $project));
+			throw new Exception(sprintf(__('%1$s is outside of the projectroot'), $path));
 		}
 
 		$this->project = $project;
@@ -1388,7 +1394,7 @@ class GitPHP_Project
 					continue;
 				}
 				$fullFile = $dir . '/' . $file;
-				if (is_dir($fullFile)) {
+				if (is_dir($fullFile) || (is_link($fullFile) && is_dir("$fullFile/."))) {
 					$subFiles = $this->ListDir($fullFile);
 					if (count($subFiles) > 0) {
 						$files = array_merge($files, $subFiles);
@@ -2216,7 +2222,7 @@ class GitPHP_Project
 
 		$subdir = substr($prefix, 0, 2);
 		$fulldir = $this->GetPath() . '/objects/' . $subdir;
-		if (!is_dir($fulldir)) {
+		if (!is_dir($fulldir.'/.')) {
 			return $matches;
 		}
 
