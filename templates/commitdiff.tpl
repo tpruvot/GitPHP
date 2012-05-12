@@ -47,6 +47,8 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    {foreach from=$comment item=line}
      {if strstr(trim($line),'-by: ') || strstr(trim($line),'Cc: ')}
      <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
+     {elseif strstr(trim($line),'Link: ')}
+     <span class="signedOffBy commentLink">{$line|buglink:'/(http(s)?:\/\/)(.)*[\.](.)*$/':"\$0"}</span>
      {elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
      <span class="changeId">{$line|buglink:$bugpattern:$bugurl}</span>
      {else}
