@@ -45,7 +45,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    {assign var=comment value=$commit->GetComment()}
    {if end($comment) != $commit->GetTitle()}
    {foreach from=$comment item=line}
-     {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
+     {if strstr(trim($line),'-by: ') || strstr(trim($line),'Cc: ')}
      <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
      {elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
      <span class="changeId">{$line|buglink:$bugpattern:$bugurl}</span>
