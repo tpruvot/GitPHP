@@ -33,7 +33,7 @@
   <br />
 </div>
 <div class="title">
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$commit->GetHash()}" class="title">{$commit->GetTitle()|escape:'html'}</a>
 </div>
 <table>
   {* Print each match *}
