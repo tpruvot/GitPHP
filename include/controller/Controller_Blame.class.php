@@ -144,7 +144,10 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {
-					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
+					$lang = GitPHP_Util::GeshiFilenameToLanguage($blob->GetName());
+					if (empty($lang)) {
+						$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
+					}
 					if (!empty($lang)) {
 						$geshi->enable_classes();
 						$geshi->enable_strict_mode(GESHI_MAYBE);

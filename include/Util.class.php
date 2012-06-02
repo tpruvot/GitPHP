@@ -129,4 +129,23 @@ class GitPHP_Util
 		return $filename;
 	}
 
+	/**
+	 * GeshiFilenameToLanguage
+	 *
+	 * Provides a geshi language for a given filename
+	 *
+	 * @access public
+	 * @param string $filename file name
+	 * @return string language
+	 * @static
+	 */
+	public static function GeshiFilenameToLanguage($filename)
+	{
+		if (strncasecmp($filename, 'Makefile', 8) === 0) {
+			return 'make';
+		}
+
+		return null;
+	}
+
 }
