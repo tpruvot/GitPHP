@@ -67,6 +67,9 @@
   {if $hasmore}
     <tr>
       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   {/if}
 </table>
