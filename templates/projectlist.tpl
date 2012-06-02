@@ -31,7 +31,7 @@ git source code archive
 
 <div class="projectSearch">
 <form method="get" action="index.php" id="projectSearchForm" enctype="application/x-www-form-urlencoded">
-{t}Search projects{/t}: <input type="text" name="s" class="projectSearchBox" {if $search}value="{$search}"{/if} /> <a href="index.php" class="clearSearch" {if !$search}style="display: none;"{/if}>X</a> {if $javascript}<img src="images/search-loader.gif" class="searchSpinner" style="display: none;" />{/if}
+{t}Search projects{/t}: <input type="text" name="s" class="projectSearchBox" {if $search}value="{$search}"{/if} /> <a href="index.php" class="clearSearch" {if !$search}style="display: none;"{/if}>X</a> {if $javascript}<img src="images/search-loader.gif" class="searchSpinner" style="display: none;" alt="{t}Loading…{/t}" />{/if}
 </form>
 </div>
 
