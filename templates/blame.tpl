@@ -52,7 +52,7 @@
 	  <tr class="{$rowclass}">
 	    <td class="date">
 	      {if $blamecommit}
-	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
+	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()|escape}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
 	      {/if}
 	    </td>
 	    <td class="author">

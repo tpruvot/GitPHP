@@ -33,7 +33,7 @@
    <br />
    {if $mark}
      {t}selected{/t} &sdot;
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 30}title="{$mark->GetTitle()|htmlspecialchars}"{/if}><strong>{$mark->GetTitle(30)|escape:'html'}</strong></a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 30}title="{$mark->GetTitle()|escape}"{/if}><strong>{$mark->GetTitle(30)|escape:'html'}</strong></a>
      &sdot;
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
      <br />

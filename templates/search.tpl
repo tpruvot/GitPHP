@@ -43,18 +43,18 @@
       <td>
         <em>
 	  {if $searchtype == 'author'}
-	    {$result->GetAuthorName()|highlight:$search}
+	    {$result->GetAuthorName()|escape|highlight:$search}
 	  {elseif $searchtype == 'committer'}
-	    {$result->GetCommitterName()|highlight:$search}
+	    {$result->GetCommitterName()|escape|highlight:$search}
 	  {else}
-	    {$result->GetAuthorName()}
+	    {$result->GetAuthorName()|escape}
 	  {/if}
         </em>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()}"{/if}><strong>{$result->GetTitle(50)|escape:'html'}</strong>
+      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()|escape}"{/if}><strong>{$result->GetTitle(50)|escape:'html'}</strong></a>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
-          <br />{$line|highlight:$search:50}
+          <br />{$line|escape|highlight:$search:50}
         {/foreach}
       {/if}
       </td>

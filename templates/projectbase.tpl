@@ -15,8 +15,8 @@
 {/block}
 
 {block name=feeds}
-  <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=atom" type="application/atom+xml" />
-  <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=rss" type="application/rss+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=atom" type="application/atom+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=rss" type="application/rss+xml" />
 {/block}
 
 {block name=header}
