@@ -26,28 +26,35 @@
      <tr>
        <td>{t}author{/t}</td>
        <td>{$commit->GetAuthorName()}</td>
+       <td></td>
      </tr>
      <tr>
        <td></td>
-       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+       <td>
+       {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
        {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
        {if $hourlocal < 6}
-       (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()})</td>
+       (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()})
        {else}
-       ({$commit->GetAuthorLocalEpoch()|date_format:"%R"} {$commit->GetAuthorTimezone()})</td>
+       ({$commit->GetAuthorLocalEpoch()|date_format:"%R"} {$commit->GetAuthorTimezone()})
        {/if}
+       </td>
+       <td></td>
      </tr>
      <tr>
        <td>{t}committer{/t}</td>
        <td>{$commit->GetCommitterName()}</td>
+       <td></td>
      </tr>
      <tr>
        <td></td>
        <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()})</td>
+       <td></td>
      </tr>
      <tr>
        <td>{t}commit{/t}</td>
        <td class="monospace">{$commit->GetHash()}</td>
+       <td></td>
      </tr>
      <tr>
        <td>{t}tree{/t}</td>
