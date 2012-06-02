@@ -51,7 +51,7 @@
 	  {/if}
         </em>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()}"{/if}><strong>{$result->GetTitle(50)}</strong>
+      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()}"{/if}><strong>{$result->GetTitle(50)|escape:'html'}</strong>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
           <br />{$line|highlight:$search:50}
