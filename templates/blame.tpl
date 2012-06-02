@@ -77,7 +77,7 @@ function($) {
 	    </td>
 	    <td class="author">
 	      {if $blamecommit}
-	        {$blamecommit->GetAuthor()}
+	        {$blamecommit->GetAuthorName()|escape}
 	      {/if}
 	    </td>
 	    <td class="num"><a id="l{$smarty.foreach.blob.iteration}" href="#l{$smarty.foreach.blob.iteration}" class="linenr">{$smarty.foreach.blob.iteration}</a></td>
