@@ -20,13 +20,7 @@ GitPHP.Resources = {ldelim}
 {rdelim};
 
 GitPHP.Snapshot = {ldelim}
-
-	Formats: {ldelim}
-		{foreach from=$snapshotformats key=format item=extension name=formats}
-		"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
-		{/foreach}
-	{rdelim}
-
+	Formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
 {rdelim}
 		
 </script>

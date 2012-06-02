@@ -39,11 +39,11 @@
     {include file='jsconst.tpl'}
     <script type="text/javascript">
     var GitPHPJSPaths = {ldelim}
-	{if $googlejs}
-		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
-	{else}
-		jquery: 'ext/jquery-1.7.1.min'
-	{/if}
+    {if $googlejs}
+	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
+    {else}
+	jquery: 'ext/jquery-1.7.1.min'
+    {/if}
     {rdelim};
     {block name=javascriptpaths}
     {if file_exists('js/common.min.js')}
