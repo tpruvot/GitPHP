@@ -30,7 +30,7 @@ GitPHPJSModules = ['tree'];
  
  <div class="page_body">
    {* List files *}
-<table cellspacing="0" class="treeTable">
+<table class="treeTable">
      {include file='treelist.tpl'}
 </table>
  </div>

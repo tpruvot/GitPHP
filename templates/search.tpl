@@ -35,7 +35,7 @@
 
 {include file='title.tpl' titlecommit=$commit}
 
-<table cellspacing="0">
+<table>
   {* Print each match *}
   {foreach from=$results item=result}
     <tr class="{cycle values="light,dark"}">

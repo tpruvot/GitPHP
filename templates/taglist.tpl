@@ -9,7 +9,7 @@
  * @subpackage Template
  *}
 
- <table cellspacing="0" class="tagTable">
+ <table class="tagTable">
    {foreach from=$taglist item=tag name=tag}
      <tr class="{cycle name=tags values="light,dark"}">
 	   {assign var=object value=$tag->GetObject()}

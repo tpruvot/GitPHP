@@ -16,6 +16,10 @@
 	font-family: monospace;
 }
 
+table {
+	border-spacing: 0px;
+}
+
 
 /*
  * Title bar
@@ -202,7 +206,6 @@ div.diff-head-links a {
 }
 
 table.diffTable {
-	border-spacing:0px;
 	width: 100%;
 	white-space: pre-wrap;
 }

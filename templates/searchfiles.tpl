@@ -35,7 +35,7 @@
 <div class="title">
   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
 </div>
-<table cellspacing="0">
+<table>
   {* Print each match *}
   {foreach from=$results item=result key=path}
     <tr class="{cycle values="light,dark"}">

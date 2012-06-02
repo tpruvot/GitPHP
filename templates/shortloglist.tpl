@@ -9,7 +9,7 @@
  * @subpackage Template
  *}
 
- <table cellspacing="0" class="shortlog">
+ <table class="shortlog">
    {assign var="baseurl"
          value="{$SCRIPT_NAME}?p={$project->GetProject('f')}"
    }
