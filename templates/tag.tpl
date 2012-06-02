@@ -25,7 +25,7 @@
    {/if}
  </div>
  <div class="title_text">
-   <table cellspacing="0">
+   <table>
      <tr>
        <td>{t}object{/t}</td>
        {if $objtype == 'commit'}

@@ -16,6 +16,10 @@
 	font-family: monospace;
 }
 
+table {
+	border-spacing: 0px;
+}
+
 
 /*
  * Title bar
@@ -137,7 +141,6 @@ span.matchline {
  * side-by-side-diff diff
  */
 table.diffTable {
-	border-spacing:0px;
 	width: 100%;
 	white-space: pre-wrap;
 }

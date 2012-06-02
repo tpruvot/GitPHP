@@ -22,7 +22,7 @@
  
  <div class="title_text">
    {* Commit data *}
-   <table cellspacing="0">
+   <table>
      <tr>
        <td>{t}author{/t}</td>
        <td>{$commit->GetAuthorName()}</td>
@@ -80,7 +80,7 @@
      {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}
    {/if}
  </div>
- <table cellspacing="0">
+ <table>
    {* Loop and show files changed *}
    {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">
