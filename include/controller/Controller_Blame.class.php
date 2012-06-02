@@ -170,7 +170,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 						if (($bodystart !== false) && ($bodyend !== false)) {
 							$geshihead = substr($output, 0, $bodystart);
 							$geshifoot = substr($output, $bodyend);
-							$geshibody = substr($output, $bodystart, $bodyend);
+							$geshibody = substr($output, $bodystart, $bodyend-$bodystart);
 
 							$this->tpl->assign('geshihead', $geshihead);
 							$this->tpl->assign('geshibody', $geshibody);
