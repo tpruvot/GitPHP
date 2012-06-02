@@ -58,8 +58,10 @@
      <tr>
      {if $source == 'summary'}
        <td><a href="{$baseurl}&amp;a=shortlog">&hellip;</a></td>
+       <td></td><td></td><td></td><td></td>
      {else if $source == 'shortlog'}
        <td><a href="{$baseurl}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page+1}{if $mark}&amp;m={$mark->GetHash()}{/if}" title="Alt-n">{t}next{/t}</a></td>
+       <td></td><td></td><td></td><td></td>
      {/if}
      </tr>
    {/if}
