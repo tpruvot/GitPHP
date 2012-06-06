@@ -420,8 +420,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$exe = new GitPHP_GitExe($this->GetProject());
 		
 		$args = array();
-		if (isset($this->commit))
-			$args[] = $this->commit->GetHash();
+		if ($this->commitHash)
+			$args[] = $this->commitHash;
 		else
 			$args[] = 'HEAD';
 		$args[] = '|';
@@ -483,8 +483,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$args = array();
 		$args[] = '-s';
 		$args[] = '-l';
-		if ($this->commit)
-			$args[] = $this->commit->GetHash();
+		if ($this->commitHash)
+			$args[] = $this->commitHash;
 		else
 			$args[] = 'HEAD';
 		$args[] = '--';

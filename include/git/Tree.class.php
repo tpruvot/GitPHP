@@ -66,23 +66,24 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * SetCommit
+	 * SetCommitHash
 	 *
-	 * Sets the commit for this tree (overrides base)
+	 * Sets the hash of this tree (overrides base)
 	 *
 	 * @access public
-	 * @param mixed $commit commit object
+	 * @param string $commitHash commit hash
 	 */
-	public function SetCommit($commit)
+	public function SetCommitHash($commitHash)
 	{
-		parent::SetCommit($commit);
-
+		parent::SetCommitHash($commitHash);
+		
 		if ($this->contentsRead && !$this->contentsReferenced) {
 			foreach ($this->contents as $obj) {
-				$obj->SetCommit($commit);
+				$obj->SetCommitHash($commitHash);
 			}
 		}
 	}
+
 
 	/**
 	 * GetContents
@@ -153,8 +154,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						if (!empty($this->path))
 							$path = $this->path . '/' . $path;
 						$t->SetPath($path);
-						if ($this->commit)
-							$t->SetCommit($this->commit);
+						if ($this->commitHash)
+							$t->SetCommitHash($this->commitHash);
 						$this->contents[] = $t;
 						break;
 					case 'blob':
@@ -167,8 +168,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						$size = trim($regs[4]);
 						if (!empty($size))
 							$b->SetSize($regs[4]);
-						if ($this->commit)
-							$b->SetCommit($this->commit);
+						if ($this->commitHash)
+							$b->SetCommitHash($this->commitHash);
 						$this->contents[] = $b;
 						break;
 				}
@@ -223,8 +224,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 
 			$obj->SetMode($mode);
 			$obj->SetPath($path);
-			if ($this->commit)
-				$obj->SetCommit($this->commit);
+			if ($this->commitHash)
+				$obj->SetCommitHash($this->commitHash);
 			$this->contents[] = $obj;
 		}
 	}
@@ -303,8 +304,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			if (isset($data['path']) && !empty($data['path']))
 				$obj->SetPath($data['path']);
 
-			if ($this->commit)
-				$obj->SetCommit($this->commit);
+			if ($this->commitHash)
+				$obj->SetCommitHash($this->commitHash);
 
 			$this->contents[$i] = $obj;
 		}
