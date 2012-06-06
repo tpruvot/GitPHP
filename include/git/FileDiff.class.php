@@ -177,13 +177,13 @@ class GitPHP_FileDiff
 	protected $project;
 
 	/**
-	 * commit
+	 * commitHash
 	 *
-	 * Stores the commit that caused this filediff
+	 * Stores the hash of the commit that caused this filediff
 	 *
 	 * @access protected
 	 */
-	protected $commit;
+	protected $commitHash;
 
 	/**
 	 * __construct
@@ -824,7 +824,7 @@ class GitPHP_FileDiff
 	 */
 	public function GetCommit()
 	{
-		return $this->commit;
+		return $this->project->GetCommit($this->commitHash);
 	}
 
 	/**
@@ -837,7 +837,11 @@ class GitPHP_FileDiff
 	 */
 	public function SetCommit($commit)
 	{
-		$this->commit = $commit;
+		if ($commit) {
+			$this->commitHash = $commit->GetHash();
+		} else {
+			$this->commitHash = null;
+		}
 	}
 	
 }
