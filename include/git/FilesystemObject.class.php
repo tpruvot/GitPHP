@@ -40,13 +40,13 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	protected $mode;
 
 	/**
-	 * commit
+	 * commitHash
 	 *
-	 * Stores the commit this object belongs to
+	 * Stores the hash of the commit this object belongs to
 	 *
 	 * @access protected
 	 */
-	protected $commit;
+	protected $commitHash;
 
 	/**
 	 * pathTree
@@ -196,7 +196,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function GetCommit()
 	{
-		return $this->commit;
+		return $this->GetProject()->GetCommit($this->commitHash);
 	}
 
 	/**
@@ -209,7 +209,23 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function SetCommit($commit)
 	{
-		$this->commit = $commit;
+		if ($commit)
+			$this->SetCommitHash($commit->GetHash());
+		else
+			$this->SetCommitHash(null);
+	}
+
+	/**
+	 * SetCommitHash
+	 *
+	 * Sets the hash of the commit this object belongs to
+	 *
+	 * @access public
+	 * @param string $commitHash commit hash
+	 */
+	public function SetCommitHash($commitHash)
+	{
+		$this->commitHash = $commitHash;
 	}
 
 	/**
@@ -246,9 +262,11 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 
 		$path = $this->path;
 
+		$commit = $this->GetCommit();
+
 		while (($pos = strrpos($path, '/')) !== false) {
 			$path = substr($path, 0, $pos);
-			$pathhash = $this->commit->PathToHash($path);
+			$pathhash = $commit->PathToHash($path);
 			if (!empty($pathhash)) {
 				$parent = $this->GetProject()->GetTree($pathhash);
 				$parent->SetPath($path);
