@@ -41,13 +41,13 @@ class GitPHP_Tag extends GitPHP_Ref
 	protected $object;
 
 	/**
-	 * commit
+	 * commitHash
 	 *
-	 * Stores the commit internally
+	 * Stores the commit hash internally
 	 *
 	 * @access protected
 	 */
-	protected $commit;
+	protected $commitHash;
 
 	/**
 	 * type
@@ -104,15 +104,6 @@ class GitPHP_Tag extends GitPHP_Ref
 	private $objectReferenced = false;
 
 	/**
-	 * commitReferenced
-	 *
-	 * Stores whether the commit has been referenced into a pointer
-	 *
-	 * @access private
-	 */
-	private $commitReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates tag
@@ -158,27 +149,22 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function GetCommit()
 	{
-		if ($this->commitReferenced)
-			$this->DereferenceCommit();
-
-		if ($this->commit)
-			return $this->commit;
+		if ($this->commitHash)
+			return $this->GetProject()->GetCommit($this->commitHash);
 
 		if (!$this->dataRead) {
 			$this->ReadData();
-			if ($this->commitReferenced)
-				$this->DereferenceCommit();
 		}
 
-		if (!$this->commit) {
+		if (!$this->commitHash) {
 			if ($this->object instanceof GitPHP_Commit) {
-				$this->commit = $this->object;
+				$this->commitHash = $this->object->GetHash();
 			} else if ($this->object instanceof GitPHP_Tag) {
-				$this->commit = $this->object->GetCommit();
+				$this->commitHash = $this->object->GetCommit()->GetHash();
 			}
 		}
 
-		return $this->commit;
+		return $this->GetProject()->GetCommit($this->commitHash);
 	}
 
 	/**
@@ -191,11 +177,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function SetCommit($commit)
 	{
-		if ($this->commitReferenced)
-			$this->DereferenceCommit();
-
-		if (!$this->commit)
-			$this->commit = $commit;
+		if ((!$this->commitHash) && $commit) {
+			$this->commitHash = $commit->GetHash();
+		}
 	}
 
 	/**
@@ -372,7 +356,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		if ($ret === 'commit') {
 			/* light tag */
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
-			$this->commit = $this->object;
+			$this->commitHash = $this->GetHash();
 			$this->type = 'commit';
 			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
@@ -423,7 +407,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			case 'commit':
 				try {
 					$this->object = $this->GetProject()->GetCommit($objectHash);
-					$this->commit = $this->object;
+					$this->commitHash = $objectHash;
 				} catch (Exception $e) {
 				}
 				break;
@@ -463,7 +447,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		if ($type == GitPHP_Pack::OBJ_COMMIT) {
 			/* light tag */
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
-			$this->commit = $this->object;
+			$this->commitHash = $this->GetHash();
 			$this->type = 'commit';
 			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
@@ -507,7 +491,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			case 'commit':
 				try {
 					$this->object = $this->GetProject()->GetCommit($objectHash);
-					$this->commit = $this->object;
+					$this->commitHash = $objectHash;
 				} catch (Exception $e) {
 				}
 				break;
@@ -549,7 +533,7 @@ class GitPHP_Tag extends GitPHP_Ref
 
 		foreach ($lines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/' . preg_quote($this->refName) . '(\^{})$/', $line, $regs)) {
-				$this->commit = $this->GetProject()->GetCommit($regs[1]);
+				$this->commitHash = $regs[1];
 				return;
 			}
 		}
@@ -610,60 +594,6 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * ReferenceCommit
-	 *
-	 * Turns the commit into a reference pointer
-	 *
-	 * @access private
-	 */
-	private function ReferenceCommit()
-	{
-		if ($this->commitReferenced)
-			return;
-
-		if (!$this->commit)
-			return;
-
-		$this->commit = $this->commit->GetHash();
-
-		$this->commitReferenced = true;
-	}
-
-	/**
-	 * DereferenceCommit
-	 *
-	 * Turns the commit pointer back into an object
-	 *
-	 * @access private
-	 */
-	private function DereferenceCommit()
-	{
-		if (!$this->commitReferenced)
-			return;
-
-		if (empty($this->commit))
-			return;
-
-		if ($this->type == 'commit') {
-			$obj = $this->GetObject();
-			if ($obj && ($obj->GetHash() == $this->commit)) {
-				/*
-				 * Light tags are type commit and the commit
-				 * and object are the same, in which case
-				 * no need to fetch the object again
-				 */
-				$this->commit = $obj;
-				$this->commitReferenced = false;
-				return;
-			}
-		}
-
-		$this->commit = $this->GetProject()->GetCommit($this->commit);
-
-		$this->commitReferenced = false;
-	}
-
-	/**
 	 * __sleep
 	 *
 	 * Called to prepare the object for serialization
@@ -676,10 +606,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->objectReferenced)
 			$this->ReferenceObject();
 
-		if (!$this->commitReferenced)
-			$this->ReferenceCommit();
-
-		$properties = array('dataRead', 'object', 'commit', 'type', 'tagger', 'taggerEpoch', 'taggerTimezone', 'comment', 'objectReferenced', 'commitReferenced');
+		$properties = array('dataRead', 'object', 'commitHash', 'type', 'tagger', 'taggerEpoch', 'taggerTimezone', 'comment', 'objectReferenced');
 		return array_merge($properties, parent::__sleep());
 	}
 
