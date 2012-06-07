@@ -1121,13 +1121,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function GetCacheKey()
 	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'commit|' . $this->hash;
-
-		return $key;
+		return GitPHP_Commit::CacheKey($this->GetProject()->GetProject(), $this->hash)
 	}
 
 	/**
@@ -1167,6 +1161,22 @@ class GitPHP_Commit extends GitPHP_GitObject
 			return 0;
 		}
 		return ($a->GetAuthorEpoch() > $b->GetAuthorEpoch() ? -1 : 1);
+	}
+
+	/**
+	 * CacheKey
+	 *
+	 * Generates a commit cache key
+	 *
+	 * @access public
+	 * @static
+	 * @param string $proj project
+	 * @param string $hash hash
+	 * @return string cache key
+	 */
+	public static function CacheKey($proj, $hash)
+	{
+		return 'project|' . $proj . '|commit|' . $hash
 	}
 
 }
