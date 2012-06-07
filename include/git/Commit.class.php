@@ -1114,7 +1114,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Commit::CacheKey($this->GetProject()->GetProject(), $this->hash)
+		return GitPHP_Commit::CacheKey($this->GetProject()->GetProject(), $this->hash);
 	}
 
 	/**
@@ -1169,7 +1169,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public static function CacheKey($proj, $hash)
 	{
-		return 'project|' . $proj . '|commit|' . $hash
+		return 'project|' . $proj . '|commit|' . $hash;
 	}
 
 }
