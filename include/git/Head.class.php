@@ -69,4 +69,20 @@ class GitPHP_Head extends GitPHP_Ref
 		return GitPHP_Commit::CompareAge($aObj, $bObj);
 	}
 
+	/**
+	 * CacheKey
+	 *
+	 * Generates a head hash key
+	 *
+	 * @access public
+	 * @static
+	 * @param string $proj project
+	 * @param string $head head name
+	 * @return string cache key
+	 */
+	public static function CacheKey($proj, $head)
+	{
+		return 'project|' . $proj . '|head|' . $head;
+	}
+
 }

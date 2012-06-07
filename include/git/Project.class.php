@@ -807,17 +807,19 @@ class GitPHP_Project
 	 */
 	private function ReadHeadCommitRaw()
 	{
-		$head = trim(file_get_contents($this->GetPath() . '/HEAD'));
-		if (preg_match('/^([0-9A-Fa-f]{40})$/', $head, $regs)) {
+		$headPointer = trim(file_get_contents($this->GetPath() . '/HEAD'));
+		if (preg_match('/^([0-9A-Fa-f]{40})$/', $headPointer, $regs)) {
 			/* Detached HEAD */
 			$this->head = $regs[1];
-		} else if (preg_match('/^ref: (.+)$/', $head, $regs)) {
+		} else if (preg_match('/^ref: (.+)$/', $headPointer, $regs)) {
 			/* standard pointer to head */
 			if (!$this->readRefs)
 				$this->ReadRefList();
 
-			if (isset($this->heads[$regs[1]])) {
-				$this->head = $this->heads[$regs[1]]->GetHash();
+			$head = substr($regs[1], strlen('refs/heads/'));
+
+			if (isset($this->heads[$head])) {
+				$this->head = $this->heads[$head];
 			}
 		}
 	}
@@ -918,8 +920,9 @@ class GitPHP_Project
 			$this->ReadRefList();
 
 		$epoch = 0;
-		foreach ($this->heads as $head) {
-			$commit = $head->GetCommit();
+		foreach ($this->heads as $head => $hash) {
+			$headObj = $this->GetHead($head);
+			$commit = $headObj->GetCommit();
 			if ($commit) {
 				if ($commit->GetCommitterEpoch() > $epoch) {
 					$epoch = $commit->GetCommitterEpoch();
@@ -1050,8 +1053,10 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
-		if (isset($this->heads['refs/heads/' . $hash]))
-			return $this->heads['refs/heads/' . $hash]->GetCommit();
+		if (isset($this->heads[$hash])) {
+			$headObj = $this->GetHead($hash);
+			return $headObj->GetCommit();
+		}
 
 		if (isset($this->tags['refs/tags/' . $hash]))
 			return $this->tags['refs/tags/' . $hash]->GetCommit();
@@ -1083,11 +1088,18 @@ class GitPHP_Project
 
 		if ($type == 'tags') {
 			return $this->tags;
-		} else if ($type == 'heads') {
-			return $this->heads;
 		}
 
-		return array_merge($this->heads, $this->tags);
+		$heads = array();
+		foreach ($this->heads as $head => $hash) {
+			$heads['refs/heads/' . $head] = $this->GetHead($head);
+		}
+
+		if ($type == 'heads') {
+			return $heads;
+		}
+
+		return array_merge($heads, $this->tags);
 	}
 
 	/**
@@ -1142,7 +1154,7 @@ class GitPHP_Project
 							$this->tags[$key] = $this->LoadTag($regs[3], $regs[1]);
 						}
 					} else if ($regs[2] == 'heads') {
-						$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						$this->heads[$regs[3]] = $regs[1];
 					}
 				} catch (Exception $e) {
 				}
@@ -1165,15 +1177,15 @@ class GitPHP_Project
 		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
 		for ($i = 0; $i < count($heads); $i++) {
 			$key = trim(substr($heads[$i], $pathlen), "/\\");
+			$head = substr($key, strlen('refs/heads/'));
 
-			if (isset($this->heads[$key])) {
+			if (isset($this->heads[$head])) {
 				continue;
 			}
 
 			$hash = trim(file_get_contents($heads[$i]));
 			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-				$head = substr($key, strlen('refs/heads/'));
-				$this->heads[$key] = new GitPHP_Head($this, $head, $hash);
+				$this->heads[$head] = $hash;
 			}
 		}
 
@@ -1221,8 +1233,8 @@ class GitPHP_Project
 							$this->tags[$key] = $lastRef;
 						}
 					} else if ($regs[2] == 'heads') {
-						if (!isset($this->heads[$key])) {
-							$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						if (!isset($this->heads[$regs[3]])) {
+							$this->heads[$regs[3]] = $regs[1];
 						}
 					}
 				}
@@ -1423,7 +1435,7 @@ class GitPHP_Project
 	 * Gets the list of sorted heads using the git executable
 	 *
 	 * @access private
-	 * @param integer $count number of tags to load
+	 * @param integer $count number of heads to load
 	 * @return array array of heads
 	 */
 	private function GetHeadsGit($count = 0)
@@ -1445,8 +1457,9 @@ class GitPHP_Project
 		$heads = array();
 
 		foreach ($lines as $ref) {
-			if (isset($this->heads[$ref])) {
-				$heads[] = $this->heads[$ref];
+			$head = substr($ref, strlen('refs/heads/'));
+			if (isset($this->heads[$head])) {
+				$heads[] = $this->GetHead($head);
 			}
 		}
 
@@ -1464,7 +1477,10 @@ class GitPHP_Project
 	 */
 	private function GetHeadsRaw($count = 0)
 	{
-		$heads = $this->heads;
+		$heads = array();
+		foreach ($this->heads as $head => $hash) {
+			$heads[] = $this->GetHead($head);
+		}
 		usort($heads, array('GitPHP_Head', 'CompareAge'));
 
 		if (($count > 0) && (count($heads) > $count)) {
@@ -1487,16 +1503,24 @@ class GitPHP_Project
 		if (empty($head))
 			return null;
 
-		if (!$this->readRefs)
-			$this->ReadRefList();
+		$key = GitPHP_Head::CacheKey($this->project, $head);
+		$memoryCache = GitPHP_MemoryCache::GetInstance();
+		$headObj = $memoryCache->Get($key);
 
-		$key = 'refs/heads/' . $head;
+		if (!$headObj) {
+			if (!$this->readRefs)
+				$this->ReadRefList();
+		
+			$hash = '';
+			if (isset($this->heads[$head]))
+				$hash = $this->heads[$head];
 
-		if (!isset($this->heads[$key])) {
-			$this->heads[$key] = new GitPHP_Head($this, $head);
+			$headObj = new GitPHP_Head($this, $head, $hash);
+
+			$memoryCache->Set($key, $headObj);
 		}
 
-		return $this->heads[$key];
+		return $headObj;
 	}
 
 /*}}}2*/
