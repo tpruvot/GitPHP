@@ -16,6 +16,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
+require_once(GITPHP_CACHEDIR . 'MemoryCache.class.php');
 
 define('GITPHP_ABBREV_HASH_MIN', 7);
 
@@ -229,16 +230,6 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $website = null;
-
-	/**
-	 * commitCache
-	 *
-	 * Caches fetched commit objects in case of
-	 * repeated requests for the same object
-	 *
-	 * @access protected
-	 */
-	protected $commitCache = array();
 
 /* packfile internal variables {{{2*/
 
@@ -1020,16 +1011,23 @@ class GitPHP_Project
 
 		if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
 
-			if (!isset($this->commitCache[$hash])) {
-				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
-				$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
-				if ($cached)
-					$this->commitCache[$hash] = $cached;
-				else
-					$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+			$key = GitPHP_Commit::CacheKey($this->project, $hash);
+			$memoryCache = GitPHP_MemoryCache::GetInstance();
+			$commit = $memoryCache->Get($key);
+
+			if (!$commit) {
+
+				$commit = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+				if (!$commit) {
+					$commit = new GitPHP_Commit($this, $hash);
+				}
+
+				$memoryCache->Set($key, $commit);
+
 			}
 
-			return $this->commitCache[$hash];
+			return $commit;
 
 		}
 
