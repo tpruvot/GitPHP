@@ -169,6 +169,19 @@ class GitPHP_MemoryCache
 	}
 
 	/**
+	 * GetCount
+	 *
+	 * Gets the count of items in this cache
+	 *
+	 * @access public
+	 * @return int count
+	 */
+	public function GetCount()
+	{
+		return count($this->objects);
+	}
+
+	/**
 	 * Evict
 	 *
 	 * Evicts items from the cache down to the size limit

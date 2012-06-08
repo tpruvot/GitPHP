@@ -16,7 +16,6 @@ require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
-require_once(GITPHP_CACHEDIR . 'MemoryCache.class.php');
 
 define('GITPHP_ABBREV_HASH_MIN', 7);
 

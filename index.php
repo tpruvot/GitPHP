@@ -52,6 +52,7 @@ require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
 require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 require_once(GITPHP_CACHEDIR . 'Cache.class.php');
+require_once(GITPHP_CACHEDIR . 'MemoryCache.class.php');
 
 // Need this include for the compression constants used in the config file
 require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
@@ -184,6 +185,7 @@ try {
 }
 
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
+	GitPHP_Log::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
 	foreach ($entries as $logline) {
 		echo "<br />\n" . $logline;
