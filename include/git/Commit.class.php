@@ -729,7 +729,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->containingTagRead)
 			$this->ReadContainingTag();
 
-		return $this->containingTag;
+		if (empty($this->containingTag))
+			return null;
+
+		return $this->GetProject()->GetTag($this->containingTag);
 	}
 
 	/**
@@ -751,7 +754,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		foreach ($revs as $revline) {
 			if (preg_match('/^([0-9a-fA-F]{40})\s+tags\/(.+)(\^[0-9]+|\~[0-9]+)$/', $revline, $regs)) {
 				if ($regs[1] == $this->hash) {
-					$this->containingTag = $this->GetProject()->GetTag($regs[2]);
+					$this->containingTag = $regs[2];
 					break;
 				}
 			}
