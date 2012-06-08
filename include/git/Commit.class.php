@@ -45,7 +45,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	/**
 	 * tree
 	 *
-	 * Tree object for this commit
+	 * Tree hash for this commit
 	 *
 	 * @access protected
 	 */
@@ -178,15 +178,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $containingTagRead = false;
 
 	/**
-	 * treeReferenced
-	 *
-	 * Stores whether the tree has been referenced into a pointer
-	 *
-	 * @access private
-	 */
-	private $treeReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -276,10 +267,14 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if ($this->treeReferenced)
-			$this->DereferenceTree();
+		if (empty($this->tree))
+			return null;
 
-		return $this->tree;
+		$tree = $this->GetProject()->GetTree($this->tree);
+		if ($tree)
+			$tree->SetCommit($this);
+
+		return $tree;
 	}
 
 	/**
@@ -602,14 +597,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$line = $lines[$i];
 			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
-				try {
-					$tree = $this->GetProject()->GetTree($regs[1]);
-					if ($tree) {
-						$tree->SetCommit($this);
-						$this->tree = $tree;
-					}
-				} catch (Exception $e) {
-				}
+				$this->tree = $regs[1];
 			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Parent */
 				$this->parents[] = $regs[1];
@@ -990,49 +978,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReferenceTree
-	 *
-	 * Turns the tree into a reference pointer
-	 *
-	 * @access private
-	 */
-	private function ReferenceTree()
-	{
-		if ($this->treeReferenced)
-			return;
-
-		if (!$this->tree)
-			return;
-
-		$this->tree = $this->tree->GetHash();
-
-		$this->treeReferenced = true;
-	}
-
-	/**
-	 * DereferenceTree
-	 *
-	 * Turns the tree pointer back into an object
-	 *
-	 * @access private
-	 */
-	private function DereferenceTree()
-	{
-		if (!$this->treeReferenced)
-			return;
-
-		if (empty($this->tree))
-			return;
-
-		$this->tree = $this->GetProject()->GetTree($this->tree);
-
-		if ($this->tree)
-			$this->tree->SetCommit($this);
-
-		$this->treeReferenced = false;
-	}
-
-	/**
 	 * __sleep
 	 *
 	 * Called to prepare the object for serialization
@@ -1042,10 +987,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function __sleep()
 	{
-		if (!$this->treeReferenced)
-			$this->ReferenceTree();
-
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'treeReferenced');
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead');
 		return array_merge($properties, parent::__sleep());
 	}
 
