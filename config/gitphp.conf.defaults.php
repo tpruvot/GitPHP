@@ -373,7 +373,7 @@ $gitphp_conf['objectcachelifetime'] = 86400;
  * the bottleneck).  Decrease if you have low web server memory or
  * lots of projects in your install (memory is the bottleneck).
  */
-$gitphp_conf['objectmemory'] = 100;
+$gitphp_conf['objectmemory'] = 150;
 
 
 

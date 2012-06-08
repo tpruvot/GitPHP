@@ -120,7 +120,7 @@ class GitPHP_MemoryCache
 	 */
 	private function Evict()
 	{
-		$size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 100);
+		$size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 150);
 
 		while (count($this->cacheMap) >= $size) {
 			$key = array_pop($this->cacheMap);
