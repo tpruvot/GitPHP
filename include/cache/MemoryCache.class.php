@@ -38,15 +38,6 @@ class GitPHP_MemoryCache
 	protected $objects = array();
 
 	/**
-	 * cacheMap
-	 *
-	 * Map of objects in cache
-	 *
-	 * @access protected
-	 */
-	protected $cacheMap = array();
-
-	/**
 	 * size
 	 *
 	 * Size of cache
@@ -140,7 +131,12 @@ class GitPHP_MemoryCache
 
 		$object = $this->objects[$key];
 
-		//$this->KeyUsed($key);
+		/*
+		 * unset and reset to move to end of associative array
+		 * (indicate as most recently used)
+		 */
+		unset($this->objects[$key]);
+		$this->objects[$key] = $object;
 
 		return $object;
 	}
@@ -160,13 +156,16 @@ class GitPHP_MemoryCache
 			return;
 
 		if (isset($this->objects[$key])) {
-			$this->objects[$key] = $object;
-			//$this->KeyUsed($key);
+			/*
+			 * unset so resetting will move to end of associative array
+		 	 * (indicate as most recently used)
+			 */
+			unset($this->objects[$key]);
 		} else {
 			//$this->Evict();
-			$this->objects[$key] = $object;
-			//array_unshift($this->cacheMap, $key);
 		}
+
+		$this->objects[$key] = $object;
 	}
 
 	/**
@@ -178,30 +177,8 @@ class GitPHP_MemoryCache
 	 */
 	private function Evict()
 	{
-		while (count($this->cacheMap) >= $this->size) {
-			$key = array_pop($this->cacheMap);
-
-			if (!empty($key))
-				unset($this->objects[$key]);
-		}
-	}
-
-	/**
-	 * KeyUsed
-	 *
-	 * Mark key as recently used
-	 *
-	 * @access private
-	 */
-	private function KeyUsed($key)
-	{
-		if (empty($key))
-			return;
-
-		$index = array_search($key, $this->cacheMap);
-		if ($index !== false) {
-			array_splice($this->cacheMap, $index, 1);
-			array_unshift($this->cacheMap, $key);
+		while (count($this->objects) >= $this->size) {
+			array_shift($this->objects);
 		}
 	}
 
