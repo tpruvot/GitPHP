@@ -626,13 +626,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function GetCacheKey()
 	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
-
-		$key .= 'tag|' . $this->refName;
-		
-		return $key;
+		return GitPHP_Tag::CacheKey($this->GetProject()->GetProject(), $this->refName);
 	}
 
 	/**
@@ -704,6 +698,22 @@ class GitPHP_Tag extends GitPHP_Ref
 		}
 
 		return ($aEpoch < $bEpoch ? 1 : -1);
+	}
+
+	/**
+	 * CacheKey
+	 *
+	 * Generates a tag cache key
+	 *
+	 * @access public
+	 * @static
+	 * @param string $proj project
+	 * @param string $tag tag name
+	 * @return string cache key
+	 */
+	public static function CacheKey($proj, $tag)
+	{
+		return 'project|' . $proj . '|tag|' . $tag;
 	}
 
 }
