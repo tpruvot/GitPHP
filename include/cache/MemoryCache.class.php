@@ -47,6 +47,15 @@ class GitPHP_MemoryCache
 	protected $cacheMap = array();
 
 	/**
+	 * size
+	 *
+	 * Size of cache
+	 *
+	 * @access protected
+	 */
+	protected $size;
+
+	/**
 	 * GetInstance
 	 *
 	 * Returns the singleton instance
@@ -61,6 +70,55 @@ class GitPHP_MemoryCache
 			self::$instance = new GitPHP_MemoryCache();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * __construct
+	 *
+	 * Class constructor
+	 *
+	 * @access public
+	 * @param int $size size of cache
+	 */
+	public function __construct($size = 0)
+	{
+		if ($size && ($size > 0)) {
+			$this->size = $size;
+		} else {
+			$this->size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 150);
+		}
+	}
+
+	/**
+	 * GetSize
+	 *
+	 * Gets the size of this cache
+	 *
+	 * @access public
+	 * @return int size
+	 */
+	public function GetSize()
+	{
+		return $this->size;
+	}
+
+	/**
+	 * SetSize
+	 *
+	 * Sets the size of this cache
+	 *
+	 * @access public
+	 * @param int $size size
+	 */
+	public function SetSize($size)
+	{
+		if ($size && ($size > 0) && ($this->size != $size)) {
+			$oldSize = $this->size;
+			$this->size = $size;
+			if ($size < $oldSize) {
+				$this->Evict();
+			}
+		}
 	}
 
 	/**
@@ -120,9 +178,7 @@ class GitPHP_MemoryCache
 	 */
 	private function Evict()
 	{
-		$size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 150);
-
-		while (count($this->cacheMap) >= $size) {
+		while (count($this->cacheMap) >= $this->size) {
 			$key = array_pop($this->cacheMap);
 
 			if (!empty($key))
