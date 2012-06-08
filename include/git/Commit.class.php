@@ -178,15 +178,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $containingTagRead = false;
 
 	/**
-	 * parentsReferenced
-	 *
-	 * Stores whether the parents have been referenced into pointers
-	 *
-	 * @access private
-	 */
-	private $parentsReferenced = false;
-
-	/**
 	 * treeReferenced
 	 *
 	 * Stores whether the tree has been referenced into a pointer
@@ -244,11 +235,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if ($this->parentsReferenced)
-			$this->DereferenceParents();
+		if (isset($this->parents[0])) {
+			return $this->GetProject()->GetCommit($this->parents[0]);
+		}
 
-		if (isset($this->parents[0]))
-			return $this->parents[0];
 		return null;
 	}
 
@@ -265,10 +255,12 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if ($this->parentsReferenced)
-			$this->DereferenceParents();
+		$parents = array();
+		foreach ($this->parents as $parent) {
+			$parents[] = $this->GetProject()->GetCommit($parent);
+		}
 
-		return $this->parents;
+		return $parents;
 	}
 
 	/**
@@ -620,10 +612,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Parent */
-				try {
-					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
-				} catch (Exception $e) {
-				}
+				$this->parents[] = $regs[1];
 			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* author data */
 				$this->author = $regs[1];
@@ -1001,50 +990,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReferenceParents
-	 *
-	 * Turns the list of parents into reference pointers
-	 *
-	 * @access private
-	 */
-	private function ReferenceParents()
-	{
-		if ($this->parentsReferenced)
-			return;
-
-		if ((!isset($this->parents)) || (count($this->parents) < 1))
-			return;
-
-		for ($i = 0; $i < count($this->parents); $i++) {
-			$this->parents[$i] = $this->parents[$i]->GetHash();
-		}
-
-		$this->parentsReferenced = true;
-	}
-
-	/**
-	 * DereferenceParents
-	 *
-	 * Turns the list of parent pointers back into objects
-	 *
-	 * @access private
-	 */
-	private function DereferenceParents()
-	{
-		if (!$this->parentsReferenced)
-			return;
-
-		if ((!$this->parents) || (count($this->parents) < 1))
-			return;
-
-		for ($i = 0; $i < count($this->parents); $i++) {
-			$this->parents[$i] = $this->GetProject()->GetCommit($this->parents[$i]);
-		}
-
-		$this->parentsReferenced = false;
-	}
-
-	/**
 	 * ReferenceTree
 	 *
 	 * Turns the tree into a reference pointer
@@ -1097,13 +1042,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function __sleep()
 	{
-		if (!$this->parentsReferenced)
-			$this->ReferenceParents();
-
 		if (!$this->treeReferenced)
 			$this->ReferenceTree();
 
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced');
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'treeReferenced');
 		return array_merge($properties, parent::__sleep());
 	}
 
