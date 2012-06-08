@@ -140,7 +140,7 @@ class GitPHP_MemoryCache
 
 		$object = $this->objects[$key];
 
-		$this->KeyUsed($key);
+		//$this->KeyUsed($key);
 
 		return $object;
 	}
@@ -161,11 +161,11 @@ class GitPHP_MemoryCache
 
 		if (isset($this->objects[$key])) {
 			$this->objects[$key] = $object;
-			$this->KeyUsed($key);
+			//$this->KeyUsed($key);
 		} else {
-			$this->Evict();
+			//$this->Evict();
 			$this->objects[$key] = $object;
-			array_unshift($this->cacheMap, $key);
+			//array_unshift($this->cacheMap, $key);
 		}
 	}
 
