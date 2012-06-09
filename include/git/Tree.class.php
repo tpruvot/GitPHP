@@ -338,13 +338,23 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	public function GetCacheKey()
 	{
-		$key = parent::GetCacheKey();
-		if (!empty($key))
-			$key .= '|';
+		return GitPHP_Tree::CacheKey($this->GetProject()->GetProject(), $this->hash);
+	}
 
-		$key .= 'tree|' . $this->hash;
-
-		return $key;
+	/**
+	 * CacheKey
+	 *
+	 * Generates a tree cache key
+	 *
+	 * @access public
+	 * @static
+	 * @param string $proj project
+	 * @param string $hash hash
+	 * @return string cache key
+	 */
+	public static function CacheKey($proj, $hash)
+	{
+		return 'project|' . $proj . '|tree|' . $hash;
 	}
 
 }
