@@ -48,7 +48,7 @@ class GitPHP_Head extends GitPHP_Ref
 	 */
 	public function GetCommit()
 	{
-		return $this->project->GetCommit($this->GetHash());
+		return $this->GetProject()->GetCommit($this->GetHash());
 	}
 	
 	/**

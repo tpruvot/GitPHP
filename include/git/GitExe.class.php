@@ -74,6 +74,19 @@ class GitPHP_GitExe
 	}
 
 	/**
+	 * GetProject
+	 *
+	 * Gets the project
+	 *
+	 * @access public
+	 * @return mixed project
+	 */
+	public function GetProject()
+	{
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+	}
+
+	/**
 	 * SetProject
 	 *
 	 * Sets the project for this executable
@@ -82,7 +95,10 @@ class GitPHP_GitExe
 	 */
 	public function SetProject($project = null)
 	{
-		$this->project = $project;
+		if ($project)
+			$this->project = $project->GetProject();
+		else
+			$this->project = null;
 	}
 
 	/**
@@ -139,7 +155,7 @@ class GitPHP_GitExe
 	{
 		$gitDir = '';
 		if ($this->project) {
-			$gitDir = '--git-dir=' . $this->project->GetPath();
+			$gitDir = '--git-dir=' . $this->GetProject()->GetPath();
 		}
 		
 		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);

@@ -90,9 +90,9 @@ class GitPHP_TreeDiff implements Iterator
 	 */
 	public function __construct($project, $toHash, $fromHash = '', $renames = false)
 	{
-		$this->project = $project;
+		$this->project = $project->GetProject();
 
-		$toCommit = $this->project->GetCommit($toHash);
+		$toCommit = $project->GetCommit($toHash);
 		$this->toHash = $toHash;
 
 		if (empty($fromHash)) {
@@ -101,11 +101,23 @@ class GitPHP_TreeDiff implements Iterator
 				$this->fromHash = $parent->GetHash();
 			}
 		} else {
-			$fromCommit = $this->project->GetCommit($fromHash);
 			$this->fromHash = $fromHash;
 		}
 
 		$this->renames = $renames;
+	}
+
+	/**
+	 * GetProject
+	 *
+	 * Gets the project
+	 *
+	 * @access public
+	 * @return mixed project
+	 */
+	public function GetProject()
+	{
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
 	}
 
 	/**
@@ -121,7 +133,7 @@ class GitPHP_TreeDiff implements Iterator
 
 		$this->fileDiffs = array();
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 
@@ -141,7 +153,7 @@ class GitPHP_TreeDiff implements Iterator
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
 				try {
-					$this->fileDiffs[] = new GitPHP_FileDiff($this->project, $trimmed);
+					$this->fileDiffs[] = new GitPHP_FileDiff($this->GetProject(), $trimmed);
 				} catch (Exception $e) {
 				}
 			}
