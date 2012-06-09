@@ -23,6 +23,24 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 {
 	/**
+	 * fileContents
+	 *
+	 * Stores the contents of the project config file
+	 *
+	 * @access protected
+	 */
+	protected $fileContents = array();
+
+	/**
+	 * fileRead
+	 *
+	 * Stores whether the file has been read
+	 *
+	 * @access protected
+	 */
+	protected $fileRead = false;
+	
+	/**
 	 * __construct
 	 *
 	 * constructor
@@ -52,7 +70,83 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		if (!$this->fileRead)
+			$this->ReadFile();
+
+		foreach ($this->fileContents as $projData) {
+			$projObj = $this->InstantiateProject($projData['name']);
+			if ($projObj) {
+				$this->projects[$projData['name']] = $projObj;
+				unset($projObj);
+			}
+		}
+	}
+
+	/**
+	 * InstantiateProject
+	 *
+	 * Instantiates the project object
+	 *
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project object
+	 */
+	protected function InstantiateProject($proj)
+	{
+		if (!$this->fileRead)
+			$this->ReadFile();
+
+		$data = null;
+		$found = false;
+
+		foreach ($this->fileContents as $projData) {
+			if (isset($projData) && ($proj == $projData['name'])) {
+				$data = $projData;
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found)
+			return null;
+
+		if (!(isset($data['type']) && ($data['type'] == 'git'))) {
+			GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $proj));
+			return null;
+		}
+
+		if (!(isset($data['public']) && ($data['public'] == true))) {
+			GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not public', $proj));
+			return null;
+		}
+
+		if (!is_file(GitPHP_Util::AddSlash($this->projectRoot) . $proj . '/HEAD')) {
+			GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $proj));
+		}
+
+		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		if (isset($data['owner']) && !empty($data['owner'])) {
+			$projectObj->SetOwner($data['owner']);
+		}
+
+		if (isset($data['description']) && !empty($data['description'])) {
+			$projectObj->SetDescription($data['description']);
+		}
+
+		return $projectObj;
+	}
+
+	/**
+	 * ReadFile
+	 *
+	 * Reads the file contents
+	 *
+	 * @access private
+	 */
+	protected function ReadFile()
+	{
+		$this->fileRead = true;
 
 		$use_errors = libxml_use_internal_errors(true);
 
@@ -66,39 +160,26 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 		}
 
 		foreach ($xml->repositories->repository as $repository) {
-
-			if ($repository->type != 'git') {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $repository->name));
-				continue;
-			}
-
-			if ($repository->public != 'true') {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not public', $repository->name));
-				continue;
-			}
-
-			$projName = trim($repository->name);
-			if (empty($projName))
+			
+			$name = trim($repository->name);
+			if (empty($name))
 				continue;
 
-			if (is_file($projectRoot . $projName . '/HEAD')) {
-				try {
-					$projObj = new GitPHP_Project($projectRoot, $projName);
-					$projOwner = trim($repository->contact);
-					if (!empty($projOwner)) {
-						$projObj->SetOwner($projOwner);
-					}
-					$projDesc = trim($repository->description);
-					if (!empty($projDesc)) {
-						$projObj->SetDescription($projDesc);
-					}
-					$this->projects[$projName] = $projObj;
-				} catch (Exception $e) {
-					GitPHP_Log::GetInstance()->Log($e->getMessage());
-				}
-			} else {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
-			}
+			$data = array();
+			$data['name'] = $name;
+			$data['type'] = $repository->type;
+			$data['public'] = ($repository->public == 'true');
+			
+			$owner = trim($repository->contact);
+			if (!empty($owner))
+				$data['owner'] = $owner;
+
+			$description = trim($repository->description);
+			if (!empty($description))
+				$data['description'] = $description;
+
+			$this->fileContents[] = $data;
+
 		}
 	}
 
