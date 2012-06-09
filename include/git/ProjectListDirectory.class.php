@@ -24,35 +24,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
 	
 	/**
-	 * projectDir
-	 *
-	 * Stores projectlist directory internally
-	 *
-	 * @access protected
-	 */
-	protected $projectDir;
-
-	/**
-	 * __construct
-	 *
-	 * constructor
-	 *
-	 * @param string $projectDir directory to search
-	 * @throws Exception if parameter is not a directory
-	 * @access public
-	 */
-	public function __construct($projectDir)
-	{
-		if (!is_dir($projectDir)) {
-			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
-		}
-
-		$this->projectDir = GitPHP_Util::AddSlash($projectDir);
-
-		parent::__construct();
-	}
-
-	/**
 	 * PopulateProjects
 	 *
 	 * Populates the internal list of projects
@@ -61,31 +32,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		// HACK workaround for strange behavior of CACHING_LIFETIME_SAVED in smarty 3
-		$oldLifetime = GitPHP_Cache::GetObjectCacheInstance()->GetLifetime();
-		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime(GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
-
-		$key = 'projectdir|' . $this->projectDir . '|projectlist|directory';
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-		if ($cached && (count($cached) > 0)) {
-			foreach ($cached as $proj) {
-				$this->AddProject($proj);
-			}
-			GitPHP_Log::GetInstance()->Log('Loaded ' . count($this->projects) . ' projects from cache');
-			GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
-			return;
-		}
-
-		$this->RecurseDir($this->projectDir);
-
-		if (count($this->projects) > 0) {
-			$projects = array();
-			foreach ($this->projects as $proj) {
-				$projects[] = $proj->GetProject();;
-			}
-			GitPHP_Cache::GetObjectCacheInstance()->Set($key, $projects, GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
-		}
-		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
+		$this->RecurseDir(GitPHP_Util::AddSlash($this->projectRoot));
 	}
 
 	/**
@@ -103,14 +50,20 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
 
 		if ($dh = opendir($dir)) {
-			$trimlen = strlen($this->projectDir) + 1;
+			$trimlen = strlen(GitPHP_Util::AddSlash($this->projectRoot)) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
 					if (is_file($fullPath . '/HEAD')) {
 						GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $fullPath));
 						$projectPath = substr($fullPath, $trimlen);
-						$this->AddProject($projectPath);
+						if (!isset($this->projects[$projectPath])) {
+							$project = $this->InstantiateProject($projectPath);
+							if ($project) {
+								$this->projects[$projectPath] = $project;
+								unset($project);
+							}
+						}
 					} else {
 						$this->RecurseDir($fullPath);
 					}
@@ -123,32 +76,41 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * AddProject
+	 * InstantiateProject
 	 *
-	 * Add project to collection
+	 * Instantiates project object
 	 *
-	 * @access private
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project
 	 */
-	private function AddProject($projectPath)
+	protected function InstantiateProject($proj)
 	{
 		try {
-			$proj = new GitPHP_Project($this->projectDir, $projectPath);
-			$category = trim(dirname($projectPath));
+
+			$project = new GitPHP_Project($this->projectRoot, $proj);
+
+			$category = trim(dirname($proj));
 			if (!(empty($category) || (strpos($category, '.') === 0))) {
-				$proj->SetCategory($category);
+				$project->SetCategory($category);
 			}
-			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) {
-				if ($proj->GetDaemonEnabled()) {
-					$this->projects[$projectPath] = $proj;
-				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $proj->GetPath()));
-				}
-			} else {
-				$this->projects[$projectPath] = $proj;
+
+			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false) && !$project->GetDaemonEnabled()) {
+				GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
+				return null;
 			}
+
+			if ($this->projectSettings && isset($this->projectSettings[$proj])) {
+				$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
+			}
+
+			return $project;
+
 		} catch (Exception $e) {
 			GitPHP_Log::GetInstance()->Log($e->getMessage());
 		}
+
+		return null;
 	}
 
 }

@@ -52,31 +52,82 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
 		foreach ($this->projectConfig as $proj => $projData) {
 			try {
 				if (is_string($projData)) {
 					// Just flat array of project paths
-					$projObj = new GitPHP_Project($projectRoot, $projData);
-					$this->projects[$projData] = $projObj;
+					$projObj = $this->InstantiateProject($projData);
+					if ($projObj) {
+						$this->projects[$projData] = $projObj;
+						unset($projObj);
+					}
 				} else if (is_array($projData)) {
 					if (is_string($proj) && !empty($proj)) {
 						// Project key pointing to data array
-						$projObj = new GitPHP_Project($projectRoot, $proj);
-						$this->projects[$proj] = $projObj;
-						$this->ApplyProjectSettings($proj, $projData);
+						$projObj = $this->InstantiateProject($proj);
+						if ($projObj) {
+							$this->projects[$proj] = $projObj;
+							unset($projObj);
+						}
 					} else if (isset($projData['project'])) {
 						// List of data arrays with projects inside
-						$projObj = new GitPHP_Project($projectRoot, $projData['project']);
-						$this->projects[$projData['project']] = $projObj;
-						$this->ApplyProjectSettings(null, $projData);
+						$projObj = $this->InstantiateProject($projData['project']);
+						if ($projObj) {
+							$this->projects[$projData['project']] = $projObj;
+							unset($projObj);
+						}
 					}
 				}
 			} catch (Exception $e) {
 				GitPHP_Log::GetInstance()->Log($e->getMessage());
 			}
 		}
+	}
+
+	/**
+	 * InstantiateProject
+	 *
+	 * Instantiates project object
+	 *
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project
+	 */
+	protected function InstantiateProject($proj)
+	{
+		$found = false;
+		$projectSettings = null;
+		foreach ($this->projectConfig as $key => $projData) {
+			if (is_string($projData) && ($projData == $proj)) {
+				// Just flat array of project paths
+				$found = true;
+				break;
+			} else if (is_array($projData)) {
+				if (is_string($key) && !empty($key) && ($key == $proj)) {
+					// Project key pointing to data array
+					$found = true;
+					$projectSettings = $projData;
+					break;
+				}
+				if (isset($projData['project']) && ($projData['project'] == $proj)) {
+					// List of data arrays with projects inside
+					$found = true;
+					$projectSettings = $projData;
+					break;
+				}
+			}
+		}
+
+		if (!$found) {
+			return;
+		}
+
+		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		if ($projectSettings != null)
+			$this->ApplyProjectSettings($projectObj, $projectSettings);
+
+		return $projectObj;
 	}
 
 }
