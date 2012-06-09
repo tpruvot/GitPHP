@@ -117,11 +117,11 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('commit', $this->project->GetCommit($this->params['hash']));
-		$this->tpl->assign('head', $this->project->GetHeadCommit());
+		$this->tpl->assign('commit', $this->GetProject()->GetCommit($this->params['hash']));
+		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 
-		$revlist = $this->project->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
+		$revlist = $this->GetProject()->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
 		if ($revlist) {
 			if (count($revlist) > 100) {
 				$this->tpl->assign('hasmorerevs', true);
@@ -131,7 +131,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		}
 
 		if (isset($this->params['mark'])) {
-			$this->tpl->assign('mark', $this->project->GetCommit($this->params['mark']));
+			$this->tpl->assign('mark', $this->GetProject()->GetCommit($this->params['mark']));
 		}
 	}
 

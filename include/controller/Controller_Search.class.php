@@ -137,7 +137,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$co = $this->project->GetCommit($this->params['hash']);
+		$co = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $co);
 
 		$results = array();
@@ -145,15 +145,15 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			switch ($this->params['searchtype']) {
 
 				case GITPHP_SEARCH_COMMIT:
-					$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					$results = $this->GetProject()->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 
 				case GITPHP_SEARCH_AUTHOR:
-					$results = $this->project->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					$results = $this->GetProject()->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 
 				case GITPHP_SEARCH_COMMITTER:
-					$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					$results = $this->GetProject()->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 					break;
 				case GITPHP_SEARCH_FILE:
 					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));

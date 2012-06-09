@@ -126,11 +126,11 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				$mime = null;
 				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-						$commit = $this->project->GetCommit($this->params['hashbase']);
+						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->PathToHash($this->params['file']);
 					}
 
-					$blob = $this->project->GetBlob($this->params['hash']);
+					$blob = $this->GetProject()->GetBlob($this->params['hash']);
 					$blob->SetPath($this->params['file']);
 
 					$mime = $blob->FileMime();
@@ -161,14 +161,14 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$commit = $this->project->GetCommit($this->params['hashbase']);
+		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
 
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 			$this->params['hash'] = $commit->PathToHash($this->params['file']);
 		}
 
-		$blob = $this->project->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetBlob($this->params['hash']);
 		if (!empty($this->params['file']))
 			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);
@@ -178,7 +178,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			return;
 		}
 
-		$head = $this->project->GetHeadCommit();
+		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
 		$this->tpl->assign('tree', $commit->GetTree());

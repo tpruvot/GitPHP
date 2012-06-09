@@ -39,10 +39,11 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		if (isset($_GET['p'])) {
-			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-			if (!$this->project) {
+			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			if (!$project) {
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
+			$this->project = $project->GetProject();
 		}
 
 		if (!$this->project) {
@@ -125,7 +126,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->archive = new GitPHP_Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		$this->archive = new GitPHP_Archive($this->GetProject(), null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
 		switch ($this->archive->GetFormat()) {
 			case GITPHP_COMPRESS_TAR:
@@ -159,9 +160,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		$commit = null;
 
 		if (!isset($this->params['hash']))
-			$commit = $this->project->GetHeadCommit();
+			$commit = $this->GetProject()->GetHeadCommit();
 		else
-			$commit = $this->project->GetCommit($this->params['hash']);
+			$commit = $this->GetProject()->GetCommit($this->params['hash']);
 
 		$this->archive->SetObject($commit);
 	}

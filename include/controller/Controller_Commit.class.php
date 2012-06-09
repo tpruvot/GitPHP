@@ -110,7 +110,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$commit = $this->project->GetCommit($this->params['hash']);
+		$commit = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('tree', $commit->GetTree());
 		$treediff = $commit->DiffToParent();
