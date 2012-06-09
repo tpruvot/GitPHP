@@ -1686,12 +1686,21 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
-		$cacheKey = 'project|' . $this->project . '|tree|' . $hash;
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
-		if ($cached)
-			return $cached;
+		$key = GitPHP_Tree::CacheKey($this->project, $hash);
+		$memoryCache = GitPHP_MemoryCache::GetInstance();
+		$tree = $memoryCache->Get($key);
 
-		return new GitPHP_Tree($this, $hash);
+		if (!$tree) {
+			$tree = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+			if (!$tree) {
+				$tree = new GitPHP_Tree($this, $hash);
+			}
+
+			$memoryCache->Set($key, $tree);
+		}
+
+		return $tree;
 	}
 
 /*}}}2*/
