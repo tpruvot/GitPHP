@@ -97,9 +97,9 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('head', $this->project->GetHeadCommit());
+		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 
-		$revlist = $this->project->GetLog('HEAD', 17);
+		$revlist = $this->GetProject()->GetLog('HEAD', 17);
 		if ($revlist) {
 			if (count($revlist) > 16) {
 				$this->tpl->assign('hasmorerevs', true);
@@ -108,7 +108,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('revlist', $revlist);
 		}
 
-		$taglist = $this->project->GetTags(17);
+		$taglist = $this->GetProject()->GetTags(17);
 		if ($taglist) {
 			if (count($taglist) > 16) {
 				$this->tpl->assign('hasmoretags', true);
@@ -117,7 +117,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('taglist', $taglist);
 		}
 
-		$headlist = $this->project->GetHeads(17);
+		$headlist = $this->GetProject()->GetHeads(17);
 		if ($headlist) {
 			if (count($headlist) > 17) {
 				$this->tpl->assign('hasmoreheads', true);
@@ -126,7 +126,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('headlist', $headlist);
 		}
 
-		$remotelist = $this->project->GetRemotes(6);
+		$remotelist = $this->GetProject()->GetRemotes(6);
 		if ($remotelist) {
 			if (count($remotelist) > 6) {
 				$this->tpl->assign('hasmoreremotes', true);

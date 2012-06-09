@@ -134,7 +134,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		if (isset($this->params['file']))
 			$this->tpl->assign('file', $this->params['file']);
 
-		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
+		$filediff = new GitPHP_FileDiff($this->GetProject(), $this->params['hashparent'], $this->params['hash']);
 
 		$filediff->GetStats();
 
@@ -148,19 +148,19 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('sidebyside', true);
 		}
 
-		$commit = $this->project->GetCommit($this->params['hashbase']);
+		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
 
 		$mimetype = FileMime($this->params['file'], true);
 		$filediff->isPicture = ($mimetype == 'image');
 		$this->tpl->assign('picture', $filediff->isPicture);
 
-		$blobparent = $this->project->GetBlob($this->params['hashparent']);
+		$blobparent = $this->GetProject()->GetBlob($this->params['hashparent']);
 		$blobparent->SetCommit($commit);
 		$blobparent->SetPath($this->params['file']);
 		$this->tpl->assign('blobparent', $blobparent);
 
-		$blob = $this->project->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetBlob($this->params['hash']);
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 

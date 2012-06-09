@@ -97,10 +97,11 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if (isset($_GET['p'])) {
-			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-			if (!$this->project) {
+			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			if (!$project) {
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
+			$this->project = $project->GetProject();
 		}
 
 		if (isset($_GET['s']))
@@ -109,6 +110,21 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * GetProject
+	 *
+	 * Gets the project for this controller
+	 *
+	 * @access public
+	 * @return mixed project
+	 */
+	public function GetProject()
+	{
+		if ($this->project)
+			return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return null;
 	}
 
 	/**
@@ -152,7 +168,7 @@ abstract class GitPHP_ControllerBase
 			unset($projList);
 		}
 		if ($this->project && $projectKeys) {
-			$cacheKeyPrefix .= '|' . sha1($this->project->GetProject());
+			$cacheKeyPrefix .= '|' . sha1($this->project);
 		}
 		
 		return $cacheKeyPrefix;
@@ -272,7 +288,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
-			$this->tpl->assign('project', $this->project);
+			$this->tpl->assign('project', $this->GetProject());
 		if (GitPHP_Config::GetInstance()->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
 		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
@@ -362,11 +378,11 @@ abstract class GitPHP_ControllerBase
 		if (!$this->project)
 			return;
 
-		$epoch = $this->project->GetEpoch();
+		$epoch = $this->GetProject()->GetEpoch();
 		if (empty($epoch))
 			return;
 
-		$age = $this->project->GetAge();
+		$age = $this->GetProject()->GetAge();
 
 		$this->tpl->clearCache(null, $this->GetCacheKeyPrefix(), null, $age);
 		$this->tpl->clearCache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);

@@ -141,7 +141,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->project->GetLog('HEAD', GITPHP_FEED_ITEMS);
+		$log = $this->GetProject()->GetLog('HEAD', GITPHP_FEED_ITEMS);
 
 		$entries = count($log);
 

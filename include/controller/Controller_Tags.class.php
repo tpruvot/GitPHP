@@ -98,10 +98,10 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$head = $this->project->GetHeadCommit();
+		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$taglist = $this->project->GetTags();
+		$taglist = $this->GetProject()->GetTags();
 		if (isset($taglist) && (count($taglist) > 0)) {
 			$this->tpl->assign("taglist",$taglist);
 		}

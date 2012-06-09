@@ -98,10 +98,10 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$head = $this->project->GetHeadCommit();
+		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$headlist = $this->project->GetRemotes();
+		$headlist = $this->GetProject()->GetRemotes();
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$this->tpl->assign("remotelist",$headlist);
 		}

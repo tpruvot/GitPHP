@@ -98,10 +98,10 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$head = $this->project->GetHeadCommit();
+		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$headlist = $this->project->GetHeads();
+		$headlist = $this->GetProject()->GetHeads();
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$this->tpl->assign("headlist",$headlist);
 		}

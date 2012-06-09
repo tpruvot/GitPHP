@@ -130,7 +130,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	 */
 	protected function LoadData()
 	{
-		$co = $this->project->GetCommit($this->params['hash']);
+		$co = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $co);
 
 		if (isset($this->params['hashparent'])) {
@@ -142,7 +142,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('extrascripts', 'commitdiff');
 		}
 
-		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
+		$treediff = new GitPHP_TreeDiff($this->GetProject(), $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
 		$this->tpl->assign('treediff', $treediff);
 	}
 

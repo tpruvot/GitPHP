@@ -121,7 +121,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			throw new Exception('Hashbase is required');
 		}
 
-		$commit = $this->project->GetCommit($this->params['hashbase']);
+		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 
 		$this->tpl->assign('commit', $commit);
 
@@ -137,7 +137,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			}
 		}
 
-		$tree = $this->project->GetTree($this->params['hash']);
+		$tree = $this->GetProject()->GetTree($this->params['hash']);
 		if (!$tree->GetCommit()) {
 			$tree->SetCommit($commit);
 		}
