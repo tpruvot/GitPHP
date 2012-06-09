@@ -363,17 +363,20 @@ $gitphp_conf['objectcachelifetime'] = 86400;
 
 /*
  * objectmemory
- * Number of git objects to keep in memory during page load
- * A higher number means more objects will be stored in memory.
- * Storing more objects in memory means GitPHP can fetch these
- * objects from memory rather than reloading them from the repository
- * again, at the expense of the web process taking more RAM to keep
- * these objects.  Increase if you have lots of memory and want to
- * decrease the likelihood of hitting the git repo on disk (disk is
- * the bottleneck).  Decrease if you have low web server memory or
- * lots of projects in your install (memory is the bottleneck).
+ * If set, this will limit the number of git objects GitPHP
+ * keeps in PHP's memory during execution, to this specific number.
+ * This can be set if you have a low memory limit on your
+ * webserver.
+ * Please note that setting this too low will severely degrade
+ * performance, as GitPHP will have to repeatedly load the same
+ * objects off of the disk since the limit prevents them from
+ * being kept in memory.  It's strongly recommended that you
+ * turn debug mode on and view the MemoryCache size on various
+ * pages (in the debug output) to get a feel for the size of
+ * your projects before setting this.
+ * 0 means no limit.
  */
-$gitphp_conf['objectmemory'] = 150;
+$gitphp_conf['objectmemory'] = 0;
 
 
 

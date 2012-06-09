@@ -89,12 +89,12 @@ class GitPHP_MemoryCache
 	 * @access public
 	 * @param int $size size of cache
 	 */
-	public function __construct($size = 0)
+	public function __construct($size = null)
 	{
-		if ($size && ($size > 0)) {
+		if ($size !== null) {
 			$this->size = $size;
 		} else {
-			$this->size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 150);
+			$this->size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 0);
 		}
 	}
 
@@ -121,10 +121,10 @@ class GitPHP_MemoryCache
 	 */
 	public function SetSize($size)
 	{
-		if ($size && ($size > 0) && ($this->size != $size)) {
+		if ($this->size != $size) {
 			$oldSize = $this->size;
 			$this->size = $size;
-			if ($size < $oldSize) {
+			if (($size > 0) && ($size < $oldSize)) {
 				$this->Evict();
 			}
 		}
@@ -223,7 +223,7 @@ class GitPHP_MemoryCache
 			 */
 			unset($this->objects[$key]);
 		} else {
-			//$this->Evict();
+			$this->Evict();
 		}
 
 		$this->objects[$key] = $object;
@@ -264,6 +264,10 @@ class GitPHP_MemoryCache
 	 */
 	private function Evict()
 	{
+		if ($this->size < 1) {
+			return;
+		}
+
 		while (count($this->objects) >= $this->size) {
 			array_shift($this->objects);
 		}
