@@ -302,12 +302,10 @@ class GitPHP_MemoryCache
 			return '';
 		}
 
-		$subKey = substr($key, strlen('project|'));
-		$nextDelim = strpos($subKey, '|');
-		if ($nextDelim === false) {
-			return $subKey;
-		}
-		$project = substr($subKey, 0, $nextDelim);
+		strtok($key, '|');
+
+		$project = strtok('|');
+
 		return $project;
 	}
 
