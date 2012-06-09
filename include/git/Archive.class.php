@@ -27,13 +27,22 @@ define('GITPHP_COMPRESS_ZIP', 'zip');
 class GitPHP_Archive
 {
 	/**
-	 * gitObject
+	 * objectType
 	 *
-	 * Stores the object for this archive internally
+	 * Stores the object type for this archive
 	 *
 	 * @access protected
 	 */
-	protected $gitObject = null;
+	protected $objectType;
+
+	/**
+	 * objectHash
+	 *
+	 * Stores the object hash for this archive
+	 *
+	 * @access protected
+	 */
+	protected $objectHash;
 
 	/**
 	 * project
@@ -112,6 +121,9 @@ class GitPHP_Archive
 	{
 		$this->SetProject($project);
 		$this->SetObject($gitObject);
+		if (!$this->project && $gitObject) {
+			$this->project = $gitObject->GetProject();
+		}
 		$this->SetFormat($format);
 		$this->SetPath($path);
 		$this->SetPrefix($prefix);
@@ -162,7 +174,15 @@ class GitPHP_Archive
 	 */
 	public function GetObject()
 	{
-		return $this->gitObject;
+		if ($this->objectType == 'commit') {
+			return $this->GetProject()->GetCommit($this->objectHash);
+		}
+
+		if ($this->objectType = 'tree') {
+			return $this->GetProject()->GetTree($this->objectHash);
+		}
+
+		return null;
 	}
 
 	/**
@@ -176,11 +196,26 @@ class GitPHP_Archive
 	public function SetObject($object)
 	{
 		// Archive only works for commits and trees
-		if (($object != null) && (!(($object instanceof GitPHP_Commit) || ($object instanceof GitPHP_Tree)))) {
-			throw new Exception('Invalid source object for archive');
+
+		if ($object == null) {
+			$this->objectHash = '';
+			$this->objectType = '';
+			return;
 		}
 
-		$this->gitObject = $object;
+		if ($object instanceof GitPHP_Commit) {
+			$this->objectType = 'commit';
+			$this->objectHash = $object->GetHash();
+			return;
+		}
+
+		if ($object instanceof GitPHP_Tree) {
+			$this->objectType = 'tree';
+			$this->objectHash = $object->GetHash();
+			return;
+		}
+
+		throw new Exception('Invalid source object for archive');
 	}
 
 	/**
@@ -195,9 +230,6 @@ class GitPHP_Archive
 	{
 		if ($this->project)
 			return $this->project;
-
-		if ($this->gitObject)
-			return $this->gitObject->GetProject();
 
 		return null;
 	}
@@ -346,7 +378,7 @@ class GitPHP_Archive
 	 */
 	public function Open()
 	{
-		if (!$this->gitObject)
+		if (!$this->objectHash)
 		{
 			throw new Exception('Invalid object for archive');
 		}
@@ -369,7 +401,7 @@ class GitPHP_Archive
 		}
 
 		$args[] = '--prefix=' . $this->GetPrefix();
-		$args[] = $this->gitObject->GetHash();
+		$args[] = $this->objectHash;
 
 		$this->handle = GitPHP_GitExe::GetInstance()->Open($this->GetProject()->GetPath(), GIT_ARCHIVE, $args);
 
