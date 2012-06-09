@@ -1917,12 +1917,21 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
-		$cacheKey = 'project|' . $this->project . '|blob|' . $hash;
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
-		if ($cached)
-			return $cached;
+		$key = GitPHP_Blob::CacheKey($this->project, $hash);
+		$memoryCache = GitPHP_MemoryCache::GetInstance();
+		$blob = $memoryCache->Get($key);
 
-		return new GitPHP_Blob($this, $hash);
+		if (!$blob) {
+			$blob = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+			if (!$blob) {
+				$blob = new GitPHP_Blob($this, $hash);
+			}
+
+			$memoryCache->Set($key, $blob);
+		}
+
+		return $blob;
 	}
 
 /*}}}2*/
