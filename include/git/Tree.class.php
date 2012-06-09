@@ -70,6 +70,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$this->ReadContents();
 
 		$contents = array();
+		$usedTrees = array();
+		$usedBlobs = array();
 
 		for ($i = 0; $i < count($this->contents); ++$i) {
 			$data = $this->contents[$i];
@@ -80,8 +82,18 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 
 			if ($data['type'] == 'tree') {
 				$obj = $this->GetProject()->GetTree($data['hash']);
+				if (isset($usedTrees[$data['hash']])) {
+					$obj = clone $obj;
+				} else {
+					$usedTrees[$data['hash']] = 1;
+				}
 			} else if ($data['type'] == 'blob') {
 				$obj = $this->GetProject()->GetBlob($data['hash']);
+				if (isset($usedBlobs[$data['hash']])) {
+					$obj = clone $obj;
+				} else {
+					$usedBlobs[$data['hash']] = 1;
+				}
 
 				if (isset($data['size']) && !empty($data['size'])) {
 					$obj->SetSize($data['size']);
@@ -93,7 +105,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			if (isset($data['mode']) && !empty($data['mode']))
 				$obj->SetMode($data['mode']);
 
-			if (isset($data['mode']) && !empty($data['mode']))
+			if (isset($data['path']) && !empty($data['path']))
 				$obj->SetPath($data['path']);
 
 			if ($this->commitHash)

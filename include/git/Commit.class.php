@@ -271,8 +271,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 			return null;
 
 		$tree = $this->GetProject()->GetTree($this->tree);
-		if ($tree)
+		if ($tree) {
 			$tree->SetCommit($this);
+			$tree->SetPath(null);
+		}
 
 		return $tree;
 	}
@@ -879,11 +881,19 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadHashPaths();
 
 		$results = array();
+		$usedTrees = array();
+		$usedBlobs = array();
 
 		foreach ($this->treePaths as $path => $hash) {
 			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
 				$obj = $this->GetProject()->GetTree($hash);
+				if (isset($usedTrees[$hash])) {
+					$obj = clone $obj;
+				} else {
+					$usedTrees[$hash] = 1;
+				}
 				$obj->SetCommit($this);
+				$obj->SetPath($path);
 				$results[$path] = $obj;
 			}
 		}
@@ -891,7 +901,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 		foreach ($this->blobPaths as $path => $hash) {
 			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
 				$obj = $this->GetProject()->GetBlob($hash);
+				if (isset($usedBlobs[$hash])) {
+					$obj = clone $obj;
+				} else {
+					$usedBlobs[$hash] = 1;
+				}
 				$obj->SetCommit($this);
+				$obj->SetPath($path);
 				$results[$path] = $obj;
 			}
 		}
