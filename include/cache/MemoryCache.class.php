@@ -38,6 +38,24 @@ class GitPHP_MemoryCache
 	protected $objects = array();
 
 	/**
+	 * autoManaged
+	 *
+	 * Whether the cache will automatically manage the number of items
+	 *
+	 * @access protected
+	 */
+	protected $autoManaged = true;
+
+	/**
+	 * lastProject
+	 *
+	 * Stores the last project that stored into this cache
+	 *
+	 * @access protected
+	 */
+	protected $lastProject;
+
+	/**
 	 * size
 	 *
 	 * Size of cache
@@ -113,6 +131,39 @@ class GitPHP_MemoryCache
 	}
 
 	/**
+	 * GetAutoManaged
+	 *
+	 * Gets whether this cache is auto managing its size
+	 *
+	 * @access public
+	 * @return bool true if automanaged
+	 */
+	public function GetAutoManaged()
+	{
+		return $this->autoManaged;
+	}
+
+	/**
+	 * SetAutoManaged
+	 *
+	 * Sets whether this cache should auto manage its size
+	 *
+	 * @access public
+	 * @param bool $autoManaged true if cache should automanage
+	 */
+	public function SetAutoManaged($autoManaged)
+	{
+		if (!$this->autoManaged && $autoManaged && (count($this->objects) > 0)) {
+			end($this->objects);
+			$lastKey = key($this->objects);
+			if ($lastKey) {
+				$this->lastProject = $this->ExtractProject($lastKey);
+			}
+		}
+		$this->autoManaged = $autoManaged;
+	}
+
+	/**
 	 * Get
 	 *
 	 * Gets an object from the cache
@@ -155,6 +206,16 @@ class GitPHP_MemoryCache
 		if (empty($key))
 			return;
 
+		if ($this->autoManaged) {
+			$project = $this->ExtractProject($key);
+			if (empty($this->lastProject) || ($this->lastProject != $project)) {
+				if (count($this->objects) > 0) {
+					$this->Clear();
+				}
+				$this->lastProject = $project;
+			}
+		}
+
 		if (isset($this->objects[$key])) {
 			/*
 			 * unset so resetting will move to end of associative array
@@ -182,6 +243,19 @@ class GitPHP_MemoryCache
 	}
 
 	/**
+	 * Clear
+	 *
+	 * Clear the cache
+	 *
+	 * @access public
+	 */
+	public function Clear()
+	{
+		$this->objects = array();
+		$this->lastProject = '';
+	}
+
+	/**
 	 * Evict
 	 *
 	 * Evicts items from the cache down to the size limit
@@ -193,6 +267,31 @@ class GitPHP_MemoryCache
 		while (count($this->objects) >= $this->size) {
 			array_shift($this->objects);
 		}
+	}
+
+	/**
+	 * KeyToProject
+	 *
+	 * Extracts the project from a key
+	 *
+	 * @access private
+	 */
+	private function ExtractProject($key)
+	{
+		if (empty($key))
+			return '';
+
+		if (strncmp($key, 'project|', 8) != 0) {
+			return '';
+		}
+
+		$subKey = substr($key, strlen('project|'));
+		$nextDelim = strpos($subKey, '|');
+		if ($nextDelim === false) {
+			return $subKey;
+		}
+		$project = substr($subKey, 0, $nextDelim);
+		return $project;
 	}
 
 }
