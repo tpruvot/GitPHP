@@ -345,6 +345,8 @@ abstract class GitPHP_ControllerBase
 		GitPHP_Log::GetInstance()->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
 		GitPHP_Log::GetInstance()->Log("Smarty render end");
+
+		$this->tpl->clearAllAssign();
 	}
 
 	/**
