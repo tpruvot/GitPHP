@@ -42,11 +42,6 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		}
 
 		parent::__construct();
-
-		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
-
 	}
 
 	/**
