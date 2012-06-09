@@ -22,6 +22,24 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
  */
 class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 {
+
+	/**
+	 * fileContents
+	 *
+	 * Stores the contents of the project list file
+	 *
+	 * @access protected
+	 */
+	protected $fileContents = array();
+
+	/**
+	 * fileRead
+	 *
+	 * Stores whether the file has been read
+	 *
+	 * @access protected
+	 */
+	protected $fileRead = false;
 	
 	/**
 	 * __construct
@@ -53,34 +71,93 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		if (!($fp = fopen($this->projectConfig, 'r'))) {
-			throw new Exception(sprintf(__('Failed to open project list file %1$s'), $this->projectConfig));
-		}
+		if (!$this->fileRead)
+			$this->ReadFile();
 
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
-		while (!feof($fp) && ($line = fgets($fp))) {
-			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
-				if (is_file($projectRoot . $regs[1] . '/HEAD')) {
-					try {
-						$projObj = new GitPHP_Project($projectRoot, $regs[1]);
-						if (isset($regs[2]) && !empty($regs[2])) {
-							$projOwner = trim($regs[2]);
-							if (!empty($projOwner)) {
-								$projObj->SetOwner($projOwner);
-							}
-						}
-						$this->projects[$regs[1]] = $projObj;
-					} catch (Exception $e) {
-						GitPHP_Log::GetInstance()->Log($e->getMessage());
-					}
-				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $regs[1]));
+		foreach ($this->fileContents as $lineData) {
+			if (isset($lineData['project'])) {
+				$projObj = $this->InstantiateProject($lineData['project']);
+				if ($projObj) {
+					$this->projects[$lineData['project']] = $projObj;
+					unset($projObj);
 				}
 			}
 		}
+	}
 
-		fclose($fp);
+	/**
+	 * InstantiateProject
+	 *
+	 * Instantiates the project object
+	 *
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project object
+	 */
+	protected function InstantiateProject($proj)
+	{
+		if (!$this->fileRead)
+			$this->ReadFile();
+
+		$found = false;
+		$owner = null;
+		foreach ($this->fileContents as $lineData) {
+			if (isset($lineData['project']) && ($lineData['project'] == $proj)) {
+				$projectRoot = GitPHP_Util::AddSlash($this->projectRoot);
+				if (is_file($projectRoot . $proj . '/HEAD')) {
+					$found = true;
+					if (isset($lineData['owner'])) {
+						$owner = $lineData['owner'];
+					}
+				} else {
+					GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $proj));
+				}
+				break;
+			}
+		}
+
+		if (!$found)
+			return null;
+
+		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		if (!empty($owner))
+			$projectObj->SetOwner($owner);
+
+		return $projectObj;
+	}
+
+	/**
+	 * ReadFile
+	 *
+	 * Reads the file contents
+	 *
+	 * @access private
+	 */
+	private function ReadFile()
+	{
+		$this->fileRead = true;
+
+		$fileString = file_get_contents($this->projectConfig);
+		
+		if ($fileString === false) {
+			throw new Exception(sprintf(__('Failed to open project list file %1$s'), $this->projectConfig));
+		}
+
+		$this->fileContents = array();
+
+		$fileLines = explode("\n", $fileString);
+		foreach ($fileLines as $line) {
+			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
+				$data = array();
+				$data['project'] = $regs[1];
+				$owner = trim($regs[2]);
+				if (!empty($owner)) {
+					$data['owner'] = $owner;
+				}
+				$this->fileContents[] = $data;
+			}
+		}
 	}
 
 }
