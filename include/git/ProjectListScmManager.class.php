@@ -134,6 +134,10 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 			$projectObj->SetDescription($data['description']);
 		}
 
+		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
+			$this->ApplyProjectSettings($projectObj, $this->projectSettings[$proj]);
+		}
+
 		return $projectObj;
 	}
 

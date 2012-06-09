@@ -127,6 +127,10 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 		if ($projectSettings != null)
 			$this->ApplyProjectSettings($projectObj, $projectSettings);
 
+		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
+			$this->ApplyProjectSettings($projectObj, $this->projectSettings[$proj]);
+		}
+
 		return $projectObj;
 	}
 
