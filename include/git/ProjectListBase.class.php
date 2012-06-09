@@ -36,6 +36,15 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $projects;
 
 	/**
+	 * projectsLoaded
+	 *
+	 * Stores whether the list of projects has been loaded
+	 *
+	 * @access protected
+	 */
+	protected $projectsLoaded = false;
+
+	/**
 	 * projectConfig
 	 *
 	 * Stores the project configuration internally
@@ -54,6 +63,15 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $projectSettings = null;
 
 	/**
+	 * projectRoot
+	 *
+	 * Stores the project root internally
+	 *
+	 * @access protected
+	 */
+	protected $projectRoot = null;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -63,8 +81,14 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	public function __construct()
 	{
 		$this->projects = array();
-		$this->PopulateProjects();
-		$this->Sort();
+		$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		if (empty($this->projectRoot)) {
+			throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
+		}
+		if (!is_dir($this->projectRoot)) {
+			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
+		}
+
 	}
 
 	/**
@@ -91,7 +115,10 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	 */
 	public function HasProject($project)
 	{
-		return ($this->GetProject($project) !== null);
+		if (empty($project))
+			return false;
+
+		return isset($this->projects[$project]);
 	}
 
 	/**
@@ -111,7 +138,33 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if (isset($this->projects[$project]))
 			return $this->projects[$project];
 
+		if (!$this->projectsLoaded) {
+			$projObj = $this->InstantiateProject($project);
+			$this->projects[$project] = $projObj;
+			return $projObj;
+		}
+
 		return null;
+	}
+
+	/**
+	 * InstantiateProject
+	 *
+	 * Instantiates a project object
+	 *
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project object
+	 */
+	protected function InstantiateProject($proj)
+	{
+		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
+
+		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
+			$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
+		}
+
+		return $project;
 	}
 
 	/**
@@ -136,6 +189,24 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	public function GetSettings()
 	{
 		return $this->projectSettings;
+	}
+
+	/**
+	 * LoadProjects
+	 *
+	 * Loads all projects in the list
+	 *
+	 * @access public
+	 */
+	public function LoadProjects()
+	{
+		$this->PopulateProjects();
+
+		$this->projectsLoaded = true;
+
+		$this->Sort();
+
+		$this->ApplySettings();
 	}
 
 	/**
@@ -293,68 +364,87 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	 * Applies override settings for a project
 	 *
 	 * @access protected
-	 * @param string $project the project path
+	 * @param string $project the project object
 	 * @param array $projData project data array
 	 */
 	protected function ApplyProjectSettings($project, $projData)
 	{
-		if (empty($project)) {
-			if (isset($projData['project']) && !empty($projData['project']))
-				$project = $projData['project'];
-			else
-				return;
-		}
-
-		$projectObj = $this->GetProject($project);
-		if (!$projectObj)
+		if (!$project)
 			return;
 
 		if (isset($projData['category']) && is_string($projData['category'])) {
-			$projectObj->SetCategory($projData['category']);
+			$project->SetCategory($projData['category']);
 		}
 		if (isset($projData['owner']) && is_string($projData['owner'])) {
-			$projectObj->SetOwner($projData['owner']);
+			$project->SetOwner($projData['owner']);
 		}
 		if (isset($projData['description']) && is_string($projData['description'])) {
-			$projectObj->SetDescription($projData['description']);
+			$project->SetDescription($projData['description']);
 		}
 		if (isset($projData['cloneurl']) && is_string($projData['cloneurl'])) {
-			$projectObj->SetCloneUrl($projData['cloneurl']);
+			$project->SetCloneUrl($projData['cloneurl']);
 		}
 		if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
-			$projectObj->SetPushUrl($projData['pushurl']);
+			$project->SetPushUrl($projData['pushurl']);
 		}
 		if (isset($projData['bugpattern']) && is_string($projData['bugpattern'])) {
-			$projectObj->SetBugPattern($projData['bugpattern']);
+			$project->SetBugPattern($projData['bugpattern']);
 		}
 		if (isset($projData['bugurl']) && is_string($projData['bugurl'])) {
-			$projectObj->SetBugUrl($projData['bugurl']);
+			$project->SetBugUrl($projData['bugurl']);
 		}
 		if (isset($projData['compat'])) {
-			$projectObj->SetCompat($projData['compat']);
+			$project->SetCompat($projData['compat']);
 		}
 		if (isset($projData['website']) && is_string($projData['website'])) {
-			$projectObj->SetWebsite($projData['website']);
+			$project->SetWebsite($projData['website']);
 		}
+	}
+
+	/**
+	 * SetSettings
+	 *
+	 * Sets a list of settings for the project list
+	 *
+	 * @access protected
+	 * @param array $settings the array of settings
+	 */
+	public function SetSettings($settings)
+	{
+		if ((!$settings) || (count($settings) < 1))
+			return;
+
+		$this->projectSettings = $settings;
+
+		$this->ApplySettings();
 	}
 
 	/**
 	 * ApplySettings
 	 *
-	 * Applies a list of settings to the project list
+	 * Applies project settings to project list
 	 *
 	 * @access protected
-	 * @param array $settings the array of settings
 	 */
-	public function ApplySettings($settings)
+	protected function ApplySettings()
 	{
-		if ((!$settings) || (count($settings) < 1))
+		if (!$this->projectSettings)
 			return;
 
-		foreach ($settings as $proj => $setting) {
-			$this->ApplyProjectSettings($proj, $setting);
-		}
+		if (count($this->projects) > 0) {
+			foreach ($this->projectSettings as $proj => $setting) {
 
-		$this->projectSettings = $settings;
+				if (empty($proj)) {
+					if (isset($setting['project']) && !empty($setting['project'])) {
+						$proj = $setting['project'];
+					}
+				}
+
+				if (!isset($this->projects[$proj]))
+					break;
+
+				$this->ApplyProjectSettings($this->projects[$proj], $setting);
+			}
+		}
 	}
 }

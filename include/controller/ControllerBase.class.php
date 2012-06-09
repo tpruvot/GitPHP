@@ -117,6 +117,10 @@ abstract class GitPHP_ControllerBase
 			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
 
+		if ($this->multiProject) {
+			GitPHP_ProjectList::GetInstance()->LoadProjects();
+		}
+
 		if (isset($_GET['s']))
 			$this->params['search'] = $_GET['s'];
 		if (isset($_GET['st']))

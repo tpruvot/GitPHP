@@ -128,10 +128,6 @@ try {
 		GitPHP_Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
 	}
 
-	if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
-		throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
-	}
-
 	/*
 	 * Check for required executables
 	 */
