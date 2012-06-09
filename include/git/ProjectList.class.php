@@ -52,6 +52,19 @@ class GitPHP_ProjectList
 	}
 
 	/**
+	 * DestroyInstance
+	 *
+	 * Releases the singleton instance
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function DestroyInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * Instantiate
 	 *
 	 * Instantiates the singleton instance

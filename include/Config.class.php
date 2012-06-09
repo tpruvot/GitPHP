@@ -63,6 +63,19 @@ class GitPHP_Config
 	}
 
 	/**
+	 * DestroyInstance
+	 *
+	 * Releases the singleton instance
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function DestroyInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * LoadConfig
 	 *
 	 * Loads a config file
