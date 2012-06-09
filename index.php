@@ -155,6 +155,7 @@ try {
 		$controller->RenderHeaders();
 		$controller->Render();
 	}
+	unset($controller);
 
 } catch (Exception $e) {
 
@@ -182,16 +183,26 @@ try {
 	$controller->RenderHeaders();
 	$controller->Render();
 
+	unset($controller);
+
 }
 
 GitPHP_Log::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
-GitPHP_MemoryCache::GetInstance()->Clear();
+
+GitPHP_MemoryCache::DestroyInstance();
+GitPHP_ProjectList::DestroyInstance();
+GitPHP_Resource::DestroyInstance();
+GitPHP_Config::DestroyInstance();
 
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
 	foreach ($entries as $logline) {
 		echo "<br />\n" . $logline;
 	}
+	unset($logline);
+	unset($entries);
 }
+
+GitPHP_Log::DestroyInstance();
 
 ?>

@@ -65,6 +65,19 @@ class GitPHP_Resource
 	}
 
 	/**
+	 * DestroyInstance
+	 *
+	 * Releases the singleton instance
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function DestroyInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * Instantiated
 	 *
 	 * Tests if the resource provider has been instantiated

@@ -82,6 +82,19 @@ class GitPHP_MemoryCache
 	}
 
 	/**
+	 * DestroyInstance
+	 *
+	 * Releases the singleton instance
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function DestroyInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * __construct
 	 *
 	 * Class constructor
