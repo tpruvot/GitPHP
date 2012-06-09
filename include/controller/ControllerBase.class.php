@@ -332,15 +332,19 @@ abstract class GitPHP_ControllerBase
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
+			GitPHP_Log::GetInstance()->Log("Data load begin");
 			$this->LoadCommonData();
 			$this->LoadData();
+			GitPHP_Log::GetInstance()->Log("Data load end");
 		}
 
 		if (!$this->preserveWhitespace) {
 			$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
+		GitPHP_Log::GetInstance()->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
+		GitPHP_Log::GetInstance()->Log("Smarty render end");
 	}
 
 	/**
