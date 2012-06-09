@@ -132,9 +132,9 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	 *
 	 * Reads the file contents
 	 *
-	 * @access private
+	 * @access protected
 	 */
-	private function ReadFile()
+	protected function ReadFile()
 	{
 		$this->fileRead = true;
 
