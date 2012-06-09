@@ -99,10 +99,10 @@ class GitPHP_MemoryCache
 	 *
 	 * Class constructor
 	 *
-	 * @access public
+	 * @access private
 	 * @param int $size size of cache
 	 */
-	public function __construct($size = null)
+	private function __construct($size = null)
 	{
 		if ($size !== null) {
 			$this->size = $size;

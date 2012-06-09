@@ -107,10 +107,10 @@ class GitPHP_Log
 	 *
 	 * Constructor
 	 *
-	 * @access public
+	 * @access private
 	 * @return Log object
 	 */
-	public function __construct()
+	private function __construct()
 	{
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();
