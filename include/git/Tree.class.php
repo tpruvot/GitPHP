@@ -41,15 +41,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	protected $contentsRead = false;
 
 	/**
-	 * contentsReferenced
-	 *
-	 * Stores whether contents have been referenced into pointers
-	 *
-	 * @access private
-	 */
-	private $contentsReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -66,26 +57,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * SetCommitHash
-	 *
-	 * Sets the hash of this tree (overrides base)
-	 *
-	 * @access public
-	 * @param string $commitHash commit hash
-	 */
-	public function SetCommitHash($commitHash)
-	{
-		parent::SetCommitHash($commitHash);
-		
-		if ($this->contentsRead && !$this->contentsReferenced) {
-			foreach ($this->contents as $obj) {
-				$obj->SetCommitHash($commitHash);
-			}
-		}
-	}
-
-
-	/**
 	 * GetContents
 	 *
 	 * Gets the tree contents
@@ -98,10 +69,40 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 		if (!$this->contentsRead)
 			$this->ReadContents();
 
-		if ($this->contentsReferenced)
-			$this->DereferenceContents();
+		$contents = array();
 
-		return $this->contents;
+		for ($i = 0; $i < count($this->contents); ++$i) {
+			$data = $this->contents[$i];
+			$obj = null;
+
+			if (!isset($data['hash']) || empty($data['hash']))
+				continue;
+
+			if ($data['type'] == 'tree') {
+				$obj = $this->GetProject()->GetTree($data['hash']);
+			} else if ($data['type'] == 'blob') {
+				$obj = $this->GetProject()->GetBlob($data['hash']);
+
+				if (isset($data['size']) && !empty($data['size'])) {
+					$obj->SetSize($data['size']);
+				}
+			} else {
+				continue;
+			}
+
+			if (isset($data['mode']) && !empty($data['mode']))
+				$obj->SetMode($data['mode']);
+
+			if (isset($data['mode']) && !empty($data['mode']))
+				$obj->SetPath($data['path']);
+
+			if ($this->commitHash)
+				$obj->SetCommitHash($this->commitHash);
+
+			$contents[] = $obj;
+		}
+
+		return $contents;
 	}
 
 	/**
@@ -148,29 +149,34 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {
 				switch($regs[2]) {
 					case 'tree':
-						$t = $this->GetProject()->GetTree($regs[3]);
-						$t->SetMode($regs[1]);
+						$data = array();
+						$data['type'] = 'tree';
+						$data['hash'] = $regs[3];
+						$data['mode'] = $regs[1];
+
 						$path = $regs[5];
 						if (!empty($this->path))
 							$path = $this->path . '/' . $path;
-						$t->SetPath($path);
-						if ($this->commitHash)
-							$t->SetCommitHash($this->commitHash);
-						$this->contents[] = $t;
+						$data['path'] = $path;
+
+						$this->contents[] = $data;
 						break;
 					case 'blob':
-						$b = $this->GetProject()->GetBlob($regs[3]);
-						$b->SetMode($regs[1]);
+						$data = array();
+						$data['type'] = 'blob';
+						$data['hash'] = $regs[3];
+						$data['mode'] = $regs[1];
+
 						$path = $regs[5];
 						if (!empty($this->path))
 							$path = $this->path . '/' . $path;
-						$b->SetPath($path);
+						$data['path'] = $path;
+
 						$size = trim($regs[4]);
 						if (!empty($size))
-							$b->SetSize($regs[4]);
-						if ($this->commitHash)
-							$b->SetCommitHash($this->commitHash);
-						$this->contents[] = $b;
+							$data['size'] = $size;
+
+						$this->contents[] = $data;
 						break;
 				}
 			}
@@ -209,108 +215,21 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			if (!empty($this->path))
 				$path = $this->path . '/' . $path;
 
-			$obj = null;
+			$data = array();
+			$data['hash'] = $hash;
 			if ($octmode & 0x4000) {
 				// tree
-				$obj = $this->GetProject()->GetTree($hash);
+				$data['type'] = 'tree';
 			} else {
 				// blob
-				$obj = $this->GetProject()->GetBlob($hash);
-			}
-
-			if (!$obj) {
-				continue;
-			}
-
-			$obj->SetMode($mode);
-			$obj->SetPath($path);
-			if ($this->commitHash)
-				$obj->SetCommitHash($this->commitHash);
-			$this->contents[] = $obj;
-		}
-	}
-
-	/**
-	 * ReferenceContents
-	 *
-	 * Turns the contents objects into reference pointers
-	 *
-	 * @access private
-	 */
-	private function ReferenceContents()
-	{
-		if ($this->contentsReferenced)
-			return;
-
-		if (!(isset($this->contents) && (count($this->contents) > 0)))
-			return;
-
-		for ($i = 0; $i < count($this->contents); ++$i) {
-			$obj = $this->contents[$i];
-			$data = array();
-
-			$data['hash'] = $obj->GetHash();
-			$data['mode'] = $obj->GetMode();
-			$data['path'] = $obj->GetPath();
-
-			if ($obj instanceof GitPHP_Tree) {
-				$data['type'] = 'tree';
-			} else if ($obj instanceof GitPHP_Blob) {
 				$data['type'] = 'blob';
-				$data['size'] = $obj->GetSize();
 			}
 
-			$this->contents[$i] = $data;
+			$data['mode'] = $mode;
+			$data['path'] = $path;
+
+			$this->contents[] = $data;
 		}
-
-		$this->contentsReferenced = true;
-	}
-
-	/**
-	 * DereferenceContents
-	 *
-	 * Turns the contents pointers back into objects
-	 *
-	 * @access private
-	 */
-	private function DereferenceContents()
-	{
-		if (!$this->contentsReferenced)
-			return;
-
-		if (!(isset($this->contents) && (count($this->contents) > 0)))
-			return;
-
-		for ($i = 0; $i < count($this->contents); ++$i) {
-			$data = $this->contents[$i];
-			$obj = null;
-
-			if (!isset($data['hash']) || empty($data['hash']))
-				continue;
-
-			if ($data['type'] == 'tree') {
-				$obj = $this->GetProject()->GetTree($data['hash']);
-			} else if ($data['type'] == 'blob') {
-				$obj = $this->GetProject()->GetBlob($data['hash']);
-				if (isset($data['size']) && !empty($data['size']))
-					$obj->SetSize($data['size']);
-			} else {
-				continue;
-			}
-
-			if (isset($data['mode']) && !empty($data['mode']))
-				$obj->SetMode($data['mode']);
-
-			if (isset($data['path']) && !empty($data['path']))
-				$obj->SetPath($data['path']);
-
-			if ($this->commitHash)
-				$obj->SetCommitHash($this->commitHash);
-
-			$this->contents[$i] = $obj;
-		}
-
-		$this->contentsReferenced = false;
 	}
 
 	/**
@@ -323,10 +242,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	public function __sleep()
 	{
-		if (!$this->contentsReferenced)
-			$this->ReferenceContents();
-
-		$properties = array('contents', 'contentsRead', 'contentsReferenced');
+		$properties = array('contents', 'contentsRead');
 		return array_merge($properties, parent::__sleep());
 	}
 
