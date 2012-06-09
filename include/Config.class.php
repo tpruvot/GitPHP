@@ -76,6 +76,17 @@ class GitPHP_Config
 	}
 
 	/**
+	 * __construct
+	 *
+	 * Class constructor
+	 *
+	 * @access private
+	 */
+	private function __construct()
+	{
+	}
+
+	/**
 	 * LoadConfig
 	 *
 	 * Loads a config file
