@@ -39,6 +39,15 @@ abstract class GitPHP_ControllerBase
 	protected $project;
 
 	/**
+	 * multiProject
+	 *
+	 * Flag if this is a multi project controller
+	 *
+	 * @access protected
+	 */
+	protected $multiProject;
+
+	/**
 	 * params
 	 *
 	 * Parameters
@@ -102,6 +111,10 @@ abstract class GitPHP_ControllerBase
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
 			$this->project = $project->GetProject();
+		}
+
+		if (!($this->project || $this->multiProject)) {
+			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
 
 		if (isset($_GET['s']))

@@ -41,9 +41,6 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
 		$this->preserveWhitespace = true;
 	}
 

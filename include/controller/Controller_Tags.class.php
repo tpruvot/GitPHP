@@ -20,22 +20,6 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 {
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
-	}
-
-	/**
 	 * GetTemplate
 	 *
 	 * Gets the template for this controller
