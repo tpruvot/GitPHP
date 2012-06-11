@@ -937,10 +937,25 @@ class GitPHP_FileDiff
 	 */
 	public function SetCommit($commit)
 	{
-		if ($commit) {
-			$this->commitHash = $commit->GetHash();
-		} else {
-			$this->commitHash = null;
-		}
+		if (!$commit)
+			return;
+
+		$this->SetCommitHash($commit->GetHash());
+	}
+
+	/**
+	 * SetCommitHash
+	 *
+	 * Sets the hash of the commit for this filediff
+	 *
+	 * @access public
+	 * @param string $hash hash
+	 */
+	public function SetCommitHash($hash)
+	{
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
+			return;
+
+		$this->commitHash = $hash;
 	}
 }

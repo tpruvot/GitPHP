@@ -272,7 +272,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		$tree = $this->GetProject()->GetTree($this->tree);
 		if ($tree) {
-			$tree->SetCommit($this);
+			$tree->SetCommitHash($this->hash);
 			$tree->SetPath(null);
 		}
 
@@ -892,7 +892,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				} else {
 					$usedTrees[$hash] = 1;
 				}
-				$obj->SetCommit($this);
+				$obj->SetCommitHash($this->hash);
 				$obj->SetPath($path);
 				$results[$path] = $obj;
 			}
@@ -906,7 +906,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				} else {
 					$usedBlobs[$hash] = 1;
 				}
-				$obj->SetCommit($this);
+				$obj->SetCommitHash($this->hash);
 				$obj->SetPath($path);
 				$results[$path] = $obj;
 			}
@@ -950,7 +950,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 					$hash = $this->PathToHash($regs[1]);
 					if (!empty($hash)) {
 						$obj = $this->GetProject()->GetBlob($hash);
-						$obj->SetCommit($this);
+						$obj->SetCommitHash($this->hash);
 						$results[$regs[1]]['object'] = $obj;
 					}
 				}
