@@ -1246,10 +1246,9 @@ class GitPHP_Project
 					$key = 'refs/' . $regs[2] . '/' . $regs[3];
 					if ($regs[2] == 'tags') {
 						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
-							$derefCommit = $this->GetCommit($regs[1]);
-							if ($derefCommit && isset($this->tags[$regs[3]])) {
+							if (isset($this->tags[$regs[3]])) {
 								$tagObj = $this->GetTag($regs[3]);
-								$tagObj->SetCommit($derefCommit);
+								$tagObj->SetCommitHash($regs[1]);
 								unset($tagObj);
 							}
 								
@@ -1319,12 +1318,9 @@ class GitPHP_Project
 				if (preg_match('/^\^([0-9a-f]{40})$/i', $ref, $regs)) {
 					// dereference of previous ref
 					if (!empty($lastTag)) {
-						$derefCommit = $this->GetCommit($regs[1]);
-						if ($derefCommit) {
-							$tagObj = $this->GetTag($lastTag);
-							$tagObj->SetCommit($derefCommit);
-							unset($tagObj);
-						}
+						$tagObj = $this->GetTag($lastTag);
+						$tagObj->SetCommitHash($regs[1]);
+						unset($tagObj);
 					}
 				}
 
