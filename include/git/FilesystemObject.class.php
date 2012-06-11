@@ -209,10 +209,10 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function SetCommit($commit)
 	{
-		if ($commit)
-			$this->SetCommitHash($commit->GetHash());
-		else
-			$this->SetCommitHash(null);
+		if (!$commit)
+			return;
+
+		$this->SetCommitHash($commit->GetHash());
 	}
 
 	/**
