@@ -225,6 +225,9 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function SetCommitHash($commitHash)
 	{
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $commitHash))
+			return;
+
 		$this->commitHash = $commitHash;
 	}
 
