@@ -435,18 +435,18 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		
 		$historylines = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
 
-		$commit = null;
+		$commitHash = null;
 		foreach ($historylines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40})/', $line, $regs)) {
-				$commit = $this->GetProject()->GetCommit($regs[1]);
-			} else if ($commit) {
+				$commitHash = $regs[1];
+			} else if ($commitHash) {
 				try {
 					$history = new GitPHP_FileDiff($this->GetProject(), $line);
-					$history->SetCommit($commit);
+					$history->SetCommitHash($commitHash);
 					$this->history[] = $history;
 				} catch (Exception $e) {
 				}
-				unset ($commit);
+				$commitHash = null;
 			}
 		}
 	}
