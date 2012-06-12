@@ -133,8 +133,6 @@ class GitPHP_TreeDiff implements Iterator
 
 		$this->fileDiffs = array();
 
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 
 		$args[] = '-r';
@@ -148,7 +146,7 @@ class GitPHP_TreeDiff implements Iterator
 
 		$args[] = $this->toHash;
 
-		$diffTreeLines = explode("\n", $exe->Execute(GIT_DIFF_TREE, $args));
+		$diffTreeLines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
 		foreach ($diffTreeLines as $line) {
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
@@ -158,8 +156,6 @@ class GitPHP_TreeDiff implements Iterator
 				}
 			}
 		}
-
-		unset($exe);
 	}
 
 	/**

@@ -790,11 +790,10 @@ class GitPHP_Project
 	 */
 	private function ReadHeadCommitGit()
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';
-		$this->head = trim($exe->Execute(GIT_REV_PARSE, $args));
+		$this->head = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_PARSE, $args));
 	}
 
 	/**
@@ -889,21 +888,17 @@ class GitPHP_Project
 	 */
 	private function ReadEpochGit()
 	{
-		$exe = new GitPHP_GitExe($this);
-
 		$args = array();
 		$args[] = '--format="%(committer)"';
 		$args[] = '--sort=-committerdate';
 		$args[] = '--count=1';
 		$args[] = 'refs/heads';
 
-		$epochstr = trim($exe->Execute(GIT_FOR_EACH_REF, $args));
+		$epochstr = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args));
 
 		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
 			$this->epoch = $regs[1];
 		}
-
-		unset($exe);
 	}
 
 	/**
@@ -1135,13 +1130,11 @@ class GitPHP_Project
 	 */
 	private function ReadRefListGit()
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--heads';
 		$args[] = '--tags';
 		$args[] = '--dereference';
-		$ret = $exe->Execute(GIT_SHOW_REF, $args);
-		unset($exe);
+		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_SHOW_REF, $args);
 
 		$lines = explode("\n", $ret);
 
@@ -1316,7 +1309,6 @@ class GitPHP_Project
 	 */
 	private function GetTagsGit($count = 0)
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-creatordate';
 		$args[] = '--format="%(refname)"';
@@ -1325,8 +1317,7 @@ class GitPHP_Project
 		}
 		$args[] = '--';
 		$args[] = 'refs/tags';
-		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
-		unset($exe);
+		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args);
 
 		$lines = explode("\n", $ret);
 
@@ -1440,7 +1431,6 @@ class GitPHP_Project
 	 */
 	private function GetHeadsGit($count = 0)
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-committerdate';
 		$args[] = '--format="%(refname)"';
@@ -1449,8 +1439,7 @@ class GitPHP_Project
 		}
 		$args[] = '--';
 		$args[] = 'refs/heads';
-		$ret = $exe->Execute(GIT_FOR_EACH_REF, $args);
-		unset($exe);
+		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args);
 
 		$lines = explode("\n", $ret);
 
@@ -1819,13 +1808,12 @@ class GitPHP_Project
 	 */
 	private function AbbreviateHashGit($hash)
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '-1';
 		$args[] = '--format=format:%h';
 		$args[] = $hash;
 
-		$abbrevData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$abbrevData = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
 		if (empty($abbrevData[0])) {
 			return $hash;
 		}
@@ -1936,13 +1924,12 @@ class GitPHP_Project
 	 */
 	private function ExpandHashGit($abbrevHash)
 	{
-		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '-1';
 		$args[] = '--format=format:%H';
 		$args[] = $abbrevHash;
 
-		$fullData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$fullData = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
 		if (empty($fullData[0])) {
 			return $abbrevHash;
 		}
@@ -2046,10 +2033,8 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
+		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
-		unset($exe);
 
 		$args[] = '--grep=\'' . $pattern . '\'';
 
@@ -2081,10 +2066,8 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
+		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
-		unset($exe);
 
 		$args[] = '--author=\'' . $pattern . '\'';
 
@@ -2116,10 +2099,8 @@ class GitPHP_Project
 
 		$args = array();
 
-		$exe = new GitPHP_GitExe($this);
-		if ($exe->CanIgnoreRegexpCase())
+		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
-		unset($exe);
 
 		$args[] = '--committer=\'' . $pattern . '\'';
 
@@ -2153,12 +2134,10 @@ class GitPHP_Project
 		if ($count < 1)
 			return;
 
-		$exe = new GitPHP_GitExe($this);
-
 		$canSkip = true;
 		
 		if ($skip > 0)
-			$canSkip = $exe->CanSkip();
+			$canSkip = GitPHP_GitExe::GetInstance()->CanSkip();
 
 		if ($canSkip) {
 			$args[] = '--max-count=' . $count;
@@ -2171,14 +2150,14 @@ class GitPHP_Project
 
 		$args[] = $hash;
 
-		$revlist = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$revlist = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
 
 		if (!$revlist[count($revlist)-1]) {
 			/* the last newline creates a null entry */
 			array_splice($revlist, -1, 1);
 		}
 
-		if (($skip > 0) && (!$exe->CanSkip())) {
+		if (($skip > 0) && (!$canSkip)) {
 			return array_slice($revlist, $skip, $count);
 		}
 

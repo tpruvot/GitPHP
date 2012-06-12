@@ -146,16 +146,14 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	private function ReadContentsGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 		$args[] = '--full-name';
-		if ($exe->CanShowSizeInTree())
+		if (GitPHP_GitExe::GetInstance()->CanShowSizeInTree())
 			$args[] = '-l';
 		$args[] = '-t';
 		$args[] = $this->hash;
 		
-		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
+		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
 
 		foreach ($lines as $line) {
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {

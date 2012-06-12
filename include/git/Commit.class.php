@@ -557,15 +557,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if ($this->GetProject()->GetCompat()) {
 
 			/* get data from git_rev_list */
-			$exe = new GitPHP_GitExe($this->GetProject());
 			$args = array();
 			$args[] = '--header';
 			$args[] = '--parents';
 			$args[] = '--max-count=1';
 			$args[] = '--abbrev-commit';
 			$args[] = $this->hash;
-			$ret = $exe->Execute(GIT_REV_LIST, $args);
-			unset($exe);
+			$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_REV_LIST, $args);
 
 			$lines = explode("\n", $ret);
 
@@ -727,11 +725,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->containingTagRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--tags';
 		$args[] = $this->hash;
-		$revs = explode("\n", $exe->Execute(GIT_NAME_REV, $args));
+		$revs = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_NAME_REV, $args));
 
 		foreach ($revs as $revline) {
 			if (preg_match('/^([0-9a-fA-F]{40})\s+tags\/(.+)(\^[0-9]+|\~[0-9]+)$/', $revline, $regs)) {
@@ -815,15 +812,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	private function ReadHashPathsGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 		$args[] = '--full-name';
 		$args[] = '-r';
 		$args[] = '-t';
 		$args[] = $this->hash;
 
-		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
+		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
 
 		foreach ($lines as $line) {
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
@@ -936,8 +931,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (empty($pattern))
 			return;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 		$args[] = '-I';
 		$args[] = '--full-name';
@@ -947,7 +940,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$args[] = '\'' . preg_quote($pattern) . '\'';
 		$args[] = $this->hash;
 
-		$lines = explode("\n", $exe->Execute(GIT_GREP, $args));
+		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_GREP, $args));
 
 		$results = array();
 

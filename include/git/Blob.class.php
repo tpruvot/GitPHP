@@ -133,13 +133,11 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$this->dataRead = true;
 
 		if ($this->GetProject()->GetCompat()) {
-			$exe = new GitPHP_GitExe($this->GetProject());
-
 			$args = array();
 			$args[] = 'blob';
 			$args[] = $this->hash;
 
-			$this->data = $exe->Execute(GIT_CAT_FILE, $args);
+			$this->data = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 		} else {
 			$this->data = $this->GetProject()->GetObject($this->hash);
 		}
@@ -417,15 +415,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->historyRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
-		
 		$args = array();
 		if ($this->commitHash)
 			$args[] = $this->commitHash;
 		else
 			$args[] = 'HEAD';
 		$args[] = '|';
-		$args[] = $exe->GetBinary();
+		$args[] = GitPHP_GitExe::GetInstance()->GetBinary();
 		$args[] = '--git-dir=' . $this->GetProject()->GetPath();
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
@@ -433,7 +429,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$args[] = '--';
 		$args[] = $this->GetPath();
 		
-		$historylines = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$historylines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_REV_LIST, $args));
 
 		$commitHash = null;
 		foreach ($historylines as $line) {
@@ -478,8 +474,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->blameRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 		$args[] = '-s';
 		$args[] = '-l';
@@ -490,7 +484,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$args[] = '--';
 		$args[] = $this->GetPath();
 
-		$blamelines = explode("\n", $exe->Execute(GIT_BLAME, $args));
+		$blamelines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_BLAME, $args));
 
 		$lastcommit = '';
 		foreach ($blamelines as $line) {

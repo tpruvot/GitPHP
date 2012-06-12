@@ -364,11 +364,10 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	private function ReadDataGit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
 		$args[] = $this->GetHash();
-		$ret = trim($exe->Execute(GIT_CAT_FILE, $args));
+		$ret = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args));
 		
 		if ($ret === 'commit') {
 			/* light tag */
@@ -383,8 +382,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		$args = array();
 		$args[] = 'tag';
 		$args[] = $this->GetName();
-		$ret = $exe->Execute(GIT_CAT_FILE, $args);
-		unset($exe);
+		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 
 		$lines = explode("\n", $ret);
 
@@ -427,12 +425,10 @@ class GitPHP_Tag extends GitPHP_Ref
 				$this->commitHash = $objectHash;
 				break;
 			case 'tag':
-				$exe = new GitPHP_GitExe($this->GetProject());
 				$args = array();
 				$args[] = 'tag';
 				$args[] = $objectHash;
-				$ret = $exe->Execute(GIT_CAT_FILE, $args);
-				unset($exe);
+				$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 				$lines = explode("\n", $ret);
 				foreach ($lines as $i => $line) {
 					if (preg_match('/^tag (.+)$/', $line, $regs)) {
@@ -534,13 +530,11 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	private function ReadCommit()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--tags';
 		$args[] = '--dereference';
 		$args[] = $this->refName;
-		$ret = $exe->Execute(GIT_SHOW_REF, $args);
-		unset($exe);
+		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_SHOW_REF, $args);
 
 		$lines = explode("\n", $ret);
 
