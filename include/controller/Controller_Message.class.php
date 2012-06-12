@@ -28,7 +28,6 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		$this->multiProject = true;
 		try {
 			parent::__construct();
 		} catch (Exception $e) {
