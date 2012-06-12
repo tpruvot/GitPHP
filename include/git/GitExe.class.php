@@ -53,6 +53,24 @@ class GitPHP_GitExe
 	 * @access protected
 	 */
 	protected $binary;
+	
+	/**
+	 * version
+	 *
+	 * Stores the binary version internally
+	 *
+	 * @access protected
+	 */
+	protected $version;
+
+	/**
+	 * versionRead
+	 *
+	 * Stores whether the version has been read
+	 *
+	 * @access protected
+	 */
+	protected $versionRead = false;
 
 	/**
 	 * GetInstance
@@ -188,12 +206,30 @@ class GitPHP_GitExe
 	 */
 	public function GetVersion()
 	{
+		if (!$this->versionRead)
+			$this->ReadVersion();
+
+		return $this->version;
+	}
+
+	/**
+	 * ReadVersion
+	 *
+	 * Reads the git version
+	 *
+	 * @access protected
+	 */
+	protected function ReadVersion()
+	{
+		$this->versionRead = true;
+
+		$this->version = '';
+
 		$versionCommand = $this->binary . ' --version';
 		$ret = trim(shell_exec($versionCommand));
 		if (preg_match('/^git version ([0-9\.]+)$/i', $ret, $regs)) {
-			return $regs[1];
+			$this->version = $regs[1];
 		}
-		return '';
 	}
 
 	/**
