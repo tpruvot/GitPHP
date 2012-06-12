@@ -128,6 +128,15 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->archive = new GitPHP_Archive($this->GetProject(), null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
+		$commit = null;
+
+		if (!isset($this->params['hash']))
+			$commit = $this->GetProject()->GetHeadCommit();
+		else
+			$commit = $this->GetProject()->GetCommit($this->params['hash']);
+
+		$this->archive->SetObject($commit);
+
 		switch ($this->archive->GetFormat()) {
 			case GITPHP_COMPRESS_TAR:
 				$this->headers[] = 'Content-Type: application/x-tar';
@@ -157,14 +166,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$commit = null;
-
-		if (!isset($this->params['hash']))
-			$commit = $this->GetProject()->GetHeadCommit();
-		else
-			$commit = $this->GetProject()->GetCommit($this->params['hash']);
-
-		$this->archive->SetObject($commit);
 	}
 
 	/**

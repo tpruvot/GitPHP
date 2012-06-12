@@ -283,6 +283,10 @@ class GitPHP_Archive
 			$fname .= '-' . GitPHP_Util::MakeSlug($this->path);
 		}
 
+		if (!empty($this->objectHash)) {
+			$fname .= '-' . $this->GetProject()->AbbreviateHash($this->objectHash);
+		}
+
 		$fname .= '.' . $this->GetExtension();
 
 		return $fname;
