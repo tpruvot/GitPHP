@@ -86,7 +86,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 			throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
 		}
 		if (!is_dir($this->projectRoot)) {
-			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
+			throw new Exception(sprintf(__('%1$s is not a directory'), $this->projectRoot));
 		}
 
 	}
