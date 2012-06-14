@@ -121,6 +121,8 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->ReadGitConfig($projectObj);
+
 		if (!empty($owner))
 			$projectObj->SetOwner($owner);
 

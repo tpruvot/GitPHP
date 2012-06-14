@@ -124,6 +124,8 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->ReadGitConfig($projectObj);
+
 		if ($projectSettings != null)
 			$this->ApplyProjectSettings($projectObj, $projectSettings);
 

@@ -98,6 +98,9 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 		}
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		$this->ReadGitConfig($projectObj);
+
 		if ($projectCat != GITPHP_NO_CATEGORY)
 			$projectObj->SetCategory($projectCat);
 

@@ -49,13 +49,13 @@ class GitPHP_GitConfig
 	const TypeBoolean = 3;
 	
 	/**
-	 * project
+	 * configPath
 	 *
-	 * Stores the project internally
+	 * Stores the config file path internally
 	 *
 	 * @access protected
 	 */
-	protected $project = null;
+	protected $configPath = null;
 
 	/**
 	 * configRead
@@ -83,9 +83,13 @@ class GitPHP_GitConfig
 	 * @access public
 	 * @param mixed $project project
 	 */
-	public function __construct($project)
+	public function __construct($configPath)
 	{
-		$this->project = $project;
+		if (!is_readable($configPath)) {
+			throw new Exception('Git config file not readable');
+		}
+
+		$this->configPath = $configPath;
 	}
 
 	/**
@@ -179,13 +183,7 @@ class GitPHP_GitConfig
 	{
 		$this->configRead = true;
 
-		$path = $this->project->GetPath() . '/config';
-
-		if (!file_exists($path)) {
-			return;
-		}
-
-		$data = explode("\n", file_get_contents($path));
+		$data = explode("\n", file_get_contents($this->configPath));
 
 		$currentSection = '';
 		$currentSetting = '';

@@ -15,7 +15,6 @@ require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
 
 define('GITPHP_ABBREV_HASH_MIN', 7);
 
@@ -263,13 +262,13 @@ class GitPHP_Project
 	protected $compat = null;
 
 	/**
-	 * config
+	 * abbreviateLength
 	 *
-	 * Stores the config reader internally
+	 * Stores the hash abbreviation length internally
 	 *
 	 * @access protected
 	 */
-	protected $config = null;
+	protected $abbreviateLength = null;
 
 /*}}}1*/
 
@@ -407,12 +406,6 @@ class GitPHP_Project
 	 */
 	protected function ReadOwner()
 	{
-		if ($this->GetConfig()->HasValue('gitphp.owner')) {
-			$this->owner = $this->GetConfig()->GetValue('gitphp.owner');
-		} else if ($this->GetConfig()->HasValue('gitweb.owner')) {
-			$this->owner = $this->GetConfig()->GetValue('gitweb.owner');
-		}
-
 		if (empty($this->owner) && function_exists('posix_getpwuid')) {
 			$uid = fileowner($this->GetPath());
 			if ($uid !== false) {
@@ -474,9 +467,7 @@ class GitPHP_Project
 	public function GetDescription($trim = 0)
 	{
 		if (!$this->readDescription) {
-			if ($this->GetConfig()->HasValue('gitphp.description')) {
-				$this->description = $this->GetConfig()->GetValue('gitphp.description');
-			} else if (file_exists($this->GetPath() . '/description')) {
+			if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
 			}
 			$this->readDescription = true;
@@ -534,10 +525,6 @@ class GitPHP_Project
 			return $this->category;
 		}
 
-		if ($this->GetConfig()->HasValue('gitphp.category')) {
-			return $this->GetConfig()->GetValue('gitphp.category');
-		}
-
 		return '';
 	}
 
@@ -570,9 +557,6 @@ class GitPHP_Project
 	{
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
-
-		if ($this->GetConfig()->HasValue('gitphp.cloneurl'))
-			return $this->GetConfig()->GetValue('gitphp.cloneurl');
 
 		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
 		if (!empty($cloneurl))
@@ -611,9 +595,6 @@ class GitPHP_Project
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
 
-		if ($this->GetConfig()->HasValue('gitphp.pushurl'))
-			return $this->GetConfig()->GetValue('gitphp.pushurl');
-
 		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
 		if (!empty($pushurl))
 			$pushurl .= $this->project;
@@ -651,10 +632,6 @@ class GitPHP_Project
 		if ($this->bugUrl != null)
 			return $this->bugUrl;
 
-		if ($this->GetConfig()->HasValue('gitphp.bugurl')) {
-			return $this->GetConfig()->GetValue('gitphp.bugurl');
-		}
-
 		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
 	}
 
@@ -683,10 +660,6 @@ class GitPHP_Project
 	{
 		if ($this->bugPattern != null)
 			return $this->bugPattern;
-
-		if ($this->GetConfig()->HasValue('gitphp.bugpattern')) {
-			return $this->GetConfig()->GetValue('gitphp.bugpattern');
-		}
 
 		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
 	}
@@ -720,10 +693,6 @@ class GitPHP_Project
 	{
 		if (!empty($this->website)) {
 			return $this->website;
-		}
-
-		if ($this->GetConfig()->HasValue('gitphp.website')) {
-			return $this->GetConfig()->GetValue('gitphp.website');
 		}
 
 		return null;
@@ -946,10 +915,6 @@ class GitPHP_Project
 			return $this->compat;
 		}
 
-		if ($this->GetConfig()->HasValue('gitphp.compat')) {
-			return $this->GetConfig()->GetValue('gitphp.compat');
-		}
-
 		return GitPHP_Config::GetInstance()->GetValue('compat', false);
 	}
 
@@ -967,23 +932,6 @@ class GitPHP_Project
 	}
 
 /*}}}2*/
-
-	/**
-	 * GetConfig
-	 *
-	 * Gets the config reader instance
-	 *
-	 * @access public
-	 * @return mixed config class
-	 */
-	public function GetConfig()
-	{
-		if (!$this->config) {
-			$this->config = new GitPHP_GitConfig($this);
-		}
-
-		return $this->config;
-	}
 
 /*}}}1*/
 
@@ -1778,6 +1726,32 @@ class GitPHP_Project
 /* hash management methods {{{2*/
 
 	/**
+	 * GetAbbreviateLength
+	 *
+	 * Gets the hash abbreviation length
+	 *
+	 * @access public
+	 * @return int abbreviate length
+	 */
+	public function GetAbbreviateLength()
+	{
+		return $this->abbreviateLength;
+	}
+
+	/**
+	 * SetAbbreviateLength
+	 *
+	 * Sets the hash abbreviation length
+	 *
+	 * @access public
+	 * @param int $length abbreviate length
+	 */
+	public function SetAbbreviateLength($length)
+	{
+		$this->abbreviateLength = $length;
+	}
+
+	/**
 	 * AbbreviateHash
 	 *
 	 * Calculates the unique abbreviated hash for a full hash
@@ -1840,8 +1814,8 @@ class GitPHP_Project
 	{
 		$abbrevLen = GITPHP_ABBREV_HASH_MIN;
 
-		if ($this->GetConfig()->HasValue('core.abbrev')) {
-			$abbrevLen = max(4, min($this->GetConfig()->GetValue('core.abbrev'), 40));
+		if ($this->abbreviateLength > 0) {
+			$abbrevLen = max(4, min($this->abbreviateLength, 40));
 		}
 
 		$prefix = substr($hash, 0, $abbrevLen);
