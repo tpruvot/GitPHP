@@ -89,12 +89,11 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	protected function FindHash()
 	{
-		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--hash';
 		$args[] = '--verify';
 		$args[] = $this->GetRefPath();
-		$hash = trim($exe->Execute(GIT_SHOW_REF, $args));
+		$hash = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_SHOW_REF, $args));
 
 		if (!empty($hash))
 			$this->SetHash($hash);

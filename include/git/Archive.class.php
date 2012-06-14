@@ -355,8 +355,6 @@ class GitPHP_Archive
 			return true;
 		}
 
-		$exe = new GitPHP_GitExe($this->GetProject());
-
 		$args = array();
 
 		switch ($this->format) {
@@ -373,8 +371,7 @@ class GitPHP_Archive
 		$args[] = '--prefix=' . $this->GetPrefix();
 		$args[] = $this->gitObject->GetHash();
 
-		$this->handle = $exe->Open(GIT_ARCHIVE, $args);
-		unset($exe);
+		$this->handle = GitPHP_GitExe::GetInstance()->Open($this->GetProject()->GetPath(), GIT_ARCHIVE, $args);
 
 		if ($this->format == GITPHP_COMPRESS_GZ) {
 			// hack to get around the fact that gzip files

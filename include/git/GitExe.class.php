@@ -34,17 +34,19 @@ define('GIT_CONFIG','config');
  */
 class GitPHP_GitExe
 {
-	/**
-	 * project
-	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
-	 */
-	protected $project;
 
 	/**
-	 * bin
+	 * instance
+	 *
+	 * Stores the singleton instance
+	 *
+	 * @access protected
+	 * @static
+	 */
+	protected static $instance;
+
+	/**
+	 * binary
 	 *
 	 * Stores the binary path internally
 	 *
@@ -71,36 +73,49 @@ class GitPHP_GitExe
 	protected $versionRead = false;
 
 	/**
-	 * __construct
+	 * GetInstance
 	 *
-	 * Constructor
+	 * Returns the singleton instance
 	 *
-	 * @param string $binary path to git binary
-	 * @param mixed $project project to operate on
-	 * @return mixed git executable class
+	 * @access public
+	 * @static
+	 * @return mixed instance of git exe classe
 	 */
-	public function __construct($project = null)
+	public static function GetInstance()
 	{
-		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
-		if (empty($binary)) {
-			$this->binary = GitPHP_GitExe::DefaultBinary();
-		} else {
-			$this->binary = $binary;
+		if (!self::$instance) {
+			self::$instance = new GitPHP_GitExe();
 		}
-
-		$this->SetProject($project);
+		return self::$instance;
 	}
 
 	/**
-	 * SetProject
+	 * DestroyInstance
 	 *
-	 * Sets the project for this executable
+	 * Releases the singleton instance
 	 *
-	 * @param mixed $project project to set
+	 * @access public
+	 * @static
 	 */
-	public function SetProject($project = null)
+	public static function DestroyInstance()
 	{
-		$this->project = $project;
+		self::$instance = null;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @access protected
+	 * @param string $binary path to git binary
+	 * @return mixed git executable class
+	 */
+	protected function __construct()
+	{
+		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
+		if (empty($binary)) {
+			$binary = GitPHP_GitExe::DefaultBinary();
+		}
+		$this->binary = $binary;
 	}
 
 	/**
@@ -108,13 +123,14 @@ class GitPHP_GitExe
 	 *
 	 * Executes a command
 	 *
+	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
 	 * @param array $args arguments
 	 * @return string result of command
 	 */
-	public function Execute($command, $args)
+	public function Execute($projectPath, $command, $args)
 	{
-		$fullCommand = $this->CreateCommand($command, $args);
+		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
 		if ($command != GIT_DIFF_TREE)
 			GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
@@ -133,13 +149,14 @@ class GitPHP_GitExe
 	 *
 	 * Opens a resource to a command
 	 *
+	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
 	 * @param array $args arguments
 	 * @return resource process handle
 	 */
-	public function Open($command, $args, $mode = 'r')
+	public function Open($projectPath, $command, $args, $mode = 'r')
 	{
-		$fullCommand = $this->CreateCommand($command, $args);
+		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
 		return popen($fullCommand, $mode);
 	}
@@ -151,17 +168,18 @@ class GitPHP_GitExe
 	 *
 	 * @access protected
 	 *
+	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
 	 * @param array $args arguments
 	 * @return string result of command
 	 */
-	protected function CreateCommand($command, $args)
+	protected function CreateCommand($projectPath, $command, $args)
 	{
 		$gitDir = '';
-		if ($this->project) {
-			$gitDir = '--git-dir=' . $this->project->GetPath();
+		if (!empty($projectPath)) {
+			$gitDir = '--git-dir=' . $projectPath;
 		}
-		
+
 		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
 	}
 
