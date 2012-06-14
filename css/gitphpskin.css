@@ -669,3 +669,7 @@ span.searchmatch {
 	color: #e00000;
 }
 
+/* for transparent images */
+div.diff_pict {
+	background-color: #DDD;
+}
