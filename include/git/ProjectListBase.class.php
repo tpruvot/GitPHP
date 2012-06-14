@@ -149,7 +149,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
-		$this->ReadGitConfig($project);
+		$this->ApplyGitConfig($project);
 
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
@@ -183,14 +183,14 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * ReadGitConfig
+	 * ApplyGitConfig
 	 *
 	 * Reads the project's git config settings and applies them to the project
 	 *
 	 * @access protected
 	 * @param mixed $project project
 	 */
-	protected function ReadGitConfig($project)
+	protected function ApplyGitConfig($project)
 	{
 		if (!$project)
 			return;
