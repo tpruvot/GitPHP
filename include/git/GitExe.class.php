@@ -103,6 +103,8 @@ class GitPHP_GitExe
 	}
 
 	/**
+	 * __construct
+	 *
 	 * Constructor
 	 *
 	 * @access protected
@@ -179,7 +181,6 @@ class GitPHP_GitExe
 		if (!empty($projectPath)) {
 			$gitDir = '--git-dir=' . $projectPath;
 		}
-
 		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
 	}
 

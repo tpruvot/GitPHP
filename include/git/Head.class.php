@@ -22,15 +22,6 @@ class GitPHP_Head extends GitPHP_Ref
 {
 
 	/**
-	 * commit
-	 *
-	 * Stores the commit internally
-	 *
-	 * @access protected
-	 */
-	protected $commit;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates head
@@ -57,11 +48,7 @@ class GitPHP_Head extends GitPHP_Ref
 	 */
 	public function GetCommit()
 	{
-		if (!$this->commit) {
-			$this->commit = $this->project->GetCommit($this->GetHash());
-		}
-
-		return $this->commit;
+		return $this->GetProject()->GetCommit($this->GetHash());
 	}
 	
 	/**
