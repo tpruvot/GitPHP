@@ -23,15 +23,6 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 {
 
 	/**
-	 * commit
-	 *
-	 * Stores the commit internally
-	 *
-	 * @access protected
-	 */
-	protected $commit;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates head
@@ -76,12 +67,9 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 	 */
 	public function GetCommit()
 	{
-		if (!$this->commit) {
-			$this->commit = $this->project->GetCommit($this->GetHash());
-		}
-		return $this->commit;
+		return $this->GetProject()->GetCommit($this->GetHash());
 	}
-	
+
 	/**
 	 * CompareAge
 	 *
@@ -97,7 +85,25 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 	{
 		$aObj = $a->GetCommit();
 		$bObj = $b->GetCommit();
+		if ($aObj == null) return 1;
 		return GitPHP_Commit::CompareAge($aObj, $bObj);
 	}
 
+	/**
+	 * CacheKey
+	 *
+	 * Generates a head hash key
+	 *
+	 * @access public
+	 * @static
+	 * @param string $proj project
+	 * @param string $head head name
+	 * @return string cache key
+	 */
+	public static function CacheKey($proj, $head)
+	{
+		GitPHP_Log::GetInstance()->Log('RemoteHead::CacheKey(): head='.$head);
+
+		return 'project|' . $proj . '|head|' . $head;
+	}
 }
