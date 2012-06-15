@@ -116,12 +116,14 @@ class GitPHP_GitExe
 	{
 		$fullCommand = $this->CreateCommand($command, $args);
 
-		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
+		if ($command != GIT_DIFF_TREE)
+			GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
 
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
-			"\nwith result: " . $ret);
+		if ($command != GIT_DIFF_TREE)
+			GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
+				"\nwith result: " . $ret);
 
 		return $ret;
 	}
