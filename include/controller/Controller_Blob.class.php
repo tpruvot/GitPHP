@@ -108,7 +108,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				$headers = array();
 
 				$mime = null;
-				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+				if ($this->config->GetValue('filemimetype', true)) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->PathToHash($this->params['file']);
@@ -167,7 +167,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
-		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+		if ($this->config->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
 			if ($mime) {
 				$mimetype = strtok($mime, '/');
@@ -180,8 +180,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 		}
 
-		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
-			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
+		if ($this->config->GetValue('geshi', true)) {
+			include_once(GitPHP_Util::AddSlash($this->config->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {

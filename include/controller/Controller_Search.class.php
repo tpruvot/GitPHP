@@ -37,11 +37,11 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		if (!GitPHP_Config::GetInstance()->GetValue('search', true)) {
+		parent::__construct();
+
+		if (!$this->config->GetValue('search', true)) {
 			throw new GitPHP_MessageException(__('Search has been disabled'), true);
 		}
-
-		parent::__construct();
 	}
 
 	/**
@@ -103,7 +103,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			$this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
 
 		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
-			if (!GitPHP_Config::GetInstance()->GetValue('filesearch', true)) {
+			if (!$this->config->GetValue('filesearch', true)) {
 				throw new GitPHP_MessageException(__('File search has been disabled'), true);
 			}
 

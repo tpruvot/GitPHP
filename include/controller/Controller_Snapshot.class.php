@@ -38,6 +38,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
+		$this->config = GitPHP_Config::GetInstance();
+
 		if (isset($_GET['p'])) {
 			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
@@ -112,7 +114,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($_GET['fmt']))
 			$this->params['format'] = $_GET['fmt'];
 		else
-			$this->params['format'] = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+			$this->params['format'] = $this->config->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
 			
 		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
@@ -179,7 +181,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->LoadData();
 
-		$cache = GitPHP_Config::GetInstance()->GetValue('cache', false);
+		$cache = $this->config->GetValue('cache', false);
 		$cachehandle = false;
 		$cachefile = '';
 		if ($cache && is_dir(GITPHP_CACHE)) {

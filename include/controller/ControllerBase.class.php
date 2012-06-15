@@ -21,6 +21,15 @@ abstract class GitPHP_ControllerBase
 {
 
 	/**
+	 * config
+	 *
+	 * Config handler instance
+	 *
+	 * @access protected
+	 */
+	protected $config;
+
+	/**
 	 * tpl
 	 *
 	 * Smarty instance
@@ -86,19 +95,21 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
+		$this->config = GitPHP_Config::GetInstance();
+
+		require_once(GitPHP_Util::AddSlash($this->config->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
 		$this->tpl->merge_compiled_includes = true;
 		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
-		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
+		if ($this->config->GetValue('cache', false)) {
 			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
-			if (GitPHP_Config::GetInstance()->HasKey('cachelifetime')) {
-				$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
+			if ($this->config->HasKey('cachelifetime')) {
+				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
 			}
 
-			$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
+			$servers = $this->config->GetValue('memcache', null);
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
 				$this->tpl->caching_type = 'memcache';
 			}
@@ -291,24 +302,24 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->assign('version', $gitphp_version);
 
-		$stylesheet = GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
+		$stylesheet = $this->config->GetValue('stylesheet', 'gitphpskin.css');
 		if ($stylesheet == 'gitphp.css') {
 			// backwards compatibility
 			$stylesheet = 'gitphpskin.css';
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
-		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
-		$this->tpl->assign('googlejs', GitPHP_Config::GetInstance()->GetValue('googlejs', false));
-		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', __('projects')));
+		$this->tpl->assign('javascript', $this->config->GetValue('javascript', true));
+		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs', false));
+		$this->tpl->assign('pagetitle', $this->config->GetValue('title', $gitphp_appstring));
+		$this->tpl->assign('homelink', $this->config->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->GetProject());
-		if (GitPHP_Config::GetInstance()->GetValue('search', true))
+		if ($this->config->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
-		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
+		if ($this->config->GetValue('filesearch', true))
 			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
@@ -361,7 +372,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
-		if ((GitPHP_Config::GetInstance()->GetValue('cache', false) == true) && (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === true))
+		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
