@@ -26,15 +26,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * projectDir
-	 *
-	 * Stores projectlist directory internally
-	 *
-	 * @access protected
-	 */
-	protected $projectDir = '';
-
-	/**
 	 * bareOnly
 	 *
 	 * Ignore working git repositories (project/.git)
@@ -78,7 +69,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
 		}
 
-		$this->projectDir = GitPHP_Util::AddSlash($projectDir);
+		$this->projectRoot = GitPHP_Util::AddSlash($projectDir);
 
 		$Config = GitPHP_Config::GetInstance();
 
@@ -98,25 +89,11 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		// HACK workaround for strange behavior of CACHING_LIFETIME_SAVED in smarty 3
-		$oldLifetime = GitPHP_Cache::GetObjectCacheInstance()->GetLifetime();
-		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime(GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
-
-		$key = 'projectdir|' . $this->projectDir . '|projectlist|directory';
-		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-		if ($cached && (count($cached) > 0)) {
-			foreach ($cached as $proj) {
-				$this->AddProject($proj);
-			}
-			GitPHP_Log::GetInstance()->Log('Loaded ' . count($this->projects) . ' projects from cache');
-			GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
-			return;
-
-		} elseif (!GitPHP_Cache::GetObjectCacheInstance()->GetEnabled()) {
+		if (!GitPHP_Cache::GetObjectCacheInstance()->GetEnabled()) {
 
 			// cache project list even if object cache is disabled (too much files)
 			$simpleCache = true;
-			$stat = @ stat(CACHE_PROJECTLIST);
+			$stat = (is_file(CACHE_PROJECTLIST)) ? stat(CACHE_PROJECTLIST) : FALSE;
 			if ($stat !== FALSE) {
 				$cache_life = '180';  //caching time, in seconds
 				$filemtime = max($stat['mtime'], $stat['ctime']);
@@ -135,19 +112,17 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		}
 
 		$this->curlevel = 0;
-		$this->RecurseDir($this->projectDir);
+		$this->RecurseDir($this->projectRoot);
 
 		if (count($this->projects) > 0) {
 			$projects = array();
 			foreach ($this->projects as $proj) {
 				$projects[] = $proj->GetProject();;
 			}
-			GitPHP_Cache::GetObjectCacheInstance()->Set($key, $projects, GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
 			if ($simpleCache) {
 				$this->CacheSaveProjectList();
 			}
 		}
-		GitPHP_Cache::GetObjectCacheInstance()->SetLifetime($oldLifetime);
 	}
 
 	/**
@@ -165,7 +140,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
 
 		if ($dh = opendir($dir)) {
-			$trimlen = strlen($this->projectDir) + 1;
+			$trimlen = strlen(GitPHP_Util::AddSlash($this->projectRoot)) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
@@ -183,17 +158,19 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 						continue;
 				}
 
-				if (is_file($fullPath . '/HEAD')) {
+				if (is_file($fullPath . '/HEAD') || is_file($fullPath . '/ORIG_HEAD')) {
 					$projectPath = substr($fullPath, $trimlen);
-					GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $projectPath));
-					try {
-						$proj = new GitPHP_Project($this->projectDir, $projectPath);
-						$proj->SetCategory(trim(substr($dir, strlen($this->projectDir)), '/'));
-						if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
-							$this->projects[$projectPath] = $proj;
+					if (!isset($this->projects[$projectPath])) {
+						GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $projectPath));
+						$project = $this->InstantiateProject($projectPath);
+						if ($project) {
+
+							$category = trim(substr($dir, $trimlen), '/');
+							$project->SetCategory($category);
+
+							$this->projects[$projectPath] = $project;
+							unset($project);
 						}
-					} catch (Exception $e) {
-						GitPHP_Log::GetInstance()->Log(sprintf('Project ignored %1$s', $e->GetMessage()));
 					}
 				} elseif ($this->curlevel < $this->sublevels) {
 					$this->curlevel++;
@@ -209,34 +186,36 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * AddProject
+	 * InstantiateProject
 	 *
-	 * Add project to collection
+	 * Instantiates project object
 	 *
-	 * @access private
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project
 	 */
-	private function AddProject($projectPath)
+	protected function InstantiateProject($proj)
 	{
 		try {
-			$proj = new GitPHP_Project($this->projectDir, $projectPath);
-			$category = trim(dirname($projectPath));
+			$project = new GitPHP_Project($this->projectRoot, $proj);
+			$category = trim(dirname($proj));
 			if (!(empty($category) || (strpos($category, '.') === 0))) {
-				$proj->SetCategory($category);
+				$project->SetCategory($category);
 			}
-			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) {
-				if ($proj->GetDaemonEnabled()) {
-					$this->projects[$projectPath] = $proj;
-				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $proj->GetPath()));
-				}
-			} else {
-				$this->projects[$projectPath] = $proj;
+			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false) && !$project->GetDaemonEnabled()) {
+				GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
+				return null;
 			}
+			if ($this->projectSettings && isset($this->projectSettings[$proj])) {
+				$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
+			}
+			return $project;
 		} catch (Exception $e) {
 			GitPHP_Log::GetInstance()->Log($e->getMessage());
 		}
+		return null;
 	}
-	
+
 	/** Save and restore project list to prevent parsing directories
 	 */
 	public function CacheSaveProjectList()
