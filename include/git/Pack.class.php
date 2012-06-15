@@ -30,11 +30,11 @@ class GitPHP_Pack
 	/**
 	 * project
 	 *
-	 * Stores the project name
+	 * Stores the project internally
 	 *
 	 * @access protected
 	 */
-	private $project = "";
+	protected $project;
 
 	/**
 	 * hash

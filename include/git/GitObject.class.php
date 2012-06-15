@@ -26,7 +26,7 @@ abstract class GitPHP_GitObject
 	 *
 	 * @access protected
 	 */
-	protected $projName;
+	protected $project;
 
 	/**
 	 * hash
@@ -68,10 +68,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function __construct($project, $hash)
 	{
-		//todo: remove this ref
-		$this->project = $project;
-
-		$this->projName = $project->GetProject();
+		$this->project = $project->GetProject();
 		$this->SetHash($hash);
 	}
 
@@ -85,7 +82,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->projName);
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
 	}
 
 	/**
@@ -153,7 +150,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetCacheKey()
 	{
-		return 'project|' . $this->projName;
+		return 'project|' . $this->project;
 	}
 
 }

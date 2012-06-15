@@ -191,22 +191,29 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	protected function InstantiateProject($proj)
 	{
 		try {
+
 			$project = new GitPHP_Project($this->projectRoot, $proj);
+
 			$category = trim(dirname($proj));
 			if (!(empty($category) || (strpos($category, '.') === 0))) {
 				$project->SetCategory($category);
 			}
+
 			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false) && !$project->GetDaemonEnabled()) {
 				GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
 				return null;
 			}
+
 			if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 				$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 			}
+
 			return $project;
+
 		} catch (Exception $e) {
 			GitPHP_Log::GetInstance()->Log($e->getMessage());
 		}
+
 		return null;
 	}
 

@@ -181,8 +181,8 @@ try {
 
 }
 
-GitPHP_MemoryCache::DestroyInstance();
 GitPHP_ProjectList::DestroyInstance();
+GitPHP_MemoryCache::DestroyInstance();
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 GitPHP_GitExe::DestroyInstance();

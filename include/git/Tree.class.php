@@ -266,7 +266,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Tree::CacheKey($this->projName, $this->hash);
+		return GitPHP_Tree::CacheKey($this->project, $this->hash);
 	}
 
 	/**
