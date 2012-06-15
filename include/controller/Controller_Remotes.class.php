@@ -20,22 +20,6 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 {
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
-	}
-
-	/**
 	 * GetTemplate
 	 *
 	 * Gets the template for this controller
@@ -98,13 +82,13 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$head = $this->GetProject()->GetHeadCommit();
-		$this->tpl->assign("head",$head);
-
 		$headlist = $this->GetProject()->GetRemotes();
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$this->tpl->assign("remotelist",$headlist);
 		}
+
+		$head = $this->GetProject()->GetHeadCommit();
+		$this->tpl->assign("head",$head);
 	}
 
 }
