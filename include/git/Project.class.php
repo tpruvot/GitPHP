@@ -1273,10 +1273,11 @@ class GitPHP_Project
 	 */
 	private function ReadRefListRaw()
 	{
-		$pathlen = strlen($this->GetPath()) + 1;
+		$path = $this->GetPath();
+		$pathlen = strlen($path) + 1;
 
 		// read loose heads
-		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
+		$heads = $this->ListDir($path . '/refs/heads');
 		for ($i = 0; $i < count($heads); $i++) {
 			$key = trim(substr($heads[$i], $pathlen), "/\\");
 			$head = substr($key, strlen('refs/heads/'));
@@ -1292,7 +1293,7 @@ class GitPHP_Project
 		}
 
 		// read loose tags
-		$tags = $this->ListDir($this->GetPath() . '/refs/tags');
+		$tags = $this->ListDir($path . '/refs/tags');
 		for ($i = 0; $i < count($tags); $i++) {
 			$key = trim(substr($tags[$i], $pathlen), "/\\");
 			$tag = substr($key, strlen('refs/tags/'));
@@ -1309,8 +1310,8 @@ class GitPHP_Project
 		}
 
 		// check packed refs
-		if (file_exists($this->GetPath() . '/packed-refs')) {
-			$packedRefs = explode("\n", file_get_contents($this->GetPath() . '/packed-refs'));
+		if (file_exists($path . '/packed-refs')) {
+			$packedRefs = explode("\n", file_get_contents($path . '/packed-refs'));
 
 			$lastTag = null;
 			foreach ($packedRefs as $ref) {
@@ -1350,14 +1351,14 @@ class GitPHP_Project
 		// double check...
 		if ($this->isAndroidRepo ) {
 //
-			$heads = $this->ListDir($this->GetPath() . '/refs/remotes');
+			$heads = $this->ListDir($path . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
 
 				//sample 'gingerbread' content in 'm' folder:
 				//  ref: refs/remotes/github/gingerbread
 				$head = trim(file_get_contents($heads[$i]));
 				if (preg_match('/^ref: (.+)$/', $head, $regs)) {
-					$heads[$i] = $this->GetPath() . "/". $regs[1];
+					$heads[$i] = $path . "/". $regs[1];
 				}
 
 				$key = trim(substr($heads[$i], $pathlen), "/\\");
@@ -1388,7 +1389,7 @@ class GitPHP_Project
 					GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] '.$key.' not found');
 				}
 			}
-//
+
 			//use defaut branch set in manifest, often missing
 			$default = $this->repoRemote.'/'.$this->repoBranch;
 			$key = 'refs/remotes/'.$default;
@@ -1398,7 +1399,7 @@ class GitPHP_Project
 			}
 
 			//var_dump(array_keys($this->remotes));
-			//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
+			GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
 		}
 	}
 
