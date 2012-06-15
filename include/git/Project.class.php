@@ -967,6 +967,8 @@ class GitPHP_Project
 					$commit = new GitPHP_Commit($this, $hash);
 				}
 
+				$commit->SetCompat($this->GetCompat());
+
 				$memoryCache->Set($key, $commit);
 
 			}

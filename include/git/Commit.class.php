@@ -204,7 +204,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function GetHash($abbreviate = false)
 	{
-		if ($this->GetProject()->GetCompat() && $abbreviate) {
+		if ($this->compat && $abbreviate) {
 			// abbreviated hash is loaded as part of commit data in compat mode
 			if (!$this->dataRead)
 				$this->ReadData();
@@ -554,7 +554,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		$lines = null;
 
-		if ($this->GetProject()->GetCompat()) {
+		if ($this->compat) {
 
 			/* get data from git_rev_list */
 			$args = array();
@@ -794,7 +794,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->hashPathsRead = true;
 
-		if ($this->GetProject()->GetCompat()) {
+		if ($this->compat) {
 			$this->ReadHashPathsGit();
 		} else {
 			$this->ReadHashPathsRaw($this->GetTree());
