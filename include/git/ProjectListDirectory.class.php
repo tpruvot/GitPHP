@@ -22,6 +22,44 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
  */
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
+
+	/**
+	 * exportedOnly
+	 *
+	 * Stores whether to only list exported projects
+	 *
+	 * @access protected
+	 */
+	protected $exportedOnly = false;
+
+	/**
+	 * __construct
+	 *
+	 * Constructor
+	 *
+	 * @access public
+	 * @param string $projectRoot project root
+	 * @param bool $exportedOnly whether to only allow exported projects
+	 */
+	public function __construct($projectRoot, $exportedOnly = false)
+	{
+		$this->exportedOnly = $exportedOnly;
+
+		parent::__construct($projectRoot);
+
+	}
+
+	/**
+	 * GetExportedOnly
+	 *
+	 * Gets whether this list only allows exported projects
+	 *
+	 * @access public
+	 */
+	public function GetExportedOnly()
+	{
+		return $this->exportedOnly;
+	}
 	
 	/**
 	 * PopulateProjects
@@ -95,7 +133,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$project->SetCategory($category);
 			}
 
-			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false) && !$project->GetDaemonEnabled()) {
+			if ($this->exportedOnly && !$project->GetDaemonEnabled()) {
 				GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
 				return null;
 			}

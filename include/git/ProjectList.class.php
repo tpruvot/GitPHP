@@ -102,7 +102,7 @@ class GitPHP_ProjectList
 
 		if (!self::$instance) {
 
-			self::$instance = new GitPHP_ProjectListDirectory($projectRoot);
+			self::$instance = new GitPHP_ProjectListDirectory($projectRoot, GitPHP_Config::GetInstance()->GetValue('exportedonly', false));
 		}
 
 		if (isset($git_projects_settings) && !$legacy)
