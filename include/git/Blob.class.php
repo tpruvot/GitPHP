@@ -132,7 +132,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->dataRead = true;
 
-		if ($this->GetProject()->GetCompat()) {
+		if ($this->compat) {
 			$args = array();
 			$args[] = 'blob';
 			$args[] = $this->hash;

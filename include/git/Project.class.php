@@ -1632,6 +1632,8 @@ class GitPHP_Project
 				$blob = new GitPHP_Blob($this, $hash);
 			}
 
+			$blob->SetCompat($this->GetCompat());
+
 			$memoryCache->Set($key, $blob);
 		}
 
@@ -1665,6 +1667,8 @@ class GitPHP_Project
 			if (!$tree) {
 				$tree = new GitPHP_Tree($this, $hash);
 			}
+
+			$tree->SetCompat($this->GetCompat());
 
 			$memoryCache->Set($key, $tree);
 		}

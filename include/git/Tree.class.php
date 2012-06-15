@@ -128,7 +128,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	{
 		$this->contentsRead = true;
 
-		if ($this->GetProject()->GetCompat()) {
+		if ($this->compat) {
 			$this->ReadContentsGit();
 		} else {
 			$this->ReadContentsRaw();
