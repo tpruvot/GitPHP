@@ -21,9 +21,31 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
  */
 class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 {
+	/**
+	 * fileRead
+	 *
+	 * Stores whether the file has been read
+	 *
+	 * @access protected
+	 */
+	protected $fileRead = false;
 
+	/**
+	 * remotes
+	 *
+	 * Stores the manifest remotes
+	 *
+	 * @access protected
+	 */
 	protected $remotes=array();
 
+	/**
+	 * default
+	 *
+	 * Store the manifest default branch/remote
+	 *
+	 * @access protected
+	 */
 	protected $default=array();
 
 	protected $local_manifest='';
@@ -47,6 +69,9 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
 		}
 
+		if (!isset($this->projectRoot))
+			$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+
 		$this->projectConfig = $projectFile;
 
 		parent::__construct();
@@ -62,8 +87,19 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		if (!$this->fileRead)
+			$this->ReadFile();
+	}
 
+	/**
+	 * ReadFile
+	 *
+	 * Reads the file contents
+	 *
+	 * @access private
+	 */
+	protected function ReadFile()
+	{
 		$use_errors = libxml_use_internal_errors(true);
 
 		$xml = simplexml_load_file($this->projectConfig);
@@ -74,6 +110,9 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		if (!$xml) {
 			throw new Exception(sprintf('Could not load Manifest %1$s', $this->projectConfig));
 		}
+
+		$this->fileRead = true;
+
 		//remotes list to associative array
 		$remotes = array();
 		foreach ($xml->remote as $k => $remote) {
@@ -107,10 +146,9 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 				}
 
 				foreach ($this->local_projects as $project => $node) {
-					GitPHP_Log::GetInstance()->Log(sprintf('override project %1$s',$project));
+					GitPHP_Log::GetInstance()->Log(sprintf('add local project %1$s',$project));
 					$projects[$project] = $node;
 				}
-
 			}
 		}
 
@@ -133,51 +171,54 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 			$projPath .= '.git';
 
-			if (!strstr($projectRoot,'.repo'))
-				$projectRoot = $projectRoot . '.repo/projects/';
+			if (!strstr($this->projectRoot,'.repo'))
+				$this->projectRoot .= '.repo/projects/';
 
-			$fullPath = $projectRoot . $projPath;
+			$fullPath = $this->projectRoot . $projPath;
 			if (!is_file($fullPath . '/HEAD')) {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projPath));
+				GitPHP_Log::GetInstance()->Log(sprintf('%1$s: %2$s is not a git project', __FUNCTION__, $projPath));
 			} else {
 				try {
-					$projectPath = substr($fullPath, strlen($projectRoot));
+					$projectPath = substr($fullPath, strlen($this->projectRoot));
 
-					$projObj = new GitPHP_Project($projectRoot, $projectPath);
-					$projObj->isAndroidRepo = true;
+					$projObj = $this->InstantiateProject($projectPath);
+					if ($projObj) {
+						$projObj->isAndroidRepo = true;
 
-					$remoteName = $repository['remote'];
-					$projObj->repoRemote = $remoteName;
+						$remoteName = $repository['remote'];
+						$projObj->repoRemote = $remoteName;
 
-					//revision can be a tag, ignore it
-					if (strpos($repository['revision'],'/tags/') === false)
-						$projObj->repoBranch = $repository['revision'];
+						//revision can be a tag, ignore it
+						if (strpos($repository['revision'],'/tags/') === false)
+							$projObj->repoBranch = $repository['revision'];
 
-					$projOwner = $repository['name'];
-					if (!empty($projOwner)) {
-						if (strpos($projOwner,'/') > 0)
-							$projOwner = substr($projOwner,0,strpos($projOwner,'/'));
-						$projObj->SetOwner($projOwner);
-						$projObj->SetCategory($remoteName.' - '.$projOwner);
+						$projOwner = $repository['name'];
+						if (!empty($projOwner)) {
+							if (strpos($projOwner,'/') > 0)
+								$projOwner = substr($projOwner,0,strpos($projOwner,'/'));
+							$projObj->SetOwner($projOwner);
+							$projObj->SetCategory($remoteName.' - '.$projOwner);
+						}
+
+						$projObj->SetDescription($remoteName.':'.$repository['name']);
+
+						//remote url + project name
+						$remoteUrl = @ $remotes[$remoteName]['fetch'];
+						if (!empty($remoteUrl)) {
+							$remoteUrl .= $repository['name'].'.git';
+							$projObj->SetCloneUrl($remoteUrl);
+						}
+
+						//gerrit
+						/* $remoteUrl = @ $remotes[$remoteName]['review'];
+						if (!empty($remoteUrl)) {
+							//$remoteUrl .= '/#q,project:'.$repository['name'];
+							$projObj->SetBugUrl($remoteUrl);
+						} */
+
+						$this->projects[$projPath] = $projObj;
+						unset($projObj);
 					}
-
-					$projObj->SetDescription($remoteName.':'.$repository['name']);
-
-					//remote url + project name
-					$remoteUrl = @ $remotes[$remoteName]['fetch'];
-					if (!empty($remoteUrl)) {
-						$remoteUrl .= $repository['name'].'.git';
-						$projObj->SetCloneUrl($remoteUrl);
-					}
-
-					//gerrit
-					/* $remoteUrl = @ $remotes[$remoteName]['review'];
-					if (!empty($remoteUrl)) {
-						//$remoteUrl .= '/#q,project:'.$repository['name'];
-						$projObj->SetBugUrl($remoteUrl);
-					} */
-
-					$this->projects[$projPath] = $projObj;
 
 				} catch (Exception $e) {
 					GitPHP_Log::GetInstance()->Log($e->getMessage());
@@ -185,6 +226,22 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			}
 		}
 		GitPHP_Log::GetInstance()->Log(sprintf('Found %1$d projects in manifest(s)', count($projects)));
+	}
+
+	/**
+	 * InstantiateProject
+	 *
+	 * Instantiates project object
+	 *
+	 * @access protected
+	 * @param string $proj project
+	 * @return mixed project
+	 */
+	protected function InstantiateProject($proj)
+	{
+		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		return $projectObj;
 	}
 
 	/**
