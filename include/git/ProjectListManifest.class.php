@@ -95,7 +95,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	 *
 	 * @access private
 	 */
-	protected function ReadFile()
+	protected function ReadFile($refProject = null)
 	{
 		$use_errors = libxml_use_internal_errors(true);
 
@@ -107,8 +107,6 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		if (!$xml) {
 			throw new Exception(sprintf('Could not load Manifest %1$s', $this->projectConfig));
 		}
-
-		$this->fileRead = true;
 
 		//remotes list to associative array
 		$remotes = array();
@@ -151,6 +149,8 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 		GitPHP_Config::GetInstance()->SetValue('reposupport', true);
 
+		$this->fileRead = true;
+
 		foreach ($projects as $project) {
 
 			//deleted projects
@@ -178,7 +178,15 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 				try {
 					$projectPath = substr($fullPath, strlen($this->projectRoot));
 
-					$projObj = $this->InstantiateProject($projectPath);
+					// Allow to apply manifest settings to a single project.
+					$projObj = null;
+					if (empty($refProject))
+						$projObj = $this->InstantiateProject($projectPath);
+					else {
+						if ($refProject->GetProject() != $projectPath) continue;
+						$projObj = $refProject;
+					}
+
 					if ($projObj) {
 						$projObj->isAndroidRepo = true;
 
@@ -237,6 +245,11 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	protected function InstantiateProject($proj)
 	{
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		// we need to read the xml file if not done... (direct tree link access)
+		if (!$this->fileRead) {
+			$this->ReadFile($projectObj);
+		}
 
 		return $projectObj;
 	}

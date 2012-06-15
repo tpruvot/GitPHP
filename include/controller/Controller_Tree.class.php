@@ -107,6 +107,19 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 
+		// Projects with Remote Heads only
+		if (empty($commit) && $this->GetProject()->isAndroidRepo) {
+			$remotes = $this->GetProject()->GetRemotes(1);
+			if (!empty($remotes)) {
+				$rm = reset($remotes);
+				$hash = $rm->GetHash();
+				$this->params['hash'] = $hash;
+				$commit = $this->GetProject()->GetCommit($hash);
+				$this->params['hashbase'] = $commit->GetTree()->GetHash();
+				unset($remotes);
+			}
+		}
+
 		$this->tpl->assign('commit', $commit);
 
 		if (!isset($this->params['hash'])) {

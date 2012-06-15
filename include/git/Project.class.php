@@ -309,6 +309,11 @@ class GitPHP_Project
 	{
 		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
+
+		if (is_file($this->GetPath() . '/.repopickle_config')) {
+			//.repo projects doesn't store refs/heads
+			$this->isAndroidRepo = true;
+		}
 	}
 
 /*}}}1*/
@@ -1210,11 +1215,6 @@ class GitPHP_Project
 	protected function ReadRefList()
 	{
 		$this->readRefs = true;
-
-		if ( !$this->isAndroidRepo && is_file($this->GetPath() . '/.repopickle_config') ) {
-			//.repo projects doesn't store refs/heads
-			$this->isAndroidRepo = true;
-		}
 
 		if ($this->GetCompat() && !$this->isAndroidRepo) {
 			$this->ReadRefListGit();
