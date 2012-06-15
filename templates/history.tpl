@@ -19,6 +19,7 @@
 
  {include file='path.tpl' pathobject=$blob target='blob'}
  
+ {if $blob}
  <table>
    {* Display each history line *}
    {foreach from=$blob->GetHistory() item=historyitem}
@@ -34,5 +35,6 @@
      </tr>
    {/foreach}
  </table>
+ {/if}
 
 {/block}
