@@ -880,10 +880,16 @@ class GitPHP_Project
 			if (!$this->readRefs)
 				$this->ReadRefList();
 
-			$head = substr($regs[1], strlen('refs/heads/'));
+			$head = $regs[1];
+			if (!isset($this->heads[$head])) {
+				$head = preg_replace('#^refs/heads/#', '', $regs[1]);
+				GitPHP_Log::GetInstance()->Log($this->project.': [ReadHeadCommitRaw] '.$regs[1].' => '.$head);
+			}
 
 			if (isset($this->heads[$head])) {
 				$this->head = $this->heads[$head];
+			} elseif (isset($this->remotes[$head])) {
+				$this->head = $this->remotes[$head]->GetHash();
 			}
 		}
 	}
@@ -982,6 +988,7 @@ class GitPHP_Project
 			$this->ReadRefList();
 
 		$epoch = 0;
+		$isRemote = false;
 
 		$array = $this->heads;
 		if (empty($array) && $this->isAndroidRepo) {
@@ -990,12 +997,18 @@ class GitPHP_Project
 			$selected = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
 			if (array_key_exists($selected, $this->remotes)) {
 				$array = array($selected => $this->remotes[$selected]->GetHash());
+				$isRemote = true;
 			}
 		}
 
-		foreach ($array as $head  => $hash) {
-			$headObj = $this->GetHead($head);
-			$commit = $headObj->GetCommit();
+		foreach ($array as $head => $hash) {
+			if (!$isRemote) {
+				$headObj = $this->GetHead($head);
+				$commit = $headObj->GetCommit();
+			} else {
+				$rhObj = $this->remotes[$selected];
+				$commit = $rhObj->GetCommit();
+			}
 			if ($commit) {
 				if ($commit->GetCommitterEpoch() > $epoch) {
 					$epoch = $commit->GetCommitterEpoch();
