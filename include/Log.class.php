@@ -83,7 +83,8 @@ class GitPHP_Log
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_Log();
+			$config = GitPHP_Config::GetInstance();
+			self::$instance = new GitPHP_Log($config->GetValue('debug', false), $config->GetValue('benchmark', false));
 		}
 
 		return self::$instance;
@@ -110,13 +111,13 @@ class GitPHP_Log
 	 * @access private
 	 * @return Log object
 	 */
-	private function __construct()
+	private function __construct($enabled = false, $benchmark = false)
 	{
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();
 
-		$this->enabled = GitPHP_Config::GetInstance()->GetValue('debug', false);
-		$this->benchmark = GitPHP_Config::GetInstance()->GetValue('benchmark', false);
+		$this->enabled = $enabled;
+		$this->benchmark = $benchmark;
 	}
 
 	/**

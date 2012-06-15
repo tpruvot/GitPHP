@@ -84,7 +84,7 @@ class GitPHP_GitExe
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_GitExe();
+			self::$instance = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
 		}
 		return self::$instance;
 	}
@@ -111,9 +111,8 @@ class GitPHP_GitExe
 	 * @param string $binary path to git binary
 	 * @return mixed git executable class
 	 */
-	protected function __construct()
+	protected function __construct($binary)
 	{
-		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();
 		}
