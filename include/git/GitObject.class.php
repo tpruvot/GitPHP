@@ -56,6 +56,15 @@ abstract class GitPHP_GitObject
 	protected $abbreviatedHashLoaded = false;
 
 	/**
+	 * compat
+	 *
+	 * Stores whether this object should load in compatibility mode
+	 *
+	 * @access protected
+	 */
+	protected $compat = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -125,6 +134,32 @@ abstract class GitPHP_GitObject
 			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
+	}
+
+	/**
+	 * GetCompat
+	 *
+	 * Gets whether this object is in compatibility mode
+	 *
+	 * @access public
+	 * @return bool true if compatibility mode
+	 */
+	public function GetCompat()
+	{
+		return $this->compat;
+	}
+
+	/**
+	 * SetCompat
+	 *
+	 * Sets whether this object should run in compatibility mode
+	 *
+	 * @access public
+	 * @param bool $compat true if compatibility mode
+	 */
+	public function SetCompat($compat)
+	{
+		$this->compat = $compat;
 	}
 
 	/**
