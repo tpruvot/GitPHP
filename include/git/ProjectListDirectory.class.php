@@ -59,18 +59,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 *
 	 * constructor
 	 *
-	 * @param string $projectDir directory to search
+	 * @param string $projectDir (deprecated)
 	 * @throws Exception if parameter is not a directory
 	 * @access public
 	 */
-	public function __construct($projectDir)
+	public function __construct($projectDir = '')
 	{
-		if (!$this->IsDir($projectDir)) {
-			throw new Exception(sprintf(__('%1$s is not a directory'), $projectDir));
-		}
-
-		$this->projectRoot = GitPHP_Util::AddSlash($projectDir);
-
 		$Config = GitPHP_Config::GetInstance();
 
 		$this->bareOnly    = $Config->GetValue('bareonly', true);

@@ -69,9 +69,6 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
 		}
 
-		if (!isset($this->projectRoot))
-			$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
 		$this->projectConfig = $projectFile;
 
 		parent::__construct();
