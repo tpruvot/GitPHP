@@ -259,7 +259,9 @@ class GitPHP_Project
 	 *
 	 * @access protected
 	 */
-	protected $compat = null;
+	protected $compat = false;
+
+/* hash abbreviation variables {{{2*/
 
 	/**
 	 * abbreviateLength
@@ -269,6 +271,27 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $abbreviateLength = null;
+
+	/**
+	 * uniqueAbbreviation
+	 *
+	 * Stores whether hashes should be guaranteed unique
+	 *
+	 * @access protected
+	 */
+	protected $uniqueAbbreviation = false;
+
+/*}}}2*/
+
+	/**
+	 * skipFallback
+	 *
+	 * Stores the threshold at which log skips will
+	 * fallback to the git executable
+	 *
+	 * @access protected
+	 */
+	protected $skipFallback = 200;
 
 /*}}}1*/
 
@@ -555,14 +578,7 @@ class GitPHP_Project
 	 */
 	public function GetCloneUrl()
 	{
-		if ($this->cloneUrl !== null)
-			return $this->cloneUrl;
-
-		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
-		if (!empty($cloneurl))
-			$cloneurl .= $this->project;
-
-		return $cloneurl;
+		return $this->cloneUrl;
 	}
 
 	/**
@@ -592,14 +608,7 @@ class GitPHP_Project
 	 */
 	public function GetPushUrl()
 	{
-		if ($this->pushUrl !== null)
-			return $this->pushUrl;
-
-		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
-		if (!empty($pushurl))
-			$pushurl .= $this->project;
-
-		return $pushurl;
+		return $this->pushUrl;
 	}
 
 	/**
@@ -629,10 +638,7 @@ class GitPHP_Project
 	 */
 	public function GetBugUrl()
 	{
-		if ($this->bugUrl != null)
-			return $this->bugUrl;
-
-		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
+		return $this->bugUrl;
 	}
 
 	/**
@@ -658,10 +664,7 @@ class GitPHP_Project
 	 */
 	public function GetBugPattern()
 	{
-		if ($this->bugPattern != null)
-			return $this->bugPattern;
-
-		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
+		return $this->bugPattern;
 	}
 
 	/**
@@ -911,11 +914,7 @@ class GitPHP_Project
 	 */
 	public function GetCompat()
 	{
-		if ($this->compat !== null) {
-			return $this->compat;
-		}
-
-		return GitPHP_Config::GetInstance()->GetValue('compat', false);
+		return $this->compat;
 	}
 
 	/**
@@ -1465,6 +1464,34 @@ class GitPHP_Project
 /* log methods {{{2*/
 
 	/**
+	 * GetSkipFallback
+	 *
+	 * Gets the threshold at which log skips will fallback on
+	 * the git executable
+	 *
+	 * @access public
+	 * @return int skip fallback number
+	 */
+	public function GetSkipFallback()
+	{
+		return $this->skipFallback;
+	}
+
+	/**
+	 * SetSkipFallback
+	 *
+	 * Sets the threshold at which log skips will fallback on
+	 * the git executable
+	 *
+	 * @access public
+	 * @param int $skip skip fallback number
+	 */
+	public function SetSkipFallback($skip)
+	{
+		$this->skipFallback = $skip;
+	}
+
+	/**
 	 * GetLogHash
 	 *
 	 * Gets log entries as an array of hashes
@@ -1493,7 +1520,7 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
-		if ($this->GetCompat() || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
+		if ($this->GetCompat() || ($skip > $this->skipFallback)) {
 			return $this->GetLogGit($hash, $count, $skip);
 		} else {
 			return $this->GetLogRaw($hash, $count, $skip);
@@ -1752,6 +1779,32 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetUniqueAbbreviation
+	 *
+	 * Gets whether abbreviated hashes should be guaranteed unique
+	 *
+	 * @access public
+	 * @return bool true if hashes are guaranteed unique
+	 */
+	public function GetUniqueAbbreviation()
+	{
+		return $this->uniqueAbbreviation;
+	}
+
+	/**
+	 * SetUniqueAbbreviation
+	 *
+	 * Sets whether abbreviated hashes should be guaranteed unique
+	 *
+	 * @access public
+	 * @param bool true if hashes should be guaranteed unique
+	 */
+	public function SetUniqueAbbreviation($unique)
+	{
+		$this->uniqueAbbreviation = $unique;
+	}
+
+	/**
 	 * AbbreviateHash
 	 *
 	 * Calculates the unique abbreviated hash for a full hash
@@ -1820,7 +1873,7 @@ class GitPHP_Project
 
 		$prefix = substr($hash, 0, $abbrevLen);
 
-		if (!GitPHP_Config::GetInstance()->GetValue('uniqueabbrev', false)) {
+		if (!$this->uniqueAbbreviation) {
 			return $prefix;
 		}
 

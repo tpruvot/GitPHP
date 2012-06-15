@@ -100,6 +100,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				return null;
 			}
 
+			$this->ApplyGlobalConfig($project);
+
 			$this->ApplyGitConfig($project);
 
 			if ($this->projectSettings && isset($this->projectSettings[$proj])) {

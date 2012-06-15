@@ -149,6 +149,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
+		$this->ApplyGlobalConfig($project);
+
 		$this->ApplyGitConfig($project);
 
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
@@ -244,6 +246,50 @@ abstract class GitPHP_ProjectListBase implements Iterator
 			$project->SetAbbreviateLength($config->GetValue('core.abbrev'));
 		}
 
+	}
+
+	/**
+	 * ApplyGlobalConfig
+	 *
+	 * Applies global config settings to a project
+	 *
+	 * @access protected
+	 * @param mixed $project project
+	 */
+	protected function ApplyGlobalConfig($project)
+	{
+		if (!$project)
+			return;
+
+		$config = GitPHP_Config::GetInstance();
+
+		if ($config->HasKey('cloneurl')) {
+			$project->SetCloneUrl(GitPHP_Util::AddSlash($config->GetValue('cloneurl'), false) . $project->GetProject());
+		}
+
+		if ($config->HasKey('pushurl')) {
+			$project->SetPushUrl(GitPHP_Util::AddSlash($config->GetValue('pushurl'), false) . $project->GetProject());
+		}
+
+		if ($config->HasKey('bugpattern')) {
+			$project->SetBugPattern($config->GetValue('bugpattern'));
+		}
+
+		if ($config->HasKey('bugurl')) {
+			$project->SetBugUrl($config->GetValue('bugurl'));
+		}
+
+		if ($config->HasKey('compat')) {
+			$project->SetCompat($config->GetValue('compat'));
+		}
+
+		if ($config->HasKey('uniqueabbrev')) {
+			$project->SetUniqueAbbreviation($config->GetValue('uniqueabbrev'));
+		}
+
+		if ($config->HasKey('largeskip')) {
+			$project->SetSkipFallback($config->GetValue('largeskip'));
+		}
 	}
 
 	/**

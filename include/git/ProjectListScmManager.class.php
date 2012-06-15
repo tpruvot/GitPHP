@@ -126,6 +126,8 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->ApplyGlobalConfig($projectObj);
+
 		$this->ApplyGitConfig($projectObj);
 
 		if (isset($data['owner']) && !empty($data['owner'])) {
