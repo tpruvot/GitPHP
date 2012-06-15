@@ -346,7 +346,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$this->dataRead = true;
 
-		if ($this->GetProject()->GetCompat()) {
+		if ($this->compat) {
 			$this->ReadDataGit();
 		} else {
 			$this->ReadDataRaw();

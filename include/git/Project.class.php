@@ -1336,6 +1336,8 @@ class GitPHP_Project
 				$tagObj = new GitPHP_Tag($this, $tag, $hash);
 			}
 
+			$tagObj->SetCompat($this->GetCompat());
+
 			$memoryCache->Set($key, $tagObj);
 		}
 
