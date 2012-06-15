@@ -572,7 +572,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Tag::CacheKey($this->GetProject()->GetProject(), $this->refName);
+		return GitPHP_Tag::CacheKey($this->projName, $this->refName);
 	}
 
 	/**
