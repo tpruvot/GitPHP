@@ -441,7 +441,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 				}
 
 				if (!isset($this->projects[$proj]))
-					break;
+					continue;
 
 				$this->ApplyProjectSettings($this->projects[$proj], $setting);
 			}
