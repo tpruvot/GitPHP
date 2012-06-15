@@ -76,7 +76,7 @@ class GitPHP_MemoryCache
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_MemoryCache();
+			self::$instance = new GitPHP_MemoryCache(GitPHP_Config::GetInstance()->GetValue('objectmemory', 0));
 		}
 		return self::$instance;
 	}
@@ -102,13 +102,9 @@ class GitPHP_MemoryCache
 	 * @access private
 	 * @param int $size size of cache
 	 */
-	private function __construct($size = null)
+	private function __construct($size = 0)
 	{
-		if ($size !== null) {
-			$this->size = $size;
-		} else {
-			$this->size = GitPHP_Config::GetInstance()->GetValue('objectmemory', 0);
-		}
+		$this->size = $size;
 	}
 
 	/**
