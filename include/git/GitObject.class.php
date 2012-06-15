@@ -28,9 +28,6 @@ abstract class GitPHP_GitObject
 	 */
 	protected $projName;
 
-	/* deprecated */
-	protected $project;
-
 	/**
 	 * hash
 	 *

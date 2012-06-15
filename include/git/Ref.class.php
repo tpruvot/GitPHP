@@ -54,7 +54,6 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	public function __construct($project, $refDir, $refName, $refHash = '')
 	{
-		$this->project = $project;
 		$this->projName = $project->GetProject();
 		$this->refDir = $refDir;
 		$this->refName = $refName;
