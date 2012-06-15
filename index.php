@@ -192,7 +192,7 @@ GitPHP_GitExe::DestroyInstance();
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
 	foreach ($entries as $logline) {
-		echo "<br />\n" . $logline;
+		echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
 	}
 	unset($logline);
 	unset($entries);
