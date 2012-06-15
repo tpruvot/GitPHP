@@ -26,6 +26,9 @@ abstract class GitPHP_GitObject
 	 *
 	 * @access protected
 	 */
+	protected $projName;
+
+	/* deprecated */
 	protected $project;
 
 	/**
@@ -56,15 +59,6 @@ abstract class GitPHP_GitObject
 	protected $abbreviatedHashLoaded = false;
 
 	/**
-	 * projectReferenced
-	 *
-	 * Stores whether the project has been referenced into a pointer
-	 *
-	 * @access protected
-	 */
-	protected $projectReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -77,7 +71,10 @@ abstract class GitPHP_GitObject
 	 */
 	public function __construct($project, $hash)
 	{
+		//todo: remove this ref
 		$this->project = $project;
+
+		$this->projName = $project->GetProject();
 		$this->SetHash($hash);
 	}
 
@@ -91,10 +88,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetProject()
 	{
-		if ($this->projectReferenced)
-			$this->DereferenceProject();
-
-		return $this->project;
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->projName);
 	}
 
 	/**
@@ -140,40 +134,6 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * ReferenceProject
-	 *
-	 * Turns the project object into a reference pointer
-	 *
-	 * @access private
-	 */
-	private function ReferenceProject()
-	{
-		if ($this->projectReferenced)
-			return;
-
-		$this->project = $this->project->GetProject();
-
-		$this->projectReferenced = true;
-	}
-
-	/**
-	 * DereferenceProject
-	 *
-	 * Turns the project reference pointer back into an object
-	 *
-	 * @access private
-	 */
-	private function DereferenceProject()
-	{
-		if (!$this->projectReferenced)
-			return;
-
-		$this->project = GitPHP_ProjectList::GetInstance()->GetProject($this->project);
-
-		$this->projectReferenced = false;
-	}
-
-	/**
 	 * __sleep
 	 *
 	 * Called to prepare the object for serialization
@@ -183,10 +143,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function __sleep()
 	{
-		if (!$this->projectReferenced)
-			$this->ReferenceProject();
-
-		return array('project', 'hash', 'projectReferenced');
+		return array('project', 'hash');
 	}
 
 	/**
@@ -199,13 +156,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetCacheKey()
 	{
-		$projKey = 'project|';
-		if ($this->projectReferenced)
-			$projKey .= $this->project;
-		else
-			$projKey .= $this->project->GetProject();
-
-		return $projKey;
+		return 'project|' . $this->projName;
 	}
 
 }

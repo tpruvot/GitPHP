@@ -30,11 +30,11 @@ class GitPHP_Pack
 	/**
 	 * project
 	 *
-	 * Stores the project internally
+	 * Stores the project name
 	 *
 	 * @access protected
 	 */
-	protected $project;
+	private $project = "";
 
 	/**
 	 * hash
@@ -71,7 +71,7 @@ class GitPHP_Pack
 			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
-		$this->project = $project;
+		$this->project = $project->GetProject();
 
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
 			throw new Exception('Pack index does not exist');
@@ -79,6 +79,19 @@ class GitPHP_Pack
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
 			throw new Exception('Pack file does not exist');
 		}
+	}
+
+	/**
+	 * GetProject
+	 *
+	 * Gets the project
+	 *
+	 * @access public
+	 * @return mixed project
+	 */
+	public function GetProject()
+	{
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
 	}
 
 	/**
@@ -127,7 +140,7 @@ class GitPHP_Pack
 			return false;
 		}
 
-		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$indexFile = $this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
 
 		if (isset($this->offsetCache[$hash])) {
 			return $this->offsetCache[$hash];
@@ -336,7 +349,7 @@ class GitPHP_Pack
 			return false;
 		}
 
-		$pack = fopen($this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.pack', 'rb');
+		$pack = fopen($this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.pack', 'rb');
 		flock($pack, LOCK_SH);
 
 		$magic = fread($pack, 4);
@@ -437,7 +450,7 @@ class GitPHP_Pack
 			 */
 			$hash = fread($pack, 20);
 			$hash = bin2hex($hash);
-			$base = $this->project->GetObject($hash, $type);
+			$base = $this->GetProject()->GetObject($hash, $type);
 
 			/*
 			 * then the gzipped delta data
@@ -515,7 +528,7 @@ class GitPHP_Pack
 			return array($prefix);
 		}
 
-		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$indexFile = $this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
 
 		$matches = array();
 
