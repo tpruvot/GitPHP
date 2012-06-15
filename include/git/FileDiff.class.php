@@ -172,11 +172,11 @@ class GitPHP_FileDiff
 	/**
 	 * project
 	 *
-	 * Stores the project
+	 * Stores the project name
 	 *
 	 * @access protected
 	 */
-	protected $project;
+	protected $projName;
 
 	/**
 	 * commit
@@ -211,7 +211,7 @@ class GitPHP_FileDiff
 	 */
 	public function __construct($project, $fromHash, $toHash = '')
 	{
-		$this->project = $project;
+		$this->projName = $project->GetProject();
 
 		if ($this->ParseDiffTreeLine($fromHash))
 			return;
@@ -222,6 +222,19 @@ class GitPHP_FileDiff
 
 		$this->fromHash = $fromHash;
 		$this->toHash = $toHash;
+	}
+
+	/**
+	 * GetProject
+	 *
+	 * Gets the project
+	 *
+	 * @access public
+	 * @return mixed project
+	 */
+	public function GetProject()
+	{
+		return GitPHP_ProjectList::GetInstance()->GetProject($this->projName);
 	}
 
 	/**
@@ -376,7 +389,7 @@ class GitPHP_FileDiff
 		if (empty($this->fromHash))
 			return null;
 
-		return $this->project->GetBlob($this->fromHash);
+		return $this->GetProject()->GetBlob($this->fromHash);
 	}
 
 	/**
@@ -392,7 +405,7 @@ class GitPHP_FileDiff
 		if (empty($this->toHash))
 			return null;
 
-		return $this->project->GetBlob($this->toHash);
+		return $this->GetProject()->GetBlob($this->toHash);
 	}
 
 	/**
@@ -834,7 +847,7 @@ class GitPHP_FileDiff
 				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
 			}
 
-			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+			$cacheKey = 'project|' . $this->projName . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
 			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 			if ($diffOutput === false) {
 
@@ -911,7 +924,7 @@ class GitPHP_FileDiff
 	 */
 	public function GetCommit()
 	{
-		return $this->commit;
+		return $this->GetProject()->GetCommit($this->commitHash);
 	}
 
 	/**
