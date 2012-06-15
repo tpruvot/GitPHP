@@ -78,11 +78,12 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	 * Constructor
 	 *
 	 * @access public
+	 * @param string $projectRoot project root
 	 */
-	public function __construct()
+	public function __construct($projectRoot)
 	{
 		$this->projects = array();
-		$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		if (empty($this->projectRoot)) {
 			throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
 		}

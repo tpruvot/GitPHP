@@ -30,11 +30,12 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	 *
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param mixed $projectArray array to read
 	 * @throws Exception if parameter is not an array
 	 * @access public
 	 */
-	public function __construct($projectArray)
+	public function __construct($projectRoot, $projectArray)
 	{
 		if (!is_array($projectArray)) {
 			throw new Exception('An array of projects is required.');
@@ -42,7 +43,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectArray;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**

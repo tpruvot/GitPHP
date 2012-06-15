@@ -45,11 +45,12 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	 *
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
 	 * @access public
 	 */
-	public function __construct($projectFile)
+	public function __construct($projectRoot, $projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
 			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
@@ -57,7 +58,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectFile;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
