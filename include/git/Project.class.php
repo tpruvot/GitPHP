@@ -1351,6 +1351,12 @@ class GitPHP_Project
 		// double check the remote heads refs
 		if ($this->isAndroidRepo ) {
 
+			if (count($this->heads) == 1) {
+				// set branch as default HEAD, if alone
+				$this->head = reset($this->heads);
+				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] use '.$this->head.' as default HEAD');
+			}
+
 			$tag = null;
 			$heads = $this->ListDir($path . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
@@ -1415,7 +1421,7 @@ class GitPHP_Project
 				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] add missing remote branch '.$key.'');
 
 				$this->remotes[$key] = new GitPHP_RemoteHead($this, $default);
-			} else {
+			} elseif (!isset($this->head)) {
 				// set repo head, with default hash
 				$this->head = $this->remotes[$key]->GetHash();
 			}
