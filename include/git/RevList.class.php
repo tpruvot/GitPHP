@@ -31,13 +31,13 @@ abstract class GitPHP_RevList implements Iterator
 	protected $project = null;
 
 	/**
-	 * revList
+	 * hashList
 	 *
 	 * Stores the list of revision hashes
 	 *
 	 * @access protected
 	 */
-	protected $revList = array();
+	protected $hashList = array();
 
 	/**
 	 * limit
@@ -117,7 +117,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return count($this->revList);
+		return count($this->hashList);
 	}
 
 	/**
@@ -149,7 +149,7 @@ abstract class GitPHP_RevList implements Iterator
 		if ($this->dataLoaded) {
 			if ($limit < $this->limit) {
 				/* want less data, just trim the array */
-				$this->revList = array_slice($this->revList, 0, $limit);
+				$this->hashList = array_slice($this->hashList, 0, $limit);
 			} else if ($limit > $this->limit) {
 				/* want more data, have to reload */
 				$this->Clear();
@@ -261,7 +261,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return reset($this->revList);
+		return reset($this->hashList);
 	}
 
 	/**
@@ -275,7 +275,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return $this->project->GetCommit(current($this->revList));
+		return $this->project->GetCommit(current($this->hashList));
 	}
 
 	/**
@@ -289,7 +289,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return key($this->revList);
+		return key($this->hashList);
 	}
 
 	/**
@@ -303,7 +303,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return next($this->revList);
+		return next($this->hashList);
 	}
 
 	/**
@@ -317,7 +317,7 @@ abstract class GitPHP_RevList implements Iterator
 			$this->LoadData();
 		}
 
-		return key($this->revList) !== null;
+		return key($this->hashList) !== null;
 	}
 
 	/**
@@ -332,8 +332,8 @@ abstract class GitPHP_RevList implements Iterator
 		if (!$this->dataLoaded)
 			return;
 
-		$this->revList = array();
-		reset($this->revList);
+		$this->hashList = array();
+		reset($this->hashList);
 
 		$this->dataLoaded = false;
 	}

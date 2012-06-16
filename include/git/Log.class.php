@@ -106,9 +106,9 @@ class GitPHP_Log extends GitPHP_RevList
 		$this->dataLoaded = true;
 
 		if ($this->compat || ($this->skip > $this->skipFallback)) {
-			$this->revList = $this->RevList();
+			$this->hashList = $this->RevList();
 		} else {
-			$this->revList = $this->RawLog();
+			$this->hashList = $this->RawLog();
 		}
 	}
 
@@ -190,11 +190,11 @@ class GitPHP_Log extends GitPHP_RevList
 			$this->LoadData();
 		}
 
-		if (count($this->revList) > $min) {
-			for ($i = $min; $i < count($this->revList); ++$i) {
-				$commit = $this->project->GetCommit($this->revList[$i]);
+		if (count($this->hashList) > $min) {
+			for ($i = $min; $i < count($this->hashList); ++$i) {
+				$commit = $this->project->GetCommit($this->hashList[$i]);
 				if ((time() - $commit->GetCommitterEpoch()) > $age) {
-					$this->revList = array_slice($this->revList, 0, $i);
+					$this->hashList = array_slice($this->hashList, 0, $i);
 					break;
 				}
 			}

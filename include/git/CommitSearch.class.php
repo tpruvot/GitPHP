@@ -203,7 +203,7 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 				break;
 		}
 
-		$this->revList = $this->RevList($args);
+		$this->hashList = $this->RevList($args);
 	}
 
 }
