@@ -509,6 +509,12 @@ span.refs span.head {
 	border-color: #ccffcc #00cc33 #00cc33 #ccffcc;
 }
 
+span.refs span.remote {
+	/* remote head badge (style overrides head too) */
+	background-color: #aaddff;
+	border-color: #ccddff #0099ee #0099ee #ccddff;
+}
+
 /* Diffs
 ---------------------------------------------------------------------------- */
 
