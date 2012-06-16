@@ -240,7 +240,7 @@ span.refs a:hover {
 
 span.tag {
 	/* tag badge */
-	padding: 0px 4px;
+	padding: 0px 2px;
 	font-size: 10px;
 	font-weight: normal;
 	background-color: #ffffaa;
@@ -250,7 +250,7 @@ span.tag {
 
 span.head {
 	/* head badge */
-	padding: 0px 4px;
+	padding: 0px 2px;
 	font-size: 10px;
 	font-weight: normal;
 	background-color: #aaffaa;
