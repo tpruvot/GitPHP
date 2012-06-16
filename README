@@ -7,23 +7,22 @@ It implements all features of xiphux 0.2.6
 
 The original skin can be seen here : http://gitphp.xiphux.com/
 
-A new one (blue based on gitphp-glip) can be seen here : http://tanguy.ath.cx/gitphp/
+A new one (blue based on gitphp-glip) can be seen here : http://epsy.ath.cx/ics/
 
 
-Changes made by Tanguy Pruvot (2011) :
-======================================
+Changes made by Tanguy Pruvot (2011/2012) :
+==========================================
 
 
 New abilities :
 + Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
 + Added ability to autolist subfolders (and set maximum level, to create groups of repositories)
-+ Added ability to load project list using an android repo manifest.xml
++ Added ability to load project list using an android .repo manifest.xml and the local_manifest.xml overrides
 
 Enhancements :
-+ Latin charset support (automatic UTF-8 Conversion on output, if needed)
 + use origin git clone url as description
 + use git user.name as default owner
-+ basic remote support
++ repo remote branches support (and badges)
 + fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
   made with a new config variable "fixupjs" where we can add a jQuery script
 + Show file line changes +/- in Commit view
@@ -31,18 +30,19 @@ Enhancements :
 + Side by Side line numbers, Tab/Space display and copy paste
 + Support for shortened hashes and search by commit hash
 + Support pictures diff
++ Merge tracking (to enhance)
 
 Addons :
-+ Gitweb alternative skin, blue (based on gitphp-glip theme, many fixes made...)
++ Blueskin alternative skin, (was based on gitphp-glip theme, but many fixes made...)
 
 
 TODO :
 ======
 
-- Implement Remote Branches (in progress)
+- Complete .repo support to check android platform status (local projects changes)
+  .repo folder contains all the subprojects .git folders, i only use that in versions <= v0.2.7
 
-- Finish .repo projects to check android platform status
-  .repo folder contains all subprojects .git folders (in progress)
+- Enhance the log history to identify "merged commits" from merged branches
 
-  implements local_manifest.xml overrides
+- Another kind of skin for tablets
 
