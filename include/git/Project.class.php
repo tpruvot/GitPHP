@@ -1200,6 +1200,20 @@ class GitPHP_Project
 			}
 			if ($type == 'heads')
 				return $heads;
+
+			foreach ($this->remotes as $head => $rh) {
+				$heads[$rh->GetName()] = $rh->GetHash();
+			}
+
+		}
+
+		if ($type == 'remoteheads') {
+			// return only remote heads for badges "github/ics" => "32abdc..."
+			$heads = array();
+			foreach ($this->remotes as $head => $rh) {
+				$heads[$rh->GetName()] = $rh->GetHash();
+			}
+			return $heads;
 		}
 
 		return array_merge($heads, $tags);

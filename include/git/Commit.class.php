@@ -671,6 +671,29 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * GetRemoteHeads
+	 *
+	 * Gets remote heads that point to this commit
+	 *
+	 * @access public
+	 * @return array array of heads
+	 */
+	public function GetRemoteHeads()
+	{
+		$heads = array();
+
+		$projectRefs = $this->GetProject()->GetRefs('remoteheads');
+
+		foreach ($projectRefs as $ref => $hash) {
+			if ($hash == $this->hash) {
+				$heads[] = $ref;
+			}
+		}
+
+		return $heads;
+	}
+
+	/**
 	 * GetTags
 	 *
 	 * Gets tags that point to this commit
