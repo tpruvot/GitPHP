@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'CommitSearch.class.php');
+
 /**
  * Constants for the various search types
  */
@@ -133,40 +135,52 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$co = $this->GetProject()->GetCommit($this->params['hash']);
+
+		if (!$co) {
+			return;
+		}
+
 		$this->tpl->assign('commit', $co);
 
+		$skip = $this->params['page'] * 100;
+
 		$results = array();
-		if ($co) {
-			switch ($this->params['searchtype']) {
+		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 
-				case GITPHP_SEARCH_COMMIT:
-					$results = $this->GetProject()->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
+			$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
 
-				case GITPHP_SEARCH_AUTHOR:
-					$results = $this->GetProject()->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
-
-				case GITPHP_SEARCH_COMMITTER:
-					$results = $this->GetProject()->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
-				case GITPHP_SEARCH_FILE:
-					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
-					break;
-				default:
-					throw new GitPHP_MessageException(__('Invalid search type'));
-
+			if (count($results) < 1) {
+				throw new GitPHP_MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
 			}
+
+			if (count($results) > 100) {
+				$this->tpl->assign('hasmore', true);
+				$results = array_slice($results, 0, 100, true);
+			}
+
+		} else {
+
+			if ($this->params['searchtype'] == GITPHP_SEARCH_AUTHOR) {
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearchType::Author, $this->params['search'], $co, 101, $skip);
+			} else if ($this->params['searchtype'] == GITPHP_SEARCH_COMMITTER) {
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearchType::Committer, $this->params['search'], $co, 101, $skip);
+			} else if ($this->params['searchtype'] == GITPHP_SEARCH_COMMIT) {
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearchType::Commit, $this->params['search'], $co, 101, $skip);
+			} else {
+				throw new GitPHP_MessageException(__('Invalid search type'));
+			}
+
+			if ($results->GetCount() < 1) {
+				throw new GitPHP_MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
+			}
+
+			if ($results->GetCount() > 100) {
+				$this->tpl->assign('hasmore', true);
+				$results->SetLimit(100);
+			}
+
 		}
 
-		if (count($results) < 1) {
-			throw new GitPHP_MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
-		}
-
-		if (count($results) > 100) {
-			$this->tpl->assign('hasmore', true);
-			$results = array_slice($results, 0, 100, true);
-		}
 		$this->tpl->assign('results', $results);
 
 		$this->tpl->assign('tree', $co->GetTree());
