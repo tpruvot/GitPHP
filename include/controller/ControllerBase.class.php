@@ -39,6 +39,15 @@ abstract class GitPHP_ControllerBase
 	protected $tpl;
 
 	/**
+	 * projectList
+	 *
+	 * Project list
+	 *
+	 * @access protected
+	 */
+	protected $projectList;
+
+	/**
 	 * project
 	 *
 	 * Current project
@@ -96,6 +105,7 @@ abstract class GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+		$this->projectList = GitPHP_ProjectList::GetInstance();
 
 		require_once(GitPHP_Util::AddSlash($this->config->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
@@ -117,7 +127,7 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if (isset($_GET['p'])) {
-			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
@@ -129,7 +139,7 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if ($this->multiProject) {
-			GitPHP_ProjectList::GetInstance()->LoadProjects();
+			$this->projectList->LoadProjects();
 		}
 
 		if (isset($_GET['s']))
@@ -151,7 +161,7 @@ abstract class GitPHP_ControllerBase
 	public function GetProject()
 	{
 		if ($this->project)
-			return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+			return $this->projectList->GetProject($this->project);
 		return null;
 	}
 
@@ -190,10 +200,8 @@ abstract class GitPHP_ControllerBase
 	{
 		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
 
-		$projList = GitPHP_ProjectList::GetInstance();
-		if ($projList) {
-			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig())) . '|' . sha1(serialize($projList->GetSettings()));
-			unset($projList);
+		if ($this->projectList) {
+			$cacheKeyPrefix .= '|' . sha1(serialize($this->projectList->GetConfig())) . '|' . sha1(serialize($this->projectList->GetSettings()));
 		}
 		if ($this->project && $projectKeys) {
 			$cacheKeyPrefix .= '|' . sha1($this->project);

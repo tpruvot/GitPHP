@@ -39,9 +39,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+		$this->projectList = GitPHP_ProjectList::GetInstance();
 
 		if (isset($_GET['p'])) {
-			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}

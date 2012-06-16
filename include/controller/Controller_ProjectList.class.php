@@ -145,20 +145,19 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('order', $this->params['order']);
 		
-		$projectList = GitPHP_ProjectList::GetInstance();
-		$projectList->Sort($this->params['order']);
+		$this->projectList->Sort($this->params['order']);
 
 		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
 		    (empty($this->params['txt']) || ($this->params['txt'] !== true)) &&
 		    (!empty($this->params['search']))) {
 		    	$this->tpl->assign('search', $this->params['search']);
-			$matches = $projectList->Filter($this->params['search']);
+			$matches = $this->projectList->Filter($this->params['search']);
 			if (count($matches) > 0) {
 				$this->tpl->assign('projectlist', $matches);
 			}
 		} else {
-			if ($projectList->Count() > 0)
-				$this->tpl->assign('projectlist', $projectList);
+			if ($this->projectList->Count() > 0)
+				$this->tpl->assign('projectlist', $this->projectList);
 		}
 	}
 
