@@ -1309,7 +1309,7 @@ class GitPHP_Project
 			}
 		}
 
-		// check packed refs
+		// check packed refs (only updated on git gc !)
 		if (file_exists($path . '/packed-refs')) {
 			$packedRefs = explode("\n", file_get_contents($path . '/packed-refs'));
 
@@ -1348,14 +1348,16 @@ class GitPHP_Project
 			}
 		}
 
-		// double check...
+		// double check the remote heads refs
 		if ($this->isAndroidRepo ) {
-//
+
+			$tag = null;
 			$heads = $this->ListDir($path . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
 
 				//sample 'gingerbread' content in 'm' folder:
 				//  ref: refs/remotes/github/gingerbread
+
 				$head = trim(file_get_contents($heads[$i]));
 				if (preg_match('/^ref: (.+)$/', $head, $regs)) {
 					$heads[$i] = $path . "/". $regs[1];
@@ -1363,28 +1365,44 @@ class GitPHP_Project
 
 				$key = trim(substr($heads[$i], $pathlen), "/\\");
 
-				if (isset($this->remotes[$key])) {
+				// force double checking only on current repo branch
+				if (isset($this->remotes[$key]) && $key != 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch) {
 					continue;
 				}
 
+				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] remote='.$key);
+
 				$m = $heads[$i];
 				if (!is_file($m)) {
-					//replace remote by "m", current ?
+					//replace remote name by "m", look like the current remote
 					$m = preg_replace('#(refs/remotes/)([^\/]+)#','$1m',$m);
+					//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] replace '.$heads[$i].' by '.$m);
 				}
 
 				if (is_file($m)) {
 					$hash = trim(file_get_contents($m));
 					if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
-						$head = substr($key, strlen('refs/remotes/'));
+						$head = $key;
 						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
-						//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.$head.'='.$hash);
-					} else {
-						$head = substr($key, strlen('refs/remotes/'));
-						if (!array_key_exists($key,$this->remotes)) {
-							$this->remotes[$key] = new GitPHP_RemoteHead($this, $head);
+						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found head='.$head.'=>'.$hash);
+
+					} elseif (preg_match('#^refs/tags/#', $hash)) {
+						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found a tag '.$hash.' as remote');
+						$tagObj = $this->GetTag(preg_replace('#^refs/tags/#','',$hash));
+						if (is_object($tagObj)) {
+							$head = $key;
+							$hash = $tagObj->GetCommit()->GetHash();
+							$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
 						}
 					}
+
+					// if the remote hash is not found, add it as-is ...
+					$head = $key;
+					if (!array_key_exists($key, $this->remotes)) {
+						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head);
+						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found head='.$head);
+					}
+
 				} else {
 					GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] '.$key.' not found');
 				}
@@ -1395,10 +1413,13 @@ class GitPHP_Project
 			$key = 'refs/remotes/'.$default;
 			if (!array_key_exists($key,$this->remotes)) {
 				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] add missing remote branch '.$key.'');
+
 				$this->remotes[$key] = new GitPHP_RemoteHead($this, $default);
+			} else {
+				// set repo head, with default hash
+				$this->head = $this->remotes[$key]->GetHash();
 			}
 
-			//var_dump(array_keys($this->remotes));
 			GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
 		}
 	}
