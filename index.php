@@ -181,6 +181,8 @@ try {
 
 }
 
+GitPHP_Log::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
+
 GitPHP_ProjectList::DestroyInstance();
 GitPHP_MemoryCache::DestroyInstance();
 GitPHP_Resource::DestroyInstance();
@@ -188,7 +190,6 @@ GitPHP_Config::DestroyInstance();
 GitPHP_GitExe::DestroyInstance();
 
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
-	GitPHP_Log::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
 	foreach ($entries as $logline) {
 		echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
