@@ -937,7 +937,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$args[] = '--ignore-case';
 		$args[] = '-n';
 		$args[] = '-e';
-		$args[] = '\'' . preg_quote($pattern) . '\'';
+		$args[] = '"' . preg_quote($pattern) . '"';
 		$args[] = $this->hash;
 
 		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_GREP, $args));
