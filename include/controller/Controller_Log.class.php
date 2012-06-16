@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Log.class.php');
+
 /**
  * Log controller class
  *
@@ -101,18 +103,22 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('commit', $this->GetProject()->GetCommit($this->params['hash']));
+		$commit = $this->GetProject()->GetCommit($this->params['hash']);
+		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 
-		$revlist = $this->GetProject()->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
-		if ($revlist) {
-			if (count($revlist) > 100) {
-				$this->tpl->assign('hasmorerevs', true);
-				$revlist = array_slice($revlist, 0, 100);
-			}
-			$this->tpl->assign('revlist', $revlist);
+		$revlist = new GitPHP_Log($this->GetProject(), $commit, 101, ($this->params['page'] * 100));
+		$revlist->SetCompat($this->GetProject()->GetCompat());
+		if ($this->config->HasKey('largeskip')) {
+			$revlist->SetSkipFallback($this->config->GetValue('largeskip'));
 		}
+
+		if ($revlist->GetCount() > 100) {
+			$this->tpl->assign('hasmorerevs', true);
+			$revlist->SetLimit(100);
+		}
+		$this->tpl->assign('revlist', $revlist);
 
 		if (isset($this->params['mark'])) {
 			$this->tpl->assign('mark', $this->GetProject()->GetCommit($this->params['mark']));

@@ -287,10 +287,6 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if ($config->HasKey('uniqueabbrev')) {
 			$project->SetUniqueAbbreviation($config->GetValue('uniqueabbrev'));
 		}
-
-		if ($config->HasKey('largeskip')) {
-			$project->SetSkipFallback($config->GetValue('largeskip'));
-		}
 	}
 
 	/**

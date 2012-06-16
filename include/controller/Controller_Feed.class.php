@@ -11,6 +11,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Log.class.php');
+
 /**
  * Constant for the number of items to load into the feed
  */
@@ -138,22 +140,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->GetProject()->GetLog('HEAD', GITPHP_FEED_ITEMS);
-
-		$entries = count($log);
-
-		if ($entries > 20) {
-			/*
-			 * Don't show commits older than 48 hours,
-			 * but show a minimum of 20 entries
-			 */
-			for ($i = 20; $i < $entries; ++$i) {
-				if ((time() - $log[$i]->GetCommitterEpoch()) > 48*60*60) {
-					$log = array_slice($log, 0, $i);
-					break;
-				}
-			}
-		}
+		$log = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), GITPHP_FEED_ITEMS);
+		$log->FilterOldCommits(48*60*60, 20);
 
 		$this->tpl->assign('log', $log);
 	}

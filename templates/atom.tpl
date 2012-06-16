@@ -12,8 +12,8 @@
   <link href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=summary"/>
   <link rel="self" href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom"/>
   <id>{scripturl}?p={$project->GetProject()|rawurlencode}</id>
-  {if $log}
-  <updated>{$log.0->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
+  {if $log->GetCount()>0}
+  <updated>{$log->GetHead()->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 
 {foreach from=$log item=logitem}

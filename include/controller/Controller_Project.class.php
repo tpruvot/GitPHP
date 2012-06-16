@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Log.class.php');
+
 /**
  * Project controller class
  *
@@ -84,14 +86,17 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 
-		$revlist = $this->GetProject()->GetLog('HEAD', 17);
-		if ($revlist) {
-			if (count($revlist) > 16) {
-				$this->tpl->assign('hasmorerevs', true);
-				$revlist = array_slice($revlist, 0, 16);
-			}
-			$this->tpl->assign('revlist', $revlist);
+		$revlist = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), 17);
+		$revlist->SetCompat($this->GetProject()->GetCompat());
+		if ($this->config->HasKey('largeskip')) {
+			$revlist->SetSkipFallback($this->config->GetValue('largeskip'));
 		}
+
+		if ($revlist->GetCount() > 16) {
+			$this->tpl->assign('hasmorerevs', true);
+			$revlist->SetLimit(16);
+		}
+		$this->tpl->assign('revlist', $revlist);
 
 		$taglist = $this->GetProject()->GetTags(17);
 		if ($taglist) {
