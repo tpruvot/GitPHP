@@ -385,23 +385,23 @@ abstract class GitPHP_ControllerBase
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
-			if (GitPHP_Log::GetInstance()->GetBenchmark())
-				GitPHP_Log::GetInstance()->Log("Data load begin");
+			if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
+				GitPHP_DebugLog::GetInstance()->Log("Data load begin");
 			$this->LoadCommonData();
 			$this->LoadData();
-			if (GitPHP_Log::GetInstance()->GetBenchmark())
-				GitPHP_Log::GetInstance()->Log("Data load end");
+			if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
+				GitPHP_DebugLog::GetInstance()->Log("Data load end");
 		}
 
 		if (!$this->preserveWhitespace) {
 			//$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
-		if (GitPHP_Log::GetInstance()->GetBenchmark())
-			GitPHP_Log::GetInstance()->Log("Smarty render begin");
+		if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
+			GitPHP_DebugLog::GetInstance()->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
-		if (GitPHP_Log::GetInstance()->GetBenchmark())
-			GitPHP_Log::GetInstance()->Log("Smarty render end");
+		if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
+			GitPHP_DebugLog::GetInstance()->Log("Smarty render end");
 
 		$this->tpl->clearAllAssign();
 	}

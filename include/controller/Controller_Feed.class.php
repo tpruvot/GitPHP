@@ -106,7 +106,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		GitPHP_Log::GetInstance()->SetEnabled(false);
+		GitPHP_DebugLog::GetInstance()->SetEnabled(false);
 	}
 
 	/**

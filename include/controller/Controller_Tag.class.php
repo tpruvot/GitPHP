@@ -80,7 +80,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
 			$this->params['jstip'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			GitPHP_DebugLog::GetInstance()->SetEnabled(false);
 		}
 	}
 

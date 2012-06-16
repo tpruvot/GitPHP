@@ -133,11 +133,11 @@ class GitPHP_GitExe
 	{
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
-		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
+		GitPHP_DebugLog::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
 
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
+		GitPHP_DebugLog::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
 			"\nwith result: " . $ret);
 
 		return $ret;

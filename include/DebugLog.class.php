@@ -1,8 +1,8 @@
 <?php
 /**
- * GitPHP Log
+ * GitPHP DebugLog
  *
- * Logging class
+ * Debug Logging class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
@@ -10,11 +10,11 @@
  */
 
 /**
- * Logging class
+ * Debug logging class
  *
  * @package GitPHP
  */
-class GitPHP_Log
+class GitPHP_DebugLog
 {
 	/**
 	 * instance
@@ -84,7 +84,7 @@ class GitPHP_Log
 	{
 		if (!self::$instance) {
 			$config = GitPHP_Config::GetInstance();
-			self::$instance = new GitPHP_Log($config->GetValue('debug', false), $config->GetValue('benchmark', false));
+			self::$instance = new GitPHP_DebugLog($config->GetValue('debug', false), $config->GetValue('benchmark', false));
 		}
 
 		return self::$instance;

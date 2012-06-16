@@ -117,7 +117,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		else
 			$this->params['format'] = $this->config->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
 			
-		GitPHP_Log::GetInstance()->SetEnabled(false);
+		GitPHP_DebugLog::GetInstance()->SetEnabled(false);
 	}
 
 	/**
