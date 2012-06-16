@@ -42,7 +42,7 @@
       {assign var=resultobject value=$result->GetObject()}
       {if $resultobject instanceof GitPHP_Tree}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()}</strong></a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()|highlight:$search}</strong></a>
 	      </td>
 	      <td class="link">
 		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}tree{/t}</a>
