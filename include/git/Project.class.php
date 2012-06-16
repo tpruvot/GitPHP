@@ -2036,7 +2036,7 @@ class GitPHP_Project
 		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 
-		$args[] = '--grep="' . $pattern . '"';
+		$args[] = '--grep="' . addslashes($pattern) . '"';
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
 		$len = count($ret);
@@ -2069,7 +2069,7 @@ class GitPHP_Project
 		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 
-		$args[] = '--author="' . $pattern . '"';
+		$args[] = '--author="' . addslashes($pattern) . '"';
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
 		$len = count($ret);
@@ -2102,7 +2102,7 @@ class GitPHP_Project
 		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 
-		$args[] = '--committer="' . $pattern . '"';
+		$args[] = '--committer="' . addslashes($pattern) . '"';
 
 		$ret = $this->RevList($hash, $count, $skip, $args);
 		$len = count($ret);
