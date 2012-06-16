@@ -41,6 +41,33 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	protected $contentsRead = false;
 
 	/**
+	 * treePaths
+	 *
+	 * Stores tree hash to path mappings
+	 *
+	 * @access protected
+	 */
+	protected $treePaths = array();
+
+	/**
+	 * blobPaths
+	 *
+	 * Stores blob hash to path mappings
+	 *
+	 * @access protected
+	 */
+	protected $blobPaths = array();
+
+	/**
+	 * hashPathsRead
+	 *
+	 * Stores whether hash paths have been read
+	 *
+	 * @access protected
+	 */
+	protected $hashPathsRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -54,6 +81,28 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	public function __construct($project, $hash)
 	{
 		parent::__construct($project, $hash);
+	}
+
+	/**
+	 * SetPath
+	 *
+	 * Sets the object path (overrides base)
+	 *
+	 * @access public
+	 * @param string $path object path
+	 */
+	public function SetPath($path)
+	{
+		if ($this->path == $path)
+			return;
+
+		if ($this->hashPathsRead) {
+			$this->treePaths = array();
+			$this->blobPaths = array();
+			$this->hashPathsRead = false;
+		}
+
+		$this->path = $path;
 	}
 
 	/**
@@ -239,6 +288,109 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$data['path'] = $path;
 
 			$this->contents[] = $data;
+		}
+	}
+
+	/**
+	 * GetTreePaths
+	 *
+	 * Gets tree paths mapped to hashes
+	 *
+	 * @access public
+	 */
+	public function GetTreePaths()
+	{
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		return $this->treePaths;
+	}
+
+	/**
+	 * GetBlobPaths
+	 *
+	 * Gets blob paths mapped to hashes
+	 *
+	 * @access public
+	 */
+	public function GetBlobPaths()
+	{
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		return $this->blobPaths;
+	}
+
+	/**
+	 * PathToHash
+	 *
+	 * Given a filepath, get its hash
+	 *
+	 * @access public
+	 * @param string $path path
+	 * @return string hash
+	 */
+	public function PathToHash($path)
+	{
+		if (empty($path))
+			return '';
+
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		if (isset($this->blobPaths[$path])) {
+			return $this->blobPaths[$path];
+		}
+
+		if (isset($this->treePaths[$path])) {
+			return $this->treePaths[$path];
+		}
+
+		return '';
+	}
+
+	/**
+	 * ReadHashPaths
+	 *
+	 * Read hash to path mappings
+	 *
+	 * @access private
+	 */
+	private function ReadHashPaths()
+	{
+		$this->hashPathsRead = true;
+
+		$this->ReadHashPathsGit();
+	}
+
+	/**
+	 * ReadHashPathsGit
+	 *
+	 * Reads hash to path mappings using git exe
+	 *
+	 * @access private
+	 */
+	private function ReadHashPathsGit()
+	{
+		$args = array();
+		$args[] = '--full-name';
+		$args[] = '-r';
+		$args[] = '-t';
+		$args[] = $this->hash;
+
+		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
+
+		foreach ($lines as $line) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
+				switch ($regs[2]) {
+					case 'tree':
+						$this->treePaths[trim($regs[4])] = $regs[3];
+						break;
+					case 'blob';
+						$this->blobPaths[trim($regs[4])] = $regs[3];
+						break;
+				}
+			}
 		}
 	}
 

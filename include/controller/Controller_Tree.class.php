@@ -111,7 +111,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		if (!isset($this->params['hash'])) {
 			if (isset($this->params['file'])) {
-				$this->params['hash'] = $commit->PathToHash($this->params['file']);
+				$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
 			} else {
 				$this->params['hash'] = $commit->GetTree()->GetHash();
 			}

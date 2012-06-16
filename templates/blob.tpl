@@ -30,7 +30,7 @@ GitPHPJSModules = ['blob'];
    {include file='nav.tpl' treecommit=$commit}
    <br />
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()|escape:'url'}">{t}plain{/t}</a> | 
-   {if ($commit->GetHash() != $head->GetHash()) && ($head->PathToHash($blob->GetPath()))}
+   {if ($commit->GetHash() != $head->GetHash()) && ($tree->PathToHash($blob->GetPath()))}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;hb=HEAD&amp;f={$blob->GetPath()|escape:'url'}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}
