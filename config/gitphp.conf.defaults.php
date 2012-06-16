@@ -47,7 +47,7 @@ $gitphp_conf['exportedonly'] = false;
 /*
  * locale
  * This is the default locale/language used in the interface.
- * The locale must exist in include/resources/locale
+ * The locale must exist in the locale/ directory
  */
 $gitphp_conf['locale'] = 'en_US';
 
@@ -96,7 +96,7 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  * references in log messages.  The pattern should have a
  * group that extracts just the bug ID to pass to the 
  * bug tracker.
- * For example, '/#([0-9+)/' will recognize any number
+ * For example, '/#([0-9]+)/' will recognize any number
  * with a '#' in front of it, and groups the numeric part
  * only.  Another common example is '/bug:([0-9]+)/' to
  * extract bug numbers with 'bug:' in front of them.
@@ -145,7 +145,7 @@ $gitphp_conf['javascript'] = true;
  * load javascript libraries, which takes advantage of the
  * speed and caching of Google's servers and content
  * delivery network.
- * http://code.google.com/apis/libraries/
+ * http://developers.google.com/speed/libraries/
  * The libraries are served from Google's servers, which
  * means your users must have an internet connection,
  * so this may not be appropriate for closed intranets.
@@ -217,6 +217,10 @@ $gitphp_conf['uniqueabbrev'] = false;
  * Any other setting, or no setting, will create uncompressed tar archives
  * If you choose a compression format and your php does not support it,
  * gitphp will fall back to uncompressed tar archives
+ *
+ * Note that users with javascript get to choose their snapshot format when
+ * they request it, so this only applies to users without javascript or if
+ * you turn the javascript setting off
  */
 $gitphp_conf['compressformat'] = GITPHP_COMPRESS_ZIP;
 
@@ -415,6 +419,9 @@ $gitphp_conf['objectmemory'] = 0;
  * /usr/lib/php/smarty/Smarty.class.php, etc.
  * Leave blank to just search in the root of the php include directories
  * like /usr/share/php/Smarty.class.php, /usr/lib/php/Smarty.class.php, etc.
+ *
+ * This is only necessary if you want to use a smarty install other than
+ * the one that comes with GitPHP.
  */
 $gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
 
@@ -424,6 +431,9 @@ $gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
  * NOTE: this is the path to the base geshi.php file to include,
  * NOT the various other geshi php source files!
  * Leave blank if geshi.php is in the gitphp root
+ *
+ * This is only necessary if you want to use a geshi install other than
+ * the one that comes with GitPHP.
  */
 $gitphp_conf['geshiroot'] = 'lib/geshi/';
 
