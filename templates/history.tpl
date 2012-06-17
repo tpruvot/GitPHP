@@ -21,7 +21,7 @@
  
  <table>
    {* Display each history line *}
-   {foreach from=$blob->GetHistory() item=historyitem}
+   {foreach from=$history item=historyitem}
      {assign var=historycommit value=$historyitem->GetCommit()}
      <tr class="{cycle values="light,dark"}">
        <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetAge()|agestring}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{$historycommit->GetAge()|agestring}{/if}</em></td>

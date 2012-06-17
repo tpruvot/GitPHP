@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'FileHistory.class.php');
+
 /**
  * History controller class
  *
@@ -99,6 +101,9 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		$blob->SetCommit($co);
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
+
+		$history = new GitPHP_FileHistory($this->GetProject(), $co, $this->params['file']);
+		$this->tpl->assign('history', $history);
 	}
 
 }
