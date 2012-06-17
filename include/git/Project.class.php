@@ -1292,7 +1292,7 @@ class GitPHP_Project
 		$pathlen = strlen($path) + 1;
 
 		// read loose heads
-		$heads = $this->ListDir($path . '/refs/heads');
+		$heads = GitPHP_Util::ListDir($path . '/refs/heads');
 		for ($i = 0; $i < count($heads); $i++) {
 			$key = trim(substr($heads[$i], $pathlen), "/\\");
 			$head = substr($key, strlen('refs/heads/'));
@@ -1308,7 +1308,7 @@ class GitPHP_Project
 		}
 
 		// read loose tags
-		$tags = $this->ListDir($path . '/refs/tags');
+		$tags = GitPHP_Util::ListDir($path . '/refs/tags');
 		for ($i = 0; $i < count($tags); $i++) {
 			$key = trim(substr($tags[$i], $pathlen), "/\\");
 			$tag = substr($key, strlen('refs/tags/'));
@@ -1373,7 +1373,7 @@ class GitPHP_Project
 			}
 
 			$tag = null;
-			$heads = $this->ListDir($path . '/refs/remotes');
+			$heads = GitPHP_Util::ListDir($path . '/refs/remotes');
 			for ($i = 0; $i < count($heads); $i++) {
 
 				//sample 'gingerbread' content in 'm' folder:
@@ -1443,37 +1443,6 @@ class GitPHP_Project
 
 			GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
 		}
-	}
-
-	/**
-	 * ListDir
-	 *
-	 * Recurses into a directory and lists files inside
-	 *
-	 * @access private
-	 * @param string $dir directory
-	 * @return array array of filenames
-	 */
-	private function ListDir($dir)
-	{
-		$files = array();
-		if ($dh = opendir($dir)) {
-			while (($file = readdir($dh)) !== false) {
-				if (($file == '.') || ($file == '..')) {
-					continue;
-				}
-				$fullFile = $dir . '/' . $file;
-				if (is_dir($fullFile) || (is_link($fullFile) && is_dir("$fullFile/."))) {
-					$subFiles = $this->ListDir($fullFile);
-					if (count($subFiles) > 0) {
-						$files = array_merge($files, $subFiles);
-					}
-				} else {
-					$files[] = $fullFile;
-				}
-			}
-		}
-		return $files;
 	}
 
 /*}}}2*/
