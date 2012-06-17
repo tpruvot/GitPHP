@@ -11,8 +11,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Log.class.php');
-
 /**
  * Constant for the number of items to load into the feed
  */

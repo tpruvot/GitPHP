@@ -10,9 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
-
 define('GITPHP_SORT_PROJECT', 'project');
 define('GITPHP_SORT_DESCRIPTION', 'descr');
 define('GITPHP_SORT_OWNER', 'owner');

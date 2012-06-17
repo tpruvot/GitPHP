@@ -10,12 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListDirectory.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListFile.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListArray.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListArrayLegacy.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListScmManager.class.php');
-
 /**
  * ProjectList class
  *

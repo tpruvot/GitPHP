@@ -10,9 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'CommitSearch.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'FileSearch.class.php');
-
 /**
  * Constants for the various search types
  */

@@ -10,9 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Pagination.interface.php');
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-
 /**
  * RevList class
  *

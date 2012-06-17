@@ -10,9 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'RevList.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
-
 /**
  * Log class
  *

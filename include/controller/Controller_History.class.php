@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'FileHistory.class.php');
-
 /**
  * History controller class
  *

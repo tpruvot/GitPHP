@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Log.class.php');
-
 /**
  * Log controller class
  *

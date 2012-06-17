@@ -10,15 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'HeadList.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'TagList.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitObjectLoader.class.php');
-
 define('GITPHP_ABBREV_HASH_MIN', 7);
 
 /**

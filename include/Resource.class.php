@@ -13,22 +13,30 @@ require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
 /**
- * Constant of the locale cookie in the user's browser
- */
-define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
-
-/**
- * Locale cookie lifetime
- */
-define('GITPHP_LOCALE_COOKIE_LIFETIME', 60*60*24*365);		// 1 year
-
-/**
  * Resource factory class
  *
  * @package GitPHP
  */
 class GitPHP_Resource
 {
+
+	/**
+	 * LocaleCookie
+	 *
+	 * Constant of the locale cookie in the user's browser
+	 *
+	 * @const
+	 */
+	const LocaleCookie = 'GitPHPLocale';
+
+	/**
+	 * LocaleCookieLifetime
+	 *
+	 * Locale cookie lifetime
+	 *
+	 * @const
+	 */
+	const LocaleCookieLifetime = 31536000;	// 1 year
 	
 	/**
 	 * instance

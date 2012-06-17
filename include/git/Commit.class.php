@@ -10,11 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Tree.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'TreeDiff.class.php');
-
 /**
  * Commit class
  *

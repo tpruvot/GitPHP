@@ -10,8 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Ref.class.php');
-
 /**
  * Head class
  *

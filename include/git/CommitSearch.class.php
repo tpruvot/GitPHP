@@ -10,8 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'RevList.class.php');
-
 /**
  * CommitSearch class
  *

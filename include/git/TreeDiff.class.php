@@ -10,8 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'FileDiff.class.php');
-
 /**
  * TreeDiff class
  *

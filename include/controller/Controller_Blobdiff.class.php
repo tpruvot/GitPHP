@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_CONTROLLERDIR . 'Controller_DiffBase.class.php');
-
 /**
  * Blobdiff controller class
  *

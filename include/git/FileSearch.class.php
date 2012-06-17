@@ -10,10 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Pagination.interface.php');
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'FileSearchResult.class.php');
-
 /**
  * FileSearch class
  *
