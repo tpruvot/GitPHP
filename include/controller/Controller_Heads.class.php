@@ -85,9 +85,9 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$headlist = $this->GetProject()->GetHeads();
+		$headlist = $this->GetProject()->GetHeadList()->GetOrderedHeads('-committerdate');
 		if (isset($headlist) && (count($headlist) > 0)) {
-			$this->tpl->assign("headlist",$headlist);
+			$this->tpl->assign("headlist", $headlist);
 		}
 	}
 

@@ -107,7 +107,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('taglist', $taglist);
 		}
 
-		$headlist = $this->GetProject()->GetHeads(17);
+		$headlist = $this->GetProject()->GetHeadList()->GetOrderedHeads('-committerdate', 17);
 		if ($headlist) {
 			if (count($headlist) > 17) {
 				$this->tpl->assign('hasmoreheads', true);

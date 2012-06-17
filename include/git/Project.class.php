@@ -15,6 +15,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'HeadList.class.php');
 
 define('GITPHP_ABBREV_HASH_MIN', 7);
 
@@ -148,6 +149,15 @@ class GitPHP_Project
 /* ref internal variables {{{2*/
 
 	/**
+	 * headList
+	 *
+	 * Stores the head list for the project
+	 *
+	 * @access protected
+	 */
+	protected $headList;
+
+	/**
 	 * tags
 	 *
 	 * Stores the tags for the project
@@ -155,15 +165,6 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $tags = array();
-
-	/**
-	 * heads
-	 *
-	 * Stores the heads for the project
-	 *
-	 * @access protected
-	 */
-	protected $heads = array();
 
 	/**
 	 * readRefs
@@ -778,9 +779,8 @@ class GitPHP_Project
 
 			$head = substr($regs[1], strlen('refs/heads/'));
 
-			if (isset($this->heads[$head])) {
-				$this->head = $this->heads[$head];
-			}
+			if ($this->GetHeadList()->Exists($head))
+				$this->head = $this->GetHeadList()->GetHead($head)->GetHash();
 		}
 	}
 
@@ -872,12 +872,8 @@ class GitPHP_Project
 	 */
 	private function ReadEpochRaw()
 	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
 		$epoch = 0;
-		foreach ($this->heads as $head => $hash) {
-			$headObj = $this->GetHead($head);
+		foreach ($this->GetHeadList() as $headObj) {
 			$commit = $headObj->GetCommit();
 			if ($commit) {
 				if ($commit->GetCommitterEpoch() > $epoch) {
@@ -918,6 +914,9 @@ class GitPHP_Project
 	public function SetCompat($compat)
 	{
 		$this->compat = $compat;
+
+		if ($this->headList)
+			$this->headList->SetCompat($compat);
 	}
 
 /*}}}2*/
@@ -968,9 +967,9 @@ class GitPHP_Project
 		}
 
 		if (substr_compare($hash, 'refs/heads/', 0, 11) === 0) {
-			$head = $this->GetHead(substr($hash, 11));
-			if ($head != null)
-				return $head->GetCommit();
+			$head = substr($hash, 11);
+			if ($this->GetHeadList()->Exists($head))
+				return $this->GetHeadList()->GetHead($head)->GetCommit();
 			return null;
 		} else if (substr_compare($hash, 'refs/tags/', 0, 10) === 0) {
 			$tag = $this->GetTag(substr($hash, 10));
@@ -986,9 +985,8 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
-		if (isset($this->heads[$hash])) {
-			$headObj = $this->GetHead($hash);
-			return $headObj->GetCommit();
+		if ($this->GetHeadList()->Exists($hash)) {
+			return $this->GetHeadList()->GetHead($hash)->GetCommit();
 		}
 
 		if (isset($this->tags[$hash])) {
@@ -1030,16 +1028,7 @@ class GitPHP_Project
 				return $tags;
 		}
 
-		$heads = array();
-		if ($type !== 'tags') {
-			foreach ($this->heads as $head => $hash) {
-				$heads['refs/heads/' . $head] = $this->GetHead($head);
-			}
-			if ($type == 'heads')
-				return $heads;
-		}
-
-		return array_merge($heads, $tags);
+		return $tags;
 	}
 
 	/**
@@ -1070,7 +1059,6 @@ class GitPHP_Project
 	private function ReadRefListGit()
 	{
 		$args = array();
-		$args[] = '--heads';
 		$args[] = '--tags';
 		$args[] = '--dereference';
 		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_SHOW_REF, $args);
@@ -1078,22 +1066,17 @@ class GitPHP_Project
 		$lines = explode("\n", $ret);
 
 		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads)\/([^^]+)(\^{})?$/', $line, $regs)) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/([^^]+)(\^{})?$/', $line, $regs)) {
 				try {
-					$key = 'refs/' . $regs[2] . '/' . $regs[3];
-					if ($regs[2] == 'tags') {
-						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
-							if (isset($this->tags[$regs[3]])) {
-								$tagObj = $this->GetTag($regs[3]);
-								$tagObj->SetCommitHash($regs[1]);
-								unset($tagObj);
-							}
-								
-						} else if (!isset($this->tags[$regs[3]])) {
-							$this->tags[$regs[3]] = $regs[1];
+					if ((!empty($regs[3])) && ($regs[3] == '^{}')) {
+						if (isset($this->tags[$regs[2]])) {
+							$tagObj = $this->GetTag($regs[2]);
+							$tagObj->SetCommitHash($regs[1]);
+							unset($tagObj);
 						}
-					} else if ($regs[2] == 'heads') {
-						$this->heads[$regs[3]] = $regs[1];
+							
+					} else if (!isset($this->tags[$regs[2]])) {
+						$this->tags[$regs[2]] = $regs[1];
 					}
 				} catch (Exception $e) {
 				}
@@ -1111,22 +1094,6 @@ class GitPHP_Project
 	private function ReadRefListRaw()
 	{
 		$pathlen = strlen($this->GetPath()) + 1;
-
-		// read loose heads
-		$heads = GitPHP_Util::ListDir($this->GetPath() . '/refs/heads');
-		for ($i = 0; $i < count($heads); $i++) {
-			$key = trim(substr($heads[$i], $pathlen), "/\\");
-			$head = substr($key, strlen('refs/heads/'));
-
-			if (isset($this->heads[$head])) {
-				continue;
-			}
-
-			$hash = trim(file_get_contents($heads[$i]));
-			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-				$this->heads[$head] = $hash;
-			}
-		}
 
 		// read loose tags
 		$tags = GitPHP_Util::ListDir($this->GetPath() . '/refs/tags');
@@ -1163,18 +1130,11 @@ class GitPHP_Project
 
 				$lastTag = null;
 
-				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads)\/(.+)$/', $ref, $regs)) {
+				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/tags\/(.+)$/', $ref, $regs)) {
 					// standard tag/head
-					$key = 'refs/' . $regs[2] . '/' . $regs[3];
-					if ($regs[2] == 'tags') {
-						if (!isset($this->tags[$regs[3]])) {
-							$this->tags[$regs[3]] = $regs[1];
-							$lastTag = $regs[3];
-						}
-					} else if ($regs[2] == 'heads') {
-						if (!isset($this->heads[$regs[3]])) {
-							$this->heads[$regs[3]] = $regs[1];
-						}
+					if (!isset($this->tags[$regs[2]])) {
+						$this->tags[$regs[2]] = $regs[1];
+						$lastTag = $regs[2];
 					}
 				}
 			}
@@ -1310,82 +1270,21 @@ class GitPHP_Project
 /* head loading methods {{{2*/
 
 	/**
-	 * GetHeads
+	 * GetHeadList
 	 *
-	 * Gets list of heads for this project by age descending
+	 * Gets the head list
 	 *
 	 * @access public
-	 * @param integer $count number of tags to load
-	 * @return array array of heads
+	 * @return mixed head list
 	 */
-	public function GetHeads($count = 0)
+	public function GetHeadList()
 	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if ($this->GetCompat()) {
-			return $this->GetHeadsGit($count);
-		} else {
-			return $this->GetHeadsRaw($count);
-		}
-	}
-
-	/**
-	 * GetHeadsGit
-	 *
-	 * Gets the list of sorted heads using the git executable
-	 *
-	 * @access private
-	 * @param integer $count number of heads to load
-	 * @return array array of heads
-	 */
-	private function GetHeadsGit($count = 0)
-	{
-		$args = array();
-		$args[] = '--sort=-committerdate';
-		$args[] = '--format="%(refname)"';
-		if ($count > 0) {
-			$args[] = '--count=' . $count;
-		}
-		$args[] = '--';
-		$args[] = 'refs/heads';
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args);
-
-		$lines = explode("\n", $ret);
-
-		$heads = array();
-
-		foreach ($lines as $ref) {
-			$head = substr($ref, strlen('refs/heads/'));
-			if (isset($this->heads[$head])) {
-				$heads[] = $this->GetHead($head);
-			}
+		if (!$this->headList) {
+			$this->headList = new GitPHP_HeadList($this);
+			$this->headList->SetCompat($this->GetCompat());
 		}
 
-		return $heads;
-	}
-
-	/**
-	 * GetHeadsRaw
-	 *
-	 * Gets the list of sorted heads using raw git objects
-	 *
-	 * @access private
-	 * @param integer $count number of tags to load
-	 * @return array array of heads
-	 */
-	private function GetHeadsRaw($count = 0)
-	{
-		$heads = array();
-		foreach ($this->heads as $head => $hash) {
-			$heads[] = $this->GetHead($head);
-		}
-		usort($heads, array('GitPHP_Head', 'CompareAge'));
-
-		if (($count > 0) && (count($heads) > $count)) {
-			$heads = array_slice($heads, 0, $count);
-		}
-		return $heads;
+		return $this->headList;
 	}
 
 	/**
@@ -1397,7 +1296,7 @@ class GitPHP_Project
 	 * @param string $head head to find
 	 * @return mixed head object
 	 */
-	public function GetHead($head)
+	public function GetHead($head, $hash = '')
 	{
 		if (empty($head))
 			return null;
@@ -1407,13 +1306,6 @@ class GitPHP_Project
 		$headObj = $memoryCache->Get($key);
 
 		if (!$headObj) {
-			if (!$this->readRefs)
-				$this->ReadRefList();
-		
-			$hash = '';
-			if (isset($this->heads[$head]))
-				$hash = $this->heads[$head];
-
 			$headObj = new GitPHP_Head($this, $head, $hash);
 
 			$memoryCache->Set($key, $headObj);
