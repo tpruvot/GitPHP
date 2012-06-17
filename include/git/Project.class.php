@@ -1113,7 +1113,7 @@ class GitPHP_Project
 		$pathlen = strlen($this->GetPath()) + 1;
 
 		// read loose heads
-		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
+		$heads = GitPHP_Util::ListDir($this->GetPath() . '/refs/heads');
 		for ($i = 0; $i < count($heads); $i++) {
 			$key = trim(substr($heads[$i], $pathlen), "/\\");
 			$head = substr($key, strlen('refs/heads/'));
@@ -1129,7 +1129,7 @@ class GitPHP_Project
 		}
 
 		// read loose tags
-		$tags = $this->ListDir($this->GetPath() . '/refs/tags');
+		$tags = GitPHP_Util::ListDir($this->GetPath() . '/refs/tags');
 		for ($i = 0; $i < count($tags); $i++) {
 			$key = trim(substr($tags[$i], $pathlen), "/\\");
 			$tag = substr($key, strlen('refs/tags/'));
@@ -1179,37 +1179,6 @@ class GitPHP_Project
 				}
 			}
 		}
-	}
-
-	/**
-	 * ListDir
-	 *
-	 * Recurses into a directory and lists files inside
-	 *
-	 * @access private
-	 * @param string $dir directory
-	 * @return array array of filenames
-	 */
-	private function ListDir($dir)
-	{
-		$files = array();
-		if ($dh = opendir($dir)) {
-			while (($file = readdir($dh)) !== false) {
-				if (($file == '.') || ($file == '..')) {
-					continue;
-				}
-				$fullFile = $dir . '/' . $file;
-				if (is_dir($fullFile)) {
-					$subFiles = $this->ListDir($fullFile);
-					if (count($subFiles) > 0) {
-						$files = array_merge($files, $subFiles);
-					}
-				} else {
-					$files[] = $fullFile;
-				}
-			}
-		}
-		return $files;
 	}
 
 /*}}}2*/

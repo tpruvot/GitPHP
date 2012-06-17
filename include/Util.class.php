@@ -148,4 +148,36 @@ class GitPHP_Util
 		return null;
 	}
 
+	/**
+	 * ListDir
+	 *
+	 * Recurses into a directory and lists files inside
+	 *
+	 * @access public
+	 * @static
+	 * @param string $dir directory
+	 * @return array array of filenames
+	 */
+	public static function ListDir($dir)
+	{
+		$files = array();
+		if ($dh = opendir($dir)) {
+			while (($file = readdir($dh)) !== false) {
+				if (($file == '.') || ($file == '..')) {
+					continue;
+				}
+				$fullFile = $dir . '/' . $file;
+				if (is_dir($fullFile)) {
+					$subFiles = GitPHP_Util::ListDir($fullFile);
+					if (count($subFiles) > 0) {
+						$files = array_merge($files, $subFiles);
+					}
+				} else {
+					$files[] = $fullFile;
+				}
+			}
+		}
+		return $files;
+	}
+
 }
