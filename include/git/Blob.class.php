@@ -50,24 +50,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	protected $size = null;
 
 	/**
-	 * blame
-	 *
-	 * Stores blame info
-	 *
-	 * @access protected
-	 */
-	protected $blame = array();
-
-	/**
-	 * blameRead
-	 *
-	 * Stores whether blame was read
-	 *
-	 * @access protected
-	 */
-	protected $blameRead = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -368,56 +350,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		}
 
 		return '';
-	}
-
-	/**
-	 * GetBlame
-	 *
-	 * Gets blame info
-	 *
-	 * @access public
-	 * @return array blame array (line to commit mapping)
-	 */
-	public function GetBlame()
-	{
-		if (!$this->blameRead)
-			$this->ReadBlame();
-
-		return $this->blame;
-	}
-
-	/**
-	 * ReadBlame
-	 *
-	 * Read blame info
-	 *
-	 * @access private
-	 */
-	private function ReadBlame()
-	{
-		$this->blameRead = true;
-
-		$args = array();
-		$args[] = '-s';
-		$args[] = '-l';
-		if ($this->commitHash)
-			$args[] = $this->commitHash;
-		else
-			$args[] = 'HEAD';
-		$args[] = '--';
-		$args[] = $this->GetPath();
-
-		$blamelines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_BLAME, $args));
-
-		$lastcommit = '';
-		foreach ($blamelines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
-				if ($regs[1] != $lastcommit) {
-					$this->blame[(int)($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
-					$lastcommit = $regs[1];
-				}
-			}
-		}
 	}
 
 	/**

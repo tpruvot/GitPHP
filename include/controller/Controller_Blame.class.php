@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'FileBlame.class.php');
+
 /**
  * Blame controller class
  *
@@ -114,8 +116,9 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		$blame = $blob->GetBlame();
-		$this->tpl->assign('blame', $blob->GetBlame());
+		$blame = new GitPHP_FileBlame($this->GetProject(), $commit, $this->params['file']);
+
+		$this->tpl->assign('blame', $blame->GetBlame());
 
 		if (isset($this->params['js']) && $this->params['js']) {
 			return;
