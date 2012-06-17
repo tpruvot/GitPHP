@@ -182,7 +182,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		if ($this->config->GetValue('geshi', true)) {
-			include_once(GitPHP_Util::AddSlash($this->config->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
+			include_once(GITPHP_GESHIDIR . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {

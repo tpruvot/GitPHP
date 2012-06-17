@@ -385,25 +385,6 @@ $gitphp_conf['objectmemory'] = 0;
 
 
 /*******************************************************
- * Paths to php libraries
- */
-
-/*
- * geshiroot
- * Directory where geshi is installed, only applies if geshi is enabled
- * NOTE: this is the path to the base geshi.php file to include,
- * NOT the various other geshi php source files!
- * Leave blank if geshi.php is in the gitphp root
- *
- * This is only necessary if you want to use a geshi install other than
- * the one that comes with GitPHP.
- */
-$gitphp_conf['geshiroot'] = 'lib/geshi/';
-
-
-
-
-/*******************************************************
  * Debugging options
  */
 

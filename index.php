@@ -32,6 +32,7 @@ define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 define('GITPHP_CACHEDIR', GITPHP_BASEDIR . 'cache/');
 define('GITPHP_LIBDIR', GITPHP_BASEDIR . 'lib/');
 define('GITPHP_SMARTYDIR', GITPHP_LIBDIR . 'smarty/libs/');
+define('GITPHP_GESHIDIR', GITPHP_LIBDIR . 'geshi/');
 
 include(GITPHP_INCLUDEDIR . 'version.php');
 
