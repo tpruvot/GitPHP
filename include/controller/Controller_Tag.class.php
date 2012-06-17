@@ -96,7 +96,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
-		$tag = $this->GetProject()->GetTag($this->params['hash']);
+		$tag = $this->GetProject()->GetTagList()->GetTag($this->params['hash']);
 
 		$this->tpl->assign("tag", $tag);
 	}

@@ -655,7 +655,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$tags = array();
 
-		$projectRefs = $this->GetProject()->GetRefs('tags');
+		$projectRefs = $this->GetProject()->GetTagList()->GetTags();
 
 		foreach ($projectRefs as $ref) {
 			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
@@ -684,7 +684,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (empty($this->containingTag))
 			return null;
 
-		return $this->GetProject()->GetTag($this->containingTag);
+		return $this->GetProject()->GetTagList()->GetTag($this->containingTag);
 	}
 
 	/**

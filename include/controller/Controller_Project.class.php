@@ -98,7 +98,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 		}
 		$this->tpl->assign('revlist', $revlist);
 
-		$taglist = $this->GetProject()->GetTags(17);
+		$taglist = $this->GetProject()->GetTagList()->GetOrderedTags('-creatordate', 17);
 		if ($taglist) {
 			if (count($taglist) > 16) {
 				$this->tpl->assign('hasmoretags', true);
