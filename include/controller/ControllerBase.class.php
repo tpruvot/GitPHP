@@ -107,7 +107,7 @@ abstract class GitPHP_ControllerBase
 		$this->config = GitPHP_Config::GetInstance();
 		$this->projectList = GitPHP_ProjectList::GetInstance();
 
-		require_once(GitPHP_Util::AddSlash($this->config->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
+		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
 		$this->tpl->merge_compiled_includes = true;

@@ -29,8 +29,9 @@ define('GITPHP_BASEDIR', dirname(__FILE__) . '/');
 define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
 define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
-
 define('GITPHP_CACHEDIR', GITPHP_BASEDIR . 'cache/');
+define('GITPHP_LIBDIR', GITPHP_BASEDIR . 'lib/');
+define('GITPHP_SMARTYDIR', GITPHP_LIBDIR . 'smarty/libs/');
 
 include(GITPHP_INCLUDEDIR . 'version.php');
 
