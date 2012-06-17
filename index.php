@@ -45,7 +45,7 @@ require_once(GITPHP_INCLUDEDIR . 'Resource.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'DebugLog.class.php');
 
-require_once(GITPHP_GITOBJECTDIR . 'ProjectList.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectList.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
 

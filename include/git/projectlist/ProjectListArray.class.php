@@ -10,7 +10,7 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'projectlist/ProjectListBase.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 
 /**
