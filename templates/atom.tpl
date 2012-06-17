@@ -13,7 +13,7 @@
   <link rel="self" href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom"/>
   <id>{scripturl}?p={$project->GetProject()|rawurlencode}</id>
   {if $log}
-  <updated>{$log.0->GetCommitterEpoch()|date_format:"%FT%T+00:00"}</updated>
+  <updated>{$log.0->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 
 {foreach from=$log item=logitem}
@@ -23,8 +23,8 @@
     <author>
       <name>{$logitem->GetAuthorName()|escape:'html'}</name>
     </author>
-    <published>{$logitem->GetCommitterEpoch()|date_format:"%FT%T+00:00"}</published>
-    <updated>{$logitem->GetCommitterEpoch()|date_format:"%FT%T+00:00"}</updated>
+    <published>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</published>
+    <updated>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
     <link rel="alternate" href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$logitem->GetHash()}"/>
     <summary>{$logitem->GetTitle()|escape:'html'}</summary>
     <content type="xhtml">
