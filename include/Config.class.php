@@ -9,6 +9,11 @@
  * @package GitPHP
  */
 
+define('GITPHP_COMPRESS_TAR', 'tar');
+define('GITPHP_COMPRESS_BZ2', 'tbz2');
+define('GITPHP_COMPRESS_GZ', 'tgz');
+define('GITPHP_COMPRESS_ZIP', 'zip');
+
 /**
  * Config class
  *

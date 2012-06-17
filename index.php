@@ -35,7 +35,7 @@ define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 define('GITPHP_CACHE', GITPHP_BASEDIR . 'cache/');
 
-include_once(GITPHP_INCLUDEDIR . 'version.php');
+include(GITPHP_INCLUDEDIR . 'version.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Util.class.php');
 
@@ -53,9 +53,6 @@ require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 require_once(GITPHP_CACHEDIR . 'Cache.class.php');
 require_once(GITPHP_CACHEDIR . 'MemoryCache.class.php');
-
-// Need this include for the compression constants used in the config file
-require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
 
 // Test these executables early
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');

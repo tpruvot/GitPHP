@@ -13,11 +13,6 @@
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 
-define('GITPHP_COMPRESS_TAR', 'tar');
-define('GITPHP_COMPRESS_BZ2', 'tbz2');
-define('GITPHP_COMPRESS_GZ', 'tgz');
-define('GITPHP_COMPRESS_ZIP', 'zip');
-
 /**
  * Archive class
  *

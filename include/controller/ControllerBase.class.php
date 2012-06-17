@@ -10,6 +10,8 @@
  * @subpackage Controller
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
+
 /**
  * ControllerBase class
  *
