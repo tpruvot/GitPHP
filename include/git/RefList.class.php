@@ -174,14 +174,14 @@ abstract class GitPHP_RefList implements Iterator
 		/* loose files */
 		$refFiles = GitPHP_Util::ListDir($fullPath);
 		for ($i = 0; $i < count($refFiles); ++$i) {
-			$head = substr($refFiles[$i], $fullPathLen);
+			$ref = substr($refFiles[$i], $fullPathLen);
 			
-			if (empty($head) || isset($refs[$head]))
+			if (empty($ref) || isset($refs[$ref]))
 				continue;
 
 			$hash = trim(file_get_contents($refFiles[$i]));
 			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-				$refs[$head] = $hash;
+				$refs[$ref] = $hash;
 			}
 		}
 
