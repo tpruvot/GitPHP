@@ -28,12 +28,9 @@ define('GITPHP_START_MEM', memory_get_usage());
 define('GITPHP_BASEDIR', dirname(__FILE__) . '/');
 define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
 define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
-define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
-define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
-define('GITPHP_CACHEDIR', GITPHP_INCLUDEDIR . 'cache/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
-define('GITPHP_CACHE', GITPHP_BASEDIR . 'cache/');
+define('GITPHP_CACHEDIR', GITPHP_BASEDIR . 'cache/');
 
 include(GITPHP_INCLUDEDIR . 'version.php');
 

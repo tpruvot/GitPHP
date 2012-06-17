@@ -185,10 +185,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		$cache = $this->config->GetValue('cache', false);
 		$cachehandle = false;
 		$cachefile = '';
-		if ($cache && is_dir(GITPHP_CACHE)) {
+		if ($cache && is_dir(GITPHP_CACHEDIR)) {
 			$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
 			$cachefile = sha1($key) . '-' . $this->archive->GetFilename();
-			$cachedfilepath = GITPHP_CACHE . $cachefile;
+			$cachedfilepath = GITPHP_CACHEDIR . $cachefile;
 
 			if (file_exists($cachedfilepath)) {
 				// read cached file
@@ -217,7 +217,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 					$pid = rand();
 
 				$tmpcachefile = 'tmp-' . $pid . '-' . $cachefile;
-				$cachehandle = fopen(GITPHP_CACHE . $tmpcachefile, 'wb');
+				$cachehandle = fopen(GITPHP_CACHEDIR . $tmpcachefile, 'wb');
 			}
 
 			while (($data = $this->archive->Read()) !== false) {
@@ -235,7 +235,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			if ($cachehandle) {
 				fclose($cachehandle);
 				sleep(1);
-				rename(GITPHP_CACHE . $tmpcachefile, GITPHP_CACHE . $cachefile);
+				rename(GITPHP_CACHEDIR . $tmpcachefile, GITPHP_CACHEDIR . $cachefile);
 			}
 		}
 	}
