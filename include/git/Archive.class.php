@@ -391,6 +391,9 @@ class GitPHP_Archive
 		switch ($this->format) {
 			case GITPHP_COMPRESS_ZIP:
 				$args[] = '--format=zip';
+				$compress = GitPHP_Config::GetInstance()->GetValue('compresslevel');
+				if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
+					$args[] = '-' . $compress;
 				break;
 			case GITPHP_COMPRESS_TAR:
 			case GITPHP_COMPRESS_BZ2:
