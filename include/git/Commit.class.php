@@ -555,7 +555,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		} else {
 			
-			$data = $this->GetProject()->GetObject($this->hash);
+			$data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
 			if (empty($data))
 				return;
 

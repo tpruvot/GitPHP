@@ -452,7 +452,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	private function ReadDataRaw()
 	{
-		$data = $this->GetProject()->GetObject($this->GetHash(), $type);
+		$data = $this->GetProject()->GetObjectLoader()->GetObject($this->GetHash(), $type);
 		
 		if ($type == GitPHP_Pack::OBJ_COMMIT) {
 			/* light tag */
@@ -506,7 +506,7 @@ class GitPHP_Tag extends GitPHP_Ref
 				}
 				break;
 			case 'tag':
-				$objectData = $this->GetProject()->GetObject($objectHash);
+				$objectData = $this->GetProject()->GetObjectLoader()->GetObject($objectHash);
 				$lines = explode("\n", $objectData);
 				foreach ($lines as $i => $line) {
 					if (preg_match('/^tag (.+)$/', $line, $regs)) {

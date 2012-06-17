@@ -252,7 +252,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 */
 	private function ReadContentsRaw()
 	{
-		$treeData = $this->GetProject()->GetObject($this->hash);
+		$treeData = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
 
 		$start = 0;
 		$len = strlen($treeData);

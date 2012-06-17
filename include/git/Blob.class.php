@@ -103,7 +103,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 			$this->data = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 		} else {
-			$this->data = $this->GetProject()->GetObject($this->hash);
+			$this->data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
 		}
 
 		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
