@@ -17,7 +17,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-interface GitPHP_Pagination
+interface GitPHP_Pagination_Interface
 {
 	public function GetLimit();
 	public function SetLimit($limit);

@@ -20,7 +20,7 @@ require_once(GITPHP_GITOBJECTDIR . 'FileSearchResult.class.php');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileSearch implements Iterator, GitPHP_Pagination
+class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
 	 * project

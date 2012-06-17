@@ -13,44 +13,6 @@
 require_once(GITPHP_GITOBJECTDIR . 'RevList.class.php');
 
 /**
- * CommitSearchType class
- *
- * Enumerates commit search types
- *
- * @package GitPHP
- * @subpackage Git
- */
-class GitPHP_CommitSearchType
-{
-	/**
-	 * Commit
-	 *
-	 * Commit search type
-	 *
-	 * @const
-	 */
-	const Commit = 1;
-
-	/**
-	 * Author
-	 *
-	 * Author search type
-	 *
-	 * @const
-	 */
-	const Author = 2;
-
-	/**
-	 * Committer
-	 *
-	 * Committer search type
-	 *
-	 * @const
-	 */
-	const Committer = 3;
-}
-
-/**
  * CommitSearch class
  *
  * @package GitPHP
@@ -58,6 +20,33 @@ class GitPHP_CommitSearchType
  */
 class GitPHP_CommitSearch extends GitPHP_RevList
 {
+	/**
+	 * CommitType
+	 *
+	 * Commit search type
+	 *
+	 * @const
+	 */
+	const CommitType = 1;
+
+	/**
+	 * AuthorType
+	 *
+	 * Author search type
+	 *
+	 * @const
+	 */
+	const AuthorType = 2;
+
+	/**
+	 * CommitterType
+	 *
+	 * Committer search type
+	 *
+	 * @const
+	 */
+	const CommitterType = 3;
+
 	/**
 	 * type
 	 *
@@ -192,13 +181,13 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 			$args[] = '--regexp-ignore-case';
 
 		switch ($this->type) {
-			case GitPHP_CommitSearchType::Commit:
+			case GitPHP_CommitSearch::CommitType:
 				$args[] = '--grep="' . addslashes($this->search) . '"';
 				break;
-			case GitPHP_CommitSearchType::Author:
+			case GitPHP_CommitSearch::AuthorType:
 				$args[] = '--author="' . addslashes($this->search) . '"';
 				break;
-			case GitPHP_CommitSearchType::Committer:
+			case GitPHP_CommitSearch::CommitterType:
 				$args[] = '--committer="' . addslashes($this->search) . '"';
 				break;
 		}
