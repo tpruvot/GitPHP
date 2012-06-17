@@ -10,6 +10,7 @@
  * @subpackage Git
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Pagination.interface.php');
 require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'FileSearchResult.class.php');
 
@@ -19,7 +20,7 @@ require_once(GITPHP_GITOBJECTDIR . 'FileSearchResult.class.php');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileSearch implements Iterator
+class GitPHP_FileSearch implements Iterator, GitPHP_Pagination
 {
 	/**
 	 * project

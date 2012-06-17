@@ -10,6 +10,7 @@
  * @subpackage Git
  */
 
+require_once(GITPHP_GITOBJECTDIR . 'Pagination.interface.php');
 require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 
 /**
@@ -19,7 +20,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
  * @subpackage Git
  * @abstract
  */
-abstract class GitPHP_RevList implements Iterator
+abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination
 {
 	/**
 	 * project
