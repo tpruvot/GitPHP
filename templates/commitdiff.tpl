@@ -52,7 +52,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
      {elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
      <span class="changeId">{$line|buglink:$bugpattern:$bugurl}</span>
      {else}
-     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}
+     {$line|htmlspecialchars|commithash|buglink:$bugpattern:$bugurl}
      {/if}
      <br />
    {/foreach}

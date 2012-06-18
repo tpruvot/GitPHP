@@ -65,7 +65,7 @@
      {if strncasecmp(trim($line),'-----BEGIN PGP',14) == 0}
      <span class="pgpSig">
      {/if}
-     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
+     {$line|htmlspecialchars|commithash|buglink:$bugpattern:$bugurl}<br />
      {if strncasecmp(trim($line),'-----END PGP',12) == 0}
      </span>
      {/if}
