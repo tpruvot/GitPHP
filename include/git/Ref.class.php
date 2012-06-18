@@ -95,10 +95,9 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 		$args[] = $this->GetRefPath();
 		$hash = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_SHOW_REF, $args));
 
-		if (!empty($hash))
+		if (!empty($hash)) {
 			$this->SetHash($hash);
-//		else
-//			 throw new Exception('Invalid ref ' . $this->GetRefPath() .' ('. $this->project->GetProject().')' );
+		}
 	}
 
 	/**

@@ -173,7 +173,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				} else {
 					GitPHP_Log::GetInstance()->Log(sprintf('Skipping %1$s', $fullPath));
 				}
-
 			}
 			closedir($dh);
 		}

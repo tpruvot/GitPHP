@@ -447,4 +447,5 @@ abstract class GitPHP_ProjectListBase implements Iterator
 			}
 		}
 	}
+
 }
