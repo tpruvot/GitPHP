@@ -15,6 +15,8 @@ require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
+
 /**
  * Commit class
  *
@@ -170,7 +172,7 @@ class GitPHP_FileDiff
 	/**
 	 * project
 	 *
-	 * Stores the project
+	 * Stores the project name
 	 *
 	 * @access protected
 	 */
@@ -184,6 +186,16 @@ class GitPHP_FileDiff
 	 * @access protected
 	 */
 	protected $commitHash;
+
+	/* set from parent TreeDiff --numstat */
+	public $totAdd=0;
+	public $totDel=0;
+
+	/* count of diff blocs for <a names> */
+	public $diffCount=0;
+
+	/* used for pictures in treediff */
+	public $isPicture=false;
 
 	/**
 	 * __construct
@@ -436,10 +448,14 @@ class GitPHP_FileDiff
 	 * @access public
 	 * @return string from file
 	 */
-	public function GetFromFile()
+	public function GetFromFile($urlencode='')
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
+
+		if ($urlencode == 'f') {
+			return GitPHP_Util::UrlEncodeFilePath($this->fromFile);
+		}
 
 		return $this->fromFile;
 	}
@@ -452,10 +468,14 @@ class GitPHP_FileDiff
 	 * @access public
 	 * @return string to file
 	 */
-	public function GetToFile()
+	public function GetToFile($urlencode='')
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
+
+		if ($urlencode == 'f') {
+			return GitPHP_Util::UrlEncodeFilePath($this->toFile);
+		}
 
 		return $this->toFile;
 	}
@@ -618,6 +638,7 @@ class GitPHP_FileDiff
 
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);
+		unset($fromBlob);
 
 		$diffLines = explode("\n", $this->GetDiffData(0, false));
 
@@ -625,6 +646,7 @@ class GitPHP_FileDiff
 		// parse diffs
 		$diffs = array();
 		$currentDiff = FALSE;
+		$totAdd = 0; $totDel = 0; $idx = 0;
 		foreach($diffLines as $d) {
 			$d = trim($d);
 			if(strlen($d) == 0)
@@ -641,16 +663,21 @@ class GitPHP_FileDiff
 					}
 					$comma = strpos($d, ",");
 					$line = -intval(substr($d, 2, $comma-2));
+					$lastDeleted = false;
 					$currentDiff = array("line" => $line,
 						"left" => array(), "right" => array());
 					break;
 				case '+':
-					if($currentDiff)
+					if($currentDiff) {
 						$currentDiff["right"][] = substr($d, 1);
+						$totAdd++;
+					}
 					break;
 				case '-':
-					if($currentDiff)
+					if($currentDiff) {
 						$currentDiff["left"][] = substr($d, 1);
+						$totDel++;
+					}
 					break;
 				case ' ':
 					echo "should not happen!";
@@ -670,42 +697,102 @@ class GitPHP_FileDiff
 			$diffs[] = $currentDiff;
 		}
 
+		// equals to git diff --numstat
+		$this->totAdd = $totAdd;
+		$this->totDel = $totDel;
+
+		// + 10 000 lines file... require to skip unchanged source
+		$big_file = (count($blob) > 10000);
+
 		//
 		// iterate over diffs
 		$output = array();
-		$idx = 0;
+		$lnl = 0; $lnr = 0; $num = 0;
+		$big_after = 15;
+
 		foreach($diffs as $d) {
-			while($idx+1 < $d['line']) {
-				$h = $blob[$idx];
-				$output[] = array('', $h, $h);
-				$idx ++;
+
+			$big_before = $big_after = 15;
+
+			while($lnl+1 < $d['line']) {
+				if (!$big_file || ($lnl+$big_before+1 == $d['line'])) {
+					$h = $blob[$lnl];
+					$output[] = array('', $h, $h, $lnl, $lnr, FALSE);
+					$big_before--;
+				}
+				$lnl++; $lnr++;
 			}
 
-			if(count($d['left']) == 0) {
+			if(empty($d['left'])) {
 				$mode = 'added';
-			} elseif(count($d['right']) == 0) {
+				$num++;
+			} elseif(empty($d['right'])) {
 				$mode = 'deleted';
+				$num++;
 			} else {
 				$mode = 'modified';
+				$num++;
 			}
+			$disp_num = $num;
 
-			for($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
-				$left = $i < count($d['left']) ? $d['left'][$i] : FALSE;
-				$right = $i < count($d['right']) ? $d['right'][$i] : FALSE;
-				$output[] = array($mode, $left, $right);
+			$nbl = count($d['left']);
+			$nbr = count($d['right']);
+			$cnt = max( $nbl, $nbr );
+			for($i = 0; $i < $cnt; $i++) {
+				if ($i < $nbl) {
+					$left = $d['left'][$i];
+					$disp_l = ++$lnl;
+				} else {
+					$left = FALSE;
+					$disp_l = FALSE;
+				}
+				if ($i < $nbr) {
+					$right = $d['right'][$i];
+					$disp_r = ++$lnr;
+				} else {
+					$right = FALSE;
+					$disp_r = FALSE;
+				}
+				$output[] = array($mode, $left, $right, $disp_l, $disp_r, $disp_num);
+
+				//only set Diff number on first line of diff.
+				$disp_num = FALSE;
 			}
-
-			$idx += count($d['left']);
 		}
 
-		while($idx < count($blob)) {
-			$h = $blob[$idx];
-			$output[] = array('', $h, $h);
-			$idx ++;
+		while ($lnl < count($blob)) {
+			if (!$big_file || $big_after-- > 0) {
+				$output[] = array('', $blob[$lnl], $blob[$lnl], $lnl, ++$lnr, FALSE);
+			}
+			$lnl++;
 		}
+
+		$this->diffCount = $num;
 
 		$this->diffDataSplit = $output;
 		return $output;
+	}
+
+	/**
+	 * GetStats (tpruvot)
+	 *
+	 * Ensure totAdd & totDel are assigned
+	 *
+	 * @return int total of line changes
+	 */
+	public function GetStats() {
+
+		//we can use the cmdline with --numstat use GetDiffSplit()
+		//or could be already set by TreeDiff parent
+
+		$tot = $this->totAdd + $this->totDel;
+		if ($this->diffDataSplitRead or $tot > 0) {
+			return $tot;
+		} else {
+			//todo cmdline ?
+			$this->GetDiffSplit();
+			return $this->totAdd + $this->totDel;
+		}
 	}
 
 	/**
@@ -730,6 +817,7 @@ class GitPHP_FileDiff
 			$fromBlob = $this->GetFromBlob();
 			$isBinary = $isBinary || $fromBlob->IsBinary();
 			$fromData = $fromBlob->GetData(false);
+			unset($fromBlob);
 			$fromName = 'a/';
 			if (!empty($file)) {
 				$fromName .= $file;
@@ -743,6 +831,7 @@ class GitPHP_FileDiff
 			$toBlob = $this->GetToBlob();
 			$isBinary = $isBinary || $toBlob->IsBinary();
 			$toData = $toBlob->GetData(false);
+			unset($toBlob);
 			$toName = 'b/';
 			if (!empty($file)) {
 				$toName .= $file;
@@ -871,5 +960,4 @@ class GitPHP_FileDiff
 
 		$this->commitHash = $hash;
 	}
-	
 }

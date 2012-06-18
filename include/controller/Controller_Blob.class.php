@@ -105,6 +105,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				else
 					$saveas = $this->params['hash'] . ".txt";
 
+				$saveas = basename($saveas);
+
 				$headers = array();
 
 				$mime = null;
@@ -120,7 +122,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					$mime = $blob->FileMime();
 				}
 
-				if ($mime)
+				if (strpos($mime,"text") === false)
 					$headers[] = "Content-type: " . $mime;
 				else
 					$headers[] = "Content-type: text/plain; charset=UTF-8";
@@ -167,6 +169,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
+		$isPicture = false;
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
 			if ($mime) {
@@ -179,6 +182,18 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				}
 			}
 		}
+
+		// Alternate system to display pictures (not embedded in HTML as base64)
+		require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
+		$mimetype = FileMime($this->params['file'], true);
+		$isPicture = ($mimetype == 'image');
+		if ($isPicture) {
+			$this->tpl->assign('file', $this->params['file']);
+			$this->tpl->assign('picture', $isPicture);
+			return;
+		}
+
+		$this->tpl->assign('extrascripts', 'blob');
 
 		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
 			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
@@ -198,6 +213,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 						$geshi->set_overall_id('blobData');
 						$this->tpl->assign('geshiout', $geshi->parse_code());
+						$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
 						$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 						$this->tpl->assign('geshi', true);
 						return;

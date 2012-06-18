@@ -64,13 +64,13 @@ $language_data = array (
         'COMMENTS' => array(
             ),
         'ESCAPE_CHAR' => array(
-            0 => 'color: #000099; font-weight: bold;'
+            0 => 'color: #000099;'
             ),
         'BRACKETS' => array(
             0 => 'color: #66cc66;'
             ),
         'STRINGS' => array(
-            0 => 'color: #ff0000;'
+            0 => 'color: #a000a0;'
             ),
         'NUMBERS' => array(
             0 => 'color: #cc66cc;'
@@ -81,7 +81,7 @@ $language_data = array (
             0 => 'color: #66cc66;'
             ),
         'SCRIPT' => array(
-            -1 => 'color: #808080; font-style: italic;', // comments
+            -1 => 'color: #808080;', // comments
             0 => 'color: #00bbdd;',
             1 => 'color: #ddbb00;',
             2 => 'color: #339933;',
@@ -89,8 +89,8 @@ $language_data = array (
             ),
         'REGEXPS' => array(
             0 => 'color: #000066;',
-            1 => 'color: #000000; font-weight: bold;',
-            2 => 'color: #000000; font-weight: bold;'
+            1 => 'color: #000000; font-weight: normal;',
+            2 => 'color: #000000;'
             )
         ),
     'URLS' => array(

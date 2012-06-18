@@ -107,13 +107,30 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 
+		// Projects with Remote Heads only
+		if (empty($commit) && $this->GetProject()->isAndroidRepo) {
+			$remotes = $this->GetProject()->GetRemotes(1);
+			if (!empty($remotes)) {
+				$rm = reset($remotes);
+				$hash = $rm->GetHash();
+				$this->params['hash'] = $hash;
+				$commit = $this->GetProject()->GetCommit($hash);
+				$this->params['hashbase'] = $commit->GetTree()->GetHash();
+				unset($remotes);
+			}
+		}
+
 		$this->tpl->assign('commit', $commit);
 
 		if (!isset($this->params['hash'])) {
 			if (isset($this->params['file'])) {
 				$this->params['hash'] = $commit->PathToHash($this->params['file']);
 			} else {
-				$this->params['hash'] = $commit->GetTree()->GetHash();
+				$tree =	$commit->GetTree();
+				if (empty($tree))
+					$this->params['hash'] =	$commit->GetHash();
+				else
+					$this->params['hash'] =	$tree->GetHash();
 			}
 		}
 
@@ -125,6 +142,8 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			$tree->SetPath($this->params['file']);
 		}
 		$this->tpl->assign('tree', $tree);
+
+		$this->tpl->assign('extrascripts', 'tree');
 	}
 
 }

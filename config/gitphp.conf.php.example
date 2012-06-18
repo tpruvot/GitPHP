@@ -11,12 +11,40 @@
  */
 
 /*
+ * stylesheet
+ * Name of skin (must be in /css folder)
+ */
+//$gitphp_conf['stylesheet'] = "blueskin.css";
+
+/*
  * projectroot
  * Full directory on server where projects are located
  */
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 
+/*
+ * bareonly
+ * Include working copies (projet/.git) in projects list
+ */
+//$gitphp_conf['bareonly'] = false;
 
+/*
+ * reposupport
+ * List projects in .repo folders (android source)
+ */
+//$gitphp_conf['reposupport'] = false;
+
+/*
+ * recursive listing (ie android repo)
+ * Search in subfolders to scan projects list
+ */
+//$gitphp_conf['subfolder_levels'] = 1;
+
+/*
+ * showremotes
+ * Display the remote branches and their badges in project summary
+ */
+//$gitphp_conf['showremotes'] = true;
 
 /*
  * cache
@@ -35,6 +63,45 @@
  * in addition to it for the maximum benefit.
  */
 //$gitphp_conf['objectcache'] = true;
+
+/* Script added (in Blob and Blame views) at end of html file.
+ * Remove all bold,italic attributes, to fix line numbers height
+ */
+$gitphp_conf['fixupjs'] = <<<EOT
+
+    if (!(jQuery.browser.mozilla))
+    jQuery('pre.de1 span').each( function() {
+        var el = jQuery(this);
+        if (el.css('font-weight') != 'normal') {
+          el.css({ 'font-weight':'normal',
+                   'text-shadow':'#f0f0f0 1px 1px 1px'
+          }); //chrome line height
+        }
+        if (el.css('font-style') == 'italic') {
+          el.css('font-style', 'normal');
+        }
+    });
+EOT;
+
+/*******************************************************
+ * Debugging options
+ */
+
+/*
+ * debug
+ * Turns on extra warning messages
+ * Not recommended for production systems, as it will give
+ * way more info about what's happening than you care about, and
+ * will screw up non-html output (rss, opml, snapshots, etc)
+ */
+//$gitphp_conf['debug'] = true;
+
+/*
+ * benchmark
+ * Turns on extra timestamp and memory benchmarking info
+ * when debug mode is turned on.  Generates lots of output.
+ */
+//$gitphp_conf['benchmark'] = true;
 
 /*
  * compat

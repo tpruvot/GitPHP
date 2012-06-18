@@ -9,8 +9,8 @@
  * @subpackage Template
  *}
 
-<div>
-{t}tag{/t}: {$tag->GetName()}
+<div class="tag_tip">
+<nobr>{t}tag{/t}: {$tag->GetName()}</nobr>
 <br />
 {foreach from=$tag->GetComment() item=line}
 {if strncasecmp(trim($line),'-----BEGIN PGP',14) == 0}

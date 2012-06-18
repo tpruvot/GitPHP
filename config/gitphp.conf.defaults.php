@@ -30,6 +30,30 @@ throw new Exception('The defaults file should not be used as your config.');
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 
 /*
+ * bareonly
+ * Include working copies (projet/.git) in projects list
+ */
+$gitphp_conf['bareonly'] = true;
+
+/*
+ * reposupport
+ * List projects in .repo folders (android source)
+ */
+$gitphp_conf['reposupport'] = false;
+
+/*
+ * recursive listing (ie android repo)
+ * Search in subfolders to list projects
+ */
+$gitphp_conf['subfolder_levels'] = 1;
+
+/*
+ * showremotes
+ * Display the remote branches and their badges in project summary
+ */
+$gitphp_conf['showremotes'] = false;
+
+/*
  * exportedonly
  * When listing all projects in the project root,
  * (not specifying any projects manually or using a project list file)
@@ -103,6 +127,9 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  */
 //$gitphp_conf['bugpattern'] = '/#([0-9]+)/';
 
+// Gerrit sample :
+$gitphp_conf['bugpattern'] = '/(I[0-9abcdef]{5,40}+)/';
+
 /*
  * bugurl
  * Sets the URL for the bug tracker.  This URL must have
@@ -112,6 +139,9 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  */
 //$gitphp_conf['bugurl'] = 'http://localhost/mantis/view.php?id=${1}';
 
+// Gerrit sample :
+$gitphp_conf['bugurl'] = 'https://android-review.googlesource.com/#q,${1},n,z';
+
 /*
  * self
  * This is the path to the script that will be inserted
@@ -119,7 +149,7 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  * will try to guess the correct URL, but you can override
  * it here if it's not being guessed correctly.
  */
-$gitphp_conf['self'] = 'http://localhost/gitphp/';
+//$gitphp_conf['self'] = 'http://localhost/gitphp/';
 
 /*
  * stylesheet
@@ -146,9 +176,17 @@ $gitphp_conf['javascript'] = true;
  * By enabling this you agree to Google's terms for their
  * library API.
  */
-$gitphp_conf['googlejs'] = false;
+$gitphp_conf['googlejs'] = true;
 
+/*
+ * layout tweeks
+ */
 
+// project list : show/hide owner column
+$gitphp_conf['projectlist_show_owner'] = true;
+
+// project list sort order : project, age, descr, owner
+$gitphp_conf['projectlist_order'] = 'project';
 
 /*********************************************************
  * Features
@@ -389,29 +427,6 @@ $gitphp_conf['objectmemory'] = 0;
  */
 
 /*
- * smarty_prefix
- * This is the prefix where smarty is installed.
- * If an absolute (starts with /) path is given,
- * Smarty.class.php will be searched for in that directory.
- * If a relative (doesn't start with /) path is given,
- * that subdirectory inside the php include dirs will be
- * searched.  So, for example, if you specify the path as
- * "/usr/share/Smarty/" then the script will look for
- * /usr/share/Smarty/Smarty.class.php.
- * If you specify the path as "smarty/" then it will search
- * the include directories in php.ini's include_path directive,
- * so it would search in places like /usr/share/php and /usr/lib/php:
- * /usr/share/php/smarty/Smarty.class.php,
- * /usr/lib/php/smarty/Smarty.class.php, etc.
- * Leave blank to just search in the root of the php include directories
- * like /usr/share/php/Smarty.class.php, /usr/lib/php/Smarty.class.php, etc.
- *
- * This is only necessary if you want to use a smarty install other than
- * the one that comes with GitPHP.
- */
-$gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
-
-/*
  * geshiroot
  * Directory where geshi is installed, only applies if geshi is enabled
  * NOTE: this is the path to the base geshi.php file to include,
@@ -423,7 +438,25 @@ $gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
  */
 $gitphp_conf['geshiroot'] = 'lib/geshi/';
 
+/* Script added (in Blob and Blame views) at end of html file.
+ * Remove all bold,italic attributes, to fix line numbers height
+ */
+$gitphp_conf['fixupjs'] = <<<EOT
 
+    if (!(jQuery.browser.mozilla))
+    jQuery('#blobData').find('pre span').each( function() {
+        var el = jQuery(this);
+        if (el.css('font-weight') != 'normal') {
+          el.css({ 'font-weight':'normal',
+                   'text-shadow':'#f0f0f0 1px 1px 1px'
+          }); //chrome line height
+        }
+        if (el.css('font-style') == 'italic') {
+          el.css({ 'font-style':'normal' });
+        }
+    });
+
+EOT;
 
 
 /*******************************************************

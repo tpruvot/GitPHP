@@ -73,6 +73,15 @@ class GitPHP_GitExe
 	protected $versionRead = false;
 
 	/**
+	 * charset
+	 *
+	 * Prefix to set terminal LANG charset.
+	 *
+	 * @access protected
+	 */
+	protected $charset = 'en_US.utf-8';
+
+	/**
 	 * GetInstance
 	 *
 	 * Returns the singleton instance
@@ -134,12 +143,12 @@ class GitPHP_GitExe
 	{
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
-		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
-
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
-			"\nwith result: " . $ret);
+		if ($command != GIT_DIFF_TREE) {
+			GitPHP_Log::GetInstance()->Log('Executed "' . $fullCommand . '"' .
+				"\nwith result: " . $ret);
+		}
 
 		return $ret;
 	}
@@ -179,8 +188,14 @@ class GitPHP_GitExe
 		if (!empty($projectPath)) {
 			$gitDir = '--git-dir=' . $projectPath;
 		}
-		
-		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
+
+		$command = $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
+
+		if (!empty($this->charset) && !GitPHP_Util::IsWindows()) {
+			$command = 'LANG='.$this->charset . ' ' . $command;
+		}
+
+		return $command;
 	}
 
 	/**

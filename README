@@ -1,0 +1,46 @@
+About this fork :
+=================
+
+This fork was based on GitPHP v0.2.3 from http://gitphp.org/
+It implements all the features of xiphux 0.2.7
+
+The original skin can be seen here : http://source.gitphp.org/
+
+A new one (blueskin) can be seen here : http://epsy.ath.cx/ics/
+
+
+Changes made by Tanguy Pruvot (2011/2012) :
+==========================================
+
+New abilities :
++ Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
++ Added ability to autolist subfolders (and set maximum level, to create groups of repositories)
++ Added ability to load project list using an android .repo manifest.xml and the local_manifest.xml overrides
+
+Enhancements :
++ use origin git clone url as description
++ use git user.name as default owner
++ repo remote branches support (and badges)
++ fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
+  made with a new config variable "fixupjs" where we can add a jQuery script
++ Show file line changes +/- in Commit view
++ New options to toggle display of owner and for default sort order of project list
++ Side by Side line numbers, Tab/Space display and copy paste
++ Support for shortened hashes and search by commit hash
++ Support pictures diff
++ Merge tracking (to enhance)
+
+Addons :
++ Blueskin alternative skin
+
+
+TODO :
+======
+
+- Complete .repo support to check android platform status (local projects changes)
+  .repo folder contains all the subprojects .git folders, i only use the .repo folder in versions <= v0.2.7
+
+- Enhance the log history to identify "merged commits" from merged branches
+
+- Another kind of skin for tablets
+

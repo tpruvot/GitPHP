@@ -157,7 +157,7 @@ class GitPHP_Tag extends GitPHP_Ref
 				$this->commitHash = $this->object;
 			} else if ($this->type == 'tag') {
 				$tag = $this->GetProject()->GetTag($this->object);
-				$this->commitHash = $tag->GetCommit()->GetHash();
+				$this->SetCommit($tag->GetCommit());
 			}
 		}
 
@@ -589,10 +589,13 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if ($this->LightTag())
-			return $this->GetCommit()->GetCommitterEpoch();
-		else
-			return $this->taggerEpoch;
+		if ($this->LightTag()) {
+			$commit = $this->GetCommit();
+			if (!empty($commit))
+				return $commit->GetCommitterEpoch();
+		}
+
+		return $this->taggerEpoch;
 	}
 
 	/**

@@ -10,7 +10,7 @@
  */
 
 define(["jquery", "modules/treedrilldown", "common"], function($, treeDrill) {
-	$(function() {
+	jQuery(function($) {
 		treeDrill.init($('table.treeTable'));
 	});
 });

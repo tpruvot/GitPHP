@@ -522,7 +522,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Blob::CacheKey($this->project, $this->hash);
+		return GitPHP_Blob::CacheKey($this->GetProject()->GetProject(), $this->hash);
 	}
 
 	/**

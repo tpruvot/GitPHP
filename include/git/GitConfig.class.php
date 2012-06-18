@@ -148,6 +148,21 @@ class GitPHP_GitConfig
 	}
 
 	/**
+	 * SetValue
+	 *
+	 * Sets a config value
+	 */
+	public function SetValue($key, $value)
+	{
+		// todo
+
+		// try to save project description if Unnamed (file may be protected)
+		if ($key == 'gitphp.description') {
+			$res = @ file_put_contents($this->project->GetPath() . '/description', $value);
+		}
+	}
+
+	/**
 	 * HasValue
 	 *
 	 * Tests if a config value exists

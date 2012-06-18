@@ -40,6 +40,8 @@
  * @link http://github.com/chrisboulton/php-diff
  */
 
+if (!class_exists('Diff_SequenceMatcher')) {
+
 class Diff_SequenceMatcher
 {
 	/**
@@ -740,3 +742,5 @@ class Diff_SequenceMatcher
 		}
 	}
 }
+
+} /* class_exists */

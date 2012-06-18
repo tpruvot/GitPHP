@@ -1464,6 +1464,7 @@ class GeSHi {
                 'delphi' => array('dpk', 'dpr', 'pp', 'pas'),
                 'diff' => array('diff', 'patch'),
                 'dos' => array('bat', 'cmd'),
+                'drupal6' => array('module'),
                 'gdb' => array('kcrash', 'crash', 'bt'),
                 'gettext' => array('po', 'pot'),
                 'gml' => array('gml'),
@@ -1472,13 +1473,14 @@ class GeSHi {
                 'haskell' => array('hs'),
                 'html4strict' => array('html', 'htm'),
                 'ini' => array('ini', 'desktop'),
-                'java' => array('java'),
+                'java' => array('java','aidl'),
                 'javascript' => array('js'),
                 'klonec' => array('kl1'),
                 'klonecpp' => array('klx'),
                 'latex' => array('tex'),
                 'lisp' => array('lisp'),
                 'lua' => array('lua'),
+                'make' => array('mk'),
                 'matlab' => array('m'),
                 'mpasm' => array(),
                 'mysql' => array('sql'),
@@ -1502,12 +1504,13 @@ class GeSHi {
                 'scheme' => array('scm'),
                 'scilab' => array('sci'),
                 'smalltalk' => array('st'),
-                'smarty' => array(),
+                'smarty' => array('tpl'),
                 'tcl' => array('tcl'),
                 'vb' => array('bas'),
                 'vbnet' => array(),
                 'visualfoxpro' => array(),
                 'whitespace' => array('ws'),
+                'windev' => array('wl','wlf','wss','wsb'),
                 'xml' => array('xml', 'svg', 'xrc'),
                 'z80' => array('z80', 'asm', 'inc')
             );
@@ -3493,6 +3496,9 @@ class GeSHi {
             $oolang_spaces = "[\s]*";
             $oolang_before = "";
             $oolang_after = "[a-zA-Z][a-zA-Z0-9_]*";
+
+            $accents=utf8_encode("éèàâî");
+            $oolang_after = "[a-zA-Z][[:alnum:]éèàâî_$accents]*"; //Patch pour les attributs avec Accents ..Libellé par exemple
             if (isset($this->language_data['PARSER_CONTROL'])) {
                 if (isset($this->language_data['PARSER_CONTROL']['OOLANG'])) {
                     if (isset($this->language_data['PARSER_CONTROL']['OOLANG']['MATCH_BEFORE'])) {
@@ -3988,7 +3994,7 @@ class GeSHi {
                             }
                             ++$close;
                         }
-                        $parsed_code .= $this->line_numbers_start + $i;
+                        $parsed_code .= '<a class="ln" name="l'.$i.'">'.($this->line_numbers_start + $i).'</a>';
                         if ($close) {
                             $parsed_code .= str_repeat('</span>', $close);
                         } else if ($i != $n) {

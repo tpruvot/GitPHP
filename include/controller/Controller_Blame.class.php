@@ -115,13 +115,23 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$this->tpl->assign('blob', $blob);
 
 		$blame = $blob->GetBlame();
-		$this->tpl->assign('blame', $blob->GetBlame());
+		$this->tpl->assign('blame', $blame);
 
 		if (isset($this->params['js']) && $this->params['js']) {
 			return;
 		}
 
 		$this->tpl->assign('tree', $commit->GetTree());
+
+		// Pictures (one blame possible)
+		require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
+		$mimetype = FileMime($this->params['file'], true);
+		$isPicture = ($mimetype == 'image');
+		if ($isPicture) {
+			$this->tpl->assign('file', $this->params['file']);
+			$this->tpl->assign('picture', $isPicture);
+			return;
+		}
 
 		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
 			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
@@ -152,6 +162,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 							$this->tpl->assign('geshihead', $geshihead);
 							$this->tpl->assign('geshibody', $geshibody);
 							$this->tpl->assign('geshifoot', $geshifoot);
+							$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
 							$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 							$this->tpl->assign('geshi', true);
 						}

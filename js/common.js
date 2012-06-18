@@ -18,9 +18,10 @@ define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapsho
 
 		if (getProject()) {
 
-			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"],
-				function($, tooltipCommit, tooltipTag) {
+			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag", "modules/hilight.parents"],
+				function($, tooltipCommit, tooltipTag, highlightParents) {
 					$(function() {
+						highlightParents($('table.shortlog td.hash'));
 						tooltipCommit($('a.commitTip'));
 						tooltipTag($('a.tagTip'));
 					});

@@ -36,8 +36,8 @@ function smarty_modifiercompiler_escape($params, $compiler)
 
         switch ($esc_type) {
             case 'html':
-                return 'htmlspecialchars('
-                    . $params[0] .', ENT_QUOTES, '
+                return '@ htmlspecialchars('
+                    . $params[0] .', ENT_QUOTES | 4, ' // < PHP5.3 : defined( "ENT_IGNORE") or define( "ENT_IGNORE", 4 );
                     . var_export($char_set, true) . ', '
                     . var_export($double_encode, true) . ')';
 

@@ -36,6 +36,7 @@ git source code archive
 </div>
 
 <table class="projectList">
+  {assign var=currentcategory value="&nbsp;"}
   {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}
       {* Header *}
@@ -50,23 +51,26 @@ git source code archive
         {else}
           <th><a class="header" href="{$SCRIPT_NAME}?o=descr">{t}Description{/t}</a></th>
         {/if}
-        {if $order == "owner"}
-          <th>{t}Owner{/t}</th>
-        {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{t}Owner{/t}</a></th>
-        {/if}
         {if $order == "age"}
           <th>{t}Last Change{/t}</th>
         {else}
           <th><a class="header" href="{$SCRIPT_NAME}?o=age">{t}Last Change{/t}</a></th>
         {/if}
-        <th>{t}Actions{/t}</th>
+        {if $show_owner }
+         {if $order == "owner"}
+          <th>{t}Owner{/t}</th>
+         {else}
+          <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{t}Owner{/t}</a></th>
+         {/if}
+        {/if}
+        <th class="actions">{t}Actions{/t}</th>
+	<th></th>
       </tr>
     {/if}
 
-    {if $currentcategory != $proj->GetCategory()}
-      {assign var=currentcategory value=$proj->GetCategory()}
-      {if $currentcategory != ''}
+    {if $currentcategory != $proj->GetCategory('&nbsp;')}
+      {assign var=currentcategory value=$proj->GetCategory('&nbsp;')}
+      {if $currentcategory != "&nbsp;" || $order == "age"}
         <tr class="light categoryRow">
           <th class="categoryName">{$currentcategory}</th>
           <th></th>
@@ -79,14 +83,15 @@ git source code archive
 
     <tr class="{cycle values="light,dark"} projectRow">
       <td class="projectName">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
-      <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
+      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
         {if $projecthead}
-          {if $proj->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
+          {if $proj->GetAge() <= 0}
+            <em class="empty">{t}No commits{/t}</em>
+          {elseif $proj->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
             <span class="agehighlight"><strong><em>{$proj->GetAge()|agestring}</em></strong></span>
           {elseif $proj->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
             <span class="agehighlight"><em>{$proj->GetAge()|agestring}</em></span>
@@ -97,14 +102,17 @@ git source code archive
 	  <em class="empty">{t}No commits{/t}</em>
 	{/if}
       </td>
+      {if $show_owner }
+      <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
+      {/if}
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=summary">{t}summary{/t}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=shortlog">{t}shortlog{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=log">{t}log{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=tree">{t}tree{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|rawurlencode}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=shortlog">{t}shortlog{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=log">{t}log{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=tree">{t}tree{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>

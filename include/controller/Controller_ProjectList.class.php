@@ -109,7 +109,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		if (isset($_GET['o']))
 			$this->params['order'] = $_GET['o'];
 		else
-			$this->params['order'] = 'project';
+			$this->params['order'] = GitPHP_Config::GetInstance()->GetValue('projectlist_order');
 		if (isset($_GET['s']))
 			$this->params['search'] = $_GET['s'];
 	}
@@ -159,6 +159,16 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		} else {
 			if ($projectList->Count() > 0)
 				$this->tpl->assign('projectlist', $projectList);
+		}
+
+		//From config, show hide columns
+		$pname = 'projectlist_show_owner';
+		$show_col = GitPHP_Config::GetInstance()->GetValue($pname);
+		$this->tpl->assign('show_owner', $show_col);
+
+		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
+		    (empty($this->params['txt']) || ($this->params['txt'] !== true))) {
+			$this->tpl->assign('extrascripts', 'projectlist');
 		}
 	}
 

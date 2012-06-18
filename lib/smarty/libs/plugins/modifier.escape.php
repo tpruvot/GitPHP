@@ -29,7 +29,7 @@ function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $
 
     switch ($esc_type) {
         case 'html':
-            return htmlspecialchars($string, ENT_QUOTES, $char_set, $double_encode);
+            return @ htmlspecialchars($string, ENT_QUOTES, $char_set, $double_encode);
 
         case 'htmlall':
             if (Smarty::$_MBSTRING) {

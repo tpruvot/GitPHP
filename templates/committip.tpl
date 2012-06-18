@@ -5,13 +5,18 @@
  *
  *  Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
-<div>
-{t}author{/t}: {$commit->GetAuthor()} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+<div class="commit_tip">
+<nobr>{t}author{/t}: {$commit->GetAuthor()} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+</nobr>
 <br />
+<nobr>
 {t}committer{/t}: {$commit->GetCommitter()} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+</nobr>
 <br /><br />
 {foreach from=$commit->GetComment() item=line}
-{if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
+{if strstr(trim($line),'-by: ') || strstr(trim($line),'Cc: ')}
+<span class="signedOffBy">{$line|escape}</span>
+{elseif strncasecmp(trim($line),'Change-Id:',10) == 0}
 <span class="signedOffBy">{$line|escape}</span>
 {else}
 {$line|escape}

@@ -58,4 +58,12 @@
 
  {/if}
 
+ {if $remotelist}
+
+  {include file='title.tpl' target='remotes'}
+
+  {include file='remotelist.tpl'}
+
+ {/if}
+
 {/block}

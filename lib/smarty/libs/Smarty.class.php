@@ -624,7 +624,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
 
         $this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';
         if (isset($_SERVER['SCRIPT_NAME'])) {
-            $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
+            $this->assignGlobal('SCRIPT_NAME', str_replace('/index.php','/',$_SERVER['SCRIPT_NAME']));
         }
     }
 

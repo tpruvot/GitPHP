@@ -85,10 +85,22 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if (empty($this->projectRoot)) {
 			throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
 		}
-		if (!is_dir($this->projectRoot)) {
+		if (!$this->IsDir($this->projectRoot)) {
 			throw new Exception(sprintf(__('%1$s is not a directory'), $this->projectRoot));
 		}
 
+	}
+
+	/**
+	 * IsDir
+	 *
+	 * @access protected
+	 * @return boolean true if folder or a link pointing to a folder
+	 * @param string path to check
+	 */
+	protected function IsDir($dir)
+	{
+		return is_dir($dir) || (is_link($dir) && is_dir("$dir/."));
 	}
 
 	/**
@@ -274,6 +286,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 				uasort($this->projects, array('GitPHP_Project', 'CompareOwner'));
 				break;
 			case GITPHP_SORT_AGE:
+				$this->GetCategoryAges();
 				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
 				break;
 			case GITPHP_SORT_PROJECT:
@@ -321,6 +334,28 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		}
 
 		return $matches;
+	}
+
+	/**
+	 * GetCategoryAges
+	 *
+	 * Store project category age
+	 *
+	 * @access protected
+	 */
+	protected function GetCategoryAges()
+	{
+		foreach ($this->projects as $proj) {
+			$cat = $proj->GetCategory('none');
+			if (isset($ages[$cat]))
+				$ages[$cat] = min($ages[$cat], $proj->GetAge());
+			else
+				$ages[$cat] = $proj->GetAge();
+		}
+		foreach ($this->projects as $proj) {
+			$cat = $proj->GetCategory('none');
+			$proj->categoryAge = $ages[$cat];
+		}
 	}
 
 	/**
@@ -406,7 +441,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 				}
 
 				if (!isset($this->projects[$proj]))
-					break;
+					continue;
 
 				$this->ApplyProjectSettings($this->projects[$proj], $setting);
 			}

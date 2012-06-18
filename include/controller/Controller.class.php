@@ -85,6 +85,10 @@ class GitPHP_Controller
 				require_once(GITPHP_CONTROLLERDIR . 'Controller_Heads.class.php');
 				$controller = new GitPHP_Controller_Heads();
 				break;
+			case 'remotes':
+				require_once(GITPHP_CONTROLLERDIR . 'Controller_Remotes.class.php');
+				$controller = new GitPHP_Controller_Remotes();
+				break;
 			case 'blame':
 				require_once(GITPHP_CONTROLLERDIR . 'Controller_Blame.class.php');
 				$controller = new GitPHP_Controller_Blame();

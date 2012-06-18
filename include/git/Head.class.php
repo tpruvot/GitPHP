@@ -33,9 +33,9 @@ class GitPHP_Head extends GitPHP_Ref
 	 * @return mixed head object
 	 * @throws Exception exception on invalid head or hash
 	 */
-	public function __construct($project, $head, $headHash = '')
+	public function __construct($project, $head, $headHash = '', $refDir='heads')
 	{
-		parent::__construct($project, 'heads', $head, $headHash);
+		parent::__construct($project, $refDir, $head, $headHash);
 	}
 
 	/**

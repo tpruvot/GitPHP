@@ -10,7 +10,7 @@
  *}
 <!DOCTYPE html>
 <html>
-  <!-- gitphp web interface {$version}, (C) 2006-2011 Christopher Han <xiphux@gmail.com> -->
+  <!-- gitphp web interface {$version}, (C) 2006-2012 Christopher Han <xiphux@gmail.com> -->
   <head>
     <title>
     {block name=title}
@@ -30,38 +30,50 @@
     {else}
     <link rel="stylesheet" href="css/{$stylesheet}.css" type="text/css" />
     {/if}
-    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     {block name=css}
     {/block}
+    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
+    {if $extracss}
+    <style type="text/css">
+    {$extracss}
+    </style>
+    {/if}
     {if $javascript}
-    {block name=javascript}
-    <script src="js/ext/require.js"></script>
+    <script src="js/ext/require.min.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
-    var GitPHPJSPaths = {ldelim}
-    {if $googlejs}
-	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
-    {else}
-	jquery: 'ext/jquery-1.7.1.min'
-    {/if}
-    {rdelim};
-    {block name=javascriptpaths}
-    {if file_exists('js/common.min.js')}
-    GitPHPJSPaths.common = "common.min";
-    {/if}
-    {/block}
-
-    var GitPHPJSModules = null;
-    {block name=javascriptmodules}
-    GitPHPJSModules = ['common'];
-    {/block}
-
-    require({ldelim}
-    	baseUrl: 'js',
-	paths: GitPHPJSPaths,
-	priority: ['jquery']
-    {rdelim}, GitPHPJSModules);
+	var GitPHPJSPaths = {ldelim}
+	{if $googlejs}
+	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min'
+	{else}
+	jquery: 'ext/jquery.min'
+	{/if}
+{rdelim};
+	{block name=javascriptpaths}
+	{if file_exists('js/common.min.js')}
+	GitPHPJSPaths.common = "common.min";
+	{/if}
+	{if $extrascripts}
+	 {if file_exists("js/$extrascripts.min.js")}
+		{$extrascripts}: "{$extrascripts}.min",
+	 {/if}
+	{/if}
+	{/block}
+	var GitPHPJSModules = null;
+	{block name=javascriptmodules}
+	GitPHPJSModules = ['common'];
+	{if $extrascripts}
+	'{$extrascripts}'
+	{/if}
+	{/block}
+	require({ldelim}
+	  baseUrl: 'js',
+	  paths: GitPHPJSPaths,
+	  priority: ['jquery']
+	  {rdelim}, GitPHPJSModules
+	);
     </script>
+    {block name=javascript}
     {/block}
     {/if}
   </head>
@@ -102,7 +114,12 @@
       {/block}
     </div>
     <div class="attr_footer">
-    	<a href="http://www.gitphp.org/" target="_blank">GitPHP by Chris Han</a>
+        <a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP branch by Tanguy Pruvot</a> based on <a href="http://source.gitphp.org/">original version by Chris Han</a>
     </div>
+{if $debug}
+    <div class="debug_footer">
+    <!-- keep unclosed for debug log -->
+{else}
   </body>
 </html>
+{/if}

@@ -101,6 +101,9 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
+		if ($this->GetProject()->isAndroidRepo) {
+			$this->tpl->assign('branch', $this->GetProject()->repoBranch);
+		}
 		$this->tpl->assign('commit', $this->GetProject()->GetCommit($this->params['hash']));
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);

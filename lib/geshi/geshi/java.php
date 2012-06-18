@@ -925,36 +925,36 @@ $language_data = array (
         ),
     'STYLES' => array(
         'KEYWORDS' => array(
-            1 => 'color: #000000; font-weight: bold;',
-            2 => 'color: #000066; font-weight: bold;',
+            1 => 'color: #000000; font-weight: normal;',
+            2 => 'color: #000066;',
             3 => 'color: #003399;',
-            4 => 'color: #000066; font-weight: bold;'
+            4 => 'color: #000066;'
             ),
         'COMMENTS' => array(
-            1 => 'color: #666666; font-style: italic;',
-            2 => 'color: #006699;',
-            3 => 'color: #008000; font-style: italic; font-weight: bold;',
-            3 => 'color: #008000; font-style: italic; font-weight: bold;',
-            'MULTI' => 'color: #666666; font-style: italic;'
+            1 => 'color: #308030;',
+            2 => 'color: #000080;', /* imports */
+            3 => 'color: #806680;',
+            3 => 'color: #207020;',
+            'MULTI' => 'color: #666666;'
             ),
         'ESCAPE_CHAR' => array(
             0 => 'color: #000099; font-weight: bold;'
             ),
         'BRACKETS' => array(
-            0 => 'color: #009900;'
+            0 => 'color: #550000;'
             ),
         'STRINGS' => array(
-            0 => 'color: #0000ff;'
+            0 => 'color: #800080;'
             ),
         'NUMBERS' => array(
-            0 => 'color: #cc66cc;'
+            0 => 'color: #0000ff;'
             ),
         'METHODS' => array(
-            1 => 'color: #006633;',
+            1 => 'color: #000060;', /* properties */
             2 => 'color: #006633;'
             ),
         'SYMBOLS' => array(
-            0 => 'color: #339933;'
+            0 => 'color: #333366;'
             ),
         'SCRIPT' => array(
             ),

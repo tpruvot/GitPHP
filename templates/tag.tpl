@@ -19,9 +19,9 @@
  {assign var=objtype value=$tag->GetType()}
  <div class="title">
    {if $objtype == 'blob'}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
    {/if}
  </div>
  <div class="title_text">
@@ -29,14 +29,14 @@
      <tr>
        <td>{t}object{/t}</td>
        {if $objtype == 'commit'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$object->GetHash()}">{t}commit{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}">{t}commit{/t}</a></td>
        {elseif $objtype == 'tag'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$object->GetName()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$object->GetName()}">{t}tag{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tag&amp;h={$object->GetName()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tag&amp;h={$object->GetName()}">{t}tag{/t}</a></td>
        {elseif $objtype == 'blob'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$object->GetHash()}">{t}blob{/t}</a></td>
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}">{t}blob{/t}</a></td>
        {/if}
      </tr>
      {if $tag->GetTagger()}
@@ -65,7 +65,7 @@
      {if strncasecmp(trim($line),'-----BEGIN PGP',14) == 0}
      <span class="pgpSig">
      {/if}
-     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
+     {$line|htmlspecialchars|commithash|buglink:$bugpattern:$bugurl}<br />
      {if strncasecmp(trim($line),'-----END PGP',12) == 0}
      </span>
      {/if}

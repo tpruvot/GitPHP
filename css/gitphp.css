@@ -10,7 +10,7 @@
 
 
 /*
- * Base styles 
+ * Base styles
  */
 .monospace {
 	font-family: monospace;
@@ -26,7 +26,7 @@ table {
  * (main header with commit message)
  */
 div.title a.title {
-	display: block; 
+	display: inline-block;
 }
 
 /*
@@ -48,11 +48,11 @@ div.title a.title {
 /*
  * Full log view
  */
-div.log_body { 
-	padding: 8px 8px 8px 150px; 
+div.log_body {
+	padding: 8px 8px 8px 150px;
 }
-span.age { 
-	position: relative; 
+span.age {
+	position: relative;
 	float: left;
 	width: 142px;
 }
@@ -60,7 +60,7 @@ div.log_link {
 	margin: -5px 0px;
 	padding: 0px 8px;
 	position: relative;
-	float: left; 
+	float: left;
 	width: 136px;
 }
 
@@ -68,17 +68,17 @@ div.log_link {
 /*
  * Diff display
  */
-.pre { 
-	white-space: pre; 
+.pre {
+	white-space: pre;
 }
 
 
 /*
  * Search box
  */
-div.search { 
-	margin: 4px 8px; 
-	position: absolute; 
+div.search {
+	margin: 4px 8px;
+	position: absolute;
 	top: 56px;
 	right: 12px
 }
@@ -130,6 +130,14 @@ td#blameData {
 	white-space: nowrap;
 }
 
+#blobData td.ln {
+	padding: 0 6px 0 0;
+}
+
+td.ln a {
+	color: silver;
+}
+
 /*
  * File search view
  */
@@ -137,9 +145,66 @@ span.matchline {
 	white-space: pre;
 }
 
-/*
- * side-by-side-diff diff
+/* To keep between skins
  */
+
+table.treeTable td.expander {
+        /* the javascript tree expander cell */
+        padding-right: 0px;
+}
+
+table.treeTable td.fileName {
+        color: silver;
+}
+
+table.treeTable a.jsTree {
+        text-decoration: none;
+        color: black;
+}
+
+table.treeTable img.treeSpinner {
+        margin: 0;
+        margin-left: 2px;
+        height: 12px;
+}
+
+/*
+ * Commit view Stats
+ */
+
+.commit_fadd, .commit_fdel {
+	padding-left:  2px;
+	padding-right: 1px;
+}
+
+.commit_fadd {
+	color: darkGreen;
+}
+
+.commit_fdel {
+	color: darkRed;
+}
+
+/*
+ * side-by-side diff
+ */
+
+div.diff-head-links {
+	text-align: right;
+	width: 450px;
+	height: 11px;
+	right: 0px;
+	float: right;
+	margin-right: 20px;
+	line-height: 14px;
+	font-family: sans-serif;
+	font-style: normal;
+}
+
+div.diff-head-links a {
+	text-decoration: none;
+}
+
 table.diffTable {
 	width: 100%;
 	white-space: pre-wrap;
@@ -147,6 +212,56 @@ table.diffTable {
 
 table.diffTable td {
 	width: 50%;
+	font-size: 11px;
+	line-height: 11px;
+}
+
+table.diffTable td.ln {
+	width: 15px;
+	font-size: 11px;
+	line-height: 11px;
+	color: gray;
+}
+
+table.diffTable td.ln.left {
+	border-right: 1px solid silver;
+}
+table.diffTable td.ln.right {
+	border-left: 1px solid silver;
+}
+/* side-by-side diffs "a name" */
+table.diffTable td.diff-num {
+	padding:0;
+	margin:0;
+	border: 0;
+	width: 1px;
+}
+table.diffTable td.diff-num a {
+	visibility: hidden;
+	font-size: 0;
+}
+
+/* toggle line numbers or side
+ * for copy/paste
+ */
+.diffTable .hidden {
+	visibility: hidden;
+}
+
+table.diffTable td.diff-left,
+table.diffTable td.diff-right {
+	height:11px;
+}
+
+/* source code for white spaces */
+.diff-added span.line,
+.diff-modified span.line {
+	border-right: 1px dotted silver;
+}
+.diffTable span.tab {
+	border-right: 1px dotted silver;
+	background-color: #F0F0F0;
+	opacity: 0.5;
 }
 
 /*
@@ -157,6 +272,24 @@ div.commitDiffSBS div.SBSTOC .showAll
 	display: none;
 }
 
+li.SBSTOCFile {
+	list-style-type: circle;
+}
+li.SBSTOCFile span.add {
+	color: darkGreen;
+}
+li.SBSTOCFile span.del {
+	color: darkRed;
+}
+
+/*
+ * debug log in footer
+ */
+div.debug_footer
+{
+	font-size: 7pt;
+	color: red;
+}
 
 /*
  * Geshi styles
@@ -166,7 +299,7 @@ div.commitDiffSBS div.SBSTOC .showAll
 	font: normal normal 1em/1.2em monospace;
 	margin: 0;
 	padding: 0;
-	background: none; 
+	background: none;
 	vertical-align: top;
 }
 
@@ -178,3 +311,29 @@ div.commitDiffSBS div.SBSTOC .showAll
 	font-weight: normal;
 	vertical-align: top;
 }
+
+/* line numbers */
+#blobData td.ln pre.de1 {
+	color: silver;
+}
+#blobData td.ln {
+	border-right: 1px solid silver;
+}
+
+/* Pictures */
+div.diff_pict {
+	text-align: center;
+}
+
+div.diff_pict img.old {
+	margin-right: 4px;
+}
+div.diff_pict img.new {
+	margin-left: 4px;
+}
+
+/* Generic hide */
+.hidden {
+	display: none;
+}
+

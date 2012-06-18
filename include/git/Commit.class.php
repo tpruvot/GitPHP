@@ -671,6 +671,29 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * GetRemoteHeads
+	 *
+	 * Gets remote heads that point to this commit
+	 *
+	 * @access public
+	 * @return array array of heads
+	 */
+	public function GetRemoteHeads()
+	{
+		$heads = array();
+
+		$projectRefs = $this->GetProject()->GetRefs('remotes');
+
+		foreach ($projectRefs as $ref => $hash) {
+			if ($hash == $this->hash) {
+				$heads[] = $ref;
+			}
+		}
+
+		return $heads;
+	}
+
+	/**
 	 * GetTags
 	 *
 	 * Gets tags that point to this commit
@@ -686,7 +709,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		foreach ($projectRefs as $ref) {
 			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
-				if ($ref->GetCommit()->GetHash() === $this->hash) {
+				if ($ref->GetCommit() && $ref->GetCommit()->GetHash() === $this->hash) {
 					$tags[] = $ref;
 				}
 			}
@@ -1053,6 +1076,15 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public static function CompareAuthorEpoch($a, $b)
 	{
+		// PHP Parsing of git history require this.
+		if (!$a->GetProject()->GetCompat()) {
+			if ($a->GetParent()
+			    && $a->GetParent()->GetHash() == $b->GetHash())
+				return -1;
+			if ($b->GetParent()
+			    && $a->GetHash() == $b->GetParent()->GetHash())
+				return 1;
+		}
 		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
 			return 0;
 		}
