@@ -130,6 +130,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	protected function LoadHeaders()
 	{
 		$this->archive = new GitPHP_Archive($this->GetProject(), null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		if ($this->config->HasKey('compresslevel'))
+			$this->archive->SetCompressLevel($this->config->GetValue('compresslevel'));
 
 		$commit = null;
 

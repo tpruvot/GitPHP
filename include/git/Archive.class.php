@@ -82,6 +82,15 @@ class GitPHP_Archive
 	protected $prefix = '';
 
 	/**
+	 * compressLevel
+	 *
+	 * Stores the compression level
+	 *
+	 * @access protected
+	 */
+	protected $compressLevel;
+
+	/**
 	 * handle
 	 *
 	 * Stores the process handle
@@ -368,6 +377,43 @@ class GitPHP_Archive
 	}
 
 	/**
+	 * GetCompressLevel
+	 *
+	 * Gets the compression level
+	 *
+	 * @access public
+	 * @return int compression level
+	 */
+	public function GetCompressLevel()
+	{
+		return $this->compressLevel;
+	}
+
+	/**
+	 * SetCompressLevel
+	 *
+	 * Sets the compression level
+	 *
+	 * @access public
+	 * @param int $compresLevel compression level
+	 */
+	public function SetCompressLevel($compressLevel)
+	{
+		if ($compressLevel === null) {
+			$this->compressLevel = $compressLevel;
+			return;
+		}
+
+		if (!is_int($compressLevel))
+			return;
+
+		if (($compressLevel < 1) || ($compressLevel > 9))
+			return;
+
+		$this->compressLevel = $compressLevel;
+	}
+
+	/**
 	 * Open
 	 *
 	 * Opens a descriptor for reading archive data
@@ -391,9 +437,8 @@ class GitPHP_Archive
 		switch ($this->format) {
 			case GITPHP_COMPRESS_ZIP:
 				$args[] = '--format=zip';
-				$compress = GitPHP_Config::GetInstance()->GetValue('compresslevel');
-				if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
-					$args[] = '-' . $compress;
+				if ($this->compressLevel)
+					$args[] = '-' . $this->compressLevel;
 				break;
 			case GITPHP_COMPRESS_TAR:
 			case GITPHP_COMPRESS_BZ2:
@@ -414,11 +459,9 @@ class GitPHP_Archive
 
 			$this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
 
-			$compress = GitPHP_Config::GetInstance()->GetValue('compresslevel');
-
 			$mode = 'wb';
-			if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
-				$mode .= $compress;
+			if ($this->compressLevel)
+				$mode .= $this->compressLevel;
 
 			$temphandle = gzopen($this->tempfile, $mode);
 			if ($temphandle) {
@@ -490,7 +533,10 @@ class GitPHP_Archive
 		$data = fread($this->handle, $size);
 
 		if ($this->format == GITPHP_COMPRESS_BZ2) {
-			$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
+			if ($this->compressLevel)
+				$data = bzcompress($data, $this->compressLevel);
+			else
+				$data = bzcompress($data);
 		}
 
 		return $data;
