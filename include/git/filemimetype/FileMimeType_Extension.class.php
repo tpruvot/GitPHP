@@ -1,0 +1,73 @@
+<?php
+/**
+ * GitPHP FileMimeType_Extension
+ *
+ * File mime type strategy guessing the file extension
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2012 Christopher Han
+ * @package GitPHP
+ * @subpackage Git
+ */
+
+/**
+ * FileMimeType_Extension class
+ *
+ * @package GitPHP
+ * @subpackage Git
+ */
+class GitPHP_FileMimeType_Extension implements GitPHP_FileMimeTypeStrategy_Interface
+{
+	/**
+	 * GetMime
+	 *
+	 * Gets the mime type for a blob
+	 *
+	 * @access public
+	 * @param mixed $blob blob
+	 * @return string mime type
+	 */
+	public function GetMime($blob)
+	{
+		if (!$blob)
+			return false;
+
+		$file = $blob->GetName();
+
+		if (empty($file))
+			return '';
+
+		$dotpos = strrpos($file, '.');
+		if ($dotpos !== FALSE)
+			$file = substr($file, $dotpos+1);
+		switch ($file) {
+			case 'jpg':
+			case 'jpeg':
+			case 'jpe':
+				return 'image/jpeg';
+				break;
+			case 'gif':
+				return 'image/gif';
+				break;
+			case 'png';
+				return 'image/png';
+				break;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Valid
+	 *
+	 * Gets whether this mimetype strategy is valid
+	 *
+	 * @access public
+	 * @return bool true if valid
+	 */
+	public function Valid()
+	{
+		return !GitPHP_Util::IsWindows();
+	}
+
+}

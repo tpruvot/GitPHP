@@ -63,6 +63,8 @@ class GitPHP_AutoLoader
 			$path = 'controller/';
 		} else if (strncmp($classname, 'ProjectList', 11) === 0) {
 			$path = 'git/projectlist/';
+		} else if (strncmp($classname, 'FileMimeType', 12) === 0) {
+			$path = 'git/filemimetype/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
 		} else if (in_array($classname, array(
