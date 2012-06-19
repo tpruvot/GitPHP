@@ -450,7 +450,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 
 					$result = $this->allResults[$regs[1]];
 					$matchingLines = $result->GetMatchingLines();
-					$matchingLines[(int)($regs[2])] = $regs[3];
+					$matchingLines[(int)($regs[2])] = trim($regs[3], "\n\r\0\x0B");
 					$result->SetMatchingLines($matchingLines);
 
 				} else {
@@ -462,7 +462,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 						$blob->SetPath($regs[1]);
 						$result = new GitPHP_FileSearchResult($this->project, $blob, $regs[1]);
 						$matchingLines = array();
-						$matchingLines[(int)($regs[2])] = $regs[3];
+						$matchingLines[(int)($regs[2])] = trim($regs[3], "\n\r\0\x0B");
 						$result->SetMatchingLines($matchingLines);
 						$this->allResults[$regs[1]] = $result;
 					}
