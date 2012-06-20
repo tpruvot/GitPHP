@@ -351,7 +351,6 @@ abstract class GitPHP_ControllerBase
 				if (substr($selfurl, -4) != '.php') {
 					$selfurl = GitPHP_Util::AddSlash($selfurl);
 				}
-				$scripturl = $selfurl;
 				$fullscripturl = $selfurl;
 			}
 		}
