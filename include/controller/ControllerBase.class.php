@@ -337,7 +337,16 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
 		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
 
-		$this->tpl->assign('scripturl', $_SERVER['SCRIPT_NAME']);
+		$scripturl = $_SERVER['SCRIPT_NAME'];
+		if (GitPHP_Config::GetInstance()->HasKey('self')) {
+			$scripturl = GitPHP_Config::GetInstance()->GetValue('self');
+			if (!empty($scripturl)) {
+				if (substr($scripturl, -4) != '.php') {
+					$scripturl = GitPHP_Util::AddSlash($scripturl);
+				}
+			}
+		}
+		$this->tpl->assign('scripturl', $scripturl);
 
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);
 		$getvarsmapped = array();
