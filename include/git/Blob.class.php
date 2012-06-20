@@ -47,6 +47,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	protected $size = null;
 
 	/**
+	 * dataEncoded
+	 *
+	 * Stores whether data has been encoded for serialization
+	 *
+	 * @access protected
+	 */
+	protected $dataEncoded = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -76,6 +85,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->dataEncoded)
+			$this->DecodeData();
+
 		if ($explode)
 			return explode("\n", $this->data);
 		else
@@ -102,6 +114,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		} else {
 			$this->data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
 		}
+
+		$this->dataEncoded = false;
 
 		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
@@ -161,10 +175,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			return $this->size;
 		}
 
-		if (!$this->dataRead)
-			$this->ReadData();
-
-		return strlen($this->data);
+		return strlen($this->GetData());
 	}
 
 	/**
@@ -193,11 +204,45 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		$data = $this->data;
-		if (strlen($this->data) > 8000)
+		$data = $this->GetData();
+		if (strlen($data) > 8000)
 			$data = substr($data, 0, 8000);
 
 		return strpos($data, chr(0)) !== false;
+	}
+
+	/**
+	 * EncodeData
+	 *
+	 * Encodes data so it can be serialized safely
+	 *
+	 * @access private
+	 */
+	private function EncodeData()
+	{
+		if ($this->dataEncoded)
+			return;
+
+		$this->data = base64_encode($this->data);
+
+		$this->dataEncoded = true;
+	}
+
+	/**
+	 * DecodeData
+	 *
+	 * Decodes data after unserialization
+	 *
+	 * @access private
+	 */
+	private function DecodeData()
+	{
+		if (!$this->dataEncoded)
+			return;
+
+		$this->data = base64_decode($this->data);
+
+		$this->dataEncoded = false;
 	}
 
 	/**
@@ -210,7 +255,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	public function __sleep()
 	{
-		$properties = array('data', 'dataRead');
+		if (!$this->dataEncoded)
+			$this->EncodeData();
+
+		$properties = array('data', 'dataRead', 'dataEncoded');
 
 		return array_merge($properties, parent::__sleep());
 	}
