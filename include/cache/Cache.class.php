@@ -49,6 +49,7 @@ class GitPHP_Cache
 		if (!self::$objectCacheInstance) {
 			self::$objectCacheInstance = new GitPHP_Cache();
 			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
+				self::$objectCacheInstance->SetServers(GitPHP_Config::GetInstance()->GetValue('memcache', null));
 				self::$objectCacheInstance->SetEnabled(true);
 				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
 			}
@@ -73,6 +74,15 @@ class GitPHP_Cache
 	 * @access protected
 	 */
 	protected $enabled = false;
+
+	/**
+	 * servers
+	 *
+	 * Stores memcache servers
+	 *
+	 * @access protected
+	 */
+	protected $servers = null;
 
 	/**
 	 * __construct
@@ -151,6 +161,41 @@ class GitPHP_Cache
 
 		$this->tpl->cache_lifetime = $lifetime;
 	}
+
+	/**
+	 * GetServers
+	 *
+	 * Gets memcache server array
+	 *
+	 * @access public
+	 * @return array memcache array
+	 */
+	public function GetServers()
+	{
+		return $this->servers;
+	}
+
+	/**
+	 * SetServers
+	 *
+	 * Sets memcache server array
+	 *
+	 * @access public
+	 * @param array $servers server array
+	 */
+	public function SetServers($servers)
+	{
+		if (($this->servers === null) && ($servers === null))
+			return;
+
+		$this->servers = $servers;
+
+		if ($this->enabled) {
+			$this->DestroySmarty();
+			$this->CreateSmarty();
+		}
+	}
+	 
 
 	/**
 	 * Get
@@ -286,9 +331,8 @@ class GitPHP_Cache
 
 		$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
 
-		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
-		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-			$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
+		if (isset($this->servers) && is_array($this->servers) && (count($this->servers) > 0)) {
+			$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($this->servers));
 			$this->tpl->caching_type = 'memcache';
 		}
 
