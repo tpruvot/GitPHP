@@ -279,6 +279,7 @@ class GitPHP_Cache
 
 		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
 		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
+			$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
 			$this->tpl->caching_type = 'memcache';
 		}
 
