@@ -9,23 +9,23 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>{$project->GetProject()}</title>
   <subtitle type="text">{$project->GetProject()} log</subtitle>
-  <link href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=summary"/>
-  <link rel="self" href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom"/>
-  <id>{scripturl}?p={$project->GetProject()|rawurlencode}</id>
+  <link href="{$fullscripturl}?p={$project->GetProject()|rawurlencode}&amp;a=summary"/>
+  <link rel="self" href="{$fullscripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom"/>
+  <id>{$fullscripturl}?p={$project->GetProject()|rawurlencode}</id>
   {if $log->GetCount()>0}
   <updated>{$log->GetHead()->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 
 {foreach from=$log item=logitem}
   <entry>
-    <id>{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$logitem->GetHash()}</id>
+    <id>{$fullscripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$logitem->GetHash()}</id>
     <title>{$logitem->GetTitle()|escape:'html'}</title>
     <author>
       <name>{$logitem->GetAuthorName()|escape:'html'}</name>
     </author>
     <published>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</published>
     <updated>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
-    <link rel="alternate" href="{scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$logitem->GetHash()}"/>
+    <link rel="alternate" href="{$fullscripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$logitem->GetHash()}"/>
     <summary>{$logitem->GetTitle()|escape:'html'}</summary>
     <content type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
