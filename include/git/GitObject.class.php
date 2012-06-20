@@ -77,7 +77,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function __construct($project, $hash)
 	{
-		$this->project = $project->GetProject();
+		$this->project = $project;
 		$this->SetHash($hash);
 	}
 
@@ -91,7 +91,20 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return $this->project;
+	}
+
+	/**
+	 * SetProject
+	 *
+	 * Sets the project
+	 *
+	 * @access public
+	 * @param mixed $project project
+	 */
+	public function SetProject($project)
+	{
+		$this->project = $project;
 	}
 
 	/**

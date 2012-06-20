@@ -88,7 +88,7 @@ class GitPHP_TreeDiff implements Iterator
 	 */
 	public function __construct($project, $toHash, $fromHash = '', $renames = false)
 	{
-		$this->project = $project->GetProject();
+		$this->project = $project;
 
 		$toCommit = $project->GetCommit($toHash);
 		$this->toHash = $toHash;
@@ -115,7 +115,7 @@ class GitPHP_TreeDiff implements Iterator
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return $this->project;
 	}
 
 	/**

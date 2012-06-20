@@ -922,7 +922,9 @@ class GitPHP_Project
 
 				$commit = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 
-				if (!$commit) {
+				if ($commit) {
+					$commit->SetProject($this);
+				} else {
 					$commit = new GitPHP_Commit($this, $hash);
 				}
 
@@ -1007,7 +1009,9 @@ class GitPHP_Project
 		if (!$tagObj) {
 			$tagObj = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 
-			if (!$tagObj) {
+			if ($tagObj) {
+				$tagObj->SetProject($this);
+			} else {
 				$tagObj = new GitPHP_Tag($this, $tag, $hash);
 			}
 
@@ -1092,7 +1096,9 @@ class GitPHP_Project
 		if (!$blob) {
 			$blob = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 
-			if (!$blob) {
+			if ($blob) {
+				$blob->SetProject($this);
+			} else {
 				$blob = new GitPHP_Blob($this, $hash);
 			}
 
@@ -1128,7 +1134,9 @@ class GitPHP_Project
 		if (!$tree) {
 			$tree = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 
-			if (!$tree) {
+			if ($tree) {
+				$tree->SetProject($this);
+			} else {
 				$tree = new GitPHP_Tree($this, $hash);
 			}
 

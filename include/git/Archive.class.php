@@ -123,7 +123,7 @@ class GitPHP_Archive
 		$this->SetProject($project);
 		$this->SetObject($gitObject);
 		if (!$this->project && $gitObject) {
-			$this->project = $gitObject->GetProject()->GetProject();
+			$this->project = $gitObject->GetProject();
 		}
 		$this->SetFormat($format);
 		$this->SetPath($path);
@@ -229,10 +229,7 @@ class GitPHP_Archive
 	 */
 	public function GetProject()
 	{
-		if ($this->project)
-			return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
-
-		return null;
+		return $this->project;
 	}
 
 	/**
@@ -245,10 +242,7 @@ class GitPHP_Archive
 	 */
 	public function SetProject($project)
 	{
-		if ($project)
-			$this->project = $project->GetProject();
-		else
-			$this->project = null;
+		$this->project = $project;
 	}
 
 	/**

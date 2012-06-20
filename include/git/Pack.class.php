@@ -71,7 +71,7 @@ class GitPHP_Pack
 			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
-		$this->project = $project->GetProject();
+		$this->project = $project;
 
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
 			throw new Exception('Pack index does not exist');
@@ -91,7 +91,7 @@ class GitPHP_Pack
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return $this->project;
 	}
 
 	/**
