@@ -1,6 +1,6 @@
 <?php
 /**
- * Smarty_CacheResource_Memcache
+ * GitPHP_CacheResource_Memcache
  *
  * Memcache and memcached cache handler
  * based on example memcache resource
@@ -13,9 +13,9 @@
  */
 
 /**
- * Smarty Memcache CacheResource
+ * GitPHP Memcache CacheResource
  */
-class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
+class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 {
 
 	/**
@@ -43,16 +43,25 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	protected $memcacheType = 0;
 
 	/**
+	 * servers
+	 *
+	 * Memcache server array
+	 *
+	 * @access protected
+	 */
+	protected $servers;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
 	 *
 	 * @access public
+	 * @param array $servers server array
 	 * @return Memcache object
 	 */
-	public function __construct()
+	public function __construct($servers)
 	{
-		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
 		if ((!$servers) || (!is_array($servers)) || (count($servers) < 1)) {
 			throw new GitPHP_MessageException('No Memcache servers defined', true, 500);
 		}
@@ -60,14 +69,14 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 		if (class_exists('Memcached')) {
 
 			$this->memcacheObj = new Memcached();
-			$this->memcacheType = Smarty_CacheResource_Memcache::Memcached;
+			$this->memcacheType = GitPHP_CacheResource_Memcache::Memcached;
 			$this->memcacheObj->addServers($servers);
 
 
 		} else if (class_exists('Memcache')) {
 
 			$this->memcacheObj = new Memcache();
-			$this->memcacheType = Smarty_CacheResource_Memcache::Memcache;
+			$this->memcacheType = GitPHP_CacheResource_Memcache::Memcache;
 			foreach ($servers as $server) {
 				if (is_array($server)) {
 					$host = $server[0];
@@ -84,6 +93,8 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 		} else {
 			throw new GitPHP_MessageException(__('The Memcached or Memcache PHP extension is required for Memcache support'), true, 500);
 		}
+
+		$this->servers = $servers;
 	}
 
 	/**
@@ -108,11 +119,11 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 		$data = false;
 		$cachedata = array();
 
-		if ($this->memcacheType == Smarty_CacheResource_Memcache::Memcache) {
+		if ($this->memcacheType == GitPHP_CacheResource_Memcache::Memcache) {
 
 			$cachedata = $this->memcacheObj->get($hashedkeys);
 
-		} else if ($this->memcacheType == Smarty_CacheResource_Memcache::Memcached) {
+		} else if ($this->memcacheType == GitPHP_CacheResource_Memcache::Memcached) {
 
 			$cachedata = $this->memcacheObj->getMulti($hashedkeys);
 		}
@@ -141,7 +152,7 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	 */
 	protected function write(array $keys, $expire = null)
 	{
-		if ($this->memcacheType == Smarty_CacheResource_Memcache::Memcache) {
+		if ($this->memcacheType == GitPHP_CacheResource_Memcache::Memcache) {
 
 			foreach ($keys as $key => $value) {
 				$this->memcacheObj->set(sha1($key), $value, 0, $expire);
@@ -149,7 +160,7 @@ class Smarty_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 
 			return true;
 
-		} else if ($this->memcacheType == Smarty_CacheResource_Memcache::Memcached) {
+		} else if ($this->memcacheType == GitPHP_CacheResource_Memcache::Memcached) {
 
 			$mapped = array();
 			foreach ($keys as $key => $value) {
