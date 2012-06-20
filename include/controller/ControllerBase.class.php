@@ -337,6 +337,8 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
 		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
 
+		$this->tpl->assign('scripturl', $_SERVER['SCRIPT_NAME']);
+
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);
 		$getvarsmapped = array();
 		foreach ($getvars as $varstr) {

@@ -14,26 +14,26 @@
   {include file='nav.tpl' logcommit=$commit treecommit=$commit}
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}">{t}first{/t}</a>
+    <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}">{t}first{/t}</a>
   {else}
     {t}first{/t}
   {/if}
     &sdot; 
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+    <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
   {else}
     {t}prev{/t}
   {/if}
     &sdot; 
   {if $hasmore}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+    <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
   {else}
     {t}next{/t}
   {/if}
   <br />
 </div>
 <div class="title">
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$commit->GetHash()}" class="title">{$commit->GetTitle()|escape:'html'}</a>
+  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$commit->GetHash()}" class="title">{$commit->GetTitle()|escape:'html'}</a>
 </div>
 <table>
   {* Print each match *}
@@ -42,20 +42,20 @@
       {assign var=resultobject value=$result->GetObject()}
       {if $resultobject instanceof GitPHP_Tree}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()|highlight:$search}</strong></a>
+		  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()|highlight:$search}</strong></a>
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}tree{/t}</a>
+		  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}tree{/t}</a>
 	      </td>
       {else}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()|highlight:$search}</strong></a>
+		  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}" class="list"><strong>{$result->GetPath()|highlight:$search}</strong></a>
 		  {foreach from=$result->GetMatchingLines() item=line name=match key=lineno}
 		    {if $smarty.foreach.match.first}<br />{/if}<span class="matchline">{$lineno}. {$line|highlight:$search:50:true}</span><br />
 		  {/foreach}
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}history{/t}</a>
+		  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$resultobject->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}blob{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$result->GetPath()}">{t}history{/t}</a>
 	      </td>
       {/if}
     </tr>
@@ -63,7 +63,7 @@
 
   {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
+      <td><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
       <td></td>
     </tr>
   {/if}
