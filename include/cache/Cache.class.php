@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Cache
- *
  * Class to store arbitrary data objects in smarty cache
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,40 +7,24 @@
  * @package GitPHP
  * @subpackage Cache
  */
-
-/**
- * Cache class
- *
- * @package GitPHP
- * @subpackage Cache
- */
 class GitPHP_Cache
 {
 	/**
-	 * Template
-	 *
 	 * Cache template
 	 */
 	const Template = 'data.tpl';
 
 	/**
-	 * objectCacheInstance
-	 *
 	 * Stores the singleton instance of the object cache
 	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_Cache
 	 */
 	protected static $objectCacheInstance;
 
 	/**
-	 * GetObjectCacheInstance
-	 *
 	 * Return the singleton instance of the object cache
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of cache class
+	 * @return GitPHP_Cache instance of cache class
 	 */
 	public static function GetObjectCacheInstance()
 	{
@@ -58,50 +40,36 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * tpl
-	 *
 	 * Smarty instance
 	 *
-	 * @access protected
+	 * @var Smarty
 	 */
 	protected $tpl = null;
 
 	/**
-	 * enabled
-	 *
 	 * Stores whether the cache is enabled
 	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $enabled = false;
 
 	/**
-	 * servers
-	 *
 	 * Stores memcache servers
 	 *
-	 * @access protected
+	 * @var array[]
 	 */
 	protected $servers = null;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
-	 *
-	 * @access public
-	 * @return mixed cache object
 	 */
 	public function __construct()
 	{
 	}
 
 	/**
-	 * GetEnabled
-	 *
 	 * Gets whether the cache is enabled
 	 *
-	 * @access public
 	 * @return boolean true if enabled
 	 */
 	public function GetEnabled()
@@ -110,11 +78,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * SetEnabled
-	 *
 	 * Sets whether the cache is enabled
 	 *
-	 * @access public
 	 * @param boolean $enable true to enable, false to disable
 	 */
 	public function SetEnabled($enable)
@@ -131,11 +96,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * GetLifetime
-	 *
 	 * Gets the cache lifetime
 	 *
-	 * @access public
 	 * @return int cache lifetime in seconds
 	 */
 	public function GetLifetime()
@@ -147,11 +109,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * SetLifetime
-	 *
 	 * Sets the cache lifetime
 	 *
-	 * @access public
 	 * @param int $lifetime cache lifetime in seconds
 	 */
 	public function SetLifetime($lifetime)
@@ -163,12 +122,9 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * GetServers
-	 *
 	 * Gets memcache server array
 	 *
-	 * @access public
-	 * @return array memcache array
+	 * @return array[] memcache array
 	 */
 	public function GetServers()
 	{
@@ -176,12 +132,9 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * SetServers
-	 *
 	 * Sets memcache server array
 	 *
-	 * @access public
-	 * @param array $servers server array
+	 * @param array[] $servers server array
 	 */
 	public function SetServers($servers)
 	{
@@ -198,13 +151,10 @@ class GitPHP_Cache
 	 
 
 	/**
-	 * Get
-	 *
 	 * Get an item from the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
-	 * @return the cached object, or false
+	 * @return mixed the cached object, or false
 	 */
 	public function Get($key = null)
 	{
@@ -223,11 +173,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Set
-	 *
 	 * Set an item in the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @param mixed $value value
 	 * @param int $lifetime override the lifetime for this data
@@ -260,11 +207,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Exists
-	 *
 	 * Tests if a key is cached
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @return boolean true if cached, false otherwise
 	 */
@@ -280,11 +224,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Delete
-	 *
 	 * Delete an item from the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 */
 	public function Delete($key = null)
@@ -299,11 +240,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Clear
-	 *
 	 * Clear the cache
-	 *
-	 * @access public
 	 */
 	public function Clear()
 	{
@@ -314,11 +251,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * CreateSmarty
-	 *
 	 * Instantiates Smarty cache
-	 *
-	 * @access private
 	 */
 	private function CreateSmarty()
 	{
@@ -339,11 +272,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * DestroySmarty
-	 *
 	 * Destroys Smarty cache
-	 *
-	 * @access private
 	 */
 	private function DestroySmarty()
 	{

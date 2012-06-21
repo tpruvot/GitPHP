@@ -1,64 +1,52 @@
 <?php
 /**
- * GitPHP_CacheResource_Memcache
- *
  * Memcache and memcached cache handler
- * based on example memcache resource
- * included with smarty
+ * 
+ * Based on example memcache resource included with smarty
  *
  * @author Christopher Han <xiphux@gmail.com>
- * @copyright (c) 2011 Christopher Han
+ * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
  * @subpackage Cache
- */
-
-/**
- * GitPHP Memcache CacheResource
  */
 class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 {
 
 	/**
-	 * Memcache extension type constants
+	 * Memcache extension type constant
 	 */
 	const Memcache = 1;
+
+	/**
+	 * Memcached extension type constant
+	 */
 	const Memcached = 2;
 
 	/**
-	 * memcacheObj
-	 *
 	 * Memcache object
 	 *
-	 * @access protected
+	 * @var Memcached|Memcache|null
 	 */
 	protected $memcacheObj = null;
 
 	/**
-	 * memcacheType
-	 *
 	 * Memcache extension type
 	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $memcacheType = 0;
 
 	/**
-	 * servers
-	 *
 	 * Memcache server array
 	 *
-	 * @access protected
+	 * @var array[]
 	 */
 	protected $servers;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param array $servers server array
-	 * @return Memcache object
+	 * @param array[] $servers server array
 	 */
 	public function __construct($servers)
 	{
@@ -98,11 +86,8 @@ class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	}
 
 	/**
-	 * read
-	 *
 	 * Read cached data
 	 *
-	 * @access protected
 	 * @param array $keys array of keys to load
 	 * @return array key/value cached data
 	 */
@@ -141,11 +126,8 @@ class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	}
 
 	/**
-	 * write
-	 *
 	 * Write data to cache
 	 *
-	 * @access protected
 	 * @param array $keys array of key/value data to store
 	 * @param int $expire expiration time
 	 * @return boolean true on success
@@ -175,11 +157,8 @@ class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	}
 
 	/**
-	 * delete
-	 *
 	 * Delete data from cache
 	 *
-	 * @access protected
 	 * @param array $keys array of keys to delete
 	 * @return boolean true on success
 	 */
@@ -192,11 +171,8 @@ class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 	}
 
 	/**
-	 * purge
-	 *
 	 * Delete all data from cache
 	 *
-	 * @access protected
 	 * @return boolean true on success
 	 */
 	protected function purge()

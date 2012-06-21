@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP MemoryCache
- *
  * Cache to manage objects in process memory
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,69 +7,47 @@
  * @package GitPHP
  * @subpackage Cache
  */
-
-/**
- * MemoryCache class
- *
- * @package GitPHP
- * @subpackage Cache
- */
 class GitPHP_MemoryCache
 {
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
 	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_MemoryCache
 	 */
 	protected static $instance;
 
 	/**
-	 * objects
-	 *
 	 * Stores the objects in this cache
 	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $objects = array();
 
 	/**
-	 * autoManaged
-	 *
 	 * Whether the cache will automatically manage the number of items
 	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $autoManaged = true;
 
 	/**
-	 * lastProject
-	 *
 	 * Stores the last project that stored into this cache
 	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $lastProject;
 
 	/**
-	 * size
-	 *
 	 * Size of cache
 	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $size;
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of config class
+	 * @return GitPHP_MemoryCache instance of cache class
 	 */
 	public static function GetInstance()
 	{
@@ -82,12 +58,7 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -95,11 +66,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Class constructor
 	 *
-	 * @access private
 	 * @param int $size size of cache
 	 */
 	private function __construct($size = 0)
@@ -108,11 +76,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * GetSize
-	 *
 	 * Gets the size of this cache
 	 *
-	 * @access public
 	 * @return int size
 	 */
 	public function GetSize()
@@ -121,11 +86,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * SetSize
-	 *
 	 * Sets the size of this cache
 	 *
-	 * @access public
 	 * @param int $size size
 	 */
 	public function SetSize($size)
@@ -140,11 +102,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * GetAutoManaged
-	 *
 	 * Gets whether this cache is auto managing its size
 	 *
-	 * @access public
 	 * @return bool true if automanaged
 	 */
 	public function GetAutoManaged()
@@ -153,11 +112,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * SetAutoManaged
-	 *
 	 * Sets whether this cache should auto manage its size
 	 *
-	 * @access public
 	 * @param bool $autoManaged true if cache should automanage
 	 */
 	public function SetAutoManaged($autoManaged)
@@ -173,11 +129,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * Get
-	 *
 	 * Gets an object from the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @return mixed object from cache if found
 	 */
@@ -202,11 +155,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * Set
-	 *
 	 * Sets an object into the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @param mixed $object object to cache
 	 */
@@ -239,11 +189,8 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * GetCount
-	 *
 	 * Gets the count of items in this cache
 	 *
-	 * @access public
 	 * @return int count
 	 */
 	public function GetCount()
@@ -252,11 +199,7 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * Clear
-	 *
 	 * Clear the cache
-	 *
-	 * @access public
 	 */
 	public function Clear()
 	{
@@ -265,11 +208,7 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * Evict
-	 *
 	 * Evicts items from the cache down to the size limit
-	 *
-	 * @access private
 	 */
 	private function Evict()
 	{
@@ -283,11 +222,9 @@ class GitPHP_MemoryCache
 	}
 
 	/**
-	 * KeyToProject
-	 *
 	 * Extracts the project from a key
 	 *
-	 * @access private
+	 * @param string $key cache key
 	 */
 	private function ExtractProject($key)
 	{
