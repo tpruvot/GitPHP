@@ -1,28 +1,19 @@
 <?php
-/**
- * GitPHP Resource
- *
- * Resource factory
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- */
 
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
 /**
- * Resource factory class
+ * Resource string manager class
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
 class GitPHP_Resource
 {
 
 	/**
-	 * LocaleCookie
-	 *
 	 * Constant of the locale cookie in the user's browser
 	 *
 	 * @const
@@ -30,8 +21,6 @@ class GitPHP_Resource
 	const LocaleCookie = 'GitPHPLocale';
 
 	/**
-	 * LocaleCookieLifetime
-	 *
 	 * Locale cookie lifetime
 	 *
 	 * @const
@@ -39,33 +28,23 @@ class GitPHP_Resource
 	const LocaleCookieLifetime = 31536000;	// 1 year
 	
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance of the resource provider
 	 *
-	 * @access protected
-	 * @static
+	 * @var gettext_reader
 	 */
 	protected static $instance = null;
 
 	/**
-	 * currentLocale
-	 *
 	 * Stores the currently instantiated locale identifier
 	 *
-	 * @access protected
-	 * @static
+	 * @var string
 	 */
 	protected static $currentLocale = '';
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of resource class
+	 * @return gettext_reader instance of resource class
 	 */
 	public static function GetInstance()
 	{
@@ -73,12 +52,7 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -86,12 +60,8 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * Instantiated
-	 *
 	 * Tests if the resource provider has been instantiated
 	 *
-	 * @access public
-	 * @static
 	 * @return boolean true if resource provider is instantiated
 	 */
 	public static function Instantiated()
@@ -100,12 +70,8 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * GetLocale
-	 *
 	 * Gets the currently instantiated locale
 	 *
-	 * @access public
-	 * @static
 	 * @return string locale identifier
 	 */
 	public static function GetLocale()
@@ -114,12 +80,8 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * GetLocaleName
-	 *
 	 * Gets the current instantiated locale's name
 	 *
-	 * @access public
-	 * @static
 	 * @return string locale name
 	 */
 	public static function GetLocaleName()
@@ -128,14 +90,10 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * LocaleToName
-	 *
 	 * Given a locale, returns a human readable name
 	 *
-	 * @access public
-	 * @static
 	 * @param string $locale locale
-	 * return string name
+	 * @return string name
 	 */
 	public static function LocaleToName($locale)
 	{
@@ -165,13 +123,9 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * SupportedLocales
-	 *
 	 * Gets the list of supported locales and their languages
 	 *
-	 * @access public
-	 * @static
-	 * @return array list of locales mapped to languages
+	 * @return string[] array of locales mapped to languages
 	 */
 	public static function SupportedLocales()
 	{
@@ -202,12 +156,8 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * FindPreferredLocale
-	 *
 	 * Given a list of preferred locales, try to find a matching supported locale
 	 *
-	 * @access public
-	 * @static
 	 * @param string $httpAcceptLang HTTP Accept-Language string
 	 * @return string matching locale if found
 	 */
@@ -258,12 +208,8 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * Instantiate
-	 *
 	 * Instantiates the singleton instance
 	 *
-	 * @access public
-	 * @static
 	 * @param string $locale locale to instantiate
 	 * @return boolean true if resource provider was instantiated successfully
 	 */
@@ -283,15 +229,11 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * CreateLocale
-	 *
 	 * Creates a locale reader object
 	 *
-	 * @access private
-	 * @static
 	 * @param string $locale locale to create
 	 * @param boolean $cache false to disable caching
-	 * @return mixed locale reader object or null on failure
+	 * @return gettext_reader|null locale reader object or null on failure
 	 */
 	private static function CreateLocale($locale, $cache = true)
 	{
@@ -310,10 +252,11 @@ class GitPHP_Resource
 
 
 /**
- * Gettext wrapper function for readability, single string
+ * Gettext wrapper function for readability, single string version
  *
  * @param string $str string to translate
  * @return string translated string
+ * @package GitPHP
  */
 function __($str)
 {
@@ -329,6 +272,7 @@ function __($str)
  * @param string $plural plural form of string
  * @param int $count number of items
  * @return string translated string
+ * @package GitPHP
  */
 function __n($singular, $plural, $count)
 {

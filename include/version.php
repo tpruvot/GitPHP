@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP version
- *
  * Version header
  *
  * @author Christopher Han <xiphux@gmail.com>

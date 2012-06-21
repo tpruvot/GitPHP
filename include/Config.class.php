@@ -1,63 +1,59 @@
 <?php
 /**
- * GitPHP Config
- *
+ * Constant for tar archive
+ */
+define('GITPHP_COMPRESS_TAR', 'tar');
+
+/**
+ * Constant for bz2 archive
+ */
+define('GITPHP_COMPRESS_BZ2', 'tbz2');
+
+/**
+ * Constant for gz archive
+ */
+define('GITPHP_COMPRESS_GZ', 'tgz');
+
+/**
+ * Constant for zip archive
+ */
+define('GITPHP_COMPRESS_ZIP', 'zip');
+
+/**
  * Configfile reader class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
-define('GITPHP_COMPRESS_TAR', 'tar');
-define('GITPHP_COMPRESS_BZ2', 'tbz2');
-define('GITPHP_COMPRESS_GZ', 'tgz');
-define('GITPHP_COMPRESS_ZIP', 'zip');
-
-/**
- * Config class
- *
- * @package GitPHP
- */
 class GitPHP_Config
 {
 	
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
 	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_Config
 	 */
 	protected static $instance;
 
 	/**
-	 * values
-	 *
 	 * Stores the config values
 	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $values = array();
 
 	/**
-	 * configs
-	 *
 	 * Stores the config files
 	 *
-	 * @access protected
+	 * @var string[]
 	 */
 	protected $configs = array();
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of config class
+	 * @return GitPHP_Config instance of config class
 	 */
 	public static function GetInstance()
 	{
@@ -68,12 +64,7 @@ class GitPHP_Config
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -81,22 +72,15 @@ class GitPHP_Config
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Class constructor
-	 *
-	 * @access private
 	 */
 	private function __construct()
 	{
 	}
 
 	/**
-	 * LoadConfig
-	 *
 	 * Loads a config file
 	 *
-	 * @access public
 	 * @param string $configFile config file to load
 	 * @throws Exception on failure
 	 */
@@ -121,11 +105,7 @@ class GitPHP_Config
 	}
 
 	/**
-	 * ClearConfig
-	 *
 	 * Clears all config values
-	 *
-	 * @access public
 	 */
 	public function ClearConfig()
 	{
@@ -134,13 +114,10 @@ class GitPHP_Config
 	}
 
 	/**
-	 * GetValue
-	 *
 	 * Gets a config value
 	 *
-	 * @access public
-	 * @param $key config key to fetch
-	 * @param $default default config value to return
+	 * @param string $key config key to fetch
+	 * @param mixed $default default config value to return
 	 * @return mixed config value
 	 */
 	public function GetValue($key, $default = null)
@@ -152,11 +129,8 @@ class GitPHP_Config
 	}
 
 	/**
-	 * SetValue
-	 *
 	 * Sets a config value
 	 *
-	 * @access public
 	 * @param string $key config key to set
 	 * @param mixed $value value to set
 	 */
@@ -173,11 +147,8 @@ class GitPHP_Config
 	}
 
 	/**
-	 * HasKey
-	 *
 	 * Tests if the config has specified this key
 	 *
-	 * @access public
 	 * @param string $key config key to find
 	 * @return boolean true if key exists
 	 */

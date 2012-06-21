@@ -1,84 +1,59 @@
 <?php
 /**
- * GitPHP DebugLog
- *
- * Debug Logging class
+ * Debug logging class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
-/**
- * Debug logging class
- *
- * @package GitPHP
- */
 class GitPHP_DebugLog
 {
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
 	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_DebugLog
 	 */
 	protected static $instance;
 
 	/**
-	 * enabled
-	 *
 	 * Stores whether logging is enabled
 	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $enabled = false;
 
 	/**
-	 * benchmark
-	 *
 	 * Stores whether benchmarking is enabled
 	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $benchmark = false;
 
 	/**
-	 * startTime
-	 *
 	 * Stores the starting instant
 	 *
-	 * @access protected
+	 * @var float
 	 */
 	protected $startTime;
 
 	/**
-	 * startMem
-	 *
 	 * Stores the starting memory
 	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $startMem;
 
 	/**
-	 * entries
-	 *
 	 * Stores the log entries
 	 *
-	 * @access protected
+	 * @var string[]
 	 */
 	protected $entries = array();
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of logging clas
+	 * @return GitPHP_DebugLog instance of logging class
 	 */
 	public static function GetInstance()
 	{
@@ -91,12 +66,7 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -104,12 +74,10 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access private
-	 * @return Log object
+	 * @param boolean $enabled whether log should be enabled
+	 * @param boolean $benchmark whether benchmarking should be enabled
 	 */
 	private function __construct($enabled = false, $benchmark = false)
 	{
@@ -121,11 +89,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * SetStartTime
-	 *
 	 * Sets start time
 	 *
-	 * @access public
 	 * @param float $start starting microtime
 	 */
 	public function SetStartTime($start)
@@ -134,11 +99,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * SetStartMemory
-	 *
 	 * Sets start memory
 	 *
-	 * @access public
 	 * @param integer $start starting memory
 	 */
 	public function SetStartMemory($start)
@@ -147,11 +109,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * Log
-	 *
 	 * Log an entry
 	 *
-	 * @access public
 	 * @param string $message message to log
 	 */
 	public function Log($message)
@@ -171,11 +130,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * GetEnabled
-	 *
 	 * Gets whether logging is enabled
 	 *
-	 * @access public
 	 * @return boolean true if logging is enabled
 	 */
 	public function GetEnabled()
@@ -184,11 +140,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * SetEnabled
-	 *
 	 * Sets whether logging is enabled
 	 *
-	 * @access public
 	 * @param boolean $enable true if logging is enabled
 	 */
 	public function SetEnabled($enable)
@@ -197,11 +150,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * GetBenchmark
-	 *
 	 * Gets whether benchmarking is enabled
 	 *
-	 * @access public
 	 * @return boolean true if benchmarking is enabled
 	 */
 	public function GetBenchmark()
@@ -210,11 +160,8 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * SetBenchmark
-	 *
 	 * Sets whether benchmarking is enabled
 	 *
-	 * @access public
 	 * @param boolean $bench true if benchmarking is enabled
 	 */
 	public function SetBenchmark($bench)
@@ -223,12 +170,9 @@ class GitPHP_DebugLog
 	}
 
 	/**
-	 * GetEntries
+	 * Gets log entries
 	 *
-	 * Calculates times and gets log entries
-	 *
-	 * @access public
-	 * @return array log entries
+	 * @return string[] log entries
 	 */
 	public function GetEntries()
 	{

@@ -1,28 +1,16 @@
 <?php
 /**
- * GitPHP AutoLoader
- *
  * Class to handle autoloading other classes
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
  */
-
-/**
- * AutoLoader class
- *
- * @package GitPHP
- */
 class GitPHP_AutoLoader
 {
 	/**
-	 * AutoLoad
-	 *
 	 * Autoload a class
 	 *
-	 * @access public
-	 * @static
 	 * @param string $classname class name
 	 */
 	public static function AutoLoad($classname)
@@ -39,12 +27,8 @@ class GitPHP_AutoLoader
 	}
 
 	/**
-	 * ClassPath
+	 * Get the path to a class
 	 *
-	 * Gets the path a class
-	 *
-	 * @access public
-	 * @static
 	 * @param string $classname class name
 	 * @return string path
 	 */

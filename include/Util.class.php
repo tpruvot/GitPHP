@@ -1,32 +1,20 @@
 <?php
 /**
- * GitPHP Util
- *
- * Utility functions
+ * Utility function class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- */
-
-/**
- * Util class
- *
  * @package GitPHP
  */
 class GitPHP_Util
 {
 
 	/**
-	 * AddSlash
-	 *
 	 * Adds a trailing slash to a directory path if necessary
 	 *
-	 * @access public
-	 * @static
 	 * @param string $path path to add slash to
-	 * @param $filesystem true if this is a filesystem path (to also check for backslash for windows paths)
-	 * @return string $path with a trailing slash
+	 * @param boolean $filesystem true if this is a filesystem path (to also check for backslash for windows paths)
+	 * @return string path with a trailing slash
 	 */
 	public static function AddSlash($path, $filesystem = true)
 	{
@@ -47,12 +35,8 @@ class GitPHP_Util
 	}
 
 	/**
-	 * IsWindows
-	 *
 	 * Tests if this is running on windows
 	 *
-	 * @access public
-	 * @static
 	 * @return bool true if on windows
 	 */
 	public static function IsWindows()
@@ -61,12 +45,8 @@ class GitPHP_Util
 	}
 
 	/**
-	 * Is64Bit
-	 *
 	 * Tests if this is a 64 bit machine
 	 *
-	 * @access public
-	 * @static
 	 * @return bool true if on 64 bit
 	 */
 	public static function Is64Bit()
@@ -75,13 +55,9 @@ class GitPHP_Util
 	}
 
 	/**
-	 * MakeSlug
-	 *
 	 * Turn a string into a filename-friendly slug
 	 *
-	 * @access public
 	 * @param string $str string to slugify
-	 * @static
 	 * @return string slug
 	 */
 	public static function MakeSlug($str)
@@ -96,16 +72,12 @@ class GitPHP_Util
 	}
 
 	/**
-	 * BaseName
-	 *
 	 * Get the filename of a given path
 	 *
-	 * based on Drupal's basename
+	 * Based on Drupal's basename
 	 *
-	 * @access public
 	 * @param string $path path
 	 * @param string $suffix optionally trim this suffix
-	 * @static
 	 * @return string filename
 	 */
 	public static function BaseName($path, $suffix = null)
@@ -130,14 +102,10 @@ class GitPHP_Util
 	}
 
 	/**
-	 * GeshiFilenameToLanguage
-	 *
 	 * Provides a geshi language for a given filename
 	 *
-	 * @access public
 	 * @param string $filename file name
 	 * @return string language
-	 * @static
 	 */
 	public static function GeshiFilenameToLanguage($filename)
 	{
@@ -149,14 +117,10 @@ class GitPHP_Util
 	}
 
 	/**
-	 * ListDir
-	 *
 	 * Recurses into a directory and lists files inside
 	 *
-	 * @access public
-	 * @static
 	 * @param string $dir directory
-	 * @return array array of filenames
+	 * @return string[] array of filenames
 	 */
 	public static function ListDir($dir)
 	{
