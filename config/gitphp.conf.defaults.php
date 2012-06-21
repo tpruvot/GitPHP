@@ -403,29 +403,6 @@ $gitphp_conf['objectmemory'] = 0;
  */
 
 /*
- * smarty_prefix
- * This is the prefix where smarty is installed.
- * If an absolute (starts with /) path is given,
- * Smarty.class.php will be searched for in that directory.
- * If a relative (doesn't start with /) path is given,
- * that subdirectory inside the php include dirs will be
- * searched.  So, for example, if you specify the path as
- * "/usr/share/Smarty/" then the script will look for
- * /usr/share/Smarty/Smarty.class.php.
- * If you specify the path as "smarty/" then it will search
- * the include directories in php.ini's include_path directive,
- * so it would search in places like /usr/share/php and /usr/lib/php:
- * /usr/share/php/smarty/Smarty.class.php,
- * /usr/lib/php/smarty/Smarty.class.php, etc.
- * Leave blank to just search in the root of the php include directories
- * like /usr/share/php/Smarty.class.php, /usr/lib/php/Smarty.class.php, etc.
- *
- * This is only necessary if you want to use a smarty install other than
- * the one that comes with GitPHP.
- */
-$gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
-
-/*
  * geshiroot
  * Directory where geshi is installed, only applies if geshi is enabled
  * NOTE: this is the path to the base geshi.php file to include,

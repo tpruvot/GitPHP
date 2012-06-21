@@ -31,6 +31,8 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
 define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
 define('GITPHP_CACHEDIR', GITPHP_INCLUDEDIR . 'cache/');
+define('GITPHP_LIBDIR', GITPHP_BASEDIR . 'lib/');
+define('GITPHP_SMARTYDIR', GITPHP_LIBDIR . 'smarty/libs/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 define('GITPHP_CACHE', GITPHP_BASEDIR . 'cache/');
