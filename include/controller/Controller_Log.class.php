@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Log
- *
  * Controller for displaying a log
  *
  * @author Christopher Han
@@ -9,22 +7,12 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Log controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Log extends GitPHP_ControllerBase
 {
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
@@ -36,11 +24,8 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -49,11 +34,8 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -72,11 +54,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
 	 * Read query into parameters
-	 *
-	 * @access protected
 	 */
 	protected function ReadQuery()
 	{
@@ -93,11 +71,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{

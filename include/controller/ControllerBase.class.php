@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP ControllerBase
- *
  * Base class that all controllers extend
  *
  * @author Christopher Han <xiphux@gmail.com
@@ -9,98 +7,67 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * ControllerBase class
- *
- * @package GitPHP
- * @subpackage Controller
- * @abstract
- */
 abstract class GitPHP_ControllerBase
 {
 
 	/**
-	 * config
-	 *
 	 * Config handler instance
 	 *
-	 * @access protected
+	 * @var GitPHP_Config
 	 */
 	protected $config;
 
 	/**
-	 * tpl
-	 *
 	 * Smarty instance
 	 *
-	 * @access protected
+	 * @var Smarty
 	 */
 	protected $tpl;
 
 	/**
-	 * projectList
-	 *
 	 * Project list
 	 *
-	 * @access protected
+	 * @var GitPHP_ProjectListBase
 	 */
 	protected $projectList;
 
 	/**
-	 * project
-	 *
 	 * Current project
 	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * multiProject
-	 *
 	 * Flag if this is a multi project controller
 	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $multiProject;
 
 	/**
-	 * params
-	 *
 	 * Parameters
 	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $params = array();
 
 	/**
-	 * headers
+	 * HTTP Headers
 	 *
-	 * Headers
-	 *
-	 * @access protected
+	 * @var string[]
 	 */
 	protected $headers = array();
 
 	/**
-	 * preserveWhitespace
+	 * Flag to preserve whitespace in output (for non-html output)
 	 *
-	 * Flag to preserve whitespace in output
-	 * (for non-html output)
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $preserveWhitespace = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
-	 *
-	 * @access public
-	 * @return mixed controller object
-	 * @throws Exception on invalid project
 	 */
 	public function __construct()
 	{
@@ -152,12 +119,9 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project for this controller
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project|null project
 	 */
 	public function GetProject()
 	{
@@ -167,34 +131,23 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
-	 * @abstract
 	 * @return string template filename
 	 */
 	protected abstract function GetTemplate();
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
-	 * @abstract
 	 * @return string cache key
 	 */
 	protected abstract function GetCacheKey();
 
 	/**
-	 * GetCacheKeyPrefix
-	 *
 	 * Get the prefix for all cache keys
 	 *
-	 * @access private
-	 * @param string $projectKeys include project-specific key pieces
+	 * @param boolean $projectKeys include project-specific key pieces
 	 * @return string cache key prefix
 	 */
 	private function GetCacheKeyPrefix($projectKeys = true)
@@ -212,11 +165,8 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/** 
-	 * GetFullCacheKey
-	 *
 	 * Get the full cache key
 	 *
-	 * @access protected
 	 * @return string full cache key
 	 */
 	protected function GetFullCacheKey()
@@ -236,33 +186,21 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @abstract
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
 	public abstract function GetName($local = false);
 
 	/**
-	 * ReadQuery
-	 *
 	 * Read query into parameters
-	 *
-	 * @abstract
-	 * @access protected
 	 */
 	protected abstract function ReadQuery();
 
 	/**
-	 * SetParam
-	 *
 	 * Set a parameter
 	 *
-	 * @access protected
 	 * @param string $key key to set
 	 * @param mixed $value value to set
 	 */
@@ -278,32 +216,19 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
-	 * @abstract
 	 */
 	protected abstract function LoadData();
 
 	/**
-	 * LoadCommonData
-	 *
 	 * Loads common data used by all templates
-	 *
-	 * @access private
 	 */
 	private function LoadCommonData()
 	{
@@ -375,11 +300,7 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * RenderHeaders
-	 *
 	 * Renders any special headers
-	 *
-	 * @access public
 	 */
 	public function RenderHeaders()
 	{
@@ -393,11 +314,7 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * Render
-	 *
 	 * Renders the output
-	 *
-	 * @access public
 	 */
 	public function Render()
 	{
@@ -428,11 +345,8 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * CacheExpire
-	 *
 	 * Expires the cache
 	 *
-	 * @access public
 	 * @param boolean $expireAll expire the whole cache
 	 */
 	public function CacheExpire($expireAll = false)

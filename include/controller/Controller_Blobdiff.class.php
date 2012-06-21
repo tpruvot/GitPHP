@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Blobdiff
- *
  * Controller for displaying a blobdiff
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,22 +7,12 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Blobdiff controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 {
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
@@ -36,11 +24,8 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -49,11 +34,8 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -66,11 +48,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
 	 * Read query into parameters
-	 *
-	 * @access protected
 	 */
 	protected function ReadQuery()
 	{
@@ -87,11 +65,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
@@ -103,11 +77,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{

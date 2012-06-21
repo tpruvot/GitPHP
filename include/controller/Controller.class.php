@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller
- *
  * Controller factory
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,23 +7,12 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Controller
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller
 {
 
 	/**
-	 * GetController
-	 *
 	 * Gets a controller for an action
 	 *
-	 * @access public
-	 * @static
 	 * @param string $action action
 	 * @return mixed controller object
 	 */

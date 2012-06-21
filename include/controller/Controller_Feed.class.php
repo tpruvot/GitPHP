@@ -1,7 +1,20 @@
 <?php
 /**
- * GitPHP Controller Feed
- *
+ * Constant for the number of items to load into the feed
+ */
+define('GITPHP_FEED_ITEMS', 150);
+
+/**
+ * Constant for rss feed format
+ */
+define('GITPHP_FEED_FORMAT_RSS', 'rss');
+
+/**
+ * Constant for atom feed format
+ */
+define('GITPHP_FEED_FORMAT_ATOM', 'atom');
+
+/**
  * Controller for displaying a project's feed
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -10,33 +23,10 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Constant for the number of items to load into the feed
- */
-define('GITPHP_FEED_ITEMS', 150);
-
-/**
- * Constants for the different feed formats
- */
-define('GITPHP_FEED_FORMAT_RSS', 'rss');
-define('GITPHP_FEED_FORMAT_ATOM', 'atom');
-
-/**
- * Feed controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 {
 	/**
-	 * __construct
-	 *
 	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
 	 */
 	public function __construct()
 	{
@@ -45,11 +35,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
@@ -61,11 +48,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -74,11 +58,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -98,11 +79,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
 	 * Read query into parameters
-	 *
-	 * @access protected
 	 */
 	protected function ReadQuery()
 	{
@@ -110,11 +87,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
@@ -130,11 +103,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{

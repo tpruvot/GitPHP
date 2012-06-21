@@ -1,20 +1,12 @@
 <?php
 /**
- * GitPHP Controller DiffBase
- *
- * Base controller for diff-type views
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2011 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-
-/**
- * Constants for diff modes
+ * Constant for unified diff mode
  */
 define('GITPHP_DIFF_UNIFIED', 1);
+
+/**
+ * Constant for side by side diff mode
+ */
 define('GITPHP_DIFF_SIDEBYSIDE', 2);
 
 /**
@@ -28,8 +20,10 @@ define('GITPHP_DIFF_MODE_COOKIE', 'GitPHPDiffMode');
 define('GITPHP_DIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 year
 
 /**
- * DiffBase controller class
+ * Base controller for diff-type views
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
  * @subpackage Controller
  */
@@ -37,11 +31,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 {
 	
 	/**
-	 * ReadQuery
-	 *
 	 * Read query into parameters
-	 *
-	 * @access protected
 	 */
 	protected function ReadQuery()
 	{
@@ -55,12 +45,9 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * DiffMode
-	 *
 	 * Determines the diff mode to use
 	 *
 	 * @param string $overrideMode mode overridden by the user
-	 * @access protected
 	 */
 	protected function DiffMode($overrideMode = '')
 	{
@@ -95,11 +82,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
