@@ -157,7 +157,7 @@ class GitPHP_Tag extends GitPHP_Ref
 				$this->commitHash = $this->object;
 			} else if ($this->type == 'tag') {
 				$tag = $this->GetProject()->GetTag($this->object);
-				$this->commitHash = $tag->GetCommit()->GetHash();
+				$this->SetCommit($tag->GetCommit());
 			}
 		}
 

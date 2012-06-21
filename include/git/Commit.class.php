@@ -709,7 +709,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		foreach ($projectRefs as $ref) {
 			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
-				if ($ref->GetCommit()->GetHash() === $this->hash) {
+				if ($ref->GetCommit() && $ref->GetCommit()->GetHash() === $this->hash) {
 					$tags[] = $ref;
 				}
 			}

@@ -116,7 +116,7 @@ class GitPHP_TreeDiff implements Iterator
 		$toCommit = $project->GetCommit($toHash);
 		$this->toHash = $toHash;
 
-		if (empty($fromHash)) {
+		if (empty($fromHash) && is_object($toCommit)) {
 			$parent = $toCommit->GetParent();
 			if ($parent) {
 				$this->fromHash = $parent->GetHash();
