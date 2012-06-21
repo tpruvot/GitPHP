@@ -1,17 +1,11 @@
 <?php
 /**
- * highlight
- *
  * Smarty modifier to highlight a substring
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Smarty
- */
-
-/**
- * highlight smarty modifier
  *
  * @param string $haystack string to search in
  * @param string $needle substring to search for

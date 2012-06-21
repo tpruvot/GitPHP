@@ -1,18 +1,11 @@
 <?php
 /**
- * agestring
- *
- * Smarty modifier to turn an age in seconds into a
- * human-readable string
+ * Smarty modifier to turn an age in seconds into a human-readable string
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Smarty
- */
-
-/**
- * agestring smarty modifier
  *
  * @param int $age age in seconds
  * @return string human readable string
