@@ -56,11 +56,6 @@ define('GIT_NAME_REV','name-rev');
 define('GIT_FOR_EACH_REF','for-each-ref');
 
 /**
- * git config constant
- */
-define('GIT_CONFIG','config');
-
-/**
  * Class to wrap git executable
  *
  * @author Christopher Han <xiphux@gmail.com>
