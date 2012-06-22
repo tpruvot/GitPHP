@@ -1,25 +1,5 @@
 <?php
 /**
- * Constant for unified diff mode
- */
-define('GITPHP_DIFF_UNIFIED', 1);
-
-/**
- * Constant for side by side diff mode
- */
-define('GITPHP_DIFF_SIDEBYSIDE', 2);
-
-/**
- * Constant of the diff mode cookie in the user's browser
- */
-define('GITPHP_DIFF_MODE_COOKIE', 'GitPHPDiffMode');
-
-/**
- * Diff mode cookie lifetime
- */
-define('GITPHP_DIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 year
-
-/**
  * Base controller for diff-type views
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -29,6 +9,33 @@ define('GITPHP_DIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 year
  */
 abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 {
+	/**
+	 * Unified diff mode
+	 *
+	 * @const
+	 */
+	const UnifiedDiff = 1;
+
+	/**
+	 * Side by side diff mode
+	 *
+	 * @const
+	 */
+	const SideBySideDiff = 2;
+
+	/**
+	 * Diff mode cookie name
+	 *
+	 * @const
+	 */
+	const DiffModeCookie = 'GitPHPDiffMode';
+
+	/**
+	 * Diff mode cookie lifetime
+	 *
+	 * @const
+	 */
+	const DiffModeCookieLifetime = 31536000;			// 1 year
 	
 	/**
 	 * Read query into parameters
@@ -37,7 +44,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
 
-			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == GITPHP_DIFF_SIDEBYSIDE) {
+			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == GitPHP_Controller_DiffBase::SideBySideDiff) {
 				$this->params['sidebyside'] = true;
 			}
 
@@ -51,18 +58,18 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	 */
 	protected function DiffMode($overrideMode = '')
 	{
-		$mode = GITPHP_DIFF_UNIFIED;	// default
+		$mode = GitPHP_Controller_DiffBase::UnifiedDiff;	// default
 
 		/*
 		 * Check cookie
 		 */
-		if (!empty($_COOKIE[GITPHP_DIFF_MODE_COOKIE])) {
-			$mode = $_COOKIE[GITPHP_DIFF_MODE_COOKIE];
+		if (!empty($_COOKIE[GitPHP_Controller_DiffBase::DiffModeCookie])) {
+			$mode = $_COOKIE[GitPHP_Controller_DiffBase::DiffModeCookie];
 		} else {
 			/*
 			 * Create cookie to prevent browser delay
 			 */
-			setcookie(GITPHP_DIFF_MODE_COOKIE, $mode, time()+GITPHP_DIFF_MODE_COOKIE_LIFETIME);
+			setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, $mode, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
 		}
 
 		if (!empty($overrideMode)) {
@@ -70,11 +77,11 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 			 * User is choosing a new mode
 			 */
 			if ($overrideMode == 'sidebyside') {
-				$mode = GITPHP_DIFF_SIDEBYSIDE;
-				setcookie(GITPHP_DIFF_MODE_COOKIE, GITPHP_DIFF_SIDEBYSIDE, time()+GITPHP_DIFF_MODE_COOKIE_LIFETIME);
+				$mode = GitPHP_Controller_DiffBase::SideBySideDiff;
+				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::SideBySideDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
 			} else if ($overrideMode == 'unified') {
-				$mode = GITPHP_DIFF_UNIFIED;
-				setcookie(GITPHP_DIFF_MODE_COOKIE, GITPHP_DIFF_UNIFIED, time()+GITPHP_DIFF_MODE_COOKIE_LIFETIME);
+				$mode = GitPHP_Controller_DiffBase::UnifiedDiff;
+				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::UnifiedDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
 			}
 		}
 
