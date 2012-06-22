@@ -1,66 +1,47 @@
 <?php
 /**
- * GitPHP FileMimeTypeReader
- *
  * Class to read the mime of a blob
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * FileMimeTypeReader class
- *
- * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\FileMimeType
  */
 class GitPHP_FileMimeTypeReader
 {
 	/**
-	 * blob
+	 * The blob
 	 *
-	 * Stores the blob internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Blob
 	 */
 	protected $blob;
 
 	/**
-	 * mimeType
+	 * The mime type
 	 *
-	 * Stores the mimeType internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $mimeType;
 
 	/**
-	 * mimeTypeRead
+	 * Whether the mime type has been read
 	 *
-	 * Stores whether the mime type has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $mimeTypeRead = false;
 
 	/**
-	 * strategy
-	 *
 	 * Stores the specific mime type strategy
 	 *
-	 * @access protected
+	 * @var GitPHP_FileMimeTypeStrategy
 	 */
 	protected $strategy;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $blob blob
+	 * @param GitPHP_Blob $blob blob
+	 * @param GitPHP_FileMimeTypeStrategy force a strategy
 	 */
 	public function __construct($blob, $strategy = null)
 	{
@@ -73,12 +54,9 @@ class GitPHP_FileMimeTypeReader
 	}
 
 	/**
-	 * GetBlob
-	 *
 	 * Gets the blob for this mime reader
 	 *
-	 * @access public
-	 * @return mixed blob
+	 * @return GitPHP_Blob blob
 	 */
 	public function GetBlob()
 	{
@@ -86,11 +64,8 @@ class GitPHP_FileMimeTypeReader
 	}
 
 	/**
-	 * GetMimeType
-	 *
 	 * Gets the mime
 	 *
-	 * @access public
 	 * @param bool $typeOnly true to get just the main type
 	 * @return string type
 	 */
@@ -106,11 +81,7 @@ class GitPHP_FileMimeTypeReader
 	}
 
 	/**
-	 * ReadMimeType
-	 *
 	 * Reads the mime type
-	 *
-	 * @access private
 	 */
 	private function ReadMimeType()
 	{
@@ -132,12 +103,9 @@ class GitPHP_FileMimeTypeReader
 	}
 
 	/**
-	 * ReadMimeTypeStrategy
-	 *
 	 * Read the mime type using a specific strategy
 	 *
-	 * @access private
-	 * @param mixed $strategy mime strategy
+	 * @param GitPHP_FileMimeTypeStrategy $strategy mime strategy
 	 * @return bool true if successful
 	 */
 	public function ReadMimeTypeStrategy($strategy)

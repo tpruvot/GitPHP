@@ -1,30 +1,18 @@
 <?php
 /**
- * GitPHP FileMimeType_Fileinfo
- *
  * File mime type strategy using Fileinfo
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * FileMimeType_Fileinfo class
- *
- * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\FileMimeType
  */
 class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interface
 {
 	/**
-	 * GetMime
-	 *
 	 * Gets the mime type for a blob
 	 *
-	 * @access public
-	 * @param mixed $blob blob
+	 * @param GitPHP_Blob $blob blob
 	 * @return string mime type
 	 */
 	public function GetMime($blob)
@@ -52,11 +40,8 @@ class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interf
 	}
 
 	/**
-	 * Valid
-	 *
 	 * Gets whether this mimetype strategy is valid
 	 *
-	 * @access public
 	 * @return bool true if valid
 	 */
 	public function Valid()
