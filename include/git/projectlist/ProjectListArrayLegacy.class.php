@@ -1,10 +1,5 @@
 <?php
 /**
- * Constant for no category indicator
- */
-define('GITPHP_NO_CATEGORY', 'none');
-
-/**
  * Lists all projects in a multidimensional array (Legacy array format)
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -14,6 +9,12 @@ define('GITPHP_NO_CATEGORY', 'none');
  */
 class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 {
+	/**
+	 * No category indicator
+	 *
+	 * @const
+	 */
+	const NoCategory = 'none';
 
 	/**
 	 * constructor
@@ -64,7 +65,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	protected function InstantiateProject($proj)
 	{
 		$found = false;
-		$projectCat = GITPHP_NO_CATEGORY;
+		$projectCat = GitPHP_ProjectListArrayLegacy::NoCategory;
 		foreach ($this->projectConfig as $cat => $plist) {
 			if (is_array($plist) && (array_search($proj, $plist) !== false)) {
 				$found = true;
@@ -83,7 +84,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 
 		$this->ApplyGitConfig($projectObj);
 
-		if ($projectCat != GITPHP_NO_CATEGORY)
+		if ($projectCat != GitPHP_ProjectListArrayLegacy::NoCategory)
 			$projectObj->SetCategory($projectCat);
 
 		return $projectObj;
