@@ -1,25 +1,5 @@
 <?php
 /**
- * Constant for commit search type
- */
-define('GITPHP_SEARCH_COMMIT', 'commit');
-
-/**
- * Constant for author search type
- */
-define('GITPHP_SEARCH_AUTHOR', 'author');
-
-/**
- * Constant for committer search type
- */
-define('GITPHP_SEARCH_COMMITTER', 'committer');
-
-/**
- * Constant for file search type
- */
-define('GITPHP_SEARCH_FILE', 'file');
-
-/**
  * Controller for running a search
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -29,6 +9,34 @@ define('GITPHP_SEARCH_FILE', 'file');
  */
 class GitPHP_Controller_Search extends GitPHP_ControllerBase
 {
+
+	/**
+	 * Commit search type
+	 *
+	 * @const
+	 */
+	const CommitSearch = 'commit';
+
+	/**
+	 * Author search type
+	 *
+	 * @const
+	 */
+	const AuthorSearch = 'author';
+
+	/**
+	 * Committer search type
+	 *
+	 * @const
+	 */
+	const CommitterSearch = 'committer';
+
+	/**
+	 * File search type
+	 *
+	 * @const
+	 */
+	const FileSearch = 'file';
 
 	/**
 	 * Constructor
@@ -49,7 +57,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
+		if ($this->params['searchtype'] == GitPHP_Controller_Search::FileSearch) {
 			return 'searchfiles.tpl';
 		}
 		return 'search.tpl';
@@ -85,9 +93,9 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	protected function ReadQuery()
 	{
 		if (!isset($this->params['searchtype']))
-			$this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
+			$this->params['searchtype'] = GitPHP_Controller_Search::CommitSearch;
 
-		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
+		if ($this->params['searchtype'] == GitPHP_Controller_Search::FileSearch) {
 			if (!$this->config->GetValue('filesearch', true)) {
 				throw new GitPHP_MessageException(__('File search has been disabled'), true);
 			}
@@ -127,19 +135,19 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		switch ($this->params['searchtype']) {
 
-			case GITPHP_SEARCH_AUTHOR:
+			case GitPHP_Controller_Search::AuthorSearch:
 				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::AuthorType, $this->params['search'], $co, 101, $skip);
 				break;
 
-			case GITPHP_SEARCH_COMMITTER:
+			case GitPHP_Controller_Search::CommitterSearch:
 				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitterType, $this->params['search'], $co, 101, $skip);
 				break;
 
-			case GITPHP_SEARCH_COMMIT:
+			case GitPHP_Controller_Search::CommitSearch:
 				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitType, $this->params['search'], $co, 101, $skip);
 				break;
 
-			case GITPHP_SEARCH_FILE:
+			case GitPHP_Controller_Search::FileSearch:
 				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], 101, $skip);
 				break;
 
