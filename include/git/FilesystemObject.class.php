@@ -1,20 +1,9 @@
 <?php
 /**
- * GitPHP Filesystem Object
- *
- * Base class for all git objects that represent
- * a filesystem item
+ * Base class for all git objects that represent a filesystem item
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * Git Filesystem object class
- *
- * @abstract
  * @package GitPHP
  * @subpackage Git
  */
@@ -22,60 +11,45 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 {
 
 	/**
-	 * path
+	 * The object path
 	 *
-	 * Stores the object path
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $path = '';
 
 	/**
-	 * mode
+	 * The object mode
 	 *
-	 * Stores the object mode
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $mode;
 
 	/**
-	 * commitHash
+	 * The hash of the commit this object belongs to
 	 *
-	 * Stores the hash of the commit this object belongs to
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * pathTree
+	 * The trees of this object's base path
 	 *
-	 * Stores the trees of this object's base path
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $pathTree;
 
 	/**
-	 * pathTreeRead
+	 * Whether the trees of the object's base path have been read
 	 *
-	 * Stores whether the trees of the object's base path have been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $pathTreeRead = false;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
-	 * @return mixed git filesystem object
-	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
@@ -83,11 +57,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the object name
 	 *
-	 * @access public
 	 * @return string name
 	 */
 	public function GetName()
@@ -99,11 +70,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the full path
 	 *
-	 * @access public
 	 * @return string path
 	 */
 	public function GetPath()
@@ -115,11 +83,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * SetPath
-	 *
 	 * Sets the object path
 	 *
-	 * @access public
 	 * @param string $path object path
 	 */
 	public function SetPath($path)
@@ -128,11 +93,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetMode
-	 *
 	 * Gets the object mode
 	 *
-	 * @access public
 	 * @return string mode
 	 */
 	public function GetMode()
@@ -141,11 +103,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetModeString
-	 *
 	 * Gets the mode as a readable string
 	 *
-	 * @access public
 	 * @return string mode string
 	 */
 	public function GetModeString()
@@ -174,11 +133,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * SetMode
-	 *
 	 * Sets the object mode
 	 *
-	 * @access public
 	 * @param string $mode tree mode
 	 */
 	public function SetMode($mode)
@@ -187,12 +143,9 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit this object belongs to
 	 *
-	 * @access public
-	 * @return mixed commit object
+	 * @return GitPHP_Commit commit object
 	 */
 	public function GetCommit()
 	{
@@ -200,12 +153,9 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * SetCommit
-	 *
 	 * Sets the commit this object belongs to
 	 *
-	 * @access public
-	 * @param mixed $commit commit object
+	 * @param GitPHP_Commit $commit commit object
 	 */
 	public function SetCommit($commit)
 	{
@@ -216,11 +166,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * SetCommitHash
-	 *
 	 * Sets the hash of the commit this object belongs to
 	 *
-	 * @access public
 	 * @param string $commitHash commit hash
 	 */
 	public function SetCommitHash($commitHash)
@@ -232,12 +179,9 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetPathTree
-	 *
 	 * Gets the objects of the base path
 	 *
-	 * @access public
-	 * @return array array of tree objects
+	 * @return GitPHP_Tree[] array of tree objects
 	 */
 	public function GetPathTree()
 	{
@@ -265,11 +209,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadPathTree
-	 *
 	 * Reads the objects of the base path
-	 *
-	 * @access private
 	 */
 	private function ReadPathTree()
 	{
@@ -301,14 +241,10 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * ComparePath
-	 *
 	 * Compares two objects by path
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first object
-	 * @param mixed $b second object
+	 * @param GitPHP_FilesystemObject $a first object
+	 * @param GitPHP_FilesystemObject $b second object
 	 * @return integer comparison result
 	 */
 	public static function ComparePath($a, $b)

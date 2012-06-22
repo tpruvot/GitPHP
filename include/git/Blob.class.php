@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Blob
- *
  * Represents a single blob
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,62 +7,42 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Commit class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Blob extends GitPHP_FilesystemObject
 {
 
 	/**
-	 * data
+	 * The blob data
 	 *
-	 * Stores the file data
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $data;
 
 	/**
-	 * dataRead
+	 * Whether data has been read
 	 *
-	 * Stores whether data has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * size
+	 * The blob size
 	 *
-	 * Stores the size
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $size = null;
 
 	/**
-	 * dataEncoded
+	 * Whether data has been encoded for serialization
 	 *
-	 * Stores whether data has been encoded for serialization
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataEncoded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
-	 * @return mixed blob object
-	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
@@ -72,13 +50,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetData
-	 *
 	 * Gets the blob data
 	 *
-	 * @access public
 	 * @param boolean $explode true to explode data into an array of lines
-	 * @return string blob data
+	 * @return string|string[] blob data
 	 */
 	public function GetData($explode = false)
 	{
@@ -95,11 +70,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadData
-	 *
 	 * Reads the blob data
-	 *
-	 * @access private
 	 */
 	private function ReadData()
 	{
@@ -121,12 +92,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * FileType
-	 *
 	 * Gets a file type from its octal mode
 	 *
-	 * @access public
-	 * @static
 	 * @param string $octMode octal mode
 	 * @param boolean $local true if caller wants localized type
 	 * @return string file type
@@ -162,11 +129,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetSize
-	 *
 	 * Gets the blob size
 	 *
-	 * @access public
 	 * @return integer size
 	 */
 	public function GetSize()
@@ -179,11 +143,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * SetSize
-	 *
 	 * Sets the blob size
 	 *
-	 * @access public
 	 * @param integer $size size
 	 */
 	public function SetSize($size)
@@ -192,11 +153,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * IsBinary
-	 *
 	 * Tests if this blob is a binary file
 	 *
-	 * @access public
 	 * @return boolean true if binary file
 	 */
 	public function IsBinary()
@@ -212,11 +170,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * EncodeData
-	 *
 	 * Encodes data so it can be serialized safely
-	 *
-	 * @access private
 	 */
 	private function EncodeData()
 	{
@@ -229,11 +183,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * DecodeData
-	 *
 	 * Decodes data after unserialization
-	 *
-	 * @access private
 	 */
 	private function DecodeData()
 	{
@@ -246,12 +196,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
@@ -264,11 +211,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -277,12 +221,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a blob cache key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $hash hash
 	 * @return string cache key

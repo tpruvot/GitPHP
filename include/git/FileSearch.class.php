@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP FileSearch
- *
  * Class to represent a file search
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,104 +7,76 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * FileSearch class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * treeHash
+	 * Tree hash
 	 *
-	 * Stores the tree hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $treeHash;
 
 	/**
-	 * treePath
+	 * Tree path
 	 *
-	 * Stores the tree path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $treePath;
 
 	/**
-	 * allResults
+	 * The list of all results
 	 *
-	 * Stores the list of results internally
-	 *
-	 * @access protected
+	 * @var GitPHP_FileSearchResult[]
 	 */
 	protected $allResults = array();
 
 	/**
-	 * resultList
+	 * The paginated subset of results
 	 *
-	 * Stores the limited subset of results internally
-	 *
-	 * @access protected
+	 * @var GitPHP_FileSearchResult[]
 	 */
 	protected $resultList;
 
 	/**
-	 * search
+	 * Search string
 	 *
-	 * Stores the search string
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $search;
 
 	/**
-	 * limit
+	 * The limit of objects to load
 	 *
-	 * Stores the limit of objects to load
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $limit = 50;
 
 	/**
-	 * skip
+	 * The number of objects to skip
 	 *
-	 * Stores the number of objects to skip
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $skip = 0;
 
 	/**
-	 * dataLoaded
+	 * Whether data has been loaded
 	 *
-	 * Stores whether data has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
-	 * @param mixed $tree tree to search
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_Tree $tree tree to search
 	 * @param string $search string to search
 	 * @param int $limit limit of results to return
 	 * @param int $skip number of results to skip
@@ -138,11 +108,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetTree
-	 *
 	 * Gets the tree for this search
 	 *
-	 * @access public
+	 * @return GitPHP_Tree tree
 	 */
 	public function GetTree()
 	{
@@ -152,11 +120,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetSearch
+	 * Gets the search string
 	 *
-	 * Gets the search
-	 *
-	 * @access public
 	 * @return string search
 	 */
 	public function GetSearch()
@@ -165,11 +130,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetSearch
+	 * Sets the search string
 	 *
-	 * Sets the search
-	 *
-	 * @access public
 	 * @param string $search search
 	 */
 	public function SetSearch($search)
@@ -188,11 +150,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetCount
+	 * Gets the count of results
 	 *
-	 * Gets the count
-	 *
-	 * @access public
 	 * @return int count
 	 */
 	public function GetCount()
@@ -205,11 +164,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetLimit
-	 *
 	 * Gets the limit
 	 *
-	 * @access public
 	 * @return int limit
 	 */
 	public function GetLimit()
@@ -218,11 +174,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetLimit
-	 *
 	 * Sets the limit
 	 *
-	 * @access public
 	 * @param int $limit limit
 	 */
 	public function SetLimit($limit)
@@ -244,11 +197,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetSkip
-	 *
 	 * Gets the skip number
 	 *
-	 * @access public
 	 * @return int skip number
 	 */
 	public function GetSkip()
@@ -257,11 +207,8 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetSkip
-	 *
 	 * Sets the skip number
 	 *
-	 * @access public
 	 * @param int $skip skip number
 	 */
 	public function SetSkip($skip)
@@ -277,9 +224,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * rewind
-	 *
 	 * Rewinds the iterator
+	 *
+	 * @return GitPHP_FileSearchResult
 	 */
 	function rewind()
 	{
@@ -291,9 +238,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * current
-	 *
 	 * Returns the current revision
+	 *
+	 * @return GitPHP_FileSearchResult
 	 */
 	function current()
 	{
@@ -305,9 +252,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * key
-	 *
 	 * Returns the current key
+	 *
+	 * @return int
 	 */
 	function key()
 	{
@@ -319,9 +266,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * next
-	 *
 	 * Advance the pointer
+	 *
+	 * @return GitPHP_FileSearchResult|boolean
 	 */
 	function next()
 	{
@@ -333,9 +280,9 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * valid
-	 *
 	 * Test for a valid pointer
+	 *
+	 * @return boolean
 	 */
 	function valid()
 	{
@@ -347,11 +294,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * Clear
-	 *
 	 * Clears the results
-	 *
-	 * @access public
 	 */
 	public function Clear()
 	{
@@ -365,11 +308,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Load search data
-	 *
-	 * @access private
 	 */
 	private function LoadData()
 	{
@@ -385,11 +324,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SearchFilenames
-	 *
 	 * Searches file names for matches
-	 *
-	 * @access private
 	 */
 	private function SearchFilenames()
 	{
@@ -423,11 +358,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SearchFileContents
-	 *
 	 * Searches file contents for matches
-	 *
-	 * @access private
 	 */
 	private function SearchFileContents()
 	{
@@ -474,11 +405,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * UpdateSubset
-	 *
 	 * Extracts the subset of results based on size limits
-	 *
-	 * @access private
 	 */
 	private function UpdateSubset()
 	{

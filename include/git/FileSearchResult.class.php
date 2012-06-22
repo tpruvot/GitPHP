@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP FileSearchResult
- *
  * Class to represent a single result of a file search
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,68 +7,48 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * FileSearchResult
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_FileSearchResult
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * objectType
+	 * The object type
 	 *
-	 * Stores the object type internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $objectType;
 
 	/**
-	 * objectHash
+	 * The object hash
 	 *
-	 * Stores the object hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $objectHash;
 
 	/**
-	 * matchingLines
+	 * Matching lines from blob
 	 *
-	 * stores matching lines internally
-	 *
-	 * @access protected
+	 * @var string[]
 	 */
 	protected $matchingLines;
 
 	/**
-	 * path
+	 * The matching path
 	 *
-	 * Stores the matching path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $path;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project the project
-	 * @param mixed $object matching object
+	 * @param GitPHP_Project $project the project
+	 * @param GitPHP_Tree|GitPHP_Blob $object matching object
 	 * @param string $path matching path
 	 */
 	public function __construct($project, $object, $path)
@@ -87,12 +65,9 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Gets the matching object
 	 *
-	 * @access public
-	 * @return mixed matching object
+	 * @return GitPHP_Tree|GitPHP_Blob|null matching object
 	 */
 	public function GetObject()
 	{
@@ -110,12 +85,9 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * SetObject
-	 *
 	 * Sets the matching object
 	 *
-	 * @access public
-	 * @param mixed $object matching object
+	 * @param GitPHP_Tree|GitPHP_Blob $object matching object
 	 */
 	public function SetObject($object)
 	{
@@ -131,11 +103,8 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the matching path
 	 *
-	 * @access public
 	 * @return string path
 	 */
 	public function GetPath()
@@ -144,11 +113,8 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * SetPath
-	 *
 	 * Sets the matching path
 	 *
-	 * @access public
 	 * @param string $path path
 	 */
 	public function SetPath($path)
@@ -157,12 +123,9 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * GetMatchingLines
-	 *
 	 * Gets the list of matching lines
 	 *
-	 * @access public
-	 * @return array array of matching lines
+	 * @return string[] array of matching lines
 	 */
 	public function GetMatchingLines()
 	{
@@ -170,12 +133,9 @@ class GitPHP_FileSearchResult
 	}
 
 	/**
-	 * SetMatchingLines
-	 *
 	 * Sets the list of matching lines
 	 *
-	 * @access public
-	 * @param array $lines matching lines
+	 * @param string[] $lines matching lines
 	 */
 	public function SetMatchingLines($lines)
 	{

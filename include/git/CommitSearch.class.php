@@ -1,26 +1,15 @@
 <?php
 /**
- * GitPHP CommitSearch
- *
- * Class to represent a commit log search
+ * Class to perform a commit log search
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * CommitSearch class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_CommitSearch extends GitPHP_RevList
 {
 	/**
-	 * CommitType
-	 *
 	 * Commit search type
 	 *
 	 * @const
@@ -28,8 +17,6 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	const CommitType = 1;
 
 	/**
-	 * AuthorType
-	 *
 	 * Author search type
 	 *
 	 * @const
@@ -37,8 +24,6 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	const AuthorType = 2;
 
 	/**
-	 * CommitterType
-	 *
 	 * Committer search type
 	 *
 	 * @const
@@ -46,33 +31,26 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	const CommitterType = 3;
 
 	/**
-	 * type
-	 *
 	 * Stores the search type
 	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $type;
 
 	/**
-	 * search
-	 *
 	 * Stores the search query
 	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $search;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 * @param int $type search type
 	 * @param string $search search string
-	 * @param mixed $head head to walk back from
+	 * @param GitPHP_Commit $head head to walk back from
 	 * @param int $limit limit of revisions to walk
 	 * @param int $skip number of revisions to skip
 	 */
@@ -93,11 +71,8 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	}
 
 	/**
-	 * GetType
-	 *
 	 * Gets the search type
 	 *
-	 * @access public
 	 * @return int search type
 	 */
 	public function GetType()
@@ -106,11 +81,8 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	}
 
 	/**
-	 * SetType
-	 *
 	 * Sets the search type
 	 *
-	 * @access public
 	 * @param int $type search type
 	 */
 	public function SetType($type)
@@ -128,11 +100,8 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	}
 
 	/**
-	 * GetSearch
-	 *
 	 * Gets the search query
 	 *
-	 * @access public
 	 * @return string search query
 	 */
 	public function GetSearch()
@@ -141,11 +110,8 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	}
 
 	/**
-	 * SetSearch
-	 *
 	 * Sets the search query
 	 *
-	 * @access public
 	 * @param string $search search query
 	 */
 	public function SetSearch($search)
@@ -163,11 +129,7 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads the data for this search
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{

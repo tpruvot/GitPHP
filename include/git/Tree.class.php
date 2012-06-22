@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Tree
- *
  * Represents a single tree
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,71 +7,47 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Tree class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Tree extends GitPHP_FilesystemObject
 {
 
 	/**
-	 * contents
-	 *
 	 * Tree contents
 	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $contents = array();
 
 	/**
-	 * contentsRead
+	 * Whether contents were read
 	 *
-	 * Stores whether contents were read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $contentsRead = false;
 
 	/**
-	 * treePaths
+	 * Tree hash to path mappings
 	 *
-	 * Stores tree hash to path mappings
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $treePaths = array();
 
 	/**
-	 * blobPaths
+	 * Blob hash to path mappings
 	 *
-	 * Stores blob hash to path mappings
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $blobPaths = array();
 
 	/**
-	 * hashPathsRead
-	 *
-	 * Stores whether hash paths have been read
-	 *
-	 * @access protected
+	 * Whether hash paths have been read
 	 */
 	protected $hashPathsRead = false;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash tree hash
-	 * @return mixed tree object
-	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
@@ -81,11 +55,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * SetPath
-	 *
 	 * Sets the object path (overrides base)
 	 *
-	 * @access public
 	 * @param string $path object path
 	 */
 	public function SetPath($path)
@@ -103,12 +74,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetContents
-	 *
 	 * Gets the tree contents
 	 *
-	 * @access public
-	 * @return array array of objects for contents
+	 * @return (GitPHP_Tree|GitPHP_Blob)[] array of objects for contents
 	 */
 	public function GetContents()
 	{
@@ -164,11 +132,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadContents
-	 *
 	 * Reads the tree contents
-	 *
-	 * @access protected
 	 */
 	protected function ReadContents()
 	{
@@ -184,11 +148,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadContentsGit
-	 *
 	 * Reads the tree contents using the git executable
-	 *
-	 * @access private
 	 */
 	private function ReadContentsGit()
 	{
@@ -241,11 +201,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadContentsRaw
-	 *
 	 * Reads the tree contents using the raw git object
-	 *
-	 * @access private
 	 */
 	private function ReadContentsRaw()
 	{
@@ -289,11 +245,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetTreePaths
-	 *
 	 * Gets tree paths mapped to hashes
 	 *
-	 * @access public
+	 * @return array
 	 */
 	public function GetTreePaths()
 	{
@@ -304,11 +258,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetBlobPaths
-	 *
 	 * Gets blob paths mapped to hashes
 	 *
-	 * @access public
+	 * @return array
 	 */
 	public function GetBlobPaths()
 	{
@@ -319,11 +271,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * PathToHash
-	 *
 	 * Given a filepath, get its hash
 	 *
-	 * @access public
 	 * @param string $path path
 	 * @return string hash
 	 */
@@ -347,11 +296,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadHashPaths
-	 *
 	 * Read hash to path mappings
-	 *
-	 * @access private
 	 */
 	private function ReadHashPaths()
 	{
@@ -361,11 +306,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadHashPathsGit
-	 *
 	 * Reads hash to path mappings using git exe
-	 *
-	 * @access private
 	 */
 	private function ReadHashPathsGit()
 	{
@@ -392,12 +333,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
@@ -406,11 +344,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -419,12 +354,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a tree cache key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $hash hash
 	 * @return string cache key

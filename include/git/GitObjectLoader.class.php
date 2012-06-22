@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP GitObjectLoader
- *
  * Handles loading data from raw git objects
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,49 +7,33 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * GitObjectLoader
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_GitObjectLoader
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * packs
+	 * The list of packs
 	 *
-	 * Stores the list of packs
-	 *
-	 * @access protected
+	 * @var GitPHP_Pack[]
 	 */
 	protected $packs = array();
 
 	/**
-	 * packsRead
+	 * Whether packs have been read
 	 *
-	 * Stores whether packs have been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $packsRead = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 */
 	public function __construct($project)
 	{
@@ -62,12 +44,10 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Gets the raw content of an object
 	 *
-	 * @access public
 	 * @param string $hash object hash
+	 * @param int $type returns the object type
 	 * @return string object data
 	 */
 	public function GetObject($hash, &$type = 0)
@@ -114,11 +94,7 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
-	 * ReadPacks
-	 *
 	 * Read the list of packs in the repository
-	 *
-	 * @access private
 	 */
 	private function ReadPacks()
 	{
@@ -134,11 +110,8 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
-	 * EnsureUniqueHash
-	 *
 	 * Ensures a hash prefix is unique
 	 *
-	 * @access public
 	 * @param string $hash full hash
 	 * @param string $prefix abbreviated hash prefix
 	 */
@@ -197,13 +170,10 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
-	 * ExpandHash
-	 *
 	 * Expands an abbreviated hash to the full hash
 	 *
-	 * @access public
-	 * @param string $abbrevHash
-	 * @return string hash
+	 * @param string $abbrevHash abbreviated hash
+	 * @return string full hash
 	 */
 	public function ExpandHash($abbrevHash)
 	{
@@ -231,13 +201,10 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
-	 * FindHashObjects
-	 *
 	 * Finds loose hash files matching a given prefix
 	 *
-	 * @access private
 	 * @param string $prefix hash prefix
-	 * @return array array of hash objects
+	 * @return string[] array of hashes
 	 */
 	private function FindHashObjects($prefix)
 	{

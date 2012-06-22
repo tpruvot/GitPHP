@@ -1,76 +1,54 @@
 <?php
 /**
- * GitPHP FileHistory
- *
- * Class to represent a file's history
+ * Class to load a file's history
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * FileHistory class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_FileHistory implements Iterator
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * commitHash
+	 * The commit hash
 	 *
-	 * Stores the commit hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * path
+	 * The path
 	 *
-	 * Stores the path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $path;
 
 	/**
-	 * history
+	 * The history
 	 *
-	 * Stores the history data
-	 *
-	 * @access protected
+	 * @var GitPHP_FileDiff[]
 	 */
 	protected $history = array();
 
 	/**
-	 * dataLoaded
+	 * Whether data has been loaded
 	 *
-	 * Stores whether data has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
-	 * @param mixed $commit commit to start history from
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_Commit $commit commit to start history from
 	 * @param string $path file path to trace history of
 	 */
 	public function __construct($project, $commit, $path)
@@ -92,12 +70,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project for this file history
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
@@ -105,12 +80,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit for this file history
 	 *
-	 * @access public
-	 * @return mixed commit
+	 * @return GitPHP_Commit commit
 	 */
 	public function GetCommit()
 	{
@@ -118,11 +90,8 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the path for this file history
 	 *
-	 * @access public
 	 * @return string path
 	 */
 	public function GetPath()
@@ -131,12 +100,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * GetHistory
-	 *
 	 * Gets the history
 	 *
-	 * @access public
-	 * @return array history data
+	 * @return GitPHP_FileDiff[] history data
 	 */
 	public function GetHistory()
 	{
@@ -147,11 +113,7 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads the history data
-	 *
-	 * @access private
 	 */
 	private function LoadData()
 	{
@@ -188,9 +150,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * rewind
-	 *
 	 * Rewinds the iterator
+	 *
+	 * @return GitPHP_FileDiff
 	 */
 	function rewind()
 	{
@@ -202,9 +164,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * current
-	 *
 	 * Returns the current revision
+	 *
+	 * @return GitPHP_FileDiff
 	 */
 	function current()
 	{
@@ -216,9 +178,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * key
-	 *
 	 * Returns the current key
+	 *
+	 * @return int
 	 */
 	function key()
 	{
@@ -230,9 +192,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * next
-	 *
 	 * Advance the pointer
+	 *
+	 * @return GitPHP_FileDiff|boolean
 	 */
 	function next()
 	{
@@ -244,9 +206,9 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * valid
-	 *
 	 * Test for a valid pointer
+	 *
+	 * @return boolean
 	 */
 	function valid()
 	{

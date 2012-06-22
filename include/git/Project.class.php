@@ -1,20 +1,14 @@
 <?php
 /**
- * GitPHP Project
- * 
- * Represents a single git project
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
+ * Constant for default minimum abbreviated hash length
  */
-
 define('GITPHP_ABBREV_HASH_MIN', 7);
 
 /**
- * Project class
+ * Class for a single git project
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
@@ -24,40 +18,32 @@ class GitPHP_Project
 /* internal variables {{{1*/
 
 	/**
-	 * projectRoot
+	 * The project root
 	 *
-	 * Stores the project root internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $projectRoot;
 
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $project;
 
 /* owner internal variables {{{2*/
 
 	/**
-	 * owner
+	 * The owner
 	 *
-	 * Stores the owner internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $owner = "";
 
 	/**
-	 * ownerRead
+	 * Whether the project owner has been read
 	 *
-	 * Stores whether the file owner has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $ownerRead = false;
 
@@ -66,52 +52,41 @@ class GitPHP_Project
 /* description internal variables {{{2*/
 
 	/**
-	 * description
+	 * The description
 	 *
-	 * Stores the description internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $description;
 
 	/**
-	 * readDescription
+	 * Whether the description has been read from the file yet
 	 *
-	 * Stores whether the description has been
-	 * read from the file yet
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $readDescription = false;
 
 /*}}}2*/
 
 	/**
-	 * category
+	 * The category
 	 *
-	 * Stores the category internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $category = '';
 
 /* epoch internal variables {{{2*/
 
 	/**
-	 * epoch
+	 * The project epoch
 	 *
-	 * Stores the project epoch internally
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $epoch;
 
 	/**
-	 * epochRead
+	 * Whether the project epoch has been read yet
 	 *
-	 * Stores whether the project epoch has been read yet
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $epochRead = false;
 
@@ -120,20 +95,16 @@ class GitPHP_Project
 /* HEAD internal variables {{{2*/
 
 	/**
-	 * head
+	 * The HEAD hash
 	 *
-	 * Stores the head hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $head;
 
 	/**
-	 * readHeadRef
+	 * Whether the head ref has been read yet
 	 *
-	 * Stores whether the head ref has been read yet
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $readHeadRef = false;
 
@@ -142,20 +113,16 @@ class GitPHP_Project
 /* ref internal variables {{{2*/
 
 	/**
-	 * headList
+	 * The head list for the project
 	 *
-	 * Stores the head list for the project
-	 *
-	 * @access protected
+	 * @var GitPHP_HeadList
 	 */
 	protected $headList;
 
 	/**
-	 * tagList
+	 * The tag list for the project
 	 *
-	 * Stores the tag list for the project
-	 *
-	 * @access protected
+	 * @var GitPHP_TagList
 	 */
 	protected $tagList;
 
@@ -164,20 +131,16 @@ class GitPHP_Project
 /* url internal variables {{{2*/
 
 	/**
-	 * cloneUrl
+	 * The clone url
 	 *
-	 * Stores the clone url internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $cloneUrl = null;
 
 	/**
-	 * pushUrl
+	 * The push url
 	 *
-	 * Stores the push url internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $pushUrl = null;
 
@@ -186,72 +149,57 @@ class GitPHP_Project
 /* bugtracker internal variables {{{2*/
 
 	/**
-	 * bugUrl
+	 * The bug url
 	 *
-	 * Stores the bug url internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $bugUrl = null;
 
 	/**
-	 * bugPattern
+	 * The bug pattern
 	 *
-	 * Stores the bug pattern internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $bugPattern = null;
 
 /*}}}2*/
 
 	/**
-	 * website
+	 * The website url
 	 *
-	 * Stores the website url internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $website = null;
 
 	/**
-	 * compat
+	 * Stores whether this project is running in compatibility mode
 	 *
-	 * Stores whether this project is running
-	 * in compatibility mode
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $compat = false;
 
 /* hash abbreviation variables {{{2*/
 
 	/**
-	 * abbreviateLength
+	 * The hash abbreviation length
 	 *
-	 * Stores the hash abbreviation length internally
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $abbreviateLength = null;
 
 	/**
-	 * uniqueAbbreviation
+	 * Whether hashes should be guaranteed unique
 	 *
-	 * Stores whether hashes should be guaranteed unique
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $uniqueAbbreviation = false;
 
 /*}}}2*/
 
 	/**
-	 * objectLoader
+	 * The raw git object loader
 	 *
-	 * Stores the raw git object loader
-	 *
-	 * @access protected
+	 * @var GitPHP_GitObjectLoader
 	 */
 	protected $objectLoader;
 
@@ -260,14 +208,10 @@ class GitPHP_Project
 /* class methods {{{1*/
 
 	/**
-	 * __construct
-	 *
 	 * Class constructor
 	 *
-	 * @access public
 	 * @param string $projectRoot project root
 	 * @param string $project project
-	 * @throws Exception if project is invalid or outside of projectroot
 	 */
 	public function __construct($projectRoot, $project)
 	{
@@ -282,8 +226,6 @@ class GitPHP_Project
 /* project accessors {{{2*/
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
 	 * @access public
@@ -295,11 +237,9 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetProject
-	 *
 	 * Attempts to set the project
 	 *
-	 * @access private
+	 * @param string $project the project
 	 * @throws Exception if project is invalid or outside of projectroot
 	 */
 	private function SetProject($project)
@@ -333,11 +273,8 @@ class GitPHP_Project
 /*}}}2*/
 
 	/**
-	 * GetSlug
-	 *
 	 * Gets the project as a filename/url friendly slug
 	 *
-	 * @access public
 	 * @return string the slug
 	 */
 	public function GetSlug()
@@ -351,11 +288,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the full project path
 	 *
-	 * @access public
 	 * @return string project path
 	 */
 	public function GetPath()
@@ -366,11 +300,8 @@ class GitPHP_Project
 /* owner accessors {{{2 */
 
 	/**
-	 * GetOwner
-	 *
 	 * Gets the project's owner
 	 *
-	 * @access public
 	 * @return string project owner
 	 */
 	public function GetOwner()
@@ -383,11 +314,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadOwner
-	 *
 	 * Reads the project owner
-	 *
-	 * @access protected
 	 */
 	protected function ReadOwner()
 	{
@@ -407,11 +334,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetOwner
-	 *
 	 * Sets the project's owner (from an external source)
 	 *
-	 * @access public
 	 * @param string $owner the owner
 	 */
 	public function SetOwner($owner)
@@ -424,11 +348,8 @@ class GitPHP_Project
 /* projectroot accessors {{{2*/
 
 	/**
-	 * GetProjectRoot
-	 *
 	 * Gets the project root
 	 *
-	 * @access public
 	 * @return string the project root
 	 */
 	public function GetProjectRoot()
@@ -441,11 +362,8 @@ class GitPHP_Project
 /* description accessors {{{2*/
 
 	/**
-	 * GetDescription
-	 *
 	 * Gets the project description
 	 *
-	 * @access public
 	 * @param $trim length to trim description to (0 for no trim)
 	 * @return string project description
 	 */
@@ -466,11 +384,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetDescription
-	 *
 	 * Overrides the project description
 	 *
-	 * @access public
 	 * @param string $descr description
 	 */
 	public function SetDescription($descr)
@@ -482,11 +397,8 @@ class GitPHP_Project
 /*}}}2*/
 
 	/**
-	 * GetDaemonEnabled
-	 *
 	 * Returns whether gitdaemon is allowed for this project
 	 *
-	 * @access public
 	 * @return boolean git-daemon-export-ok?
 	 */
 	public function GetDaemonEnabled()
@@ -497,11 +409,8 @@ class GitPHP_Project
 /* category accessors {{{2*/
 
 	/**
-	 * GetCategory
-	 *
 	 * Gets the project's category
 	 *
-	 * @access public
 	 * @return string category
 	 */
 	public function GetCategory()
@@ -514,11 +423,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetCategory
-	 * 
 	 * Sets the project's category
 	 *
-	 * @access public
 	 * @param string $category category
 	 */
 	public function SetCategory($category)
@@ -531,11 +437,8 @@ class GitPHP_Project
 /* clone url accessors {{{2*/
 
 	/**
-	 * GetCloneUrl
-	 *
 	 * Gets the clone URL for this repository, if specified
 	 *
-	 * @access public
 	 * @return string clone url
 	 */
 	public function GetCloneUrl()
@@ -544,11 +447,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetCloneUrl
-	 *
 	 * Overrides the clone URL for this repository
 	 *
-	 * @access public
 	 * @param string $cUrl clone url
 	 */
 	public function SetCloneUrl($cUrl)
@@ -561,11 +461,8 @@ class GitPHP_Project
 /* push url accessors {{{2*/
 
 	/**
-	 * GetPushUrl
-	 *
 	 * Gets the push URL for this repository, if specified
 	 *
-	 * @access public
 	 * @return string push url
 	 */
 	public function GetPushUrl()
@@ -574,11 +471,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetPushUrl
-	 *
 	 * Overrides the push URL for this repository
 	 *
-	 * @access public
 	 * @param string $pUrl push url
 	 */
 	public function SetPushUrl($pUrl)
@@ -591,11 +485,8 @@ class GitPHP_Project
 /* bugtracker accessors {{{2*/
 
 	/**
-	 * GetBugUrl
-	 *
 	 * Gets the bug URL for this repository, if specified
 	 *
-	 * @access public
 	 * @return string bug url
 	 */
 	public function GetBugUrl()
@@ -604,11 +495,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetBugUrl
-	 *
 	 * Overrides the bug URL for this repository
 	 *
-	 * @access public
 	 * @param string $bUrl bug url
 	 */
 	public function SetBugUrl($bUrl)
@@ -617,11 +505,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetBugPattern
-	 *
 	 * Gets the bug pattern for this repository, if specified
 	 *
-	 * @access public
 	 * @return string bug pattern
 	 */
 	public function GetBugPattern()
@@ -630,11 +515,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetBugPattern
-	 *
 	 * Overrides the bug pattern for this repository
 	 *
-	 * @access public
 	 * @param string $bPat bug pattern
 	 */
 	public function SetBugPattern($bPat)
@@ -647,11 +529,8 @@ class GitPHP_Project
 /* website accessors {{{2*/
 
 	/**
-	 * GetWebsite
-	 *
 	 * Gets the website for this repository, if specified
 	 *
-	 * @access public
 	 * @return string website
 	 */
 	public function GetWebsite()
@@ -664,11 +543,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetWebsite
-	 *
 	 * Sets the website for this repository
 	 *
-	 * @access public
 	 * @param string $site website
 	 */
 	public function SetWebsite($site)
@@ -681,13 +557,11 @@ class GitPHP_Project
 /* HEAD accessors {{{2*/
 
 	/**
-	 * GetHeadCommit
-	 *
 	 * Gets the head commit for this project
+	 *
 	 * Shortcut for getting the tip commit of the HEAD branch
 	 *
-	 * @access public
-	 * @return mixed head commit
+	 * @return GitPHP_Commit head commit
 	 */
 	public function GetHeadCommit()
 	{
@@ -698,11 +572,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadHeadCommit
-	 *
 	 * Reads the head commit hash
-	 *
-	 * @access protected
 	 */
 	public function ReadHeadCommit()
 	{
@@ -716,11 +586,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadHeadCommitGit
-	 *
 	 * Read head commit using git executable
-	 *
-	 * @access private
 	 */
 	private function ReadHeadCommitGit()
 	{
@@ -731,11 +597,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadHeadCommitRaw
-	 *
 	 * Read head commit using raw git head pointer
-	 *
-	 * @access private
 	 */
 	private function ReadHeadCommitRaw()
 	{
@@ -757,12 +619,8 @@ class GitPHP_Project
 /* epoch accessors {{{2*/
 
 	/**
-	 * GetEpoch
+	 * Gets this project's epoch (time of last change)
 	 *
-	 * Gets this project's epoch
-	 * (time of last change)
-	 *
-	 * @access public
 	 * @return integer timestamp
 	 */
 	public function GetEpoch()
@@ -774,12 +632,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetAge
+	 * Gets this project's age (time since most recent change)
 	 *
-	 * Gets this project's age
-	 * (time since most recent change)
-	 *
-	 * @access public
 	 * @return integer age
 	 */
 	public function GetAge()
@@ -791,12 +645,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadEpoch
-	 *
-	 * Reads this project's epoch
-	 * (timestamp of most recent change)
-	 *
-	 * @access private
+	 * Reads this project's epoch (timestamp of most recent change)
 	 */
 	private function ReadEpoch()
 	{
@@ -810,11 +659,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadEpochGit
-	 *
 	 * Reads this project's epoch using git executable
-	 *
-	 * @access private
 	 */
 	private function ReadEpochGit()
 	{
@@ -832,11 +677,7 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ReadEpochRaw
-	 *
 	 * Reads this project's epoch using raw objects
-	 *
-	 * @access private
 	 */
 	private function ReadEpochRaw()
 	{
@@ -859,11 +700,8 @@ class GitPHP_Project
 /* compatibility accessors {{{2*/
 
 	/**
-	 * GetCompat
-	 *
 	 * Gets whether this project is running in compatibility mode
 	 *
-	 * @access public
 	 * @return boolean true if compatibilty mode
 	 */
 	public function GetCompat()
@@ -872,11 +710,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetCompat
-	 *
 	 * Sets whether this project is running in compatibility mode
 	 *
-	 * @access public
 	 * @param boolean true if compatibility mode
 	 */
 	public function SetCompat($compat)
@@ -898,11 +733,10 @@ class GitPHP_Project
 /* commit loading methods {{{2*/
 
 	/**
-	 * GetCommit
-	 *
 	 * Get a commit for this project
 	 *
-	 * @access public
+	 * @param string $hash commit hash
+	 * @return GitPHP_Commit|null commit object
 	 */
 	public function GetCommit($hash)
 	{
@@ -971,12 +805,9 @@ class GitPHP_Project
 /* tag loading methods {{{2*/
 
 	/**
-	 * GetTagList
-	 *
 	 * Gets the tag list
 	 *
-	 * @access public
-	 * @return mixed tag list
+	 * @return GitPHP_TagList tag list
 	 */
 	public function GetTagList()
 	{
@@ -989,13 +820,11 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetTag
-	 *
 	 * Gets a single tag
 	 *
-	 * @access public
 	 * @param string $tag tag to find
-	 * @return mixed tag object
+	 * @param string $hash hash of tag, if known
+	 * @return GitPHP_Tag tag object
 	 */
 	public function GetTag($tag, $hash = '')
 	{
@@ -1028,12 +857,9 @@ class GitPHP_Project
 /* head loading methods {{{2*/
 
 	/**
-	 * GetHeadList
-	 *
 	 * Gets the head list
 	 *
-	 * @access public
-	 * @return mixed head list
+	 * @return GitPHP_HeadList head list
 	 */
 	public function GetHeadList()
 	{
@@ -1046,13 +872,11 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetHead
-	 *
 	 * Gets a single head
 	 *
-	 * @access public
 	 * @param string $head head to find
-	 * @return mixed head object
+	 * @param string $hash hash of head, if known
+	 * @return GitPHP_Head head object
 	 */
 	public function GetHead($head, $hash = '')
 	{
@@ -1077,12 +901,10 @@ class GitPHP_Project
 /* blob loading methods {{{2*/
 
 	/**
-	 * GetBlob
-	 *
 	 * Gets a blob from this project
 	 *
-	 * @access public
 	 * @param string $hash blob hash
+	 * @return GitPHP_Blob blob object
 	 */
 	public function GetBlob($hash)
 	{
@@ -1115,12 +937,10 @@ class GitPHP_Project
 /* tree loading methods {{{2*/
 
 	/**
-	 * GetTree
-	 *
 	 * Gets a tree from this project
 	 *
-	 * @access public
 	 * @param string $hash tree hash
+	 * @return GitPHP_Tree tree object
 	 */
 	public function GetTree($hash)
 	{
@@ -1153,11 +973,10 @@ class GitPHP_Project
 /* object loader methods {{{2*/
 
 	/**
-	 * GetObjectLoader
-	 *
 	 * Gets the git object loader for this project
 	 *
 	 * @access public
+	 * @return GitPHP_GitObjectLoader
 	 */
 	public function GetObjectLoader()
 	{
@@ -1173,11 +992,8 @@ class GitPHP_Project
 /* hash management methods {{{2*/
 
 	/**
-	 * GetAbbreviateLength
-	 *
 	 * Gets the hash abbreviation length
 	 *
-	 * @access public
 	 * @return int abbreviate length
 	 */
 	public function GetAbbreviateLength()
@@ -1186,11 +1002,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetAbbreviateLength
-	 *
 	 * Sets the hash abbreviation length
 	 *
-	 * @access public
 	 * @param int $length abbreviate length
 	 */
 	public function SetAbbreviateLength($length)
@@ -1199,11 +1012,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetUniqueAbbreviation
-	 *
 	 * Gets whether abbreviated hashes should be guaranteed unique
 	 *
-	 * @access public
 	 * @return bool true if hashes are guaranteed unique
 	 */
 	public function GetUniqueAbbreviation()
@@ -1212,11 +1022,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * SetUniqueAbbreviation
-	 *
 	 * Sets whether abbreviated hashes should be guaranteed unique
 	 *
-	 * @access public
 	 * @param bool true if hashes should be guaranteed unique
 	 */
 	public function SetUniqueAbbreviation($unique)
@@ -1225,11 +1032,9 @@ class GitPHP_Project
 	}
 
 	/**
-	 * AbbreviateHash
-	 *
 	 * Calculates the unique abbreviated hash for a full hash
 	 *
-	 * @param string $hash hash to abbreviate
+	 * @param string $hash full hash
 	 * @return string abbreviated hash
 	 */
 	public function AbbreviateHash($hash)
@@ -1246,8 +1051,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * AbbreviateHashGit
-	 *
 	 * Abbreviates a hash using the git executable
 	 *
 	 * @param string $hash hash to abbreviate
@@ -1276,8 +1079,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * AbbreviateHashRaw
-	 *
 	 * Abbreviates a hash using raw git objects
 	 *
 	 * @param string $hash hash to abbreviate
@@ -1301,8 +1102,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ExpandHash
-	 *
 	 * Finds the full hash for an abbreviated hash
 	 *
 	 * @param string $abbrevHash abbreviated hash
@@ -1322,8 +1121,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * ExpandHashGit
-	 *
 	 * Expands a hash using the git executable
 	 *
 	 * @param string $abbrevHash
@@ -1358,14 +1155,10 @@ class GitPHP_Project
 /* static utilities {{{1*/
 
 	/**
-	 * CompareProject
-	 *
 	 * Compares two projects by project name
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
+	 * @param GitPHP_Project $a first project
+	 * @param GitPHP_Project $b second project
 	 * @return integer comparison result
 	 */
 	public static function CompareProject($a, $b)
@@ -1378,14 +1171,10 @@ class GitPHP_Project
 	}
 
 	/**
-	 * CompareDescription
-	 *
 	 * Compares two projects by description
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
+	 * @param GitPHP_Project $a first project
+	 * @param GitPHP_Project $b second project
 	 * @return integer comparison result
 	 */
 	public static function CompareDescription($a, $b)
@@ -1398,14 +1187,10 @@ class GitPHP_Project
 	}
 
 	/**
-	 * CompareOwner
-	 *
 	 * Compares two projects by owner
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
+	 * @param GitPHP_Project $a first project
+	 * @param GitPHP_Project $b second project
 	 * @return integer comparison result
 	 */
 	public static function CompareOwner($a, $b)
@@ -1418,14 +1203,10 @@ class GitPHP_Project
 	}
 
 	/**
-	 * CompareAge
-	 *
 	 * Compares two projects by age
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
+	 * @param GitPHP_Project $a first project
+	 * @param GitPHP_Project $b second project
 	 * @return integer comparison result
 	 */
 	public static function CompareAge($a, $b)

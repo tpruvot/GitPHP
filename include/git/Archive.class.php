@@ -1,122 +1,92 @@
 <?php
 /**
- * GitPHP Archive
- *
- * Represents an archive (snapshot)
+ * Generates an archive (snapshot)
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Archive class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Archive
 {
 	/**
-	 * objectType
+	 * The object type for this archive
 	 *
-	 * Stores the object type for this archive
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $objectType;
 
 	/**
-	 * objectHash
+	 * The object hash for this archive
 	 *
-	 * Stores the object hash for this archive
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $objectHash;
 
 	/**
-	 * project
+	 * The project for this archive
 	 *
-	 * Stores the project for this archive internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project|string
 	 */
 	protected $project;
 
 	/**
-	 * format
+	 * The archive format
 	 *
-	 * Stores the archive format internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $format;
 
 	/**
-	 * fileName
+	 * The archive filename
 	 *
-	 * Stores the archive filename internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $fileName = '';
 
 	/**
-	 * path
+	 * The archive path
 	 *
-	 * Stores the archive path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $path = '';
 
 	/**
-	 * prefix
+	 * The archive prefix
 	 *
-	 * Stores the archive prefix internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $prefix = '';
 
 	/**
-	 * compressLevel
-	 *
 	 * Stores the compression level
 	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $compressLevel;
 
 	/**
-	 * handle
-	 *
 	 * Stores the process handle
 	 *
-	 * @access protected
+	 * @var resource
 	 */
 	protected $handle = false;
 
 	/**
-	 * tempfile
-	 *
 	 * Stores the temp file name
 	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $tempfile = '';
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
-	 * @param mixed $gitObject the object
-	 * @param integer $format the format for the archive
-	 * @return mixed git archive
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_Commit|GitPHP_Tree $gitObject the object
+	 * @param string $format the format for the archive
+	 * @param string $path subtree path to archive
+	 * @param string $prefix archive directory prefix
 	 */
 	public function __construct($project, $gitObject, $format = GITPHP_FORMAT_ZIP, $path = '', $prefix = '')
 	{
@@ -131,12 +101,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetFormat
-	 *
 	 * Gets the archive format
 	 *
-	 * @access public
-	 * @return integer archive format
+	 * @return string archive format
 	 */
 	public function GetFormat()
 	{
@@ -144,12 +111,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetFormat
-	 *
 	 * Sets the archive format
 	 *
-	 * @access public
-	 * @param integer $format archive format
+	 * @param string $format archive format
 	 */
 	public function SetFormat($format)
 	{
@@ -166,12 +130,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Gets the object for this archive
 	 *
-	 * @access public
-	 * @return mixed the git object
+	 * @return GitPHP_Commit|GitPHP_Tree|null the git object
 	 */
 	public function GetObject()
 	{
@@ -187,12 +148,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetObject
-	 *
 	 * Sets the object for this archive
 	 *
-	 * @access public
-	 * @param mixed $object the git object
+	 * @param GitPHP_Commit|GitPHP_Tree|null $object the git object
 	 */
 	public function SetObject($object)
 	{
@@ -220,12 +178,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project for this archive
 	 *
-	 * @access public
-	 * @return mixed the project
+	 * @return GitPHP_Project the project
 	 */
 	public function GetProject()
 	{
@@ -233,12 +188,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetProject
-	 *
 	 * Sets the project for this archive
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 */
 	public function SetProject($project)
 	{
@@ -246,11 +198,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetExtension
-	 *
 	 * Gets the extension to use for this archive
 	 *
-	 * @access public
 	 * @return string extension for the archive
 	 */
 	public function GetExtension()
@@ -259,11 +208,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetFilename
-	 *
 	 * Gets the filename for this archive
 	 *
-	 * @access public
 	 * @return string filename
 	 */
 	public function GetFilename()
@@ -288,11 +234,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetFilename
-	 *
 	 * Sets the filename for this archive
 	 *
-	 * @access public
 	 * @param string $name filename
 	 */
 	public function SetFilename($name = '')
@@ -301,11 +244,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the path to restrict this archive to
 	 *
-	 * @access public
 	 * @return string path
 	 */
 	public function GetPath()
@@ -314,11 +254,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetPath
-	 *
 	 * Sets the path to restrict this archive to
 	 *
-	 * @access public
 	 * @param string $path path to restrict
 	 */
 	public function SetPath($path = '')
@@ -327,11 +264,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetPrefix
-	 *
 	 * Gets the directory prefix to use for files in this archive
 	 *
-	 * @access public
 	 * @return string prefix
 	 */
 	public function GetPrefix()
@@ -349,11 +283,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetPrefix
-	 *
 	 * Sets the directory prefix to use for files in this archive
 	 *
-	 * @access public
 	 * @param string $prefix prefix to use
 	 */
 	public function SetPrefix($prefix = '')
@@ -371,11 +302,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetCompressLevel
-	 *
 	 * Gets the compression level
 	 *
-	 * @access public
 	 * @return int compression level
 	 */
 	public function GetCompressLevel()
@@ -384,12 +312,9 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SetCompressLevel
-	 *
 	 * Sets the compression level
 	 *
-	 * @access public
-	 * @param int $compresLevel compression level
+	 * @param int $compressLevel compression level
 	 */
 	public function SetCompressLevel($compressLevel)
 	{
@@ -408,11 +333,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * Open
-	 *
 	 * Opens a descriptor for reading archive data
 	 *
-	 * @access public
 	 * @return boolean true on success
 	 */
 	public function Open()
@@ -477,11 +399,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * Close
-	 *
 	 * Close the archive data descriptor
 	 *
-	 * @access public
 	 * @return boolean true on success
 	 */
 	public function Close()
@@ -506,11 +425,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * Read
-	 *
 	 * Read a chunk of the archive data
 	 *
-	 * @access public
 	 * @param int $size size of data to read
 	 * @return string archive data
 	 */
@@ -537,12 +453,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * FormatToExtension
-	 *
 	 * Gets the extension to use for a particular format
 	 *
-	 * @access public
-	 * @static
 	 * @param string $format format to get extension for
 	 * @return string file extension
 	 */
@@ -565,12 +477,8 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * SupportedFormats
-	 *
 	 * Gets the supported formats for the archiver
 	 *
-	 * @access public
-	 * @static
 	 * @return array array of formats mapped to extensions
 	 */
 	public static function SupportedFormats()

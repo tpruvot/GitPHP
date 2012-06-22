@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Head
- *
  * Represents a single head
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,27 +7,15 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Head class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Head extends GitPHP_Ref
 {
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates head
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $head head name
 	 * @param string $headHash head hash
-	 * @return mixed head object
-	 * @throws Exception exception on invalid head or hash
 	 */
 	public function __construct($project, $head, $headHash = '')
 	{
@@ -37,12 +23,9 @@ class GitPHP_Head extends GitPHP_Ref
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit for this head
 	 *
-	 * @access public
-	 * @return mixed commit object for this tag
+	 * @return GitPHP_Commit commit object for this head
 	 */
 	public function GetCommit()
 	{
@@ -50,14 +33,10 @@ class GitPHP_Head extends GitPHP_Ref
 	}
 	
 	/**
-	 * CompareAge
-	 *
 	 * Compares two heads by age
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first head
-	 * @param mixed $b second head
+	 * @param GitPHP_Head $a first head
+	 * @param GitPHP_Head $b second head
 	 * @return integer comparison result
 	 */
 	public static function CompareAge($a, $b)
@@ -68,12 +47,8 @@ class GitPHP_Head extends GitPHP_Ref
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a head hash key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $head head name
 	 * @return string cache key

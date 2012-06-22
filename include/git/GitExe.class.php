@@ -1,7 +1,66 @@
 <?php
+
 /**
- * GitPHP GitExe
- *
+ * git cat-file constant
+ */
+define('GIT_CAT_FILE','cat-file');
+
+/**
+ * git diff-tree constant
+ */
+define('GIT_DIFF_TREE','diff-tree');
+
+/**
+ * git ls-tree constant
+ */
+define('GIT_LS_TREE','ls-tree');
+
+/**
+ * git rev-list constant
+ */
+define('GIT_REV_LIST','rev-list');
+
+/**
+ * git rev-parse constant
+ */
+define('GIT_REV_PARSE','rev-parse');
+
+/**
+ * git show-ref constant
+ */
+define('GIT_SHOW_REF','show-ref');
+
+/**
+ * git archive constant
+ */
+define('GIT_ARCHIVE','archive');
+
+/**
+ * git grep constant
+ */
+define('GIT_GREP','grep');
+
+/**
+ * git blame constant
+ */
+define('GIT_BLAME','blame');
+
+/**
+ * git name-rev constant
+ */
+define('GIT_NAME_REV','name-rev');
+
+/**
+ * git for-each-ref constant
+ */
+define('GIT_FOR_EACH_REF','for-each-ref');
+
+/**
+ * git config constant
+ */
+define('GIT_CONFIG','config');
+
+/**
  * Class to wrap git executable
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,77 +68,41 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Constants for git commands
- */
-define('GIT_CAT_FILE','cat-file');
-define('GIT_DIFF_TREE','diff-tree');
-define('GIT_LS_TREE','ls-tree');
-define('GIT_REV_LIST','rev-list');
-define('GIT_REV_PARSE','rev-parse');
-define('GIT_SHOW_REF','show-ref');
-define('GIT_ARCHIVE','archive');
-define('GIT_GREP','grep');
-define('GIT_BLAME','blame');
-define('GIT_NAME_REV','name-rev');
-define('GIT_FOR_EACH_REF','for-each-ref');
-define('GIT_CONFIG','config');
-
-/**
- * Git Executable class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_GitExe
 {
 
 	/**
-	 * instance
+	 * The singleton instance
 	 *
-	 * Stores the singleton instance
-	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_GitExe
 	 */
 	protected static $instance;
 
 	/**
-	 * binary
+	 * The binary path
 	 *
-	 * Stores the binary path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $binary;
 	
 	/**
-	 * version
+	 * The binary version
 	 *
-	 * Stores the binary version internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $version;
 
 	/**
-	 * versionRead
+	 * Whether the version has been read
 	 *
-	 * Stores whether the version has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $versionRead = false;
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of git exe classe
+	 * @return GitPHP_GitExe instance of git exe classe
 	 */
 	public static function GetInstance()
 	{
@@ -90,12 +113,7 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -103,13 +121,9 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access protected
 	 * @param string $binary path to git binary
-	 * @return mixed git executable class
 	 */
 	protected function __construct($binary)
 	{
@@ -120,13 +134,11 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * Execute
-	 *
 	 * Executes a command
 	 *
 	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
-	 * @param array $args arguments
+	 * @param string[] $args arguments
 	 * @return string result of command
 	 */
 	public function Execute($projectPath, $command, $args)
@@ -144,13 +156,12 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * Open
-	 *
 	 * Opens a resource to a command
 	 *
 	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
-	 * @param array $args arguments
+	 * @param string[] $args arguments
+	 * @param string $mode process open mode
 	 * @return resource process handle
 	 */
 	public function Open($projectPath, $command, $args, $mode = 'r')
@@ -161,16 +172,12 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * BuildCommand
-	 *
 	 * Creates a command
-	 *
-	 * @access protected
 	 *
 	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
-	 * @param array $args arguments
-	 * @return string result of command
+	 * @param string[] $args arguments
+	 * @return string full executable string
 	 */
 	protected function CreateCommand($projectPath, $command, $args)
 	{
@@ -183,12 +190,9 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * GetBinary
-	 *
 	 * Gets the binary for this executable
 	 *
 	 * @return string binary
-	 * @access public
 	 */
 	public function GetBinary()
 	{
@@ -196,12 +200,9 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * GetVersion
-	 *
 	 * Gets the version of the git binary
 	 *
 	 * @return string version
-	 * @access public
 	 */
 	public function GetVersion()
 	{
@@ -212,11 +213,7 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * ReadVersion
-	 *
 	 * Reads the git version
-	 *
-	 * @access protected
 	 */
 	protected function ReadVersion()
 	{
@@ -232,11 +229,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanSkip
-	 *
 	 * Tests if this version of git can skip through the revision list
 	 *
-	 * @access public
 	 * @return boolean true if we can skip
 	 */
 	public function CanSkip()
@@ -255,11 +249,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanShowSizeInTree
-	 *
 	 * Tests if this version of git can show the size of a blob when listing a tree
 	 *
-	 * @access public
 	 * @return true if we can show sizes
 	 */
 	public function CanShowSizeInTree()
@@ -282,11 +273,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanIgnoreRegexpCase
-	 *
 	 * Tests if this version of git has the regexp tuning option to ignore regexp case
 	 *
-	 * @access public
 	 * @return true if we can ignore regexp case
 	 */
 	public function CanIgnoreRegexpCase()
@@ -307,11 +295,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * Valid
-	 *
 	 * Tests if this executable is valid
 	 *
-	 * @access public
 	 * @return boolean true if valid
 	 */
 	public function Valid()
@@ -326,12 +311,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * DefaultBinary
-	 *
 	 * Gets the default binary for the platform
 	 *
-	 * @access public
-	 * @static
 	 * @return string binary
 	 */
 	public static function DefaultBinary()

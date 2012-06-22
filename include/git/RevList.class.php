@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP RevList
- *
  * Base class for a revision list
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,78 +7,55 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * RevList class
- *
- * @package GitPHP
- * @subpackage Git
- * @abstract
- */
 abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project = null;
 
 	/**
-	 * hashList
+	 * The list of revision hashes
 	 *
-	 * Stores the list of revision hashes
-	 *
-	 * @access protected
+	 * @var string[]
 	 */
 	protected $hashList = array();
 
 	/**
-	 * limit
+	 * The limit of objects to load
 	 *
-	 * Stores the limit of objects to load
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $limit = 50;
 
 	/**
-	 * skip
+	 * The number of objects to skip
 	 *
-	 * Stores the number of objects to skip
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $skip = 0;
 
 	/**
-	 * hash
+	 * The hash to walk back from
 	 *
-	 * Stores the hash to walk back from
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $hash = false;
 
 	/**
-	 * dataLoaded
+	 * Whether data has been loaded
 	 *
-	 * Stores whether data has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
-	 * @param mixed $head head to walk back from
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_Commit $head head to walk back from
 	 * @param int $limit limit of revisions to walk
 	 * @param int $skip number of revisions to skip
 	 */
@@ -102,11 +77,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetCount
-	 *
 	 * Gets the count
 	 *
-	 * @access public
 	 * @return int count
 	 */
 	public function GetCount()
@@ -119,11 +91,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetLimit
-	 *
 	 * Gets the limit
 	 *
-	 * @access public
 	 * @return int limit
 	 */
 	public function GetLimit()
@@ -132,11 +101,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetLimit
-	 *
 	 * Sets the limit
 	 *
-	 * @access public
 	 * @param int $limit limit
 	 */
 	public function SetLimit($limit)
@@ -158,11 +124,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetSkip
-	 *
 	 * Gets the skip number
 	 *
-	 * @access public
 	 * @return int skip number
 	 */
 	public function GetSkip()
@@ -171,11 +134,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetSkip
-	 *
 	 * Sets the skip number
 	 *
-	 * @access public
 	 * @param int $skip skip number
 	 */
 	public function SetSkip($skip)
@@ -191,12 +151,9 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * GetHead
-	 *
 	 * Gets the head this log will walk from
 	 *
-	 * @access public
-	 * @return mixed head commit
+	 * @return GitPHP_Commit head commit
 	 */
 	public function GetHead()
 	{
@@ -204,12 +161,9 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetHead
-	 *
 	 * Sets the head this log will walk from
 	 *
-	 * @access public
-	 * @param mixed $head head commit
+	 * @param GitPHP_Commit $head head commit
 	 */
 	public function SetHead($head)
 	{
@@ -220,11 +174,8 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * SetHeadHash
-	 *
 	 * Sets the head hash this log will walk from
 	 *
-	 * @access public
 	 * @param string $hash head commit hash
 	 */
 	public function SetHeadHash($hash)
@@ -239,18 +190,11 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Load the data for this revlist
-	 *
-	 * @access protected
-	 * @abstract
 	 */
 	protected abstract function LoadData();
 
 	/**
-	 * rewind
-	 *
 	 * Rewinds the iterator
 	 */
 	function rewind()
@@ -263,9 +207,9 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * current
-	 *
 	 * Returns the current revision
+	 *
+	 * @return GitPHP_Commit
 	 */
 	function current()
 	{
@@ -277,8 +221,6 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * key
-	 *
 	 * Returns the current key
 	 */
 	function key()
@@ -291,8 +233,6 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * next
-	 *
 	 * Advance the pointer
 	 */
 	function next()
@@ -305,9 +245,9 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * valid
-	 *
 	 * Test for a valid pointer
+	 *
+	 * @return boolean
 	 */
 	function valid()
 	{
@@ -319,11 +259,7 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * Clear
-	 *
 	 * Clears the loaded data
-	 *
-	 * @access public
 	 */
 	public function Clear()
 	{
@@ -337,13 +273,10 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
-	 * RevList
-	 *
 	 * Common code for using rev-list command
 	 *
-	 * @access protected
 	 * @param array $args args to give to rev-list
-	 * @return array array of hashes
+	 * @return string[] array of hashes
 	 */
 	protected function RevList($args = array())
 	{

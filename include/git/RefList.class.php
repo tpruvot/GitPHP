@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP RefList
- *
  * Base class representing a list of refs
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,59 +7,40 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * RefList
- *
- * @package GitPHP
- * @subpackage Git
- * @abstract
- */
 abstract class GitPHP_RefList implements Iterator
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * compat
+	 * Whether this list is running in compatbility mode
 	 *
-	 * Stores whether this list is running in compatbility mode
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $compat = false;
 
 	/**
-	 * refs
+	 * The refs
 	 *
-	 * Stores the refs
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $refs = array();
 
 	/**
-	 * dataLoaded
+	 * Whether data has been loaded
 	 *
-	 * Stores whether data has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 */
 	public function __construct($project)
 	{
@@ -72,12 +51,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
@@ -85,11 +61,8 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * GetCompat
-	 *
 	 * Gets whether this list is running in compatibility mode
 	 *
-	 * @access public
 	 * @return bool true if compatibilty mode
 	 */
 	public function GetCompat()
@@ -98,11 +71,8 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * SetCompat
-	 *
 	 * Sets whether this list is running in compatibility mode
 	 *
-	 * @access public
 	 * @param bool $compat true if compatibility mode
 	 */
 	public function SetCompat($compat)
@@ -111,21 +81,13 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this ref list
-	 * 
-	 * @access protected
-	 * @abstract
 	 */
 	protected abstract function LoadData();
 
 	/**
-	 * ReadRefListGit
-	 *
 	 * Reads the list of refs using the git executable
 	 *
-	 * @access protected
 	 * @param string $type ref type
 	 * @return array array of refs
 	 */
@@ -152,11 +114,8 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * ReadRefListRaw
-	 *
 	 * Reads the list of refs using the raw git files
 	 *
-	 * @access protected
 	 * @param string $type ref type
 	 * @return array array of refs
 	 */
@@ -203,11 +162,8 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * GetOrderedRefsGit
-	 *
 	 * Get refs in a specific order using git executable
 	 *
-	 * @access public
 	 * @param string $type type of ref
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
@@ -245,11 +201,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * Exists
-	 *
 	 * Checks if a ref exists
 	 *
-	 * @access public
+	 * @param string $ref ref name
 	 * @return boolean true if exists
 	 */
 	public function Exists($ref)
@@ -261,9 +215,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * rewind
-	 *
 	 * Rewinds the iterator
+	 *
+	 * @return mixed
 	 */
 	function rewind()
 	{
@@ -275,9 +229,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * current
+	 * Returns the current ref
 	 *
-	 * Returns the current revision
+	 * @return mixed
 	 */
 	function current()
 	{
@@ -289,9 +243,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * key
-	 *
 	 * Returns the current key
+	 *
+	 * @return mixed
 	 */
 	function key()
 	{
@@ -303,9 +257,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * next
-	 *
 	 * Advance the pointer
+	 *
+	 * @return mixed
 	 */
 	function next()
 	{
@@ -317,9 +271,9 @@ abstract class GitPHP_RefList implements Iterator
 	}
 
 	/**
-	 * valid
-	 *
 	 * Test for a valid pointer
+	 *
+	 * @return boolean
 	 */
 	function valid()
 	{

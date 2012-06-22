@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP GitObject
- *
  * Base class for all hash objects in a git repository
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,71 +7,48 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Git Object class
- *
- * @abstract
- * @package GitPHP
- * @subpackage Git
- */
 abstract class GitPHP_GitObject
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * hash
+	 * The hash of the object
 	 *
-	 * Stores the hash of the object internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $hash;
 
 	/**
-	 * abbreviatedHash
+	 * The abbreviated hash of the object
 	 *
-	 * Stores the abbreviated hash of the object internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $abbreviatedHash;
 
 	/**
-	 * abbreviatedHashLoaded
+	 * Whether the abbreviated hash has been loaded
 	 *
-	 * Stores whether the abbreviated hash has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $abbreviatedHashLoaded = false;
 
 	/**
-	 * compat
+	 * Whether this object should load in compatibility mode
 	 *
-	 * Stores whether this object should load in compatibility mode
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $compat = false;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
-	 * @return mixed git object
-	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
 	{
@@ -82,12 +57,9 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
@@ -95,12 +67,9 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * SetProject
-	 *
 	 * Sets the project
 	 *
-	 * @access public
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 */
 	public function SetProject($project)
 	{
@@ -108,11 +77,8 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * GetHash
-	 *
 	 * Gets the hash
 	 *
-	 * @access public
 	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
@@ -133,13 +99,10 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * SetHash
-	 *
 	 * Attempts to set the hash of this object
 	 *
 	 * @param string $hash the hash to set
 	 * @throws Exception on invalid hash
-	 * @access protected
 	 */
 	protected function SetHash($hash)
 	{
@@ -150,11 +113,8 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * GetCompat
-	 *
 	 * Gets whether this object is in compatibility mode
 	 *
-	 * @access public
 	 * @return bool true if compatibility mode
 	 */
 	public function GetCompat()
@@ -163,11 +123,8 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * SetCompat
-	 *
 	 * Sets whether this object should run in compatibility mode
 	 *
-	 * @access public
 	 * @param bool $compat true if compatibility mode
 	 */
 	public function SetCompat($compat)
@@ -176,12 +133,9 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
@@ -189,11 +143,8 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()

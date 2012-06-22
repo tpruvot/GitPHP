@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Log
- *
  * Class to represent a project log
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,40 +7,25 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Log class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Log extends GitPHP_RevList
 {
 	/**
-	 * compat
+	 * Whether this log is operating in compatibility mode
 	 *
-	 * Stores whether this log is operating in compatibility mode
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $compat = false;
 
 	/**
-	 * skipFallback
+	 * The threshold at which log skips will fallback to the git executable
 	 *
-	 * Stores the threshold at which log skips will
-	 * fallback to the git executable
-	 *
-	 * @access protected
+	 * @var int
 	 */
 	protected $skipFallback = 200;
 
 	/**
-	 * GetCompat
-	 *
 	 * Gets whether this log is operating in compatibilty mode
 	 *
-	 * @access public
 	 * @return bool true if compatibility mode is on
 	 */
 	public function GetCompat()
@@ -51,11 +34,8 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * SetCompat
-	 *
 	 * Sets whether this log is operating in compatibility mode
 	 *
-	 * @access public
 	 * @param bool $compat true if compatibility mode is on
 	 */
 	public function SetCompat($compat)
@@ -64,12 +44,8 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * GetSkipFallback
+	 * Gets the threshold at which log skips will fallback on the git executable
 	 *
-	 * Gets the threshold at which log skips will fallback on
-	 * the git executable
-	 *
-	 * @access public
 	 * @return int skip fallback number
 	 */
 	public function GetSkipFallback()
@@ -78,12 +54,8 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * SetSkipFallback
+	 * Sets the threshold at which log skips will fallback on the git executable
 	 *
-	 * Sets the threshold at which log skips will fallback on
-	 * the git executable
-	 *
-	 * @access public
 	 * @param int $skip skip fallback number
 	 */
 	public function SetSkipFallback($skip)
@@ -92,11 +64,7 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads the data for this log
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -110,13 +78,11 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * RawLog
-	 *
 	 * Loads the log using raw git objects
+	 *
 	 * Based on history walking code from glip
 	 *
-	 * @access private
-	 * @return array array of hashes
+	 * @return string[] array of hashes
 	 */
 	private function RawLog()
 	{
@@ -173,11 +139,8 @@ class GitPHP_Log extends GitPHP_RevList
 	}
 
 	/**
-	 * FilterOldCommits
-	 *
 	 * Filters out commits older than a certain age
 	 *
-	 * @access public
 	 * @param int $age age in seconds
 	 * @param int $min minimum number of commits to retain
 	 */

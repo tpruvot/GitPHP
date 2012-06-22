@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP TagList
- *
  * Class representing a list of tags
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,22 +7,12 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * TagList
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_TagList extends GitPHP_RefList
 {
 	/**
-	 * GetTags
-	 *
 	 * Gets the tags
 	 *
-	 * @access public
-	 * @return array array of tags
+	 * @return GitPHP_Tag[] array of tags
 	 */
 	public function GetTags()
 	{
@@ -41,11 +29,7 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Load tag data
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -58,12 +42,10 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetTag
-	 *
 	 * Gets a tag
 	 *
-	 * @access public
 	 * @param string $tag tag
+	 * @return GitPHP_Tag tag object
 	 */
 	public function GetTag($tag)
 	{
@@ -80,14 +62,11 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetOrderedTags
-	 *
 	 * Gets tags in a specific order
 	 *
-	 * @access public
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
-	 * @return array array of tags
+	 * @return GitPHP_Tag[] array of tags
 	 */
 	public function GetOrderedTags($order, $count = 0)
 	{
@@ -109,14 +88,11 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetOrderedTagsRaw
-	 *
 	 * Get tags in a specific order
 	 *
-	 * @access public
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
-	 * @return array array of tags
+	 * @return GitPHP_Tag[] array of tags
 	 */
 	private function GetOrderedTagsRaw($order, $count = 0)
 	{
@@ -137,9 +113,9 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
-	 * current
-	 *
 	 * Returns the current revision (overrides base)
+	 *
+	 * @return GitPHP_Tag
 	 */
 	function current()
 	{

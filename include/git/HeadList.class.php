@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP HeadList
- *
  * Class representing a list of heads
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,22 +7,12 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * HeadList
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_HeadList extends GitPHP_RefList
 {
 	/**
-	 * GetHeads
-	 *
 	 * Gets the heads
 	 *
-	 * @access public
-	 * @return array array of heads
+	 * @return GitPHP_Head[] array of heads
 	 */
 	public function GetHeads()
 	{
@@ -41,11 +29,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Load head data
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -58,11 +42,8 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetHead
-	 *
 	 * Gets a head
 	 *
-	 * @access public
 	 * @param string $head head
 	 */
 	public function GetHead($head)
@@ -80,14 +61,11 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetOrderedHeads
-	 *
 	 * Gets heads in a specific order
 	 *
-	 * @access public
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
-	 * @return array array of heads
+	 * @return GitPHP_Head[] array of heads
 	 */
 	public function GetOrderedHeads($order, $count = 0)
 	{
@@ -109,14 +87,11 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
-	 * GetOrderedHeadsRaw
+	 * Get heads in a specific order using raw objects
 	 *
-	 * Get heads in a specific order
-	 *
-	 * @access public
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
-	 * @return array array of heads
+	 * @return GitPHP_Head[] array of heads
 	 */
 	private function GetOrderedHeadsRaw($order, $count = 0)
 	{
@@ -137,9 +112,9 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
-	 * current
+	 * Returns the current head (overrides base)
 	 *
-	 * Returns the current revision (overrides base)
+	 * @return GitPHP_Head
 	 */
 	function current()
 	{

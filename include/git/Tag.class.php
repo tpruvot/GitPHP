@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Tag
- *
  * Represents a single tag object
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,99 +7,71 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Tag class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Tag extends GitPHP_Ref
 {
 	
 	/**
-	 * dataRead
+	 * Whether data for this tag has been read
 	 *
-	 * Indicates whether data for this tag has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * object
+	 * The identifier for the tagged object
 	 *
-	 * Stores the object internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $object;
 
 	/**
-	 * commitHash
+	 * The commit hash
 	 *
-	 * Stores the commit hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * type
+	 * The tagged object type
 	 *
-	 * Stores the type internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $type;
 
 	/**
-	 * tagger
+	 * The tagger
 	 *
-	 * Stores the tagger internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $tagger;
 
 	/**
-	 * taggerEpoch
+	 * The tagger epoch
 	 *
-	 * Stores the tagger epoch internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $taggerEpoch;
 
 	/**
-	 * taggerTimezone
+	 * The tagger timezone
 	 *
-	 * Stores the tagger timezone internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $taggerTimezone;
 
 	/**
-	 * comment
+	 * The tag comment
 	 *
-	 * Stores the tag comment internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $comment = array();
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates tag
 	 *
-	 * @access public
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $tag tag name
 	 * @param string $tagHash tag hash
-	 * @return mixed tag object
-	 * @throws Exception exception on invalid tag or hash
 	 */
 	public function __construct($project, $tag, $tagHash = '')
 	{
@@ -109,12 +79,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Gets the object this tag points to
 	 *
-	 * @access public
-	 * @return mixed object for this tag
+	 * @return GitPHP_Commit|GitPHP_Tag|GitPHP_Blob object for this tag
 	 */
 	public function GetObject()
 	{
@@ -133,12 +100,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit this tag points to
 	 *
-	 * @access public
-	 * @return mixed commit for this tag
+	 * @return GitPHP_Commit commit for this tag
 	 */
 	public function GetCommit()
 	{
@@ -162,12 +126,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * SetCommit
-	 *
 	 * Sets the commit this tag points to
 	 *
-	 * @access public
-	 * @param mixed $commit commit object 
+	 * @param GitPHP_Commit $commit commit object 
 	 */
 	public function SetCommit($commit)
 	{
@@ -178,11 +139,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * SetCommitHash
-	 *
 	 * Sets the hash of the commit this tag points to
 	 *
-	 * @access public
 	 * @param string $hash hash
 	 */
 	public function SetCommitHash($hash)
@@ -195,11 +153,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetType
-	 *
 	 * Gets the tag type
 	 *
-	 * @access public
 	 * @return string tag type
 	 */
 	public function GetType()
@@ -211,11 +166,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetTagger
-	 *
 	 * Gets the tagger
 	 *
-	 * @access public
 	 * @return string tagger
 	 */
 	public function GetTagger()
@@ -227,11 +179,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetTaggerEpoch
-	 *
 	 * Gets the tagger epoch
 	 *
-	 * @access public
 	 * @return string tagger epoch
 	 */
 	public function GetTaggerEpoch()
@@ -243,11 +192,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetTaggerLocalEpoch
-	 *
 	 * Gets the tagger local epoch
 	 *
-	 * @access public
 	 * @return string tagger local epoch
 	 */
 	public function GetTaggerLocalEpoch()
@@ -262,11 +208,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetTaggerTimezone
-	 *
 	 * Gets the tagger timezone
 	 *
-	 * @access public
 	 * @return string tagger timezone
 	 */
 	public function GetTaggerTimezone()
@@ -278,11 +221,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetAge
-	 *
 	 * Gets the tag age
 	 *
-	 * @access public
 	 * @return string age
 	 */
 	public function GetAge()
@@ -294,12 +234,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetComment
-	 *
 	 * Gets the tag comment
 	 *
-	 * @access public
-	 * @return array comment lines
+	 * @return string[] comment lines
 	 */
 	public function GetComment()
 	{
@@ -310,11 +247,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * LightTag
-	 *
 	 * Tests if this is a light tag (tag without tag object)
 	 *
-	 * @access public
 	 * @return boolean true if tag is light (has no object)
 	 */
 	public function LightTag()
@@ -333,11 +267,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * ReadData
-	 *
 	 * Reads the tag data
-	 *
-	 * @access protected
 	 */
 	protected function ReadData()
 	{
@@ -353,11 +283,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * ReadDataGit
-	 *
 	 * Reads the tag data using the git executable
-	 *
-	 * @access private
 	 */
 	private function ReadDataGit()
 	{
@@ -441,11 +367,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * ReadDataRaw
-	 *
 	 * Reads the tag data using the raw git object
-	 *
-	 * @access private
 	 */
 	private function ReadDataRaw()
 	{
@@ -519,11 +441,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * ReadCommit
-	 *
 	 * Attempts to dereference the commit for this tag
-	 *
-	 * @access private
 	 */
 	private function ReadCommit()
 	{
@@ -546,12 +464,9 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
@@ -560,11 +475,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -573,12 +485,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * GetCreationEpoch
+	 * Gets tag's creation epoch (tagger epoch, or committer epoch for light tags)
 	 *
-	 * Gets tag's creation epoch
-	 * (tagger epoch, or committer epoch for light tags)
-	 *
-	 * @access public
 	 * @return string creation epoch
 	 */
 	public function GetCreationEpoch()
@@ -593,14 +501,10 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * CompareAge
-	 *
 	 * Compares two tags by age
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first tag
-	 * @param mixed $b second tag
+	 * @param GitPHP_Tag $a first tag
+	 * @param GitPHP_Tag $b second tag
 	 * @return integer comparison result
 	 */
 	public static function CompareAge($a, $b)
@@ -621,14 +525,10 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * CompareCreationEpoch
-	 *
 	 * Compares to tags by creation epoch
 	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first tag
-	 * @param mixed $b second tag
+	 * @param GitPHP_Tag $a first tag
+	 * @param GitPHP_Tag $b second tag
 	 * @return integer comparison result
 	 */
 	public static function CompareCreationEpoch($a, $b)
@@ -644,12 +544,8 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a tag cache key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $tag tag name
 	 * @return string cache key

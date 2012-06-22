@@ -1,199 +1,149 @@
 <?php
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
+
 /**
- * GitPHP File Diff
- *
- * Represents a single file difference
+ * Diffs two blobs
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-
-require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
-require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
-
-/**
- * Commit class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_FileDiff
 {
 	/**
-	 * diffInfoRead
+	 * Whether diff info has been read
 	 *
-	 * Stores whether diff info has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $diffInfoRead = false;
 
 	/**
-	 * diffDataRead
+	 * Whether diff data has been read
 	 *
-	 * Stores whether diff data has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $diffDataRead = false;
 
 	/**
-	 * diffData
+	 * Diff data
 	 *
-	 * Stores the diff data
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $diffData;
 
 	/**
-	 * diffDataSplitRead
+	 * Whether split diff data has been read
 	 *
-	 * Stores whether split diff data has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $diffDataSplitRead = false;
 
 	/**
-	 * diffDataSplit
+	 * Diff data split up by left/right changes
 	 *
-	 * Stores the diff data split up by left/right changes
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $diffDataSplit;
 
 	/**
-	 * diffDataName
-	 *
 	 * Filename used on last data diff
 	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $diffDataName;
 
 	/**
-	 * fromMode
+	 * From file mode
 	 *
-	 * Stores the from file mode
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $fromMode;
 
 	/**
-	 * toMode
+	 * To file mode
 	 *
-	 * Stores the to file mode
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $toMode;
 
 	/**
-	 * fromHash
+	 * From blob hash
 	 *
-	 * Stores the from hash
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $fromHash;
 
 	/**
-	 * toHash
+	 * To blob hash
 	 *
-	 * Stores the to hash
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $toHash;
 
 	/**
-	 * status
+	 * Change status
 	 *
-	 * Stores the status
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $status;
 
 	/**
-	 * similarity
+	 * File similarity
 	 *
-	 * Stores the similarity
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $similarity;
 
 	/**
-	 * fromFile
+	 * From filename
 	 *
-	 * Stores the from filename
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $fromFile;
 
 	/**
-	 * toFile
+	 * To filename
 	 *
-	 * Stores the to filename
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $toFile;
 
 	/**
-	 * fromFileType
+	 * From file type
 	 *
-	 * Stores the from file type
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $fromFileType;
 
 	/**
-	 * toFileType
+	 * To file type
 	 *
-	 * Stores the to file type
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $toFileType;
 
 	/**
-	 * project
+	 * Project
 	 *
-	 * Stores the project
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * commitHash
+	 * The hash of the commit that caused this filediff
 	 *
-	 * Stores the hash of the commit that caused this filediff
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 * @param string $fromHash source hash, can also be a diff-tree info line
 	 * @param string $toHash target hash, required if $fromHash is a hash
-	 * @return mixed FileDiff object
-	 * @throws Exception on invalid parameters
 	 */
 	public function __construct($project, $fromHash, $toHash = '')
 	{
@@ -211,12 +161,9 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
@@ -224,9 +171,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * ParseDiffTreeLine
+	 * Reads data from a git-formatted diff tree line
 	 *
-	 * @access private
 	 * @param string $diffTreeLine line from difftree
 	 * @return boolean true if data was read from line
 	 */
@@ -255,11 +201,7 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * ReadDiffInfo
-	 *
 	 * Reads file diff info
-	 *
-	 * @access protected
 	 */
 	protected function ReadDiffInfo()
 	{
@@ -269,12 +211,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromMode
+	 * Gets the from file mode (full a/u/g/o)
 	 *
-	 * Gets the from file mode
-	 * (full a/u/g/o)
-	 *
-	 * @access public
 	 * @return string from file mode
 	 */
 	public function GetFromMode()
@@ -286,12 +224,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromModeShort
+	 * Gets the from file mode in short form (standard u/g/o)
 	 *
-	 * Gets the from file mode in short form
-	 * (standard u/g/o)
-	 *
-	 * @access public
 	 * @return string short from file mode
 	 */
 	public function GetFromModeShort()
@@ -303,12 +237,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToMode
+	 * Gets the to file mode (full a/u/g/o)
 	 *
-	 * Gets the to file mode
-	 * (full a/u/g/o)
-	 *
-	 * @access public
 	 * @return string to file mode
 	 */
 	public function GetToMode()
@@ -320,12 +250,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToModeShort
+	 * Gets the to file mode in short form (standard u/g/o)
 	 *
-	 * Gets the to file mode in short form
-	 * (standard u/g/o)
-	 *
-	 * @access public
 	 * @return string short to file mode
 	 */
 	public function GetToModeShort()
@@ -337,11 +263,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromHash
-	 *
 	 * Gets the from hash
 	 *
-	 * @access public
 	 * @return string from hash
 	 */
 	public function GetFromHash()
@@ -350,11 +273,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToHash
-	 *
 	 * Gets the to hash
 	 *
-	 * @access public
 	 * @return string to hash
 	 */
 	public function GetToHash()
@@ -363,12 +283,9 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromBlob
-	 *
 	 * Gets the from file blob
 	 *
-	 * @access public
-	 * @return mixed blob object
+	 * @return GitPHP_Blob|null blob object
 	 */
 	public function GetFromBlob()
 	{
@@ -379,12 +296,9 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToBlob
-	 *
 	 * Gets the to file blob
 	 *
-	 * @access public
-	 * @return mixed blob object
+	 * @return GitPHP_Blob|null blob object
 	 */
 	public function GetToBlob()
 	{
@@ -395,11 +309,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetStatus
-	 *
 	 * Gets the status of the change
 	 *
-	 * @access public
 	 * @return string status
 	 */
 	public function GetStatus()
@@ -411,11 +322,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetSimilarity
-	 *
 	 * Gets the similarity
 	 *
-	 * @access public
 	 * @return string similarity
 	 */
 	public function GetSimilarity()
@@ -427,11 +335,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromFile
-	 *
 	 * Gets the from file name
 	 *
-	 * @access public
 	 * @return string from file
 	 */
 	public function GetFromFile()
@@ -443,11 +348,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToFile
-	 *
 	 * Gets the to file name
 	 *
-	 * @access public
 	 * @return string to file
 	 */
 	public function GetToFile()
@@ -459,11 +361,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromFileType
-	 *
 	 * Gets the from file type
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants localized type
 	 * @return string from file type
 	 */
@@ -476,11 +375,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToFileType
-	 *
 	 * Gets the to file type
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants localized type
 	 * @return string to file type
 	 */
@@ -493,11 +389,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * FileTypeChanged
-	 *
 	 * Tests if filetype changed
 	 *
-	 * @access public
 	 * @return boolean true if file type changed
 	 */
 	public function FileTypeChanged()
@@ -509,11 +402,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * FileModeChanged
-	 *
 	 * Tests if file mode changed
 	 *
-	 * @access public
 	 * @return boolean true if file mode changed
 	 */
 	public function FileModeChanged()
@@ -525,11 +415,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * FromFileIsRegular
-	 *
 	 * Tests if the from file is a regular file
 	 *
-	 * @access public
 	 * @return boolean true if from file is regular
 	 */
 	public function FromFileIsRegular()
@@ -541,11 +428,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * ToFileIsRegular
-	 *
 	 * Tests if the to file is a regular file
 	 *
-	 * @access public
 	 * @return boolean true if to file is regular
 	 */
 	public function ToFileIsRegular()
@@ -557,13 +441,12 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetDiff
-	 *
 	 * Gets the diff output
 	 *
-	 * @access public
 	 * @param string $file override the filename on the diff
-	 * @return string diff output
+	 * @param boolean $readFileData whether file info data should also be read
+	 * @param boolean $explode whether data should be exploded into an array of lines
+	 * @return string|string[] diff output
 	 */
 	public function GetDiff($file = '', $readFileData = true, $explode = false)
 	{
@@ -594,17 +477,15 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetDiffSplit
+	 * Construct the side by side diff data from the git data
 	 *
-	 * construct the side by side diff data from the git data
 	 * The result is an array of ternary arrays with 3 elements each:
 	 * First the mode ("" or "-added" or "-deleted" or "-modified"),
 	 * then the first column, then the second.
 	 *
 	 * @author Mattias Ulbrich
 	 *
-	 * @access public
-	 * @return an array of line elements (see above)
+	 * @return array an array of line elements
 	 */
 	public function GetDiffSplit()
 	{
@@ -707,11 +588,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetDiffData
-	 *
 	 * Get diff data
 	 *
-	 * @access private
 	 * @param integer $context number of context lines
 	 * @param boolean $header true to include file header
 	 * @param string $file override file name
@@ -777,11 +655,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetPhpDiff
-	 *
 	 * Get diff using php-diff
 	 *
-	 * @access private
 	 * @param string $fromData from file data
 	 * @param string $toData to file data
 	 * @param integer $context context lines
@@ -797,11 +672,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * UseXDiff
-	 *
 	 * Returns whether xdiff should be used
 	 *
-	 * @access private
 	 * @return boolean true if xdiff should be used
 	 */
 	private function UseXDiff()
@@ -810,11 +682,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetXDiff
-	 *
 	 * Get diff using xdiff
 	 *
-	 * @access private
 	 * @param string $fromData from file data
 	 * @param string $toData to file data
 	 * @param integer $context context lines
@@ -826,12 +695,9 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit for this filediff
 	 *
-	 * @access public
-	 * @return commit object
+	 * @return GitPHP_Commit commit object
 	 */
 	public function GetCommit()
 	{
@@ -839,12 +705,9 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * SetCommit
-	 *
 	 * Sets the commit for this filediff
 	 *
-	 * @access public
-	 * @param mixed $commit commit object
+	 * @param GitPHP_Commit $commit commit object
 	 */
 	public function SetCommit($commit)
 	{
@@ -855,11 +718,8 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * SetCommitHash
-	 *
 	 * Sets the hash of the commit for this filediff
 	 *
-	 * @access public
 	 * @param string $hash hash
 	 */
 	public function SetCommitHash($hash)

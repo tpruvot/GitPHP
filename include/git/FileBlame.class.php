@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP FileBlame
- *
  * Class to get a file's blame
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,68 +7,48 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * FileBlame class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_FileBlame
 {
 	/**
-	 * project
+	 * The project
 	 *
-	 * Stores the project internally
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * commitHash
+	 * The commit hash
 	 *
-	 * Stores the commit hash internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * path
+	 * The file path
 	 *
-	 * Stores the path internally
-	 *
-	 * @access protected
+	 * @var string
 	 */
 	protected $path;
 
 	/**
-	 * blame
-	 * 
-	 * Stores the blame data
+	 * Blame data
 	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $blame = array();
 
 	/**
-	 * dataLoaded
+	 * Whether data has been loaded
 	 *
-	 * Stores whether data has been loaded
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $dataLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
-	 * @param mixed $project project
-	 * @param mixed $commit commit to trace blame from
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_Commit $commit commit to trace blame from
 	 * @param string $path file path to trace blame of
 	 */
 	public function __construct($project, $commit, $path)
@@ -92,12 +70,9 @@ class GitPHP_FileBlame
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project for this file history
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
@@ -105,12 +80,9 @@ class GitPHP_FileBlame
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit for this file history
 	 *
-	 * @access public
-	 * @return mixed commit
+	 * @return GitPHP_Commit commit
 	 */
 	public function GetCommit()
 	{
@@ -118,11 +90,8 @@ class GitPHP_FileBlame
 	}
 
 	/**
-	 * GetPath
-	 *
 	 * Gets the path for this file history
 	 *
-	 * @access public
 	 * @return string path
 	 */
 	public function GetPath()
@@ -131,11 +100,8 @@ class GitPHP_FileBlame
 	}
 
 	/**
-	 * GetBlame
-	 *
 	 * Gets the blame
 	 *
-	 * @access public
 	 * @return array blame data
 	 */
 	public function GetBlame()
@@ -153,11 +119,7 @@ class GitPHP_FileBlame
 	}
 
 	/**
-	 * LoadData
-	 *
-	 * Loads the history data
-	 *
-	 * @access private
+	 * Loads the blame data
 	 */
 	private function LoadData()
 	{
