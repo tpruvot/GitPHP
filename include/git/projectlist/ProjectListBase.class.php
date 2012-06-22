@@ -1,25 +1,5 @@
 <?php
 /**
- * Constant for project name sort order
- */
-define('GITPHP_SORT_PROJECT', 'project');
-
-/**
- * Constant for project description sort order
- */
-define('GITPHP_SORT_DESCRIPTION', 'descr');
-
-/**
- * Constant for project owner sort order
- */
-define('GITPHP_SORT_OWNER', 'owner');
-
-/**
- * Constant for project age sort order
- */
-define('GITPHP_SORT_AGE', 'age');
-
-/**
  * Base class that all projectlist classes extend
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -29,6 +9,34 @@ define('GITPHP_SORT_AGE', 'age');
  */
 abstract class GitPHP_ProjectListBase implements Iterator
 {
+	/**
+	 * Project name sort
+	 *
+	 * @const
+	 */
+	const ProjectSort = 'project';
+
+	/**
+	 * Project description sort
+	 *
+	 * @const
+	 */
+	const DescriptionSort = 'descr';
+
+	/**
+	 * Project owner sort
+	 *
+	 * @const
+	 */
+	const OwnerSort = 'owner';
+
+	/**
+	 * Project age sort
+	 *
+	 * @const
+	 */
+	const AgeSort = 'age';
+
 	/**
 	 * Project list
 	 *
@@ -332,19 +340,19 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	 *
 	 * @param string $sortBy sort method
 	 */
-	public function Sort($sortBy = GITPHP_SORT_PROJECT)
+	public function Sort($sortBy = GitPHP_ProjectListBase::ProjectSort)
 	{
 		switch ($sortBy) {
-			case GITPHP_SORT_DESCRIPTION:
+			case GitPHP_ProjectListBase::DescriptionSort:
 				uasort($this->projects, array('GitPHP_Project', 'CompareDescription'));
 				break;
-			case GITPHP_SORT_OWNER:
+			case GitPHP_ProjectListBase::OwnerSort:
 				uasort($this->projects, array('GitPHP_Project', 'CompareOwner'));
 				break;
-			case GITPHP_SORT_AGE:
+			case GitPHP_ProjectListBase::AgeSort:
 				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
 				break;
-			case GITPHP_SORT_PROJECT:
+			case GitPHP_ProjectListBase::ProjectSort:
 			default:
 				uasort($this->projects, array('GitPHP_Project', 'CompareProject'));
 				break;
