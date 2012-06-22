@@ -228,7 +228,6 @@ class GitPHP_Project
 	/**
 	 * Gets the project
 	 *
-	 * @access public
 	 * @return string the project
 	 */
 	public function GetProject()
@@ -975,7 +974,6 @@ class GitPHP_Project
 	/**
 	 * Gets the git object loader for this project
 	 *
-	 * @access public
 	 * @return GitPHP_GitObjectLoader
 	 */
 	public function GetObjectLoader()

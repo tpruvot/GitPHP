@@ -235,7 +235,6 @@ class GitPHP_TreeDiff implements Iterator
 	/**
 	 * Gets the number of file changes in this treediff
 	 *
-	 * @access public
 	 * @return integer count of file changes
 	 */
 	public function Count()
