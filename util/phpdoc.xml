@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <title>GitPHP</title>
+  <parser>
+    <target>doc/code</target>
+  </parser>
+  <transformer>
+    <target>doc/code</target>
+  </transformer>
+  <files>
+    <file>index.php</file>
+    <directory>include</directory>
+    <ignore>block.t.php</ignore>
+  </files>
+</phpdoc>
