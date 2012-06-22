@@ -1,10 +1,5 @@
 <?php
 /**
- * Constant for default minimum abbreviated hash length
- */
-define('GITPHP_ABBREV_HASH_MIN', 7);
-
-/**
  * Class for a single git project
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -1077,6 +1072,13 @@ class GitPHP_Project
 	}
 
 	/**
+	 * Default raw abbreviation length
+	 *
+	 * @const
+	 */
+	const HashAbbreviateLength = 7;
+
+	/**
 	 * Abbreviates a hash using raw git objects
 	 *
 	 * @param string $hash hash to abbreviate
@@ -1084,7 +1086,7 @@ class GitPHP_Project
 	 */
 	private function AbbreviateHashRaw($hash)
 	{
-		$abbrevLen = GITPHP_ABBREV_HASH_MIN;
+		$abbrevLen = GitPHP_Project::HashAbbreviateLength;
 
 		if ($this->abbreviateLength > 0) {
 			$abbrevLen = max(4, min($this->abbreviateLength, 40));
