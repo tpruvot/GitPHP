@@ -73,9 +73,9 @@ class GitPHP_Controller
 			case 'rss':
 				$controller = new GitPHP_Controller_Feed();
 				if ($action == 'rss')
-					$controller->SetParam('format', GITPHP_FEED_FORMAT_RSS);
+					$controller->SetParam('format', GitPHP_Controller_Feed::RssFormat);
 				else if ($action == 'atom')
-					$controller->SetParam('format', GITPHP_FEED_FORMAT_ATOM);
+					$controller->SetParam('format', GitPHP_Controller_Feed::AtomFormat);
 				break;
 			case 'commit':
 				$controller = new GitPHP_Controller_Commit();
