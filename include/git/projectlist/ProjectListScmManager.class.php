@@ -1,50 +1,34 @@
 <?php
 /**
- * GitPHP ProjectListScmManager
- *
  * Lists all projects in an scm-manager config file
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * ProjectListScmManager class
- *
- * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 {
 	/**
-	 * fileContents
+	 * The contents of the project config file
 	 *
-	 * Stores the contents of the project config file
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $fileContents = array();
 
 	/**
-	 * fileRead
+	 * Whether the file has been read
 	 *
-	 * Stores whether the file has been read
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $fileRead = false;
 	
 	/**
-	 * __construct
-	 *
 	 * constructor
 	 *
 	 * @param string $projectRoot project root
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
-	 * @access public
 	 */
 	public function __construct($projectRoot, $projectFile)
 	{
@@ -58,12 +42,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
-	 *
-	 * @access protected
-	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
 	{
@@ -80,13 +59,10 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates the project object
 	 *
-	 * @access protected
 	 * @param string $proj project
-	 * @return mixed project object
+	 * @return GitPHP_Project project object
 	 */
 	protected function InstantiateProject($proj)
 	{
@@ -143,11 +119,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * ReadFile
-	 *
 	 * Reads the file contents
-	 *
-	 * @access private
 	 */
 	protected function ReadFile()
 	{
@@ -189,11 +161,9 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * IsSCMManager
-	 *
 	 * Tests if this file is an SCM manager config file
 	 *
-	 * @access protected
+	 * @param string $file file
 	 * @returns true if file is an SCM manager config
 	 */
 	public static function IsSCMManager($file)

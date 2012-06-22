@@ -1,43 +1,26 @@
 <?php
 /**
- * GitPHP ProjectList
- *
  * Project list singleton instance and factory
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * ProjectList class
- *
- * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectList
 {
 
 	/**
-	 * instance
+	 * The singleton instance of the projectlist
 	 *
-	 * Stores the singleton instance of the projectlist
-	 *
-	 * @access protected
-	 * @static
+	 * @var GitPHP_ProjectListBase
 	 */
 	protected static $instance = null;
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of projectlist
-	 * @throws Exception if projectlist has not been instantiated yet
+	 * @return GitPHP_ProjectListBase instance of projectlist
 	 */
 	public static function GetInstance()
 	{
@@ -45,12 +28,7 @@ class GitPHP_ProjectList
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -58,12 +36,8 @@ class GitPHP_ProjectList
 	}
 
 	/**
-	 * Instantiate
-	 *
 	 * Instantiates the singleton instance
 	 *
-	 * @access private
-	 * @static
 	 * @param string $file config file with git projects
 	 * @param boolean $legacy true if this is the legacy project config
 	 * @throws Exception if there was an error reading the file

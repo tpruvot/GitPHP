@@ -1,39 +1,25 @@
 <?php
 /**
- * GitPHP ProjectListDirectory
- *
  * Lists all projects in a given directory
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * ProjectListDirectory class
- *
- * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * exportedOnly
+	 * Whether to only list exported projects
 	 *
-	 * Stores whether to only list exported projects
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $exportedOnly = false;
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access public
 	 * @param string $projectRoot project root
 	 * @param bool $exportedOnly whether to only allow exported projects
 	 */
@@ -46,11 +32,9 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * GetExportedOnly
-	 *
 	 * Gets whether this list only allows exported projects
 	 *
-	 * @access public
+	 * @return boolean
 	 */
 	public function GetExportedOnly()
 	{
@@ -58,11 +42,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 	
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
-	 *
-	 * @access protected
 	 */
 	protected function PopulateProjects()
 	{
@@ -70,8 +50,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * RecurseDir
-	 *
 	 * Recursively searches for projects
 	 *
 	 * @param string $dir directory to recurse into
@@ -110,13 +88,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates project object
 	 *
-	 * @access protected
 	 * @param string $proj project
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	protected function InstantiateProject($proj)
 	{
