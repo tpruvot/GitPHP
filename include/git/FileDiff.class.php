@@ -708,6 +708,8 @@ class GitPHP_FileDiff
 		// iterate over diffs
 		$output = array();
 		$lnl = 0; $lnr = 0; $num = 0;
+		$big_after = 15;
+
 		foreach($diffs as $d) {
 
 			$big_before = $big_after = 15;
