@@ -15,31 +15,6 @@ class GitPHP_Cache
 	const Template = 'data.tpl';
 
 	/**
-	 * Stores the singleton instance of the object cache
-	 *
-	 * @var GitPHP_Cache
-	 */
-	protected static $objectCacheInstance;
-
-	/**
-	 * Return the singleton instance of the object cache
-	 *
-	 * @return GitPHP_Cache instance of cache class
-	 */
-	public static function GetObjectCacheInstance()
-	{
-		if (!self::$objectCacheInstance) {
-			self::$objectCacheInstance = new GitPHP_Cache();
-			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
-				self::$objectCacheInstance->SetServers(GitPHP_Config::GetInstance()->GetValue('memcache', null));
-				self::$objectCacheInstance->SetEnabled(true);
-				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
-			}
-		}
-		return self::$objectCacheInstance;
-	}
-
-	/**
 	 * Smarty instance
 	 *
 	 * @var Smarty
@@ -59,13 +34,6 @@ class GitPHP_Cache
 	 * @var array[]
 	 */
 	protected $servers = null;
-
-	/**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-	}
 
 	/**
 	 * Gets whether the cache is enabled

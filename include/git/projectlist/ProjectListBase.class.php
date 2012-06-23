@@ -73,6 +73,13 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $projectRoot = null;
 
 	/**
+	 * Object cache instance for all projects
+	 *
+	 * @var GitPHP_Cache
+	 */
+	protected $cache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $projectRoot project root
@@ -88,6 +95,12 @@ abstract class GitPHP_ProjectListBase implements Iterator
 			throw new Exception(sprintf(__('%1$s is not a directory'), $this->projectRoot));
 		}
 
+		if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
+			$this->cache = new GitPHP_Cache();
+			$this->cache->SetServers(GitPHP_Config::GetInstance()->GetValue('memcache', null));
+			$this->cache->SetEnabled(true);
+			$this->cache->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
+		}
 	}
 
 	/**
@@ -160,7 +173,9 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if (!$project)
 			return;
 
-		$project->GetObjectManager()->SetCache(GitPHP_Cache::GetObjectCacheInstance());
+		if ($this->cache) {
+			$project->GetObjectManager()->SetCache($this->cache);
+		}
 	}
 
 	/**
