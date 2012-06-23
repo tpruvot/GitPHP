@@ -1076,6 +1076,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public static function CompareAuthorEpoch($a, $b)
 	{
+		// PHP Parsing of git history require this.
+		if (!$a->GetProject()->GetCompat()) {
+			if ($a->GetParent()->GetHash() == $b->GetHash())
+				return -1;
+			if ($a->GetHash() == $b->GetParent()->GetHash())
+				return 1;
+		}
 		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
 			return 0;
 		}
