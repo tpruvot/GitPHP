@@ -57,7 +57,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$head = $this->GetProject()->GetHeadCommit();
-		$this->tpl->assign('head');
+		$this->tpl->assign('head', $head);
 		if (!$head)
 			$this->tpl->assign('enablesearch', false);
 
