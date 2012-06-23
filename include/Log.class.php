@@ -221,6 +221,15 @@ class GitPHP_Log
 		$this->benchmark = $bench;
 	}
 
+	protected function GetTime($time, $since = 0.0)
+	{
+		return sprintf('%.6F', $time - $since);
+	}
+
+	protected function GetMem($mem, $since = 0)
+	{
+		return ($mem - $since);
+	}
 	/**
 	 * GetEntries
 	 *
@@ -242,13 +251,18 @@ class GitPHP_Log
 				$lastTime = $this->startTime;
 				$lastMem = $this->startMem;
 
-				$data[] = 'DEBUG: [' . $this->startTime . '] [' . $this->startMem . ' bytes] Start';
+				$data[] = 'DEBUG: [' . $this->GetTime($this->startTime) . '] [' . $this->GetMem($this->startMem) . ' bytes] Start';
 
 			}
 
 			foreach ($this->entries as $entry) {
 				if ($this->benchmark) {
-					$data[] = 'DEBUG: [' . $entry['time'] . '] [' . ($entry['time'] - $this->startTime) . ' sec since start] [' . ($entry['time'] - $lastTime) . ' sec since last] [' . $entry['mem'] . ' bytes] [' . ($entry['mem'] - $this->startMem) . ' bytes since start] [' . ($entry['mem'] - $lastMem) . ' bytes since last] ' . $entry['msg'];
+					$data[] = 'DEBUG: [' . $this->GetTime($entry['time']) . '] '.
+						'[' . $this->GetTime($entry['time'], $this->startTime) . ' sec since start] ' .
+						'[' . $this->GetTime($entry['time'], $lastTime) . ' sec since last] ' .
+						'[' . $this->GetMem($entry['mem']) . ' bytes] '.
+						'[' . $this->GetMem($entry['mem'], $this->startMem) . ' bytes since start] '.
+						'[' . $this->GetMem($entry['mem'], $lastMem) . ' bytes since last] ' . $entry['msg'];
 					$lastTime = $entry['time'];
 					$lastMem = $entry['mem'];
 				} else {
@@ -257,7 +271,12 @@ class GitPHP_Log
 			}
 
 			if ($this->benchmark) {
-				$data[] = 'DEBUG: [' . $endTime . '] [' . ($endTime - $this->startTime) . ' sec since start] [' . ($endTime - $lastTime) . ' sec since last] [' . $endMem . ' bytes] [' . ($endMem - $this->startMem) . ' bytes since start] [' . ($endMem - $lastMem) . ' bytes since last] End';
+				$data[] = 'DEBUG: [' . $this->GetTime($endTime) . '] '.
+					'[' . $this->GetTime($endTime, $this->startTime) . ' sec since start] '.
+					'[' . $this->GetTime($endTime, $lastTime) . ' sec since last] '.
+					'[' . $this->GetMem($endMem) . ' bytes] '.
+					'[' . $this->GetMem($endMem - $this->startMem) . ' bytes since start] '.
+					'[' . $this->GetMem($endMem, $lastMem) . ' bytes since last] End';
 			}
 		}
 
