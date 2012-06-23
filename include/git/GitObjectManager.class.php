@@ -24,6 +24,13 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $cache = null;
 
 	/**
+	 * MemoryCache instance
+	 *
+	 * @var GitPHP_MemoryCache
+	 */
+	protected $memoryCache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -57,6 +64,26 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Gets the memory cache instance being used
+	 *
+	 * @return GitPHP_MemoryCache|null memory cache instance
+	 */
+	public function GetMemoryCache()
+	{
+		return $this->memoryCache;
+	}
+
+	/**
+	 * Sets the memory cache instance to use
+	 *
+	 * @param GitPHP_MemoryCache|null $memoryCache memory cache instance
+	 */
+	public function SetMemoryCache($memoryCache)
+	{
+		$this->memoryCache = $memoryCache;
+	}
+
+	/**
 	 * Get a commit
 	 *
 	 * @param string $hash commit hash
@@ -67,9 +94,12 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
 			return null;
 
+
 		$key = GitPHP_Commit::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$commit = $memoryCache->Get($key);
+
+		$commit = null;
+		if ($this->memoryCache)
+			$commit = $this->memoryCache->Get($key);
 
 		if (!$commit) {
 
@@ -86,7 +116,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$commit->SetCompat($this->project->GetCompat());
 
-			$memoryCache->Set($key, $commit);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $commit);
 
 		}
 
@@ -106,8 +137,10 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Tag::CacheKey($this->project->GetProject(), $tag);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tagObj = $memoryCache->Get($key);
+
+		$tagObj = null;
+		if ($this->memoryCache)
+			$tagObj = $this->memoryCache->Get($key);
 
 		if (!$tagObj) {
 
@@ -124,7 +157,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$tagObj->SetCompat($this->project->GetCompat());
 
-			$memoryCache->Set($key, $tagObj);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $tagObj);
 		}
 
 		return $tagObj;
@@ -143,13 +177,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Head::CacheKey($this->project->GetProject(), $head);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$headObj = $memoryCache->Get($key);
+
+		$headObj = null;
+		if ($this->memoryCache)
+			$headObj = $this->memoryCache->Get($key);
 
 		if (!$headObj) {
 			$headObj = new GitPHP_Head($this->project, $head, $hash);
 
-			$memoryCache->Set($key, $headObj);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $headObj);
 		}
 
 		return $headObj;
@@ -167,8 +204,10 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Blob::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$blob = $memoryCache->Get($key);
+
+		$blob = null;
+		if ($this->memoryCache)
+			$blob = $this->memoryCache->Get($key);
 
 		if (!$blob) {
 
@@ -185,7 +224,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$blob->SetCompat($this->project->GetCompat());
 
-			$memoryCache->Set($key, $blob);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $blob);
 		}
 
 		return $blob;
@@ -203,8 +243,9 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Tree::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tree = $memoryCache->Get($key);
+		$tree = null;
+		if ($this->memoryCache)
+			$tree = $this->memoryCache->Get($key);
 
 		if (!$tree) {
 
@@ -221,7 +262,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$tree->SetCompat($this->project->GetCompat());
 
-			$memoryCache->Set($key, $tree);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $tree);
 		}
 
 		return $tree;

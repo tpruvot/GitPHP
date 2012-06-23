@@ -10,13 +10,6 @@
 class GitPHP_MemoryCache
 {
 	/**
-	 * Stores the singleton instance
-	 *
-	 * @var GitPHP_MemoryCache
-	 */
-	protected static $instance;
-
-	/**
 	 * Stores the objects in this cache
 	 *
 	 * @var array
@@ -45,32 +38,11 @@ class GitPHP_MemoryCache
 	protected $size;
 
 	/**
-	 * Returns the singleton instance
-	 *
-	 * @return GitPHP_MemoryCache instance of cache class
-	 */
-	public static function GetInstance()
-	{
-		if (!self::$instance) {
-			self::$instance = new GitPHP_MemoryCache(GitPHP_Config::GetInstance()->GetValue('objectmemory', 0));
-		}
-		return self::$instance;
-	}
-
-	/**
-	 * Releases the singleton instance
-	 */
-	public static function DestroyInstance()
-	{
-		self::$instance = null;
-	}
-
-	/**
 	 * Class constructor
 	 *
 	 * @param int $size size of cache
 	 */
-	private function __construct($size = 0)
+	public function __construct($size = 0)
 	{
 		$this->size = $size;
 	}

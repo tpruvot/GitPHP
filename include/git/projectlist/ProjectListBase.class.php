@@ -80,6 +80,13 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $cache = null;
 
 	/**
+	 * Memory cache instance for all project
+	 *
+	 * @var GitPHP_MemoryCache
+	 */
+	protected $memoryCache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $projectRoot project root
@@ -95,12 +102,58 @@ abstract class GitPHP_ProjectListBase implements Iterator
 			throw new Exception(sprintf(__('%1$s is not a directory'), $this->projectRoot));
 		}
 
+		$this->memoryCache = new GitPHP_MemoryCache(GitPHP_Config::GetInstance()->GetValue('objectmemory', 0));
+
 		if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
 			$this->cache = new GitPHP_Cache();
 			$this->cache->SetServers(GitPHP_Config::GetInstance()->GetValue('memcache', null));
 			$this->cache->SetEnabled(true);
 			$this->cache->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
 		}
+	}
+
+	/**
+	 * Get memory cache instance
+	 *
+	 * @access public
+	 * @return GitPHP_MemoryCache|null
+	 */
+	public function GetMemoryCache()
+	{
+		return $this->memoryCache;
+	}
+
+	/**
+	 * Set memory cache instance
+	 *
+	 * @access public
+	 * @param GitPHP_MemoryCache|null $memoryCache memory cache instance
+	 */
+	public function SetMemoryCache($memoryCache)
+	{
+		$this->memoryCache = $memoryCache;
+	}
+
+	/**
+	 * Get object cache instance
+	 *
+	 * @access public
+	 * @return GitPHP_Cache|null object cache
+	 */
+	public function GetCache()
+	{
+		return $this->cache;
+	}
+
+	/**
+	 * Set object cache instance
+	 *
+	 * @access public
+	 * @param GitPHP_Cache|null $cache object cache instance
+	 */
+	public function SetCache($cache)
+	{
+		$this->cache = $cache;
 	}
 
 	/**
@@ -172,6 +225,10 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		if (!$project)
 			return;
+
+		if ($this->memoryCache) {
+			$project->GetObjectManager()->SetMemoryCache($this->memoryCache);
+		}
 
 		if ($this->cache) {
 			$project->GetObjectManager()->SetCache($this->cache);

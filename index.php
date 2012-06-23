@@ -151,9 +151,6 @@ try {
 
 }
 
-GitPHP_DebugLog::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
-
-GitPHP_MemoryCache::DestroyInstance();
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 GitPHP_GitExe::DestroyInstance();

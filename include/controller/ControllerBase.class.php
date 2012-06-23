@@ -355,6 +355,8 @@ abstract class GitPHP_ControllerBase
 			GitPHP_DebugLog::GetInstance()->Log("Smarty render end");
 
 		$this->tpl->clearAllAssign();
+
+		GitPHP_DebugLog::GetInstance()->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
 	}
 
 	/**
