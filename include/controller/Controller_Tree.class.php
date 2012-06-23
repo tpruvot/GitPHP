@@ -65,7 +65,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
 			$this->params['js'] = true;
-			GitPHP_DebugLog::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 		}
 	}
 

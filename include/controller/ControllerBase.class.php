@@ -145,6 +145,21 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
+	 * Disable logging
+	 */
+	protected function DisableLogging()
+	{
+		if (!$this->log)
+			return;
+
+		$this->projectList->RemoveObserver($this->log);
+
+		$this->log->SetEnabled(false);
+
+		$this->log = null;
+	}
+
+	/**
 	 * Gets the project for this controller
 	 *
 	 * @return GitPHP_Project|null project

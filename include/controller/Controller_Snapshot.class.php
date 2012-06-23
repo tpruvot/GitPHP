@@ -23,9 +23,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
-		$log = GitPHP_DebugLog::GetInstance();
-		if ($log && $log->GetEnabled())
-			$this->log = $log;
 		$this->InitializeProjectList();
 
 		if (isset($_GET['p'])) {
@@ -90,8 +87,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			$this->params['format'] = $_GET['fmt'];
 		else
 			$this->params['format'] = $this->config->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
-			
-		GitPHP_DebugLog::GetInstance()->SetEnabled(false);
 	}
 
 	/**

@@ -94,7 +94,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	protected function LoadHeaders()
 	{
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			GitPHP_DebugLog::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
 		}
 	}

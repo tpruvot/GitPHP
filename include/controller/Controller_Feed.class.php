@@ -38,6 +38,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		$this->preserveWhitespace = true;
+		$this->DisableLogging();
 	}
 
 	/**
@@ -89,7 +90,6 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		GitPHP_DebugLog::GetInstance()->SetEnabled(false);
 	}
 
 	/**
