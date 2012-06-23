@@ -124,7 +124,7 @@ try {
 
 } catch (Exception $e) {
 
-	if (GitPHP_Config::GetInstance()->GetValue('debug', false)) {
+	if (GitPHP_Config::GetInstance()->GetValue('debug', false) && !($e instanceof GitPHP_MessageException)) {
 		throw $e;
 	}
 
