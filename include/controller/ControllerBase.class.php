@@ -88,6 +88,10 @@ abstract class GitPHP_ControllerBase
 
 		$this->InitializeSmarty();
 
+		if ($this->multiProject) {
+			$this->projectList->LoadProjects();
+		}
+
 		if (isset($_GET['p'])) {
 			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
@@ -98,10 +102,6 @@ abstract class GitPHP_ControllerBase
 
 		if (!($this->project || $this->multiProject)) {
 			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
-
-		if ($this->multiProject) {
-			$this->projectList->LoadProjects();
 		}
 
 		if (isset($_GET['s']))
