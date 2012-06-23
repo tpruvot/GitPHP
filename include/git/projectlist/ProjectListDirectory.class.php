@@ -99,8 +99,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 			$project = new GitPHP_Project($this->projectRoot, $proj);
 
-			$this->InjectProjectDependencies($project);
-
 			$category = trim(dirname($proj));
 			if (!(empty($category) || (strpos($category, '.') === 0))) {
 				$project->SetCategory($category);
@@ -118,6 +116,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 				$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 			}
+
+			$this->InjectProjectDependencies($project);
 
 			return $project;
 

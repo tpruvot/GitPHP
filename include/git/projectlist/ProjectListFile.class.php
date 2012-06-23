@@ -94,8 +94,6 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
-		$this->InjectProjectDependencies($projectObj);
-
 		$this->ApplyGlobalConfig($projectObj);
 
 		$this->ApplyGitConfig($projectObj);
@@ -106,6 +104,8 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($projectObj, $this->projectSettings[$proj]);
 		}
+
+		$this->InjectProjectDependencies($projectObj);
 
 		return $projectObj;
 	}

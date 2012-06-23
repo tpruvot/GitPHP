@@ -790,12 +790,20 @@ class GitPHP_Project
 	 */
 	public function GetTagList()
 	{
-		if (!$this->tagList) {
-			$this->tagList = new GitPHP_TagList($this);
-			$this->tagList->SetCompat($this->GetCompat());
-		}
-
 		return $this->tagList;
+	}
+
+	/**
+	 * Sets the tag list
+	 *
+	 * @param GitPHP_TagList $tagList tag list
+	 */
+	public function SetTagList($tagList)
+	{
+		if ($tagList && ($tagList->GetProject() !== $this))
+			throw new Exception('Invalid taglist for this project');
+
+		$this->tagList = $tagList;
 	}
 
 /*}}}2*/
@@ -809,12 +817,20 @@ class GitPHP_Project
 	 */
 	public function GetHeadList()
 	{
-		if (!$this->headList) {
-			$this->headList = new GitPHP_HeadList($this);
-			$this->headList->SetCompat($this->GetCompat());
-		}
-
 		return $this->headList;
+	}
+
+	/**
+	 * Sets the head list
+	 *
+	 * @param GitPHP_HeadList $headList head list
+	 */
+	public function SetHeadList($headList)
+	{
+		if ($headList && ($headList->GetProject() !== $this))
+			throw new Exception('Invalid headlist for this project');
+
+		$this->headList = $headList;
 	}
 
 /*}}}2*/
@@ -828,11 +844,20 @@ class GitPHP_Project
 	 */
 	public function GetObjectLoader()
 	{
-		if (!$this->objectLoader) {
-			$this->objectLoader = new GitPHP_GitObjectLoader($this);
-		}
-
 		return $this->objectLoader;
+	}
+
+	/**
+	 * Sets the git object loader for this project
+	 *
+	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 */
+	public function SetObjectLoader($objectLoader)
+	{
+		if ($objectLoader && ($objectLoader->GetProject() !== $this))
+			throw new Exception('Invalid object loader for this project');
+
+		$this->objectLoader = $objectLoader;
 	}
 
 	/**
@@ -842,10 +867,20 @@ class GitPHP_Project
 	 */
 	public function GetObjectManager()
 	{
-		if (!$this->objectManager)
-			$this->objectManager = new GitPHP_GitObjectManager($this);
-
 		return $this->objectManager;
+	}
+
+	/**
+	 * Set the git object manager for this project
+	 *
+	 * @param GitPHP_GitObjectManager $objectManager object manager
+	 */
+	public function SetObjectManager($objectManager)
+	{
+		if ($objectManager && ($objectManager->GetProject() !== $this))
+			throw new Exception('Invalid object manager for this project');
+
+		$this->objectManager = $objectManager;
 	}
 
 /*}}}2*/

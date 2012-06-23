@@ -210,8 +210,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
-		$this->InjectProjectDependencies($project);
-
 		$this->ApplyGlobalConfig($project);
 
 		$this->ApplyGitConfig($project);
@@ -219,6 +217,8 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 		}
+
+		$this->InjectProjectDependencies($project);
 
 		return $project;
 	}
@@ -233,13 +233,29 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if (!$project)
 			return;
 
-		if ($this->memoryCache) {
-			$project->GetObjectManager()->SetMemoryCache($this->memoryCache);
+		$compat = $project->GetCompat();
+
+		$headList = new GitPHP_HeadList($project);
+		$headList->SetCompat($compat);
+		$project->SetHeadList($headList);
+
+		$tagList = new GitPHP_TagList($project);
+		$tagList->SetCompat($compat);
+		$project->SetTagList($tagList);
+
+		if (!$compat) {
+			$loader = new GitPHP_GitObjectLoader($project);
+			$project->SetObjectLoader($loader);
 		}
 
-		if ($this->cache) {
-			$project->GetObjectManager()->SetCache($this->cache);
+		$manager = new GitPHP_GitObjectManager($project);
+		if ($this->memoryCache) {
+			$manager->SetMemoryCache($this->memoryCache);
 		}
+		if ($this->cache) {
+			$manager->SetCache($this->cache);
+		}
+		$project->SetObjectManager($manager);
 	}
 
 	/**

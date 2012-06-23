@@ -44,6 +44,16 @@ class GitPHP_GitObjectLoader
 	}
 
 	/**
+	 * Gets the project
+	 *
+	 * @return GitPHP_Project project
+	 */
+	public function GetProject()
+	{
+		return $this->project;
+	}
+
+	/**
 	 * Gets the raw content of an object
 	 *
 	 * @param string $hash object hash

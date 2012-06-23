@@ -44,6 +44,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Get project
+	 *
+	 * @return GitPHP_Project
+	 */
+	public function GetProject()
+	{
+		return $this->project;
+	}
+
+	/**
 	 * Gets the cache instance being used
 	 *
 	 * @return GitPHP_Cache|null cache instance
