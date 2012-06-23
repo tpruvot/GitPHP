@@ -80,6 +80,8 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->InjectProjectDependencies($projectObj);
+
 		$this->ApplyGlobalConfig($projectObj);
 
 		$this->ApplyGitConfig($projectObj);

@@ -137,6 +137,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
+		$this->InjectProjectDependencies($project);
+
 		$this->ApplyGlobalConfig($project);
 
 		$this->ApplyGitConfig($project);
@@ -146,6 +148,19 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		}
 
 		return $project;
+	}
+
+	/**
+	 * Inject project dependency objects
+	 *
+	 * @param GitPHP_Project $project project object
+	 */
+	protected function InjectProjectDependencies($project)
+	{
+		if (!$project)
+			return;
+
+		$project->GetObjectManager()->SetCache(GitPHP_Cache::GetObjectCacheInstance());
 	}
 
 	/**
