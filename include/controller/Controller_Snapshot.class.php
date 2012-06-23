@@ -23,6 +23,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+		$log = GitPHP_DebugLog::GetInstance();
+		if ($log && $log->GetEnabled())
+			$this->log = $log;
 		$this->InitializeProjectList();
 
 		if (isset($_GET['p'])) {

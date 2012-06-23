@@ -67,11 +67,21 @@ abstract class GitPHP_ControllerBase
 	protected $preserveWhitespace = false;
 
 	/**
+	 * Logger instance
+	 *
+	 * @var GitPHP_DebugLog
+	 */
+	protected $log;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+		$log = GitPHP_DebugLog::GetInstance();
+		if ($log && $log->GetEnabled())
+			$this->log = $log;
 		$this->InitializeProjectList();
 
 		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
@@ -129,7 +139,8 @@ abstract class GitPHP_ControllerBase
 			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
 
-		$this->projectList->AddObserver(GitPHP_DebugLog::GetInstance());
+		if ($this->log)
+			$this->projectList->AddObserver($this->log);
 
 	}
 
@@ -338,27 +349,28 @@ abstract class GitPHP_ControllerBase
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
-			if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
-				GitPHP_DebugLog::GetInstance()->Log("Data load begin");
+			if ($this->log && $this->log->GetBenchmark())
+				$this->log->Log("Data load begin");
 			$this->LoadCommonData();
 			$this->LoadData();
-			if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
-				GitPHP_DebugLog::GetInstance()->Log("Data load end");
+			if ($this->log && $this->log->GetBenchmark())
+				$this->log->Log("Data load end");
 		}
 
 		if (!$this->preserveWhitespace) {
 			//$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
-		if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
-			GitPHP_DebugLog::GetInstance()->Log("Smarty render begin");
+		if ($this->log && $this->log->GetBenchmark())
+			$this->log->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
-		if (GitPHP_DebugLog::GetInstance()->GetBenchmark())
-			GitPHP_DebugLog::GetInstance()->Log("Smarty render end");
+		if ($this->log && $this->log->GetBenchmark())
+			$this->log->Log("Smarty render end");
 
 		$this->tpl->clearAllAssign();
 
-		GitPHP_DebugLog::GetInstance()->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
+		if ($this->log)
+			$this->log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
 	}
 
 	/**
