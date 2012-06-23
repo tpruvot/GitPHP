@@ -301,7 +301,7 @@ abstract class GitPHP_ControllerBase
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
 		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
-		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales($this->config->GetValue('debug', false)));
 
 		$scripturl = $_SERVER['SCRIPT_NAME'];
 		$fullscripturl = '';
