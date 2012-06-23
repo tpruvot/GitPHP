@@ -72,7 +72,7 @@ abstract class GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
-		$this->projectList = GitPHP_ProjectList::GetInstance();
+		$this->InitializeProjectList();
 
 		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
 		$this->tpl = new Smarty;
@@ -116,6 +116,19 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * Initialize project list
+	 */
+	protected function InitializeProjectList()
+	{
+		if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
+			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
+		} else {
+			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
+		}
+
 	}
 
 	/**

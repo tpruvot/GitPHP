@@ -115,15 +115,6 @@ try {
 		throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), GitPHP_GitExe::GetInstance()->GetBinary(), 'gitbin'), true, 500);
 	}
 
-	/*
-	 * Project list
-	 */
-	if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
-		GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
-	} else {
-		GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
-	}
-
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
 		$controller->RenderHeaders();
@@ -162,7 +153,6 @@ try {
 
 GitPHP_DebugLog::GetInstance()->Log('MemoryCache count: ' . GitPHP_MemoryCache::GetInstance()->GetCount());
 
-GitPHP_ProjectList::DestroyInstance();
 GitPHP_MemoryCache::DestroyInstance();
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
