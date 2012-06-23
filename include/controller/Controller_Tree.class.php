@@ -17,13 +17,11 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	{	
 		parent::Initialize();
 
-		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
+		if (!(isset($this->params['hashbase']) || isset($this->params['hash'])))
 			$this->params['hashbase'] = 'HEAD';
-		}
 
-		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
-			GitPHP_Log::GetInstance()->SetEnabled(false);
-		}
+		if (isset($this->params['output']) && ($this->params['output'] == 'js'))
+			$this->DisableLogging();
 	}
 
 	/**

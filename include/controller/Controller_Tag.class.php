@@ -18,7 +18,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 		parent::Initialize();
 
 		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 	}
 
 	/**

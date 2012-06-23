@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Controller Snapshot
- *
  * Controller for getting a snapshot
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * Snapshot controller class
- *
  * @package GitPHP
  * @subpackage Controller
  */

@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Commit
- *
  * Represents a single commit
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,175 +7,104 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Commit class
- *
- * @package GitPHP
- * @subpackage Git
- */
-class GitPHP_Commit extends GitPHP_GitObject
+class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
-	 * dataRead
-	 *
 	 * Indicates whether data for this commit has been read
-	 *
-	 * @access protected
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * parents
-	 *
 	 * Array of parent commits
-	 *
-	 * @access protected
 	 */
 	protected $parents = array();
 
 	/**
-	 * tree
-	 *
 	 * Tree hash for this commit
-	 *
-	 * @access protected
 	 */
 	protected $tree;
 
 	/**
-	 * author
-	 *
 	 * Author for this commit
-	 *
-	 * @access protected
 	 */
 	protected $author;
 
 	/**
-	 * authorEpoch
-	 *
 	 * Author's epoch
-	 *
-	 * @access protected
 	 */
 	protected $authorEpoch;
 
 	/**
-	 * authorTimezone
-	 *
 	 * Author's timezone
-	 *
-	 * @access protected
 	 */
 	protected $authorTimezone;
 
 	/**
-	 * committer
-	 *
 	 * Committer for this commit
-	 *
-	 * @access protected
 	 */
 	protected $committer;
 
 	/**
-	 * committerEpoch
-	 *
 	 * Committer's epoch
-	 *
-	 * @access protected
 	 */
 	protected $committerEpoch;
 
 	/**
-	 * committerTimezone
-	 *
 	 * Committer's timezone
-	 *
-	 * @access protected
 	 */
 	protected $committerTimezone;
 
 	/**
-	 * title
-	 *
 	 * Stores the commit title
-	 *
-	 * @access protected
 	 */
 	protected $title;
 
 	/**
-	 * comment
-	 *
 	 * Stores the commit comment
-	 *
-	 * @access protected
 	 */
 	protected $comment = array();
 
 	/**
-	 * readTree
-	 *
 	 * Stores whether tree filenames have been read
-	 *
-	 * @access protected
 	 */
 	protected $readTree = false;
 
 	/**
-	 * blobPaths
-	 *
 	 * Stores blob hash to path mappings
-	 *
-	 * @access protected
 	 */
 	protected $blobPaths = array();
 
 	/**
-	 * treePaths
-	 *
 	 * Stores tree hash to path mappings
-	 *
-	 * @access protected
 	 */
 	protected $treePaths = array();
 
 	/**
-	 * hashPathsRead
-	 *
 	 * Stores whether hash paths have been read
-	 *
-	 * @access protected
 	 */
 	protected $hashPathsRead = false;
 
 	/**
-	 * containingTag
-	 *
 	 * Stores the tag containing the changes in this commit
-	 *
-	 * @access protected
 	 */
 	protected $containingTag = null;
 
 	/**
-	 * containingTagRead
-	 *
 	 * Stores whether the containing tag has been looked up
-	 *
-	 * @access public
 	 */
 	protected $containingTagRead = false;
 
 	/**
-	 * __construct
+	 * Observers
 	 *
+	 * @var array
+	 */
+	protected $observers = array();
+
+	/**
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash object hash
 	 * @return mixed git object
@@ -189,11 +116,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetHash
-	 *
 	 * Gets the hash for this commit (overrides base)
 	 *
-	 * @access public
 	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
@@ -209,11 +133,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetParent
-	 *
 	 * Gets the main parent of this commit
 	 *
-	 * @access public
 	 * @return mixed commit object for parent
 	 */
 	public function GetParent()
@@ -229,11 +150,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetParents
-	 *
 	 * Gets an array of parent objects for this commit
 	 *
-	 * @access public
 	 * @return mixed array of commit objects
 	 */
 	public function GetParents()
@@ -250,11 +168,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetTree
-	 *
 	 * Gets the tree for this commit
 	 *
-	 * @access public
 	 * @return mixed tree object
 	 */
 	public function GetTree()
@@ -275,11 +190,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAuthor
-	 *
 	 * Gets the author for this commit
 	 *
-	 * @access public
 	 * @return string author
 	 */
 	public function GetAuthor()
@@ -291,11 +203,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAuthorName
-	 *
 	 * Gets the author's name only
 	 *
-	 * @access public
 	 * @return string author name
 	 */
 	public function GetAuthorName()
@@ -307,11 +216,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAuthorEpoch
-	 *
 	 * Gets the author's epoch
 	 *
-	 * @access public
 	 * @return string author epoch
 	 */
 	public function GetAuthorEpoch()
@@ -323,11 +229,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAuthorLocalEpoch
-	 *
 	 * Gets the author's local epoch
 	 *
-	 * @access public
 	 * @return string author local epoch
 	 */
 	public function GetAuthorLocalEpoch()
@@ -342,11 +245,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAuthorTimezone
-	 *
 	 * Gets the author's timezone
 	 *
-	 * @access public
 	 * @return string author timezone
 	 */
 	public function GetAuthorTimezone()
@@ -358,11 +258,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommitter
-	 *
 	 * Gets the author for this commit
 	 *
-	 * @access public
 	 * @return string author
 	 */
 	public function GetCommitter()
@@ -374,11 +271,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommitterName
-	 *
 	 * Gets the author's name only
 	 *
-	 * @access public
 	 * @return string author name
 	 */
 	public function GetCommitterName()
@@ -390,11 +284,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommitterEpoch
-	 *
 	 * Gets the committer's epoch
 	 *
-	 * @access public
 	 * @return string committer epoch
 	 */
 	public function GetCommitterEpoch()
@@ -406,11 +297,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommitterLocalEpoch
-	 *
 	 * Gets the committer's local epoch
 	 *
-	 * @access public
 	 * @return string committer local epoch
 	 */
 	public function GetCommitterLocalEpoch()
@@ -425,11 +313,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCommitterTimezone
-	 *
 	 * Gets the author's timezone
 	 *
-	 * @access public
 	 * @return string author timezone
 	 */
 	public function GetCommitterTimezone()
@@ -441,11 +326,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetTitle
-	 *
 	 * Gets the commit title
 	 *
-	 * @access public
 	 * @param integer $trim length to trim to (0 for no trim)
 	 * @return string title
 	 */
@@ -466,11 +348,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetComment
-	 *
 	 * Gets the lines of comment
 	 *
-	 * @access public
 	 * @return array lines of comment
 	 */
 	public function GetComment()
@@ -482,11 +361,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * SearchComment
-	 *
 	 * Gets the lines of the comment matching the given pattern
 	 *
-	 * @access public
 	 * @param string $pattern pattern to find
 	 * @return array matching lines of comment
 	 */
@@ -502,11 +378,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetAge
-	 *
 	 * Gets the age of the commit
 	 *
-	 * @access public
 	 * @return string age
 	 */
 	public function GetAge()
@@ -521,11 +394,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * IsMergeCommit
-	 *
 	 * Returns whether this is a merge commit
 	 *
-	 * @access pubilc
 	 * @return boolean true if merge commit
 	 */
 	public function IsMergeCommit()
@@ -537,11 +407,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadData
-	 *
 	 * Read the data for the commit
-	 *
-	 * @access protected
 	 */
 	protected function ReadData()
 	{
@@ -576,7 +442,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			array_shift($lines);
 
 		} else {
-			
+
 			$data = $this->GetProject()->GetObject($this->hash);
 			if (empty($data))
 				return;
@@ -622,7 +488,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				break;
 			}
 		}
-		
+
 		/* Commit body */
 		for ($i += 1; $i < $linecount; $i++) {
 			$trimmed = trim($lines[$i]);
@@ -639,15 +505,14 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
-	 * GetHeads
-	 *
 	 * Gets heads that point to this commit
-	 * 
-	 * @access public
+	 *
 	 * @return array array of heads
 	 */
 	public function GetHeads()
@@ -666,11 +531,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetRemoteHeads
-	 *
 	 * Gets remote heads that point to this commit
 	 *
-	 * @access public
 	 * @return array array of heads
 	 */
 	public function GetRemoteHeads()
@@ -689,11 +551,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetTags
-	 *
 	 * Gets tags that point to this commit
 	 *
-	 * @access public
 	 * @return array array of tags
 	 */
 	public function GetTags()
@@ -714,11 +573,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetContainingTag
-	 *
 	 * Gets the tag that contains the changes in this commit
 	 *
-	 * @access public
 	 * @return tag object
 	 */
 	public function GetContainingTag()
@@ -733,11 +589,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadContainingTag
-	 *
 	 * Looks up the tag that contains the changes in this commit
-	 *
-	 * @access private
 	 */
 	public function ReadContainingTag()
 	{
@@ -756,16 +608,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			}
 		}
-
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
-	 * DiffToParent
-	 *
 	 * Diffs this commit with its immediate parent
 	 *
-	 * @access public
 	 * @return mixed Tree diff
 	 */
 	public function DiffToParent()
@@ -774,11 +621,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * PathToHash
-	 *
 	 * Given a filepath, get its hash
 	 *
-	 * @access public
 	 * @param string $path path
 	 * @return string hash
 	 */
@@ -802,11 +646,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadHashPaths
-	 *
 	 * Read hash to path mappings
-	 *
-	 * @access private
 	 */
 	private function ReadHashPaths()
 	{
@@ -822,11 +662,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadHashPathsGit
-	 *
 	 * Reads hash to path mappings using git exe
-	 *
-	 * @access private
 	 */
 	private function ReadHashPathsGit()
 	{
@@ -853,11 +689,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReadHashPathsRaw
-	 *
 	 * Reads hash to path mappings using raw objects
-	 *
-	 * @access private
 	 */
 	private function ReadHashPathsRaw($tree)
 	{
@@ -882,11 +714,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * SearchFilenames
-	 *
 	 * Returns array of objects matching pattern
 	 *
-	 * @access public
 	 * @param string $pattern pattern to find
 	 * @return array array of objects
 	 */
@@ -936,11 +765,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * SearchFileContents
-	 *
 	 * Searches for a pattern in file contents
 	 *
-	 * @access public
 	 * @param string $pattern pattern to search for
 	 * @return array multidimensional array of results
 	 */
@@ -980,11 +806,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * SearchFiles
-	 *
 	 * Searches filenames and file contents for a pattern
 	 *
-	 * @access public
 	 * @param string $pattern pattern to search
 	 * @param integer $count number of results to get
 	 * @param integer $skip number of results to skip
@@ -1012,11 +835,42 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * __sleep
+	 * Add a new observer
 	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
 	 * @return array list of properties to serialize
 	 */
 	public function __sleep()
@@ -1026,11 +880,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -1039,12 +890,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * CompareAge
-	 *
 	 * Compares two commits by age
 	 *
-	 * @access public
-	 * @static
 	 * @param mixed $a first commit
 	 * @param mixed $b second commit
 	 * @return integer comparison result
@@ -1059,12 +906,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * CompareAuthorEpoch
-	 *
 	 * Compares two commits by author epoch
 	 *
-	 * @access public
-	 * @static
 	 * @param mixed $a first commit
 	 * @param mixed $b second commit
 	 * @return integer comparison result
@@ -1087,12 +930,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a commit cache key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $hash hash
 	 * @return string cache key

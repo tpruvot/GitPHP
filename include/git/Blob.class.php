@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Blob
- *
  * Represents a single blob
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,85 +7,54 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Commit class
- *
- * @package GitPHP
- * @subpackage Git
- */
-class GitPHP_Blob extends GitPHP_FilesystemObject
+class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
-	 * data
-	 *
 	 * Stores the file data
-	 *
-	 * @access protected
 	 */
 	protected $data;
 
 	/**
-	 * dataRead
-	 *
 	 * Stores whether data has been read
-	 *
-	 * @access protected
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * size
-	 *
 	 * Stores the size
-	 *
-	 * @access protected
 	 */
 	protected $size = null;
 
 	/**
-	 * history
-	 *
 	 * Stores the history
-	 *
-	 * @access protected
 	 */
 	protected $history = array();
 
 	/**
-	 * historyRead
-	 *
 	 * Stores whether the history has been read
-	 *
-	 * @access protected
 	 */
 	protected $historyRead = false;
 
 	/**
-	 * blame
-	 *
 	 * Stores blame info
-	 *
-	 * @access protected
 	 */
 	protected $blame = array();
 
 	/**
-	 * blameRead
-	 *
 	 * Stores whether blame was read
-	 *
-	 * @access protected
 	 */
 	protected $blameRead = false;
 
 	/**
-	 * __construct
+	 * Observers
 	 *
+	 * @var array
+	 */
+	protected $observers = array();
+
+	/**
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash object hash
 	 * @return mixed blob object
@@ -99,11 +66,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetData
-	 *
 	 * Gets the blob data
 	 *
-	 * @access public
 	 * @param boolean $explode true to explode data into an array of lines
 	 * @return string blob data
 	 */
@@ -119,11 +83,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadData
-	 *
 	 * Reads the blob data
-	 *
-	 * @access private
 	 */
 	private function ReadData()
 	{
@@ -139,15 +99,14 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			$this->data = $this->GetProject()->GetObject($this->hash);
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
-	 * GetSize
-	 *
 	 * Gets the blob size
 	 *
-	 * @access public
 	 * @return integer size
 	 */
 	public function GetSize()
@@ -163,11 +122,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * SetSize
-	 *
 	 * Sets the blob size
 	 *
-	 * @access public
 	 * @param integer $size size
 	 */
 	public function SetSize($size)
@@ -176,11 +132,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * IsBinary
-	 *
 	 * Tests if this blob is a binary file
 	 *
-	 * @access public
 	 * @return boolean true if binary file
 	 */
 	public function IsBinary()
@@ -196,11 +149,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * FileMime
-	 *
 	 * Get the file mimetype
 	 *
-	 * @access public
 	 * @param boolean $short true to only the type group
 	 * @return string mime
 	 */
@@ -222,11 +172,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/** 
-	 * FileMime_Fileinfo
-	 *
 	 * Get the file mimetype using fileinfo
 	 *
-	 * @access private
 	 * @return string mimetype
 	 */
 	private function FileMime_Fileinfo()
@@ -266,11 +213,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * FileMime_File
-	 *
 	 * Get the file mimetype using file command
 	 *
-	 * @access private
 	 * @return string mimetype
 	 */
 	private function FileMime_File()
@@ -310,11 +254,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * FileMime_Extension
-	 *
 	 * Get the file mimetype using the file extension
 	 *
-	 * @access private
 	 * @return string mimetype
 	 */
 	private function FileMime_Extension()
@@ -345,11 +286,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetHistory
-	 *
 	 * Gets the history of this file
 	 *
-	 * @access public
 	 * @return array array of filediff changes
 	 */
 	public function GetHistory()
@@ -361,11 +299,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadHistory
-	 *
 	 * Reads the file history
-	 *
-	 * @access private
 	 */
 	private function ReadHistory()
 	{
@@ -404,11 +338,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetBlame
-	 *
 	 * Gets blame info
 	 *
-	 * @access public
 	 * @return array blame array (line to commit mapping)
 	 */
 	public function GetBlame()
@@ -420,11 +351,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * ReadBlame
-	 *
 	 * Read blame info
-	 *
-	 * @access private
 	 */
 	private function ReadBlame()
 	{
@@ -454,11 +381,42 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * __sleep
+	 * Add a new observer
 	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
 	 * @return array list of properties to serialize
 	 */
 	public function __sleep()
@@ -469,11 +427,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -482,12 +437,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a blob cache key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $hash hash
 	 * @return string cache key

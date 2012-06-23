@@ -23,7 +23,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 			$this->params['hash'] = 'HEAD';
 
 		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 	}
 
 	/**

@@ -9,14 +9,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Tree class
- *
- * @package GitPHP
- * @subpackage Git
- */
-class GitPHP_Tree extends GitPHP_FilesystemObject
+class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
@@ -38,8 +31,23 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	protected $contentsRead = false;
 
 	/**
-	 * __construct
+	 * @var array
+	 */
+	protected $blobPaths = array();
+
+	/**
+	 * Whether hash paths have been read
+	 */
+	protected $hashPathsRead = false;
+
+	/**
+	 * Observers
 	 *
+	 * @var array
+	 */
+	protected $observers = array();
+
+	/**
 	 * Instantiates object
 	 *
 	 * @access public
@@ -131,7 +139,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$this->ReadContentsRaw();
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
@@ -149,7 +159,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$args[] = '-l';
 		$args[] = '-t';
 		$args[] = $this->hash;
-		
+
 		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
 
 		foreach ($lines as $line) {
@@ -240,8 +250,126 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * __sleep
+	 * @return array
+	 */
+	public function GetTreePaths()
+	{
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		return $this->treePaths;
+	}
+
+	/**
+	 * Gets blob paths mapped to hashes
 	 *
+	 * @return array
+	 */
+	public function GetBlobPaths()
+	{
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		return $this->blobPaths;
+	}
+
+	/**
+	 * Given a filepath, get its hash
+	 *
+	 * @param string $path path
+	 * @return string hash
+	 */
+	public function PathToHash($path)
+	{
+		if (empty($path))
+			return '';
+
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		if (isset($this->blobPaths[$path])) {
+			return $this->blobPaths[$path];
+		}
+
+		if (isset($this->treePaths[$path])) {
+			return $this->treePaths[$path];
+		}
+
+		return '';
+	}
+
+	/**
+	 * Read hash to path mappings
+	 */
+	private function ReadHashPaths()
+	{
+		$this->hashPathsRead = true;
+
+		$this->ReadHashPathsGit();
+	}
+
+	/**
+	 * Reads hash to path mappings using git exe
+	 */
+	private function ReadHashPathsGit()
+	{
+		$args = array();
+		$args[] = '--full-name';
+		$args[] = '-r';
+		$args[] = '-t';
+		$args[] = $this->hash;
+
+		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
+
+		foreach ($lines as $line) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
+				switch ($regs[2]) {
+					case 'tree':
+						$this->treePaths[trim($regs[4])] = $regs[3];
+						break;
+					case 'blob';
+						$this->blobPaths[trim($regs[4])] = $regs[3];
+						break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
 	 * Called to prepare the object for serialization
 	 *
 	 * @access public

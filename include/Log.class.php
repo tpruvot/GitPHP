@@ -1,84 +1,49 @@
 <?php
 /**
- * GitPHP Log
- *
  * Logging class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
-/**
- * Logging class
- *
- * @package GitPHP
- */
 class GitPHP_Log
 {
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
-	 *
-	 * @access protected
-	 * @static
+	 * @deprecated
 	 */
 	protected static $instance;
 
 	/**
-	 * enabled
-	 *
 	 * Stores whether logging is enabled
-	 *
-	 * @access protected
 	 */
 	protected $enabled = false;
 
 	/**
-	 * benchmark
-	 *
 	 * Stores whether benchmarking is enabled
-	 *
-	 * @access protected
 	 */
 	protected $benchmark = false;
 
 	/**
-	 * startTime
-	 *
 	 * Stores the starting instant
-	 *
-	 * @access protected
 	 */
 	protected $startTime;
 
 	/**
-	 * startMem
-	 *
 	 * Stores the starting memory
-	 *
-	 * @access protected
 	 */
 	protected $startMem;
 
 	/**
-	 * entries
-	 *
 	 * Stores the log entries
-	 *
-	 * @access protected
 	 */
 	protected $entries = array();
 
 	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
+	 * @deprecated
 	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of logging clas
+	 * @return mixed instance of logging class
 	 */
 	public static function GetInstance()
 	{
@@ -90,12 +55,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
+	 * @deprecated
 	 */
 	public static function DestroyInstance()
 	{
@@ -103,28 +64,26 @@ class GitPHP_Log
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access private
 	 * @return Log object
 	 */
-	private function __construct()
+	public function __construct()
 	{
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();
 
 		$this->enabled = GitPHP_Config::GetInstance()->GetValue('debug', false);
 		$this->benchmark = GitPHP_Config::GetInstance()->GetValue('benchmark', false);
+
+		if (!self::$instance) {
+			self::$instance = $this;
+		}
 	}
 
 	/**
-	 * SetStartTime
-	 *
 	 * Sets start time
 	 *
-	 * @access public
 	 * @param float $start starting microtime
 	 */
 	public function SetStartTime($start)
@@ -133,11 +92,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * SetStartMemory
-	 *
 	 * Sets start memory
 	 *
-	 * @access public
 	 * @param integer $start starting memory
 	 */
 	public function SetStartMemory($start)
@@ -146,11 +102,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * Log
-	 *
 	 * Log an entry
 	 *
-	 * @access public
 	 * @param string $message message to log
 	 */
 	public function Log($message)
@@ -170,11 +123,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * GetEnabled
-	 *
 	 * Gets whether logging is enabled
 	 *
-	 * @access public
 	 * @return boolean true if logging is enabled
 	 */
 	public function GetEnabled()
@@ -183,11 +133,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * SetEnabled
-	 *
 	 * Sets whether logging is enabled
 	 *
-	 * @access public
 	 * @param boolean $enable true if logging is enabled
 	 */
 	public function SetEnabled($enable)
@@ -196,11 +143,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * GetBenchmark
-	 *
 	 * Gets whether benchmarking is enabled
 	 *
-	 * @access public
 	 * @return boolean true if benchmarking is enabled
 	 */
 	public function GetBenchmark()
@@ -209,11 +153,8 @@ class GitPHP_Log
 	}
 
 	/**
-	 * SetBenchmark
-	 *
 	 * Sets whether benchmarking is enabled
 	 *
-	 * @access public
 	 * @param boolean $bench true if benchmarking is enabled
 	 */
 	public function SetBenchmark($bench)
@@ -230,12 +171,10 @@ class GitPHP_Log
 	{
 		return ($mem - $since);
 	}
+
 	/**
-	 * GetEntries
-	 *
 	 * Calculates times and gets log entries
 	 *
-	 * @access public
 	 * @return array log entries
 	 */
 	public function GetEntries()
@@ -283,4 +222,26 @@ class GitPHP_Log
 		return $data;
 	}
 
+	/**
+	 * Notify that observable object changed
+	 *
+	 * @param GitPHP_Observable_Interface $object object
+	 * @param int $changeType type of change
+	 * @param array $args argument array
+	 */
+	public function ObjectChanged($object, $changeType, $args = array())
+	{
+		if ($changeType !== GitPHP_Observer_Interface::LoggableChange)
+			return;
+
+		if (!$this->enabled)
+			return;
+
+		if (!isset($args[0]) || empty($args[0]))
+			return;
+
+		$msg = $args[0];
+
+		$this->Log($msg);
+	}
 }

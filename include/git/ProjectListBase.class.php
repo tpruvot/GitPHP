@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP ProjectListBase
- *
  * Base class that all projectlist classes extend
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * ProjectListBase class
- *
- * @package GitPHP
- * @subpackage Git
- * @abstract
- */
-abstract class GitPHP_ProjectListBase implements Iterator
+abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Interface
 {
 
 	/**
@@ -29,56 +19,47 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	const SORT_AGE = 'age';
 
 	/**
-	 * projects
-	 *
 	 * Stores array of projects internally
-	 *
-	 * @access protected
 	 */
 	protected $projects;
 
 	/**
-	 * projectsLoaded
-	 *
 	 * Stores whether the list of projects has been loaded
-	 *
-	 * @access protected
 	 */
 	protected $projectsLoaded = false;
 
 	/**
-	 * projectConfig
-	 *
 	 * Stores the project configuration internally
-	 *
-	 * @access protected
 	 */
 	protected $projectConfig = null;
 
 	/**
-	 * projectSettings
-	 *
 	 * Stores the project settings internally
-	 *
-	 * @access protected
 	 */
 	protected $projectSettings = null;
 
 	/**
-	 * projectRoot
-	 *
 	 * Stores the project root internally
-	 *
-	 * @access protected
 	 */
 	protected $projectRoot = null;
 
 	/**
-	 * __construct
-	 *
+	 * Executable for all projects
+	 */
+	protected $exe = null;
+
+	/**
+	 * Config provider
+	 */
+	protected $config = null;
+
+	/**
+	 * @var GitPHP_Observer_Interface[]
+	 */
+	protected $observers = array();
+
+	/**
 	 * Constructor
-	 *
-	 * @access public
 	 */
 	public function __construct()
 	{
@@ -94,9 +75,38 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * IsDir
-	 *
-	 * @access protected
+	 * Get config provider
+	 */
+	public function GetConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Set config provider
+	 */
+	public function SetConfig($config)
+	{
+		$this->config = $config;
+	}
+
+	/**
+	 * Get executable
+	 */
+	public function GetExe()
+	{
+		return $this->exe;
+	}
+
+	/**
+	 * Set executable
+	 */
+	public function SetExe($exe)
+	{
+		$this->exe = $exe;
+	}
+
+	/**
 	 * @return boolean true if folder or a link pointing to a folder
 	 * @param string path to check
 	 */
@@ -106,12 +116,9 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * HasProject
-	 *
 	 * Test if the projectlist contains
 	 * the given project
 	 *
-	 * @access public
 	 * @return boolean true if project exists in list
 	 * @param string $project the project string to find
 	 */
@@ -124,11 +131,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets a particular project
 	 *
-	 * @access public
 	 * @return mixed project object or null
 	 * @param string $project the project to find
 	 */
@@ -150,11 +154,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates a project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project object
 	 */
@@ -170,35 +171,23 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * GetConfig
-	 *
 	 * Gets the config defined for this ProjectList
-	 *
-	 * @access public
 	 */
-	public function GetConfig()
+	public function GetProjectListConfig()
 	{
 		return $this->projectConfig;
 	}
 
 	/**
-	 * GetSettings
-	 *
 	 * Gets the settings applied to this projectlist
-	 *
-	 * @access public
 	 */
-	public function GetSettings()
+	public function GetProjectSettings()
 	{
 		return $this->projectSettings;
 	}
 
 	/**
-	 * LoadProjects
-	 *
 	 * Loads all projects in the list
-	 *
-	 * @access public
 	 */
 	public function LoadProjects()
 	{
@@ -212,17 +201,11 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
-	 *
-	 * @access protected
 	 */
 	abstract protected function PopulateProjects();
 
 	/**
-	 * rewind
-	 *
 	 * Rewinds the iterator
 	 */
 	function rewind()
@@ -231,8 +214,6 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * current
-	 *
 	 * Returns the current element in the array
 	 */
 	function current()
@@ -241,8 +222,6 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * key
-	 *
 	 * Returns the current key
 	 */
 	function key()
@@ -251,8 +230,6 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * next
-	 * 
 	 * Advance the pointer
 	 */
 	function next()
@@ -261,8 +238,6 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * valid
-	 *
 	 * Test for a valid pointer
 	 */
 	function valid()
@@ -271,11 +246,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * Sort
-	 *
 	 * Sorts the project list
-	 *
-	 * @access public
 	 * @param string $sortBy sort method
 	 */
 	public function Sort($sortBy = self::SORT_PROJECT)
@@ -299,11 +270,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * Count
-	 *
 	 * Gets the count of projects
 	 *
-	 * @access public
 	 * @return integer number of projects
 	 */
 	public function Count()
@@ -312,11 +280,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * Filter
-	 *
 	 * Returns a filtered list of projects
 	 *
-	 * @access public
 	 * @param string $filter filter pattern
 	 * @return array array of filtered projects
 	 */
@@ -339,11 +304,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * GetCategoryAges
-	 *
 	 * Store project category age
-	 *
-	 * @access protected
 	 */
 	protected function GetCategoryAges()
 	{
@@ -361,11 +322,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * ApplyProjectSettings
-	 *
 	 * Applies override settings for a project
 	 *
-	 * @access protected
 	 * @param string $project the project object
 	 * @param array $projData project data array
 	 */
@@ -404,14 +362,11 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * SetSettings
-	 *
 	 * Sets a list of settings for the project list
 	 *
-	 * @access protected
 	 * @param array $settings the array of settings
 	 */
-	public function SetSettings($settings)
+	public function SetProjectSettings($settings)
 	{
 		if ((!$settings) || (count($settings) < 1))
 			return;
@@ -422,11 +377,7 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * ApplySettings
-	 *
 	 * Applies project settings to project list
-	 *
-	 * @access protected
 	 */
 	protected function ApplySettings()
 	{
@@ -450,4 +401,51 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		}
 	}
 
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
+	 * Log a message to observers
+	 *
+	 * @param string $message message
+	 */
+	protected function Log($message)
+	{
+		if (empty($message))
+			return;
+
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
+		}
+	}
 }

@@ -9,83 +9,75 @@
  */
 abstract class GitPHP_ControllerBase
 {
+
 	/**
 	 * Config handler instance
-	 *
 	 * @var GitPHP_Config
 	 */
 	protected $config;
 
 	/**
+	 * Resource handler instance
 	 * @var GitPHP_Resource
 	 */
 	protected $resource;
 
 	/**
-	 * tpl
-	 *
 	 * Smarty instance
-	 *
-	 * @access protected
+	 * @var Smarty
 	 */
 	protected $tpl;
 
 	/**
-	 * project
-	 *
+	 * Project list
+	 * @var GitPHP_ProjectListBase
+	 */
+	protected $projectList;
+
+	/**
 	 * Current project
-	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * multiProject
-	 *
 	 * Flag if this is a multi project controller
-	 *
-	 * @access protected
+	 * @var boolean
 	 */
 	protected $multiProject;
 
 	/**
-	 * params
-	 *
 	 * Parameters
-	 *
-	 * @access protected
+	 * @var array
 	 */
 	protected $params = array();
 
 	/**
-	 * headers
-	 *
-	 * Headers
-	 *
-	 * @access protected
+	 * HTTP Headers
+	 * @var string[]
 	 */
 	protected $headers = array();
 
 	/**
-	 * preserveWhitespace
-	 *
-	 * Flag to preserve whitespace in output
-	 * (for non-html output)
-	 *
-	 * @access protected
+	 * Flag to preserve whitespace in output (for non-html output)
+	 * @var boolean
 	 */
 	protected $preserveWhitespace = false;
 
 	/**
+	 * Logger instance
+	 * @var GitPHP_Log
+	 */
+	protected $log;
+
+	/**
 	 * Git executable instance
-	 *
 	 * @var GitPHP_GitExe
 	 */
 	protected $exe;
 
 	/**
 	 * Url router instance
-	 *
 	 * @var GitPHP_Router
 	 */
 	protected $router;
@@ -98,6 +90,8 @@ abstract class GitPHP_ControllerBase
 		$this->InitializeConfig();
 
 		$this->InitializeResource();
+
+		$this->EnableLogging();
 
 		$this->InitializeGitExe();
 
@@ -187,6 +181,8 @@ abstract class GitPHP_ControllerBase
 	protected function InitializeGitExe($validate = true)
 	{
 		$this->exe = new GitPHP_GitExe($this->config->GetValue('gitbin'));
+		if ($this->log)
+			$this->exe->AddObserver($this->log);
 		if ($validate && !$this->exe->Valid()) {
 			throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $this->exe->GetBinary(), 'gitbin'), true, 500);
 		}
@@ -203,12 +199,19 @@ abstract class GitPHP_ControllerBase
 		} else {
 			GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
+
+		$this->projectList = GitPHP_ProjectList::GetInstance();
+
+		$this->projectList->SetExe($this->exe);
+
+		if ($this->log)
+			$this->projectList->AddObserver($this->log);
 	}
 
 	/**
 	 * Initialize smarty
 	 */
-	public function InitializeSmarty()
+	protected function InitializeSmarty()
 	{
 		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
 		$this->tpl = new Smarty;
@@ -222,7 +225,7 @@ abstract class GitPHP_ControllerBase
 				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
 			}
 
-			$servers = $this->config->GetValue('memcache', null);
+			$servers = $this->config->GetValue('memcache');
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
 				$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
 				$this->tpl->caching_type = 'memcache';
@@ -252,48 +255,86 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetProject
-	 *
+	 * Logger instance
+	 */
+	public function GetLog()
+	{
+		return $this->log;
+	}
+
+	/**
+	 * Enable logging
+	 */
+	public function EnableLogging()
+	{
+		if ($this->log)
+			return;
+
+		$debug = $this->config->GetValue('debug', false);
+
+		if ($debug) {
+			$this->log = new GitPHP_Log($debug, $this->config->GetValue('benchmark', false));
+			$this->log->SetStartTime(GITPHP_START_TIME);
+			$this->log->SetStartMemory(GITPHP_START_MEM);
+
+			if ($this->exe)
+				$this->exe->AddObserver($this->log);
+
+			if ($this->projectList)
+				$this->projectList->AddObserver($this->log);
+		}
+	}
+
+	/**
+	 * Disable logging
+	 */
+	protected function DisableLogging()
+	{
+		if (!$this->log)
+			return;
+
+		if ($this->projectList)
+			$this->projectList->RemoveObserver($this->log);
+
+		if ($this->exe)
+			$this->exe->RemoveObserver($this->log);
+
+		$this->log->SetEnabled(false);
+
+		$this->log = null;
+	}
+
+	/**
 	 * Gets the project for this controller
 	 *
-	 * @access public
-	 * @return mixed project
+	 * @return GitPHP_Project|null project
 	 */
 	public function GetProject()
 	{
-		if ($this->project)
+		if ($this->projectList && $this->project)
+			return $this->projectList->GetProject($this->project);
+		elseif ($this->project)
 			return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
 		return null;
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
-	 * @abstract
 	 * @return string template filename
 	 */
 	protected abstract function GetTemplate();
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
-	 * @abstract
 	 * @return string cache key
 	 */
 	protected abstract function GetCacheKey();
 
 	/**
-	 * GetCacheKeyPrefix
-	 *
 	 * Get the prefix for all cache keys
 	 *
-	 * @access private
 	 * @param string $projectKeys include project-specific key pieces
 	 * @return string cache key prefix
 	 */
@@ -304,9 +345,13 @@ abstract class GitPHP_ControllerBase
 		else
 			$cacheKeyPrefix = 'en_US';
 
-		$projList = GitPHP_ProjectList::GetInstance();
+		if ($this->projectList)
+			$projList = $this->projectList;
+		else
+			$projList = GitPHP_ProjectList::GetInstance();
+
 		if ($projList) {
-			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig())) . '|' . sha1(serialize($projList->GetSettings()));
+			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetProjectListConfig())) . '|' . sha1(serialize($projList->GetProjectSettings()));
 			unset($projList);
 		}
 		if ($this->project && $projectKeys) {
@@ -317,11 +362,8 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/** 
-	 * GetFullCacheKey
-	 *
 	 * Get the full cache key
 	 *
-	 * @access protected
 	 * @return string full cache key
 	 */
 	protected function GetFullCacheKey()
@@ -341,23 +383,16 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @abstract
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
 	public abstract function GetName($local = false);
 
 	/**
-	 * SetParam
-	 *
 	 * Set a parameter
 	 *
-	 * @access protected
 	 * @param string $key key to set
 	 * @param mixed $value value to set
 	 */
@@ -381,21 +416,12 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
-	 * @abstract
 	 */
 	protected abstract function LoadData();
 
 	/**
-	 * LoadCommonData
-	 *
 	 * Loads common data used by all templates
-	 *
-	 * @access private
 	 */
 	private function LoadCommonData()
 	{
@@ -488,11 +514,7 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * RenderHeaders
-	 *
 	 * Renders any special headers
-	 *
-	 * @access public
 	 */
 	public function RenderHeaders()
 	{
@@ -515,33 +537,30 @@ abstract class GitPHP_ControllerBase
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
-			if (GitPHP_Log::GetInstance()->GetBenchmark())
-				GitPHP_Log::GetInstance()->Log("Data load begin");
+			if ($this->log && $this->log->GetBenchmark())
+				$this->Log("Data load begin");
 			$this->LoadCommonData();
 			$this->LoadData();
-			if (GitPHP_Log::GetInstance()->GetBenchmark())
-				GitPHP_Log::GetInstance()->Log("Data load end");
+			if ($this->log && $this->log->GetBenchmark())
+				$this->Log("Data load end");
 		}
 
 		if (!$this->preserveWhitespace) {
 			//$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
-		if (GitPHP_Log::GetInstance()->GetBenchmark())
-			GitPHP_Log::GetInstance()->Log("Smarty render begin");
+		if ($this->log && $this->log->GetBenchmark())
+			$this->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
-		if (GitPHP_Log::GetInstance()->GetBenchmark())
-			GitPHP_Log::GetInstance()->Log("Smarty render end");
+		if ($this->log && $this->log->GetBenchmark())
+			$this->Log("Smarty render end");
 
 		$this->tpl->clearAllAssign();
 	}
 
 	/**
-	 * CacheExpire
-	 *
 	 * Expires the cache
 	 *
-	 * @access public
 	 * @param boolean $expireAll expire the whole cache
 	 */
 	public function CacheExpire($expireAll = false)

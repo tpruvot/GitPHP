@@ -1,16 +1,5 @@
 <?php
 /**
- * GitPHP GitExe
- *
- * Class to wrap git executable
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
-
-/**
  * Constants for git commands
  */
 define('GIT_CAT_FILE','cat-file');
@@ -27,84 +16,64 @@ define('GIT_FOR_EACH_REF','for-each-ref');
 define('GIT_CONFIG','config');
 
 /**
- * Git Executable class
+ * Class to wrap git executable
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_GitExe
+class GitPHP_GitExe implements GitPHP_Observable_Interface
 {
 
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
-	 *
-	 * @access protected
-	 * @static
 	 */
 	protected static $instance;
 
 	/**
-	 * binary
-	 *
 	 * Stores the binary path internally
-	 *
-	 * @access protected
 	 */
 	protected $binary;
 	
 	/**
-	 * version
-	 *
 	 * Stores the binary version internally
-	 *
-	 * @access protected
 	 */
 	protected $version;
 
 	/**
-	 * versionRead
-	 *
 	 * Stores whether the version has been read
-	 *
-	 * @access protected
 	 */
 	protected $versionRead = false;
 
 	/**
-	 * charset
-	 *
 	 * Prefix to set terminal LANG charset.
-	 *
-	 * @access protected
 	 */
 	protected $charset = 'en_US.utf-8';
 
 	/**
-	 * GetInstance
+	 * Observers
 	 *
+	 * @var GitPHP_Observer_Interface[]
+	 */
+	protected $observers = array();
+
+	/**
 	 * Returns the singleton instance
 	 *
-	 * @access public
-	 * @static
 	 * @return mixed instance of git exe classe
 	 */
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_GitExe();
+			self::$instance = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
+			self::$instance->AddObserver(GitPHP_Log::GetInstance());
 		}
 		return self::$instance;
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -128,32 +97,29 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * Execute
-	 *
 	 * Executes a command
 	 *
 	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
-	 * @param array $args arguments
-	 * @return string result of command
+	 * @param string[] $args arguments
+	 * @return string full executable string
 	 */
 	public function Execute($projectPath, $command, $args)
 	{
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
+		$this->Log('Begin executing "' . $fullCommand . '"');
+
 		$ret = shell_exec($fullCommand);
 
-		if ($command != GIT_DIFF_TREE) {
-			GitPHP_Log::GetInstance()->Log('Executed "' . $fullCommand . '"' .
+		if ($command != GIT_DIFF_TREE) /* reduce noisy results */
+			$this->Log('Finish executing "' . $fullCommand . '"' .
 				"\nwith result: " . $ret);
-		}
 
 		return $ret;
 	}
 
 	/**
-	 * Open
-	 *
 	 * Opens a resource to a command
 	 *
 	 * @param string $projectPath path to project
@@ -169,11 +135,7 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * BuildCommand
-	 *
 	 * Creates a command
-	 *
-	 * @access protected
 	 *
 	 * @param string $projectPath path to project
 	 * @param string $command the command to execute
@@ -197,12 +159,9 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * GetBinary
-	 *
 	 * Gets the binary for this executable
 	 *
 	 * @return string binary
-	 * @access public
 	 */
 	public function GetBinary()
 	{
@@ -210,12 +169,9 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * GetVersion
-	 *
 	 * Gets the version of the git binary
 	 *
 	 * @return string version
-	 * @access public
 	 */
 	public function GetVersion()
 	{
@@ -226,11 +182,7 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * ReadVersion
-	 *
 	 * Reads the git version
-	 *
-	 * @access protected
 	 */
 	protected function ReadVersion()
 	{
@@ -246,11 +198,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanSkip
-	 *
 	 * Tests if this version of git can skip through the revision list
 	 *
-	 * @access public
 	 * @return boolean true if we can skip
 	 */
 	public function CanSkip()
@@ -269,11 +218,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanShowSizeInTree
-	 *
 	 * Tests if this version of git can show the size of a blob when listing a tree
 	 *
-	 * @access public
 	 * @return true if we can show sizes
 	 */
 	public function CanShowSizeInTree()
@@ -296,11 +242,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * CanIgnoreRegexpCase
-	 *
 	 * Tests if this version of git has the regexp tuning option to ignore regexp case
 	 *
-	 * @access public
 	 * @return true if we can ignore regexp case
 	 */
 	public function CanIgnoreRegexpCase()
@@ -321,11 +264,8 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * Valid
-	 *
 	 * Tests if this executable is valid
 	 *
-	 * @access public
 	 * @return boolean true if valid
 	 */
 	public function Valid()
@@ -340,28 +280,78 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * DefaultBinary
+	 * Add a new observer
 	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
+	 * Log an execution
+	 *
+	 * @param string $message message
+	 */
+	private function Log($message)
+	{
+		if (empty($message))
+			return;
+
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
+		}
+	}
+
+	/**
 	 * Gets the default binary for the platform
 	 *
-	 * @access public
-	 * @static
 	 * @return string binary
 	 */
 	public static function DefaultBinary()
 	{
 		if (GitPHP_Util::IsWindows()) {
-			// windows
 
+			// windows
 			if (GitPHP_Util::Is64Bit()) {
 				// match x86_64 and x64 (64 bit)
 				// C:\Program Files (x86)\Git\bin\git.exe
-				return 'C:\\Progra~2\\Git\\bin\\git.exe';
+				$bin = 'C:\\Progra~2\\Git\\bin\\git.exe';
 			} else {
 				// 32 bit
 				// C:\Program Files\Git\bin\git.exe
-				return 'C:\\Progra~1\\Git\\bin\\git.exe';
+				$bin = 'C:\\Progra~1\\Git\\bin\\git.exe';
 			}
+			if (!is_file($bin)) {
+				// use PATH
+				$bin = 'git.exe';
+			}
+			return $bin;
 		} else {
 			// *nix, just use PATH
 			return 'git';

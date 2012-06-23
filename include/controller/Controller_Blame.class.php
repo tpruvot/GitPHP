@@ -20,7 +20,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		if (empty($this->params['hashbase']))
 			$this->params['hashbase'] = 'HEAD';
 		if (!empty($this->params['output']) && ($this->params['output'] == 'js')) {
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 		}
 	}
 

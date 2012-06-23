@@ -74,7 +74,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	{
 		if ($this->Plain()) {
 
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->DisableLogging();
 			$this->preserveWhitespace = true;
 
 			// XXX: Nasty hack to cache headers

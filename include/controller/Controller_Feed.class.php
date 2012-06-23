@@ -28,15 +28,12 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 		$this->preserveWhitespace = true;
-		GitPHP_Log::GetInstance()->SetEnabled(false);
+		$this->DisableLogging();
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
