@@ -98,12 +98,12 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
 
-		$blobparent = $this->GetProject()->GetBlob($this->params['hashparent']);
+		$blobparent = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hashparent']);
 		$blobparent->SetCommit($commit);
 		$blobparent->SetPath($this->params['file']);
 		$this->tpl->assign('blobparent', $blobparent);
 
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 

@@ -22,7 +22,7 @@ class GitPHP_TagList extends GitPHP_RefList
 		$tags = array();
 
 		foreach ($this->refs as $tag => $hash) {
-			$tags[] = $this->project->GetTag($tag, $hash);
+			$tags[] = $this->project->GetObjectManager()->GetTag($tag, $hash);
 		}
 
 		return $tags;
@@ -58,7 +58,7 @@ class GitPHP_TagList extends GitPHP_RefList
 		if (!isset($this->refs[$tag]))
 			return;
 
-		return $this->project->GetTag($tag, $this->refs[$tag]);
+		return $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
 	}
 
 	/**
@@ -78,7 +78,7 @@ class GitPHP_TagList extends GitPHP_RefList
 			$tags = array();
 			foreach ($ordered as $tag) {
 				if (isset($this->refs[$tag])) {
-					$tags[] = $this->project->GetTag($tag, $this->refs[$tag]);
+					$tags[] = $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
 				}
 			}
 			return $tags;
@@ -98,7 +98,7 @@ class GitPHP_TagList extends GitPHP_RefList
 	{
 		$tags = array();
 		foreach ($this->refs as $tag => $hash) {
-			$tags[] = $this->project->GetTag($tag, $hash);
+			$tags[] = $this->project->GetObjectManager()->GetTag($tag, $hash);
 		}
 
 		/* TODO add different orders */
@@ -123,7 +123,7 @@ class GitPHP_TagList extends GitPHP_RefList
 			$this->LoadData();
 		}
 
-		return $this->project->GetTag(key($this->refs), current($this->refs));
+		return $this->project->GetObjectManager()->GetTag(key($this->refs), current($this->refs));
 	}
 
 }

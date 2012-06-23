@@ -194,7 +194,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 			$data = $this->pathTree[$i];
 
 			if (isset($data['hash']) && !empty($data['hash'])) {
-				$tree = $this->GetProject()->GetTree($data['hash']);
+				$tree = $this->GetProject()->GetObjectManager()->GetTree($data['hash']);
 				if (isset($usedTrees[$data['hash']])) {
 					$tree = clone $obj;
 				} else {

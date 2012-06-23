@@ -93,7 +93,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		} else if ($this->type == 'tag') {
 			return $this->GetProject()->GetTagList()->GetTag($this->object);
 		} else if ($this->type == 'blob') {
-			return $this->GetProject()->GetBlob($this->object);
+			return $this->GetProject()->GetObjectManager()->GetBlob($this->object);
 		}
 
 		return null;

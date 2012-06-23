@@ -88,7 +88,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
 					}
 
-					$blob = $this->GetProject()->GetBlob($this->params['hash']);
+					$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 					$blob->SetPath($this->params['file']);
 
 					$mimeReader = new GitPHP_FileMimeTypeReader($blob);
@@ -126,7 +126,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			$this->params['hash'] = $tree->PathToHash($this->params['file']);
 		}
 
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 		if (!empty($this->params['file']))
 			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);

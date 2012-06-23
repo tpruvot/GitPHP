@@ -95,14 +95,14 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 				continue;
 
 			if ($data['type'] == 'tree') {
-				$obj = $this->GetProject()->GetTree($data['hash']);
+				$obj = $this->GetProject()->GetObjectManager()->GetTree($data['hash']);
 				if (isset($usedTrees[$data['hash']])) {
 					$obj = clone $obj;
 				} else {
 					$usedTrees[$data['hash']] = 1;
 				}
 			} else if ($data['type'] == 'blob') {
-				$obj = $this->GetProject()->GetBlob($data['hash']);
+				$obj = $this->GetProject()->GetObjectManager()->GetBlob($data['hash']);
 				if (isset($usedBlobs[$data['hash']])) {
 					$obj = clone $obj;
 				} else {

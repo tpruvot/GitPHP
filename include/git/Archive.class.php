@@ -141,7 +141,7 @@ class GitPHP_Archive
 		}
 
 		if ($this->objectType = 'tree') {
-			return $this->GetProject()->GetTree($this->objectHash);
+			return $this->GetProject()->GetObjectManager()->GetTree($this->objectHash);
 		}
 
 		return null;

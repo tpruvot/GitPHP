@@ -82,7 +82,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 			$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
 		}
 		
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 		if ($this->params['file'])
 			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);

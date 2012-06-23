@@ -292,7 +292,7 @@ class GitPHP_FileDiff
 		if (empty($this->fromHash))
 			return null;
 
-		return $this->GetProject()->GetBlob($this->fromHash);
+		return $this->GetProject()->GetObjectManager()->GetBlob($this->fromHash);
 	}
 
 	/**
@@ -305,7 +305,7 @@ class GitPHP_FileDiff
 		if (empty($this->toHash))
 			return null;
 
-		return $this->GetProject()->GetBlob($this->toHash);
+		return $this->GetProject()->GetObjectManager()->GetBlob($this->toHash);
 	}
 
 	/**

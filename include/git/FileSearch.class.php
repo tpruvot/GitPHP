@@ -114,7 +114,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	 */
 	public function GetTree()
 	{
-		$tree = $this->project->GetTree($this->treeHash);
+		$tree = $this->project->GetObjectManager()->GetTree($this->treeHash);
 		$tree->SetPath($this->treePath);
 		return $tree;
 	}
@@ -334,7 +334,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 			if (preg_match('/' . preg_quote($this->search, '/') . '/i', $path)) {
 				if (!isset($this->allResults[$path])) {
 
-					$obj = $this->project->GetTree($hash);
+					$obj = $this->project->GetObjectManager()->GetTree($hash);
 					$obj->SetPath($path);
 
 					$this->allResults[$path] = new GitPHP_FileSearchResult($this->project, $obj, $path);
@@ -348,7 +348,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 			if (preg_match('/' . preg_quote($this->search, '/') . '/i', $path)) {
 				if (!isset($this->allResults[$path])) {
 
-					$obj = $this->project->GetBlob($hash);
+					$obj = $this->project->GetObjectManager()->GetBlob($hash);
 					$obj->SetPath($path);
 					
 					$this->allResults[$path] = new GitPHP_FileSearchResult($this->project, $obj, $path);
@@ -389,7 +389,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 					$tree = $this->GetTree();
 					$hash = $tree->PathToHash($regs[1]);
 					if ($hash) {
-						$blob = $this->project->GetBlob($hash);
+						$blob = $this->project->GetObjectManager()->GetBlob($hash);
 						$blob->SetPath($regs[1]);
 						$result = new GitPHP_FileSearchResult($this->project, $blob, $regs[1]);
 						$matchingLines = array();

@@ -91,7 +91,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			}
 		}
 
-		$tree = $this->GetProject()->GetTree($this->params['hash']);
+		$tree = $this->GetProject()->GetObjectManager()->GetTree($this->params['hash']);
 		if (!$tree->GetCommit()) {
 			$tree->SetCommit($commit);
 		}

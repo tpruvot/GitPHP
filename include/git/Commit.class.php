@@ -184,7 +184,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (empty($this->tree))
 			return null;
 
-		$tree = $this->GetProject()->GetTree($this->tree);
+		$tree = $this->GetProject()->GetObjectManager()->GetTree($this->tree);
 		if ($tree) {
 			$tree->SetCommitHash($this->hash);
 			$tree->SetPath(null);

@@ -22,7 +22,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 		$heads = array();
 
 		foreach ($this->refs as $head => $hash) {
-			$heads[] = $this->project->GetHead($head, $hash);
+			$heads[] = $this->project->GetObjectManager()->GetHead($head, $hash);
 		}
 
 		return $heads;
@@ -57,7 +57,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 		if (!isset($this->refs[$head]))
 			return;
 
-		return $this->project->GetHead($head, $this->refs[$head]);
+		return $this->project->GetObjectManager()->GetHead($head, $this->refs[$head]);
 	}
 
 	/**
@@ -77,7 +77,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 			$heads = array();
 			foreach ($ordered as $head) {
 				if (isset($this->refs[$head])) {
-					$heads[] = $this->project->GetHead($head, $this->refs[$head]);
+					$heads[] = $this->project->GetObjectManager()->GetHead($head, $this->refs[$head]);
 				}
 			}
 			return $heads;
@@ -97,7 +97,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 	{
 		$heads = array();
 		foreach ($this->refs as $head => $hash) {
-			$heads[] = $this->project->GetHead($head, $hash);
+			$heads[] = $this->project->GetObjectManager()->GetHead($head, $hash);
 		}
 
 		/* TODO add different orders */
@@ -122,7 +122,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 			$this->LoadData();
 		}
 
-		return $this->project->GetHead(key($this->refs), current($this->refs));
+		return $this->project->GetObjectManager()->GetHead(key($this->refs), current($this->refs));
 	}
 
 }

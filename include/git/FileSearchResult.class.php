@@ -72,11 +72,11 @@ class GitPHP_FileSearchResult
 	public function GetObject()
 	{
 		if ($this->objectType == 'tree') {
-			$tree = $this->project->GetTree($this->objectHash);
+			$tree = $this->project->GetObjectManager()->GetTree($this->objectHash);
 			$tree->SetPath($this->path);
 			return $tree;
 		} else if ($this->objectType == 'blob') {
-			$blob = $this->project->GetBlob($this->objectHash);
+			$blob = $this->project->GetObjectManager()->GetBlob($this->objectHash);
 			$blob->SetPath($this->path);
 			return $blob;
 		}

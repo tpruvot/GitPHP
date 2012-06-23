@@ -198,6 +198,13 @@ class GitPHP_Project
 	 */
 	protected $objectLoader;
 
+	/**
+	 * The git object manager
+	 *
+	 * @var GitPHP_GitObjectManager
+	 */
+	protected $objectManager;
+
 /*}}}1*/
 
 /* class methods {{{1*/
@@ -741,29 +748,7 @@ class GitPHP_Project
 			return $this->GetHeadCommit();
 
 		if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-
-			$key = GitPHP_Commit::CacheKey($this->project, $hash);
-			$memoryCache = GitPHP_MemoryCache::GetInstance();
-			$commit = $memoryCache->Get($key);
-
-			if (!$commit) {
-
-				$commit = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-
-				if ($commit) {
-					$commit->SetProject($this);
-				} else {
-					$commit = new GitPHP_Commit($this, $hash);
-				}
-
-				$commit->SetCompat($this->GetCompat());
-
-				$memoryCache->Set($key, $commit);
-
-			}
-
-			return $commit;
-
+			return $this->GetObjectManager()->GetCommit($hash);
 		}
 
 		if (substr_compare($hash, 'refs/heads/', 0, 11) === 0) {
@@ -813,39 +798,6 @@ class GitPHP_Project
 		return $this->tagList;
 	}
 
-	/**
-	 * Gets a single tag
-	 *
-	 * @param string $tag tag to find
-	 * @param string $hash hash of tag, if known
-	 * @return GitPHP_Tag tag object
-	 */
-	public function GetTag($tag, $hash = '')
-	{
-		if (empty($tag))
-			return null;
-
-		$key = GitPHP_Tag::CacheKey($this->project, $tag);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tagObj = $memoryCache->Get($key);
-
-		if (!$tagObj) {
-			$tagObj = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-
-			if ($tagObj) {
-				$tagObj->SetProject($this);
-			} else {
-				$tagObj = new GitPHP_Tag($this, $tag, $hash);
-			}
-
-			$tagObj->SetCompat($this->GetCompat());
-
-			$memoryCache->Set($key, $tagObj);
-		}
-
-		return $tagObj;
-	}
-
 /*}}}2*/
 
 /* head loading methods {{{2*/
@@ -865,106 +817,9 @@ class GitPHP_Project
 		return $this->headList;
 	}
 
-	/**
-	 * Gets a single head
-	 *
-	 * @param string $head head to find
-	 * @param string $hash hash of head, if known
-	 * @return GitPHP_Head head object
-	 */
-	public function GetHead($head, $hash = '')
-	{
-		if (empty($head))
-			return null;
-
-		$key = GitPHP_Head::CacheKey($this->project, $head);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$headObj = $memoryCache->Get($key);
-
-		if (!$headObj) {
-			$headObj = new GitPHP_Head($this, $head, $hash);
-
-			$memoryCache->Set($key, $headObj);
-		}
-
-		return $headObj;
-	}
-
 /*}}}2*/
 
-/* blob loading methods {{{2*/
-
-	/**
-	 * Gets a blob from this project
-	 *
-	 * @param string $hash blob hash
-	 * @return GitPHP_Blob blob object
-	 */
-	public function GetBlob($hash)
-	{
-		if (empty($hash))
-			return null;
-
-		$key = GitPHP_Blob::CacheKey($this->project, $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$blob = $memoryCache->Get($key);
-
-		if (!$blob) {
-			$blob = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-
-			if ($blob) {
-				$blob->SetProject($this);
-			} else {
-				$blob = new GitPHP_Blob($this, $hash);
-			}
-
-			$blob->SetCompat($this->GetCompat());
-
-			$memoryCache->Set($key, $blob);
-		}
-
-		return $blob;
-	}
-
-/*}}}2*/
-
-/* tree loading methods {{{2*/
-
-	/**
-	 * Gets a tree from this project
-	 *
-	 * @param string $hash tree hash
-	 * @return GitPHP_Tree tree object
-	 */
-	public function GetTree($hash)
-	{
-		if (empty($hash))
-			return null;
-
-		$key = GitPHP_Tree::CacheKey($this->project, $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tree = $memoryCache->Get($key);
-
-		if (!$tree) {
-			$tree = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-
-			if ($tree) {
-				$tree->SetProject($this);
-			} else {
-				$tree = new GitPHP_Tree($this, $hash);
-			}
-
-			$tree->SetCompat($this->GetCompat());
-
-			$memoryCache->Set($key, $tree);
-		}
-
-		return $tree;
-	}
-
-/*}}}2*/
-
-/* object loader methods {{{2*/
+/* object loader/manager methods {{{2*/
 
 	/**
 	 * Gets the git object loader for this project
@@ -978,6 +833,19 @@ class GitPHP_Project
 		}
 
 		return $this->objectLoader;
+	}
+
+	/**
+	 * Get the git object manager for this project
+	 *
+	 * @return GitPHP_GitObjectManager
+	 */
+	public function GetObjectManager()
+	{
+		if (!$this->objectManager)
+			$this->objectManager = new GitPHP_GitObjectManager($this);
+
+		return $this->objectManager;
 	}
 
 /*}}}2*/
