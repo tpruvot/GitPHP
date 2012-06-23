@@ -33,7 +33,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	public function __construct($projectRoot, $projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new Exception(sprintf(__('%1$s is not a file'), $projectFile));
+			throw new GitPHP_MessageException(sprintf(__('%1$s is not a file'), $projectFile));
 		}
 
 		$this->projectConfig = $projectFile;
