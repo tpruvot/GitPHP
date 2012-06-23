@@ -10,7 +10,7 @@
  *}
 <!DOCTYPE html>
 <html>
-  <!-- gitphp web interface {$version}, (C) 2006-2011 Christopher Han <xiphux@gmail.com> -->
+  <!-- gitphp web interface {$version}, (C) 2006-2012 Christopher Han <xiphux@gmail.com> -->
   <head>
     <title>
     {block name=title}

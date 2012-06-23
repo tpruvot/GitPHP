@@ -456,9 +456,7 @@ class GitPHP_Pack
 			 * then the gzipped delta data
 			 */
 			$delta = gzuncompress(fread($pack, $size + 512), $size);
-
 			$data = GitPHP_Pack::ApplyDelta($delta, $base);
-
 			return array($type, $data);
 		}
 
