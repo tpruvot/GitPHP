@@ -138,7 +138,7 @@ class GitPHP_FileHistory implements Iterator
 				$commitHash = $regs[1];
 			} else if ($commitHash) {
 				try {
-					$history = new GitPHP_FileDiff($this->GetProject(), $line);
+					$history = $this->GetProject()->GetObjectManager()->GetFileDiff($line);
 					$history->SetCommitHash($commitHash);
 					$this->history[] = $history;
 				} catch (Exception $e) {

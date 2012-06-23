@@ -139,6 +139,13 @@ class GitPHP_FileDiff
 	protected $commitHash;
 
 	/**
+	 * Cache instance
+	 *
+	 * @var GitPHP_Cache
+	 */
+	protected $cache = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -168,6 +175,26 @@ class GitPHP_FileDiff
 	public function GetProject()
 	{
 		return $this->project;
+	}
+
+	/**
+	 * Get the cache instance
+	 *
+	 * @return GitPHP_Cache|null object cache
+	 */
+	public function GetCache()
+	{
+		return $this->cache;
+	}
+
+	/**
+	 * Set the cache instance
+	 *
+	 * @param GitPHP_Cache|null $cache object cache
+	 */
+	public function SetCache($cache)
+	{
+		$this->cache = $cache;
 	}
 
 	/**
@@ -636,8 +663,12 @@ class GitPHP_FileDiff
 				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
 			}
 
-			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
-			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
+			$diffOutput = false;
+			$cacheKey = null;
+			if ($this->cache) {
+				$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+				$diffOutput = $this->cache->Get($cacheKey);
+			}
 			if ($diffOutput === false) {
 
 				if ($this->UseXDiff()) {
@@ -646,7 +677,9 @@ class GitPHP_FileDiff
 					$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
 				}
 
-				GitPHP_Cache::GetObjectCacheInstance()->Set($cacheKey, $diffOutput);
+				if ($this->cache) {
+					$this->cache->Set($cacheKey, $diffOutput);
+				}
 			}
 			$output .= $diffOutput;
 

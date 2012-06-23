@@ -190,6 +190,20 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Gets a file diff
+	 *
+	 * @param string $fromHash source hash, can also be a diff-tree info line
+	 * @param string $toHash target hash, required if $fromHash is a hash
+	 * @return GitPHP_FileDiff file diff object
+	 */
+	public function GetFileDiff($fromHash, $toHash = '')
+	{
+		$fileDiff = new GitPHP_FileDiff($this->project, $fromHash, $toHash);
+		$fileDiff->SetCache(GitPHP_Cache::GetObjectCacheInstance());
+		return $fileDiff;
+	}
+
+	/**
 	 * Notify that observable object changed
 	 *
 	 * @param GitPHP_Observable_Interface $object object
