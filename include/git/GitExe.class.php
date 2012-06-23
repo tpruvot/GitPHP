@@ -63,7 +63,7 @@ define('GIT_FOR_EACH_REF','for-each-ref');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_GitExe
+class GitPHP_GitExe implements GitPHP_Observable_Interface
 {
 
 	/**
@@ -95,6 +95,13 @@ class GitPHP_GitExe
 	protected $versionRead = false;
 
 	/**
+	 * Observers
+	 *
+	 * @var GitPHP_Observer_Interface[]
+	 */
+	protected $observers = array();
+
+	/**
 	 * Returns the singleton instance
 	 *
 	 * @return GitPHP_GitExe instance of git exe classe
@@ -103,6 +110,7 @@ class GitPHP_GitExe
 	{
 		if (!self::$instance) {
 			self::$instance = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
+			self::$instance->AddObserver(GitPHP_DebugLog::GetInstance());
 		}
 		return self::$instance;
 	}
@@ -140,11 +148,11 @@ class GitPHP_GitExe
 	{
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
-		GitPHP_DebugLog::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
+		$this->Log('Begin executing "' . $fullCommand . '"');
 
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_DebugLog::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
+		$this->Log('Finish executing "' . $fullCommand . '"' .
 			"\nwith result: " . $ret);
 
 		return $ret;
@@ -303,6 +311,55 @@ class GitPHP_GitExe
 		$out = exec($this->binary . ' --version', $tmp, $code);
 
 		return $code == 0;
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
+	 * Log an execution
+	 *
+	 * @param string $message message
+	 */
+	private function Log($message)
+	{
+		if (empty($message))
+			return;
+
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
+		}
 	}
 
 	/**
