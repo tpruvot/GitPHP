@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Tree extends GitPHP_FilesystemObject
+class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
@@ -42,6 +42,13 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	 * Whether hash paths have been read
 	 */
 	protected $hashPathsRead = false;
+
+	/**
+	 * Observers
+	 *
+	 * @var array
+	 */
+	protected $observers = array();
 
 	/**
 	 * Instantiates object
@@ -144,7 +151,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$this->ReadContentsRaw();
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
@@ -330,6 +339,40 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 				}
 			}
 		}
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
 	}
 
 	/**

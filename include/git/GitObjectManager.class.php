@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_GitObjectManager
+class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 {
 	/**
 	 * The project
@@ -53,6 +53,7 @@ class GitPHP_GitObjectManager
 			} else {
 				$commit = new GitPHP_Commit($this->project, $hash);
 			}
+			$commit->AddObserver($this);
 
 			$commit->SetCompat($this->project->GetCompat());
 
@@ -87,6 +88,7 @@ class GitPHP_GitObjectManager
 			} else {
 				$tagObj = new GitPHP_Tag($this->project, $tag, $hash);
 			}
+			$tagObj->AddObserver($this);
 
 			$tagObj->SetCompat($this->project->GetCompat());
 
@@ -144,6 +146,7 @@ class GitPHP_GitObjectManager
 			} else {
 				$blob = new GitPHP_Blob($this->project, $hash);
 			}
+			$blob->AddObserver($this);
 
 			$blob->SetCompat($this->project->GetCompat());
 
@@ -176,6 +179,7 @@ class GitPHP_GitObjectManager
 			} else {
 				$tree = new GitPHP_Tree($this->project, $hash);
 			}
+			$tree->AddObserver($this);
 
 			$tree->SetCompat($this->project->GetCompat());
 
@@ -183,6 +187,26 @@ class GitPHP_GitObjectManager
 		}
 
 		return $tree;
+	}
+
+	/**
+	 * Notify that observable object changed
+	 *
+	 * @param GitPHP_Observable_Interface $object object
+	 * @param int $changeType type of change
+	 */
+	public function ObjectChanged($object, $changeType)
+	{
+		if (!$object)
+			return;
+
+		if ($changeType !== GitPHP_Observer_Interface::CacheableDataChange)
+			return;
+
+		if (!(($object instanceof GitPHP_Observable_Interface) && ($object instanceof GitPHP_Cacheable_Interface)))
+			return;
+
+		GitPHP_Cache::GetObjectCacheInstance()->Set($object->GetCacheKey(), $object);
 	}
 
 }

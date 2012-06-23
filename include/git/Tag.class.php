@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Tag extends GitPHP_Ref
+class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 	
 	/**
@@ -65,6 +65,13 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * @var string
 	 */
 	protected $comment = array();
+
+	/**
+	 * Observers
+	 *
+	 * @var array
+	 */
+	protected $observers = array();
 
 	/**
 	 * Instantiates tag
@@ -279,7 +286,9 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->ReadDataRaw();
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
@@ -297,7 +306,6 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetHash();
 			$this->commitHash = $this->GetHash();
 			$this->type = 'commit';
-			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -378,7 +386,6 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetHash();
 			$this->commitHash = $this->GetHash();
 			$this->type = 'commit';
-			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -460,7 +467,43 @@ class GitPHP_Tag extends GitPHP_Ref
 			}
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
 	}
 
 	/**

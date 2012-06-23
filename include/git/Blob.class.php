@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Blob extends GitPHP_FilesystemObject
+class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
@@ -37,6 +37,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 * @var boolean
 	 */
 	protected $dataEncoded = false;
+
+	/**
+	 * Observers
+	 *
+	 * @var array
+	 */
+	protected $observers = array();
 
 	/**
 	 * Instantiates object
@@ -88,7 +95,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 		$this->dataEncoded = false;
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
@@ -193,6 +202,40 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$this->data = base64_decode($this->data);
 
 		$this->dataEncoded = false;
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
 	}
 
 	/**

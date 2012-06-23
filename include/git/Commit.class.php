@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Commit extends GitPHP_GitObject
+class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 
 	/**
@@ -107,6 +107,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 * @var boolean
 	 */
 	protected $containingTagRead = false;
+
+	/**
+	 * Observers
+	 *
+	 * @var array
+	 */
+	protected $observers = array();
 
 	/**
 	 * Instantiates object
@@ -509,7 +516,9 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		}
 	}
 
 	/**
@@ -590,8 +599,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			}
 		}
-
-		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -602,6 +609,40 @@ class GitPHP_Commit extends GitPHP_GitObject
 	public function DiffToParent()
 	{
 		return new GitPHP_TreeDiff($this->GetProject(), $this->hash);
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
 	}
 
 	/**
