@@ -69,10 +69,11 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 		$this->limit = $limit;
 		$this->skip = $skip;
 
+		if (!$head)
+			$head = $this->project->GetHeadCommit();
+
 		if ($head) {
 			$this->hash = $head->GetHash();
-		} else {
-			$this->hash = $this->project->GetHeadCommit()->GetHash();
 		}
 	}
 
@@ -180,8 +181,11 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	 */
 	public function SetHeadHash($hash)
 	{
-		if (empty($hash))
-			$hash = $this->project->GetHeadCommit()->GetHash();
+		if (empty($hash)) {
+			$head = $this->project->GetHeadCommit();
+			if ($head)
+				$hash = $head->GetHash();
+		}
 
 		if ($hash != $this->hash) {
 			$this->Clear();

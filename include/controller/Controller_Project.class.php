@@ -56,7 +56,10 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
+		$head = $this->GetProject()->GetHeadCommit();
+		$this->tpl->assign('head');
+		if (!$head)
+			$this->tpl->assign('enablesearch', false);
 
 		$revlist = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), 17);
 		$revlist->SetCompat($this->GetProject()->GetCompat());

@@ -70,6 +70,9 @@ class GitPHP_Log extends GitPHP_RevList
 	{
 		$this->dataLoaded = true;
 
+		if (empty($this->hash))
+			return;
+
 		if ($this->compat || ($this->skip > $this->skipFallback)) {
 			$this->hashList = $this->RevList();
 		} else {
