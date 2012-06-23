@@ -14,10 +14,28 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
+		$this->config = GitPHP_Config::GetInstance();
+
 		try {
-			parent::__construct();
+			$this->InitializeProjectList();
 		} catch (Exception $e) {
 		}
+
+		$this->InitializeSmarty();
+
+		if (isset($_GET['p']) && $this->projectList) {
+			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
+			if ($project) {
+				$this->project = $project->GetProject();
+			}
+		}
+
+		if (isset($_GET['s']))
+			$this->params['search'] = $_GET['s'];
+		if (isset($_GET['st']))
+			$this->params['searchtype'] = $_GET['st'];
+
+		$this->ReadQuery();
 	}
 
 	/**
@@ -27,6 +45,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if ($this->project)
+			return 'projectmessage.tpl';
 		return 'message.tpl';
 	}
 
@@ -57,6 +77,10 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
+		if (isset($_GET['h']))
+			$this->params['hash'] = $_GET['h'];
+		else
+			$this->params['hash'] = 'HEAD';
 	}
 
 	/**
@@ -87,6 +111,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 		$this->tpl->assign('message', $this->params['message']);
 		if (isset($this->params['error']) && ($this->params['error'])) {
 			$this->tpl->assign('error', true);
+		}
+		if ($this->project) {
+			$co = $this->GetProject()->GetCommit($this->params['hash']);
+			if ($co) {
+				$this->tpl->assign('commit', $co);
+			}
 		}
 	}
 
