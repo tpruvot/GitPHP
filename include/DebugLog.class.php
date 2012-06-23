@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-class GitPHP_DebugLog
+class GitPHP_DebugLog implements GitPHP_Observer_Interface
 {
 	/**
 	 * Stores the singleton instance
@@ -207,6 +207,29 @@ class GitPHP_DebugLog
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Notify that observable object changed
+	 *
+	 * @param GitPHP_Observable_Interface $object object
+	 * @param int $changeType type of change
+	 * @param array $args argument array
+	 */
+	public function ObjectChanged($object, $changeType, $args = array())
+	{
+		if ($changeType !== GitPHP_Observer_Interface::LoggableChange)
+			return;
+
+		if (!$this->enabled)
+			return;
+
+		if (!isset($args[0]) || empty($args[0]))
+			return;
+
+		$msg = $args[0];
+
+		$this->Log($msg);
 	}
 
 }

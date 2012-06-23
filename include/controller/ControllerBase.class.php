@@ -129,6 +129,8 @@ abstract class GitPHP_ControllerBase
 			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
 
+		$this->projectList->AddObserver(GitPHP_DebugLog::GetInstance());
+
 	}
 
 	/**

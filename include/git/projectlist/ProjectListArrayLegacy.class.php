@@ -49,7 +49,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 							unset($projObj);
 						}
 					} catch (Exception $e) {
-						GitPHP_DebugLog::GetInstance()->Log($e->getMessage());
+						$this->Log($e->getMessage());
 					}
 				}
 			}

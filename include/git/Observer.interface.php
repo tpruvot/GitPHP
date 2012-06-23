@@ -17,10 +17,18 @@ interface GitPHP_Observer_Interface
 	const CacheableDataChange = 1;
 
 	/**
+	 * Change type for logger message
+	 *
+	 * @const
+	 */
+	const LoggableChange = 2;
+
+	/**
 	 * Notify that observable object changed
 	 *
 	 * @param GitPHP_Observable_Interface $object object
 	 * @param int $changeType type of change
+	 * @param array $args argument array
 	 */
-	public function ObjectChanged($object, $changeType);
+	public function ObjectChanged($object, $changeType, $args = array());
 }

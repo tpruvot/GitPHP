@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git\ProjectList
  */
-abstract class GitPHP_ProjectListBase implements Iterator
+abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Interface
 {
 	/**
 	 * Project name sort
@@ -80,11 +80,18 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $cache = null;
 
 	/**
-	 * Memory cache instance for all project
+	 * Memory cache instance for all projects
 	 *
 	 * @var GitPHP_MemoryCache
 	 */
 	protected $memoryCache = null;
+
+	/**
+	 * Observers
+	 *
+	 * @var GitPHP_Observer_Interface[]
+	 */
+	protected $observers = array();
 
 	/**
 	 * Constructor
@@ -557,6 +564,55 @@ abstract class GitPHP_ProjectListBase implements Iterator
 
 				$this->ApplyProjectSettings($this->projects[$proj], $setting);
 			}
+		}
+	}
+
+	/**
+	 * Add a new observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function AddObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		if (array_search($observer, $this->observers) !== false)
+			return;
+
+		$this->observers[] = $observer;
+	}
+
+	/**
+	 * Remove an observer
+	 *
+	 * @param GitPHP_Observer_Interface $observer observer
+	 */
+	public function RemoveObserver($observer)
+	{
+		if (!$observer)
+			return;
+
+		$key = array_search($observer, $this->observers);
+
+		if ($key === false)
+			return;
+
+		unset($this->observers[$key]);
+	}
+
+	/**
+	 * Log a message to observers
+	 *
+	 * @param string $message message
+	 */
+	protected function Log($message)
+	{
+		if (empty($message))
+			return;
+
+		foreach ($this->observers as $observer) {
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
 		}
 	}
 

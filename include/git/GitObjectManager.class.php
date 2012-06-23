@@ -288,8 +288,9 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	 *
 	 * @param GitPHP_Observable_Interface $object object
 	 * @param int $changeType type of change
+	 * @param array $args argument array
 	 */
-	public function ObjectChanged($object, $changeType)
+	public function ObjectChanged($object, $changeType, $args = array())
 	{
 		if (!$object)
 			return;
