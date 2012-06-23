@@ -79,30 +79,14 @@ abstract class GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+
 		$log = GitPHP_DebugLog::GetInstance();
 		if ($log && $log->GetEnabled())
 			$this->log = $log;
+
 		$this->InitializeProjectList();
 
-		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
-		$this->tpl = new Smarty;
-		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
-		$this->tpl->merge_compiled_includes = true;
-		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
-
-		if ($this->config->GetValue('cache', false)) {
-			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
-			if ($this->config->HasKey('cachelifetime')) {
-				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
-			}
-
-			$servers = $this->config->GetValue('memcache', null);
-			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-				$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
-				$this->tpl->caching_type = 'memcache';
-			}
-
-		}
+		$this->InitializeSmarty();
 
 		if (isset($_GET['p'])) {
 			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
@@ -141,6 +125,33 @@ abstract class GitPHP_ControllerBase
 
 		if ($this->log)
 			$this->projectList->AddObserver($this->log);
+
+	}
+
+	/**
+	 * Initialize smarty
+	 */
+	protected function InitializeSmarty()
+	{
+		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
+		$this->tpl = new Smarty;
+		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
+		$this->tpl->merge_compiled_includes = true;
+		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
+
+		if ($this->config->GetValue('cache', false)) {
+			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
+			if ($this->config->HasKey('cachelifetime')) {
+				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
+			}
+
+			$servers = $this->config->GetValue('memcache', null);
+			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
+				$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
+				$this->tpl->caching_type = 'memcache';
+			}
+
+		}
 
 	}
 
