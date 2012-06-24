@@ -242,7 +242,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			$headListStrategy = new GitPHP_HeadListLoad_Raw();
 		}
 		$headList = new GitPHP_HeadList($project, $headListStrategy);
-		$headList->SetCompat($compat);
 		$project->SetHeadList($headList);
 
 		$tagListStrategy = null;
@@ -252,7 +251,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			$tagListStrategy = new GitPHP_TagListLoad_Raw();
 		}
 		$tagList = new GitPHP_TagList($project, $tagListStrategy);
-		$tagList->SetCompat($compat);
 		$project->SetTagList($tagList);
 
 		if (!$compat) {
