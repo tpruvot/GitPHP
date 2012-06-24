@@ -10,6 +10,42 @@
 class GitPHP_HeadList extends GitPHP_RefList
 {
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_HeadListLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
+	 * Constructor
+	 *
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_HeadListLoadStrategy_Interface $strategy load strategy
+	 */
+	public function __construct($project, GitPHP_HeadListLoadStrategy_Interface $strategy)
+	{
+		parent::__construct($project);
+
+		if (!$strategy)
+			throw new Exception('Head list load strategy is required');
+
+		$this->SetStrategy($strategy);
+	}
+
+	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_HeadListLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_HeadListLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
+	}
+
+	/**
 	 * Gets the heads
 	 *
 	 * @return GitPHP_Head[] array of heads
@@ -35,10 +71,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 	{
 		$this->dataLoaded = true;
 
-		if ($this->compat)
-			$this->refs = $this->ReadRefListGit('heads');
-		else
-			$this->refs = $this->ReadRefListRaw('heads');
+		$this->refs = $this->strategy->Load($this);
 	}
 
 	/**
@@ -69,46 +102,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 	 */
 	public function GetOrderedHeads($order, $count = 0)
 	{
-		if (!$this->dataLoaded)
-			$this->LoadData();
-
-		if ($this->compat) {
-			$ordered = $this->GetOrderedRefsGit('heads', $order, $count);
-			$heads = array();
-			foreach ($ordered as $head) {
-				if (isset($this->refs[$head])) {
-					$heads[] = $this->project->GetObjectManager()->GetHead($head, $this->refs[$head]);
-				}
-			}
-			return $heads;
-		} else {
-			return $this->GetOrderedHeadsRaw($order, $count);
-		}
-	}
-
-	/**
-	 * Get heads in a specific order using raw objects
-	 *
-	 * @param string $order order to use
-	 * @param int $count limit the number of results
-	 * @return GitPHP_Head[] array of heads
-	 */
-	private function GetOrderedHeadsRaw($order, $count = 0)
-	{
-		$heads = array();
-		foreach ($this->refs as $head => $hash) {
-			$heads[] = $this->project->GetObjectManager()->GetHead($head, $hash);
-		}
-
-		/* TODO add different orders */
-		if ($order == '-committerdate') {
-			usort($heads, array('GitPHP_Head', 'CompareAge'));
-		}
-
-		if (($count > 0) && (count($heads) > $count)) {
-			$heads = array_slice($heads, 0, $count);
-		}
-		return $heads;
+		return $this->strategy->LoadOrdered($this, $order, $count);
 	}
 
 	/**
