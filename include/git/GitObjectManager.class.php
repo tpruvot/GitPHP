@@ -225,14 +225,23 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$blob = $this->cache->Get($key);
 			}
 
+			$compat = $this->project->GetCompat();
+			$strategy = null;
+			if ($compat) {
+				$strategy = new GitPHP_BlobLoad_Git(GitPHP_GitExe::GetInstance());
+			} else {
+				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
+			}
+
 			if ($blob) {
 				$blob->SetProject($this->project);
+				$blob->SetStrategy($strategy);
 			} else {
-				$blob = new GitPHP_Blob($this->project, $hash);
+				$blob = new GitPHP_Blob($this->project, $hash, $strategy);
 			}
-			$blob->AddObserver($this);
+			$blob->SetCompat($compat);
 
-			$blob->SetCompat($this->project->GetCompat());
+			$blob->AddObserver($this);
 
 			if ($this->memoryCache)
 				$this->memoryCache->Set($key, $blob);
