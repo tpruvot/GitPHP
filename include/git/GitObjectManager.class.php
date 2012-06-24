@@ -290,14 +290,22 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$tree = $this->cache->Get($key);
 			}
 
+			$compat = $this->project->GetCompat();
+			$strategy = null;
+			if ($compat) {
+				$strategy = new GitPHP_TreeLoad_Git(GitPHP_GitExe::GetInstance());
+			} else {
+				$strategy = new GitPHP_TreeLoad_Raw($this->project->GetObjectLoader(), GitPHP_GitExe::GetInstance());
+			}
 			if ($tree) {
 				$tree->SetProject($this->project);
+				$tree->SetStrategy($strategy);
 			} else {
-				$tree = new GitPHP_Tree($this->project, $hash);
+				$tree = new GitPHP_Tree($this->project, $hash, $strategy);
 			}
-			$tree->AddObserver($this);
+			$tree->SetCompat($compat);
 
-			$tree->SetCompat($this->project->GetCompat());
+			$tree->AddObserver($this);
 
 			if ($this->memoryCache)
 				$this->memoryCache->Set($key, $tree);

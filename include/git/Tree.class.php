@@ -51,14 +51,40 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $observers = array();
 
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_TreeLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
 	 * Instantiates object
 	 *
 	 * @param GitPHP_Project $project the project
 	 * @param string $hash tree hash
+	 * @param GitPHP_TreeLoadStrategy_Interface $strategy load strategy
 	 */
-	public function __construct($project, $hash)
+	public function __construct($project, $hash, $strategy)
 	{
 		parent::__construct($project, $hash);
+
+		if (!$strategy)
+			throw new Exception('Tree load strategy is required');
+
+		$this->SetStrategy($strategy);
+	}
+
+	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_TreeLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_TreeLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
 	}
 
 	/**
@@ -145,111 +171,10 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	{
 		$this->contentsRead = true;
 
-		if ($this->compat) {
-			$this->ReadContentsGit();
-		} else {
-			$this->ReadContentsRaw();
-		}
+		$this->contents = $this->strategy->Load($this);
 
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
-		}
-	}
-
-	/**
-	 * Reads the tree contents using the git executable
-	 */
-	private function ReadContentsGit()
-	{
-		$args = array();
-		$args[] = '--full-name';
-		if (GitPHP_GitExe::GetInstance()->CanShowSizeInTree())
-			$args[] = '-l';
-		$args[] = '-t';
-		$args[] = $this->hash;
-		
-		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
-
-		foreach ($lines as $line) {
-			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {
-				switch($regs[2]) {
-					case 'tree':
-						$data = array();
-						$data['type'] = 'tree';
-						$data['hash'] = $regs[3];
-						$data['mode'] = $regs[1];
-
-						$path = $regs[5];
-						if (!empty($this->path))
-							$path = $this->path . '/' . $path;
-						$data['path'] = $path;
-
-						$this->contents[] = $data;
-						break;
-					case 'blob':
-						$data = array();
-						$data['type'] = 'blob';
-						$data['hash'] = $regs[3];
-						$data['mode'] = $regs[1];
-
-						$path = $regs[5];
-						if (!empty($this->path))
-							$path = $this->path . '/' . $path;
-						$data['path'] = $path;
-
-						$size = trim($regs[4]);
-						if (!empty($size))
-							$data['size'] = $size;
-
-						$this->contents[] = $data;
-						break;
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Reads the tree contents using the raw git object
-	 */
-	private function ReadContentsRaw()
-	{
-		$treeData = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
-
-		$start = 0;
-		$len = strlen($treeData);
-		while ($start < $len) {
-			$pos = strpos($treeData, "\0", $start);
-
-			list($mode, $path) = explode(' ', substr($treeData, $start, $pos-$start), 2);
-			$mode = str_pad($mode, 6, '0', STR_PAD_LEFT);
-			$hash = bin2hex(substr($treeData, $pos+1, 20));
-			$start = $pos + 21;
-
-			$octmode = octdec($mode);
-
-			if ($octmode == 57344) {
-				// submodules not currently supported
-				continue;
-			}
-
-			if (!empty($this->path))
-				$path = $this->path . '/' . $path;
-
-			$data = array();
-			$data['hash'] = $hash;
-			if ($octmode & 0x4000) {
-				// tree
-				$data['type'] = 'tree';
-			} else {
-				// blob
-				$data['type'] = 'blob';
-			}
-
-			$data['mode'] = $mode;
-			$data['path'] = $path;
-
-			$this->contents[] = $data;
 		}
 	}
 
@@ -311,34 +236,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	{
 		$this->hashPathsRead = true;
 
-		$this->ReadHashPathsGit();
-	}
-
-	/**
-	 * Reads hash to path mappings using git exe
-	 */
-	private function ReadHashPathsGit()
-	{
-		$args = array();
-		$args[] = '--full-name';
-		$args[] = '-r';
-		$args[] = '-t';
-		$args[] = $this->hash;
-
-		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_LS_TREE, $args));
-
-		foreach ($lines as $line) {
-			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
-				switch ($regs[2]) {
-					case 'tree':
-						$this->treePaths[trim($regs[4])] = $regs[3];
-						break;
-					case 'blob';
-						$this->blobPaths[trim($regs[4])] = $regs[3];
-						break;
-				}
-			}
-		}
+		list($this->treePaths, $this->blobPaths) = $this->strategy->LoadHashPaths($this);
 	}
 
 	/**
