@@ -52,7 +52,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		foreach ($this->fileContents as $lineData) {
 			if (isset($lineData['project'])) {
-				$projObj = $this->InstantiateProject($lineData['project']);
+				$projObj = $this->LoadProject($lineData['project']);
 				if ($projObj) {
 					$this->projects[$lineData['project']] = $projObj;
 					unset($projObj);
@@ -62,12 +62,12 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates the project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project object
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		if (!$this->fileRead)
 			$this->ReadFile();

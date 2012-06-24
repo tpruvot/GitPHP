@@ -43,7 +43,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 			if (is_array($plist)) {
 				foreach ($plist as $pname => $ppath) {
 					try {
-						$projObj = $this->InstantiateProject($ppath);
+						$projObj = $this->LoadProject($ppath);
 						if ($projObj) {
 							$this->projects[$ppath] = $projObj;
 							unset($projObj);
@@ -57,12 +57,12 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$found = false;
 		$projectCat = GitPHP_ProjectListArrayLegacy::NoCategory;

@@ -50,7 +50,7 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 			$this->ReadFile();
 
 		foreach ($this->fileContents as $projData) {
-			$projObj = $this->InstantiateProject($projData['name']);
+			$projObj = $this->LoadProject($projData['name']);
 			if ($projObj) {
 				$this->projects[$projData['name']] = $projObj;
 				unset($projObj);
@@ -59,12 +59,12 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates the project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project object
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		if (!$this->fileRead)
 			$this->ReadFile();

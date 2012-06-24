@@ -70,7 +70,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 						$this->Log(sprintf('Found project %1$s', $fullPath));
 						$projectPath = substr($fullPath, $trimlen);
 						if (!isset($this->projects[$projectPath])) {
-							$project = $this->InstantiateProject($projectPath);
+							$project = $this->LoadProject($projectPath);
 							if ($project) {
 								$this->projects[$projectPath] = $project;
 								unset($project);
@@ -88,12 +88,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		try {
 

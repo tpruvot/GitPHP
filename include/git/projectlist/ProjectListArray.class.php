@@ -37,7 +37,7 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 			try {
 				if (is_string($projData)) {
 					// Just flat array of project paths
-					$projObj = $this->InstantiateProject($projData);
+					$projObj = $this->LoadProject($projData);
 					if ($projObj) {
 						$this->projects[$projData] = $projObj;
 						unset($projObj);
@@ -45,14 +45,14 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 				} else if (is_array($projData)) {
 					if (is_string($proj) && !empty($proj)) {
 						// Project key pointing to data array
-						$projObj = $this->InstantiateProject($proj);
+						$projObj = $this->LoadProject($proj);
 						if ($projObj) {
 							$this->projects[$proj] = $projObj;
 							unset($projObj);
 						}
 					} else if (isset($projData['project'])) {
 						// List of data arrays with projects inside
-						$projObj = $this->InstantiateProject($projData['project']);
+						$projObj = $this->LoadProject($projData['project']);
 						if ($projObj) {
 							$this->projects[$projData['project']] = $projObj;
 							unset($projObj);
@@ -66,12 +66,12 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$found = false;
 		$projectSettings = null;

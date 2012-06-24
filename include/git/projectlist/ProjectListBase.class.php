@@ -192,7 +192,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			return $this->projects[$project];
 
 		if (!$this->projectsLoaded) {
-			$projObj = $this->InstantiateProject($project);
+			$projObj = $this->LoadProject($project);
 			$this->projects[$project] = $projObj;
 			return $projObj;
 		}
@@ -201,12 +201,12 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	}
 
 	/**
-	 * Instantiates a project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return return GitPHP_Project project object
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
