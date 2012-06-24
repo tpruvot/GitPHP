@@ -55,6 +55,14 @@ class GitPHP_AutoLoader
 			$path = 'git/taglist/';
 		} else if (strncmp($classname, 'HeadList', 8) === 0) {
 			$path = 'git/headlist/';
+		} else if (($classname == 'Blob') || (strncmp($classname, 'BlobLoad', 8) === 0)) {
+			$path = 'git/blob/';
+		} else if (($classname == 'Commit') || (strncmp($classname, 'CommitLoad', 10) === 0)) {
+			$path = 'git/commit/';
+		} else if (($classname == 'Tag') || (strncmp($classname, 'TagLoad', 7) === 0)) {
+			$path = 'git/tag/';
+		} else if (($classname == 'Tree') || (strncmp($classname, 'TreeLoad', 8) === 0)) {
+			$path = 'git/tree/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
 		} else if (in_array($classname, array(
