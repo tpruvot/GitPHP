@@ -3994,7 +3994,7 @@ class GeSHi {
                             }
                             ++$close;
                         }
-                        $parsed_code .= $this->line_numbers_start + $i;
+                        $parsed_code .= '<a class="ln" name="l'.$i.'">'.($this->line_numbers_start + $i).'</a>';
                         if ($close) {
                             $parsed_code .= str_repeat('</span>', $close);
                         } else if ($i != $n) {
