@@ -57,6 +57,13 @@ class GitPHP_Pack
 	protected $hash;
 
 	/**
+	 * The object loader
+	 *
+	 * @var GitPHP_GitObjectLoader
+	 */
+	protected $objectLoader;
+
+	/**
 	 * Caches object offsets
 	 *
 	 * @var array
@@ -68,14 +75,23 @@ class GitPHP_Pack
 	 *
 	 * @param GitPHP_Project $project the project
 	 * @param string $hash pack hash
+	 * @param GitPHP_GitObjectLoader object loader
 	 */
-	public function __construct($project, $hash)
+	public function __construct($project, $hash, $objectLoader)
 	{
+		if (!$project)
+			throw new Exception('Project is required');
+
 		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
 			throw new GitPHP_MessageException(sprintf(__('Invalid hash %1$s'), $hash));
 		}
+
+		if (!$objectLoader)
+			throw new Exception('Object loader is required');
+
 		$this->hash = $hash;
 		$this->project = $project;
+		$this->objectLoader = $objectLoader;
 
 		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
 			throw new Exception('Pack index does not exist');
@@ -426,7 +442,7 @@ class GitPHP_Pack
 			 */
 			$hash = fread($pack, 20);
 			$hash = bin2hex($hash);
-			$base = $this->GetProject()->GetObjectLoader()->GetObject($hash, $type);
+			$base = $this->objectLoader->GetObject($hash, $type);
 
 			/*
 			 * then the gzipped delta data
