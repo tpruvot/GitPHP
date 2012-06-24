@@ -74,15 +74,41 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	protected $observers = array();
 
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_TagLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
 	 * Instantiates tag
 	 *
 	 * @param GitPHP_Project $project the project
 	 * @param string $tag tag name
+	 * @param GitPHP_TagLoadStrategy_Interface $strategy load strategy
 	 * @param string $tagHash tag hash
 	 */
-	public function __construct($project, $tag, $tagHash = '')
+	public function __construct($project, $tag, GitPHP_TagLoadStrategy_Interface $strategy, $tagHash = '')
 	{
 		parent::__construct($project, 'tags', $tag, $tagHash);
+
+		if (!$strategy)
+			throw new Exception('Tag load strategy is required');
+
+		$this->SetStrategy($strategy);
+	}
+
+	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_TagLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_TagLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
 	}
 
 	/**
@@ -280,170 +306,21 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	{
 		$this->dataRead = true;
 
-		if ($this->compat) {
-			$this->ReadDataGit();
-		} else {
-			$this->ReadDataRaw();
-		}
+		list(
+			$this->type,
+			$this->object,
+			$commitHash,
+			$this->tagger,
+			$this->taggerEpoch,
+			$this->taggerTimezone,
+			$this->comment
+		) = $this->strategy->Load($this);
+
+		if (!empty($commitHash))
+			$this->commitHash = $commitHash;
 
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
-		}
-	}
-
-	/**
-	 * Reads the tag data using the git executable
-	 */
-	private function ReadDataGit()
-	{
-		$args = array();
-		$args[] = '-t';
-		$args[] = $this->GetHash();
-		$ret = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args));
-		
-		if ($ret === 'commit') {
-			/* light tag */
-			$this->object = $this->GetHash();
-			$this->commitHash = $this->GetHash();
-			$this->type = 'commit';
-			return;
-		}
-
-		/* get data from tag object */
-		$args = array();
-		$args[] = 'tag';
-		$args[] = $this->GetName();
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
-
-		$lines = explode("\n", $ret);
-
-		if (!isset($lines[0]))
-			return;
-
-		$objectHash = null;
-
-		$readInitialData = false;
-		foreach ($lines as $i => $line) {
-			if (!$readInitialData) {
-				if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
-					$objectHash = $regs[1];
-					continue;
-				} else if (preg_match('/^type (.+)$/', $line, $regs)) {
-					$this->type = $regs[1];
-					continue;
-				} else if (preg_match('/^tag (.+)$/', $line, $regs)) {
-					continue;
-				} else if (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-					$this->tagger = $regs[1];
-					$this->taggerEpoch = $regs[2];
-					$this->taggerTimezone = $regs[3];
-					continue;
-				}
-			}
-
-			$trimmed = trim($line);
-
-			if ((strlen($trimmed) > 0) || ($readInitialData === true)) {
-				$this->comment[] = $line;
-			}
-			$readInitialData = true;
-
-		}
-
-		switch ($this->type) {
-			case 'commit':
-				$this->object = $objectHash;
-				$this->commitHash = $objectHash;
-				break;
-			case 'tag':
-				$args = array();
-				$args[] = 'tag';
-				$args[] = $objectHash;
-				$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
-				$lines = explode("\n", $ret);
-				foreach ($lines as $i => $line) {
-					if (preg_match('/^tag (.+)$/', $line, $regs)) {
-						$name = trim($regs[1]);
-						$this->object = $name;
-					}
-				}
-				break;
-			case 'blob':
-				$this->object = $objectHash;
-				break;
-		}
-	}
-
-	/**
-	 * Reads the tag data using the raw git object
-	 */
-	private function ReadDataRaw()
-	{
-		$data = $this->GetProject()->GetObjectLoader()->GetObject($this->GetHash(), $type);
-		
-		if ($type == GitPHP_Pack::OBJ_COMMIT) {
-			/* light tag */
-			$this->object = $this->GetHash();
-			$this->commitHash = $this->GetHash();
-			$this->type = 'commit';
-			return;
-		}
-
-		$lines = explode("\n", $data);
-
-		if (!isset($lines[0]))
-			return;
-
-		$objectHash = null;
-
-		$readInitialData = false;
-		foreach ($lines as $i => $line) {
-			if (!$readInitialData) {
-				if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
-					$objectHash = $regs[1];
-					continue;
-				} else if (preg_match('/^type (.+)$/', $line, $regs)) {
-					$this->type = $regs[1];
-					continue;
-				} else if (preg_match('/^tag (.+)$/', $line, $regs)) {
-					continue;
-				} else if (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-					$this->tagger = $regs[1];
-					$this->taggerEpoch = $regs[2];
-					$this->taggerTimezone = $regs[3];
-					continue;
-				}
-			}
-
-			$trimmed = trim($line);
-
-			if ((strlen($trimmed) > 0) || ($readInitialData === true)) {
-				$this->comment[] = $line;
-			}
-			$readInitialData = true;
-		}
-
-		switch ($this->type) {
-			case 'commit':
-				try {
-					$this->object = $objectHash;
-					$this->commitHash = $objectHash;
-				} catch (Exception $e) {
-				}
-				break;
-			case 'tag':
-				$objectData = $this->GetProject()->GetObjectLoader()->GetObject($objectHash);
-				$lines = explode("\n", $objectData);
-				foreach ($lines as $i => $line) {
-					if (preg_match('/^tag (.+)$/', $line, $regs)) {
-						$name = trim($regs[1]);
-						$this->object = $name;
-					}
-				}
-				break;
-			case 'blob':
-				$this->object = $objectHash;
-				break;
 		}
 	}
 

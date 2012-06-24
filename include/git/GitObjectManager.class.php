@@ -167,14 +167,23 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$tagObj = $this->cache->Get($key);
 			}
 
+			$compat = $this->project->GetCompat();
+			$strategy = null;
+			if ($compat) {
+				$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
+			} else {
+				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());
+			}
+
 			if ($tagObj) {
 				$tagObj->SetProject($this->project);
+				$tagObj->SetStrategy($strategy);
 			} else {
-				$tagObj = new GitPHP_Tag($this->project, $tag, $hash);
+				$tagObj = new GitPHP_Tag($this->project, $tag, $strategy, $hash);
 			}
-			$tagObj->AddObserver($this);
+			$tagObj->SetCompat($compat);
 
-			$tagObj->SetCompat($this->project->GetCompat());
+			$tagObj->AddObserver($this);
 
 			if ($this->memoryCache)
 				$this->memoryCache->Set($key, $tagObj);
