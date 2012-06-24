@@ -10,6 +10,42 @@
 class GitPHP_TagList extends GitPHP_RefList
 {
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_TagListLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
+	 * Constructor
+	 *
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_TagListLoadStrategy_Interface $strategy load strategy
+	 */
+	public function __construct($project, GitPHP_TagListLoadStrategy_Interface $strategy)
+	{
+		parent::__construct($project);
+
+		if (!$strategy)
+			throw new Exception('Tag list load strategy is required');
+
+		$this->SetStrategy($strategy);
+	}
+
+	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_TagListLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_TagListLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
+	}
+
+	/**
 	 * Gets the tags
 	 *
 	 * @return GitPHP_Tag[] array of tags
@@ -35,10 +71,7 @@ class GitPHP_TagList extends GitPHP_RefList
 	{
 		$this->dataLoaded = true;
 
-		if ($this->compat)
-			$this->refs = $this->ReadRefListGit('tags');
-		else
-			$this->refs = $this->ReadRefListRaw('tags');
+		$this->refs = $this->strategy->Load($this);
 	}
 
 	/**
@@ -70,46 +103,7 @@ class GitPHP_TagList extends GitPHP_RefList
 	 */
 	public function GetOrderedTags($order, $count = 0)
 	{
-		if (!$this->dataLoaded)
-			$this->LoadData();
-
-		if ($this->compat) {
-			$ordered = $this->GetOrderedRefsGit('tags', $order, $count);
-			$tags = array();
-			foreach ($ordered as $tag) {
-				if (isset($this->refs[$tag])) {
-					$tags[] = $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
-				}
-			}
-			return $tags;
-		} else {
-			return $this->GetOrderedTagsRaw($order, $count);
-		}
-	}
-
-	/**
-	 * Get tags in a specific order
-	 *
-	 * @param string $order order to use
-	 * @param int $count limit the number of results
-	 * @return GitPHP_Tag[] array of tags
-	 */
-	private function GetOrderedTagsRaw($order, $count = 0)
-	{
-		$tags = array();
-		foreach ($this->refs as $tag => $hash) {
-			$tags[] = $this->project->GetObjectManager()->GetTag($tag, $hash);
-		}
-
-		/* TODO add different orders */
-		if ($order == '-creatordate') {
-			usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
-		}
-
-		if (($count > 0) && (count($tags) > $count)) {
-			$tags = array_slice($tags, 0, $count);
-		}
-		return $tags;
+		return $this->strategy->LoadOrdered($this, $order, $count);
 	}
 
 	/**
