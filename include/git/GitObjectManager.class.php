@@ -131,7 +131,6 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			} else {
 				$commit = new GitPHP_Commit($this->project, $hash, $strategy);
 			}
-			$commit->SetCompat($compat);
 
 			$commit->AddObserver($this);
 
@@ -181,7 +180,6 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			} else {
 				$tagObj = new GitPHP_Tag($this->project, $tag, $strategy, $hash);
 			}
-			$tagObj->SetCompat($compat);
 
 			$tagObj->AddObserver($this);
 
@@ -257,7 +255,6 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			} else {
 				$blob = new GitPHP_Blob($this->project, $hash, $strategy);
 			}
-			$blob->SetCompat($compat);
 
 			$blob->AddObserver($this);
 
@@ -303,7 +300,6 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			} else {
 				$tree = new GitPHP_Tree($this->project, $hash, $strategy);
 			}
-			$tree->SetCompat($compat);
 
 			$tree->AddObserver($this);
 

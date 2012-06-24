@@ -38,13 +38,6 @@ abstract class GitPHP_GitObject
 	protected $abbreviatedHashLoaded = false;
 
 	/**
-	 * Whether this object should load in compatibility mode
-	 *
-	 * @var boolean
-	 */
-	protected $compat = false;
-
-	/**
 	 * Instantiates object
 	 *
 	 * @param GitPHP_Project $project the project
@@ -110,26 +103,6 @@ abstract class GitPHP_GitObject
 			throw new GitPHP_MessageException(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
-	}
-
-	/**
-	 * Gets whether this object is in compatibility mode
-	 *
-	 * @return bool true if compatibility mode
-	 */
-	public function GetCompat()
-	{
-		return $this->compat;
-	}
-
-	/**
-	 * Sets whether this object should run in compatibility mode
-	 *
-	 * @param bool $compat true if compatibility mode
-	 */
-	public function SetCompat($compat)
-	{
-		$this->compat = $compat;
 	}
 
 	/**
