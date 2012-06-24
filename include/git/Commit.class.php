@@ -116,14 +116,40 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	protected $observers = array();
 
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_CommitLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
 	 * Instantiates object
 	 *
 	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
+	 * @param GitPHP_CommitLoadStrategy_Interface $strategy load strategy
 	 */
-	public function __construct($project, $hash)
+	public function __construct($project, $hash, GitPHP_CommitLoadStrategy_Interface $strategy)
 	{
 		parent::__construct($project, $hash);
+
+		if (!$strategy)
+			throw new Exception('Commit load strategy is required');
+
+		$this->SetStrategy($strategy);
+	}
+
+	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_CommitLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_CommitLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
 	}
 
 	/**
@@ -424,96 +450,23 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	{
 		$this->dataRead = true;
 
-		$lines = null;
+		list(
+			$abbreviatedHash,
+			$this->tree,
+			$this->parents,
+			$this->author,
+			$this->authorEpoch,
+			$this->authorTimezone,
+			$this->committer,
+			$this->committerEpoch,
+			$this->committerTimezone,
+			$this->title,
+			$this->comment
+		) = $this->strategy->Load($this);
 
-		if ($this->compat) {
-
-			/* get data from git_rev_list */
-			$args = array();
-			$args[] = '--header';
-			$args[] = '--parents';
-			$args[] = '--max-count=1';
-			$args[] = '--abbrev-commit';
-			$args[] = $this->hash;
-			$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_REV_LIST, $args);
-
-			$lines = explode("\n", $ret);
-
-			if (!isset($lines[0]))
-				return;
-
-			/* In case we returned something unexpected */
-			$tok = strtok($lines[0], ' ');
-			if ((strlen($tok) == 0) || (substr_compare($this->hash, $tok, 0, strlen($tok)) !== 0)) {
-				return;
-			}
-			$this->abbreviatedHash = $tok;
+		if (!empty($abbreviatedHash)) {
+			$this->abbreviatedHash = $abbreviatedHash;
 			$this->abbreviatedHashLoaded = true;
-
-			array_shift($lines);
-
-		} else {
-			
-			$data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
-			if (empty($data))
-				return;
-
-			$lines = explode("\n", $data);
-
-		}
-
-		$linecount = count($lines);
-		$i = 0;
-		$encoding = null;
-
-		/* Commit header */
-		for ($i = 0; $i < $linecount; $i++) {
-			$line = $lines[$i];
-			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
-				/* Tree */
-				$this->tree = $regs[1];
-			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
-				/* Parent */
-				$this->parents[] = $regs[1];
-			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-				/* author data */
-				$this->author = $regs[1];
-				$this->authorEpoch = $regs[2];
-				$this->authorTimezone = $regs[3];
-			} else if (preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-				/* committer data */
-				$this->committer = $regs[1];
-				$this->committerEpoch = $regs[2];
-				$this->committerTimezone = $regs[3];
-			} else if (preg_match('/^encoding (.+)$/', $line, $regs)) {
-				$gitEncoding = trim($regs[1]);
-				if ((strlen($gitEncoding) > 0) && function_exists('mb_list_encodings')) {
-					$supportedEncodings = mb_list_encodings();
-					$encIdx = array_search(strtolower($gitEncoding), array_map('strtolower', $supportedEncodings));
-					if ($encIdx !== false) {
-						$encoding = $supportedEncodings[$encIdx];
-					}
-				}
-				$encoding = trim($regs[1]);
-			} else if (strlen($line) == 0) {
-				break;
-			}
-		}
-		
-		/* Commit body */
-		for ($i += 1; $i < $linecount; $i++) {
-			$trimmed = trim($lines[$i]);
-
-			if ((strlen($trimmed) > 0) && (strlen($encoding) > 0) && function_exists('mb_convert_encoding')) {
-				$trimmed = mb_convert_encoding($trimmed, 'UTF-8', $encoding);
-			}
-
-			if (empty($this->title) && (strlen($trimmed) > 0))
-				$this->title = $trimmed;
-			if (!empty($this->title)) {
-				if ((strlen($trimmed) > 0) || ($i < ($linecount-1)))
-					$this->comment[] = $trimmed;
-			}
 		}
 
 		foreach ($this->observers as $observer) {
@@ -586,19 +539,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	{
 		$this->containingTagRead = true;
 
-		$args = array();
-		$args[] = '--tags';
-		$args[] = $this->hash;
-		$revs = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_NAME_REV, $args));
-
-		foreach ($revs as $revline) {
-			if (preg_match('/^([0-9a-fA-F]{40})\s+tags\/(.+)(\^[0-9]+|\~[0-9]+)$/', $revline, $regs)) {
-				if ($regs[1] == $this->hash) {
-					$this->containingTag = $regs[2];
-					break;
-				}
-			}
-		}
+		$this->containingTag = $this->strategy->LoadContainingTag($this);
 	}
 
 	/**

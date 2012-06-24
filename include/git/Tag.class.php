@@ -448,31 +448,6 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * Attempts to dereference the commit for this tag
-	 */
-	private function ReadCommit()
-	{
-		$args = array();
-		$args[] = '--tags';
-		$args[] = '--dereference';
-		$args[] = $this->refName;
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_SHOW_REF, $args);
-
-		$lines = explode("\n", $ret);
-
-		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/' . preg_quote($this->refName) . '(\^{})$/', $line, $regs)) {
-				$this->commitHash = $regs[1];
-				return;
-			}
-		}
-
-		foreach ($this->observers as $observer) {
-			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
-		}
-	}
-
-	/**
 	 * Add a new observer
 	 *
 	 * @param GitPHP_Observer_Interface $observer observer

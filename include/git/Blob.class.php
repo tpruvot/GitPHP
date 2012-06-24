@@ -57,8 +57,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 *
 	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
+	 * @param GitPHP_BlobLoadStrategy_Interface $strategy load strategy
 	 */
-	public function __construct($project, $hash, $strategy)
+	public function __construct($project, $hash, GitPHP_BlobLoadStrategy_Interface $strategy)
 	{
 		parent::__construct($project, $hash);
 
