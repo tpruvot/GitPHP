@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Tag
  */
 class GitPHP_TagLoad_Git implements GitPHP_TagLoadStrategy_Interface
 {

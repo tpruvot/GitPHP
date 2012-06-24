@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Blob
  */
 class GitPHP_BlobLoad_Raw implements GitPHP_BlobLoadStrategy_Interface
 {

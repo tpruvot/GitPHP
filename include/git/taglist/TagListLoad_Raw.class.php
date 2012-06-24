@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\TagList
  */
 class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_TagListLoadStrategy_Interface
 {

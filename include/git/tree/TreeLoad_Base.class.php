@@ -5,7 +5,7 @@
  * @author CHristopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Tree
  */
 abstract class GitPHP_TreeLoad_Base implements GitPHP_TreeLoadStrategy_Interface
 {

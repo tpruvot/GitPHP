@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Commit
  */
 abstract class GitPHP_CommitLoad_Base implements GitPHP_CommitLoadStrategy_Interface
 {

@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Tree
  */
 class GitPHP_TreeLoad_Git extends GitPHP_TreeLoad_Base
 {

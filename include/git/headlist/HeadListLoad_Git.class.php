@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\HeadList
  */
 class GitPHP_HeadListLoad_Git extends GitPHP_RefListLoad_Git implements GitPHP_HeadListLoadStrategy_Interface
 {
