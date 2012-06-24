@@ -24,4 +24,11 @@ interface GitPHP_CommitLoadStrategy_Interface
 	 * @return string containing tag
 	 */
 	public function LoadContainingTag($commit);
+
+	/**
+	 * Whether this load strategy loads the abbreviated hash
+	 *
+	 * @return boolean
+	 */
+	public function LoadsAbbreviatedHash();
 }

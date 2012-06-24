@@ -126,4 +126,14 @@ class GitPHP_CommitLoad_Git extends GitPHP_CommitLoad_Base
 		);
 
 	}
+
+	/**
+	 * Whether this load strategy loads the abbreviated hash
+	 *
+	 * @return boolean
+	 */
+	public function LoadsAbbreviatedHash()
+	{
+		return true;
+	}
 }

@@ -160,8 +160,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetHash($abbreviate = false)
 	{
-		if ($this->compat && $abbreviate) {
-			// abbreviated hash is loaded as part of commit data in compat mode
+		if ($abbreviate && $this->strategy->LoadsAbbreviatedHash()) {
 			if (!$this->dataRead)
 				$this->ReadData();
 		}
