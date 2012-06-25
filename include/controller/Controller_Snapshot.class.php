@@ -94,10 +94,24 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->archive = new GitPHP_Archive($this->GetProject(), null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
-		if ($this->config->HasKey('compresslevel'))
-			$this->archive->SetCompressLevel($this->config->GetValue('compresslevel'));
+		$strategy = null;
+		if ($this->params['format'] == GITPHP_COMPRESS_TAR) {
+			$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		} else if ($this->params['format'] == GITPHP_COMPRESS_BZ2) {
+			$strategy = new GitPHP_Archive_Bzip2(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		} else if ($this->params['format'] == GITPHP_COMPRESS_GZ) {
+			$strategy = new GitPHP_Archive_Gzip(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		} else if ($this->params['format'] == GITPHP_COMPRESS_ZIP) {
+			$strategy = new GitPHP_Archive_Zip(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		}
 
+		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 		$commit = null;
 
 		if (!isset($this->params['hash']))
@@ -107,22 +121,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$this->archive->SetObject($commit);
 
-		switch ($this->archive->GetFormat()) {
-			case GITPHP_COMPRESS_TAR:
-				$this->headers[] = 'Content-Type: application/x-tar';
-				break;
-			case GITPHP_COMPRESS_BZ2:
-				$this->headers[] = 'Content-Type: application/x-bzip2';
-				break;
-			case GITPHP_COMPRESS_GZ:
-				$this->headers[] = 'Content-Type: application/x-gzip';
-				break;
-			case GITPHP_COMPRESS_ZIP:
-				$this->headers[] = 'Content-Type: application/x-zip';
-				break;
-			default:
-				throw new Exception('Unknown compression type');
-		}
+		$mimetype = $strategy->MimeType();
+		if (!empty($mimetype))
+			$this->headers[] = 'Content-Type: ' . $mimetype;
 
 		$this->headers[] = 'Content-Disposition: attachment; filename=' . $this->archive->GetFilename();
 	}

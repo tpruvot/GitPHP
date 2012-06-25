@@ -31,13 +31,6 @@ class GitPHP_Archive
 	protected $project;
 
 	/**
-	 * The archive format
-	 *
-	 * @var string
-	 */
-	protected $format;
-
-	/**
 	 * The archive filename
 	 *
 	 * @var string
@@ -59,74 +52,48 @@ class GitPHP_Archive
 	protected $prefix = '';
 
 	/**
-	 * Stores the compression level
+	 * Archiving strategy
 	 *
-	 * @var int
+	 * @var GitPHP_ArchiveStrategy_Interface
 	 */
-	protected $compressLevel;
-
-	/**
-	 * Stores the process handle
-	 *
-	 * @var resource
-	 */
-	protected $handle = false;
-
-	/**
-	 * Stores the temp file name
-	 *
-	 * @var string
-	 */
-	protected $tempfile = '';
+	protected $strategy;
 
 	/**
 	 * Instantiates object
 	 *
 	 * @param GitPHP_Project $project project
 	 * @param GitPHP_Commit|GitPHP_Tree $gitObject the object
-	 * @param string $format the format for the archive
+	 * @param GitPHP_ArchiveStrategy_Interface $strategy archive format strategy
 	 * @param string $path subtree path to archive
 	 * @param string $prefix archive directory prefix
 	 */
-	public function __construct($project, $gitObject, $format = GITPHP_FORMAT_ZIP, $path = '', $prefix = '')
+	public function __construct($project, $gitObject, GitPHP_ArchiveStrategy_Interface $strategy, $path = '', $prefix = '')
 	{
 		$this->SetProject($project);
 		$this->SetObject($gitObject);
 		if (!$this->project && $gitObject) {
 			$this->project = $gitObject->GetProject();
 		}
-		$this->SetFormat($format);
 		$this->SetPath($path);
 		$this->SetPrefix($prefix);
+
+		if (!$strategy)
+			throw new Exception('Archiving strategy is required');
+
+		$this->SetStrategy($strategy);
 	}
 
 	/**
-	 * Gets the archive format
+	 * Set the archive strategy
 	 *
-	 * @return string archive format
+	 * @param GitPHP_ArchiveStrategy_Interface $strategy archive strategy
 	 */
-	public function GetFormat()
+	public function SetStrategy(GitPHP_ArchiveStrategy_Interface $strategy)
 	{
-		return $this->format;
-	}
+		if (!$strategy)
+			return;
 
-	/**
-	 * Sets the archive format
-	 *
-	 * @param string $format archive format
-	 */
-	public function SetFormat($format)
-	{
-		if ((($format == GITPHP_COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-		    (($format == GITPHP_COMPRESS_GZ) && (!function_exists('gzencode')))) {
-		    /*
-		     * Trying to set a format but doesn't have the appropriate
-		     * compression function, fall back to tar
-		     */
-		    $format = GITPHP_COMPRESS_TAR;
-		}
-
-		$this->format = $format;
+		$this->strategy = $strategy;
 	}
 
 	/**
@@ -198,16 +165,6 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * Gets the extension to use for this archive
-	 *
-	 * @return string extension for the archive
-	 */
-	public function GetExtension()
-	{
-		return GitPHP_Archive::FormatToExtension($this->format);
-	}
-
-	/**
 	 * Gets the filename for this archive
 	 *
 	 * @return string filename
@@ -228,7 +185,7 @@ class GitPHP_Archive
 			$fname .= '-' . $this->GetProject()->AbbreviateHash($this->objectHash);
 		}
 
-		$fname .= '.' . $this->GetExtension();
+		$fname .= '.' . $this->strategy->Extension();
 
 		return $fname;
 	}
@@ -302,37 +259,6 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * Gets the compression level
-	 *
-	 * @return int compression level
-	 */
-	public function GetCompressLevel()
-	{
-		return $this->compressLevel;
-	}
-
-	/**
-	 * Sets the compression level
-	 *
-	 * @param int $compressLevel compression level
-	 */
-	public function SetCompressLevel($compressLevel)
-	{
-		if ($compressLevel === null) {
-			$this->compressLevel = $compressLevel;
-			return;
-		}
-
-		if (!is_int($compressLevel))
-			return;
-
-		if (($compressLevel < 1) || ($compressLevel > 9))
-			return;
-
-		$this->compressLevel = $compressLevel;
-	}
-
-	/**
 	 * Opens a descriptor for reading archive data
 	 *
 	 * @return boolean true on success
@@ -344,58 +270,7 @@ class GitPHP_Archive
 			throw new Exception('Invalid object for archive');
 		}
 
-		if ($this->handle) {
-			return true;
-		}
-
-		$args = array();
-
-		switch ($this->format) {
-			case GITPHP_COMPRESS_ZIP:
-				$args[] = '--format=zip';
-				if ($this->compressLevel)
-					$args[] = '-' . $this->compressLevel;
-				break;
-			case GITPHP_COMPRESS_TAR:
-			case GITPHP_COMPRESS_BZ2:
-			case GITPHP_COMPRESS_GZ:
-				$args[] = '--format=tar';
-				break;
-		}
-
-		$args[] = '--prefix=' . $this->GetPrefix();
-		$args[] = $this->objectHash;
-
-		$this->handle = GitPHP_GitExe::GetInstance()->Open($this->GetProject()->GetPath(), GIT_ARCHIVE, $args);
-
-		if ($this->format == GITPHP_COMPRESS_GZ) {
-			// hack to get around the fact that gzip files
-			// can't be compressed on the fly and the php zlib stream
-			// doesn't seem to daisy chain with any non-file streams
-
-			$this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
-
-			$mode = 'wb';
-			if ($this->compressLevel)
-				$mode .= $this->compressLevel;
-
-			$temphandle = gzopen($this->tempfile, $mode);
-			if ($temphandle) {
-				while (!feof($this->handle)) {
-					gzwrite($temphandle, fread($this->handle, 1048576));
-				}
-				gzclose($temphandle);
-
-				$temphandle = fopen($this->tempfile, 'rb');
-			}
-			
-			if ($this->handle) {
-				pclose($this->handle);
-			}
-			$this->handle = $temphandle;
-		}
-
-		return ($this->handle !== false);
+		return $this->strategy->Open($this);
 	}
 
 	/**
@@ -405,23 +280,7 @@ class GitPHP_Archive
 	 */
 	public function Close()
 	{
-		if (!$this->handle) {
-			return true;
-		}
-
-		if ($this->format == GITPHP_COMPRESS_GZ) {
-			fclose($this->handle);
-			if (!empty($this->tempfile)) {
-				unlink($this->tempfile);
-				$this->tempfile = '';
-			}
-		} else {
-			pclose($this->handle);
-		}
-
-		$this->handle = null;
-		
-		return true;
+		return $this->strategy->Close();
 	}
 
 	/**
@@ -432,48 +291,7 @@ class GitPHP_Archive
 	 */
 	public function Read($size = 1048576)
 	{
-		if (!$this->handle) {
-			return false;
-		}
-
-		if (feof($this->handle)) {
-			return false;
-		}
-
-		$data = fread($this->handle, $size);
-
-		if ($this->format == GITPHP_COMPRESS_BZ2) {
-			if ($this->compressLevel)
-				$data = bzcompress($data, $this->compressLevel);
-			else
-				$data = bzcompress($data);
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Gets the extension to use for a particular format
-	 *
-	 * @param string $format format to get extension for
-	 * @return string file extension
-	 */
-	public static function FormatToExtension($format)
-	{
-		switch ($format) {
-			case GITPHP_COMPRESS_TAR:
-				return 'tar';
-				break;
-			case GITPHP_COMPRESS_BZ2:
-				return 'tar.bz2';
-				break;
-			case GITPHP_COMPRESS_GZ:
-				return 'tar.gz';
-				break;
-			case GITPHP_COMPRESS_ZIP:
-				return 'zip';
-				break;
-		}
+		return $this->strategy->Read($size);
 	}
 
 	/**
@@ -485,16 +303,21 @@ class GitPHP_Archive
 	{
 		$formats = array();
 
-		$formats[GITPHP_COMPRESS_TAR] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_TAR);
-		
-		// TODO check for git > 1.4.3 for zip
-		$formats[GITPHP_COMPRESS_ZIP] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
+		$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		if ($strategy->Valid())
+			$formats[GITPHP_COMPRESS_TAR] = $strategy->Extension();
+	
+		$strategy = new GitPHP_Archive_Zip(GitPHP_GitExe::GetInstance());
+		if ($strategy->Valid())
+			$formats[GITPHP_COMPRESS_ZIP] = $strategy->Extension();
 
-		if (function_exists('bzcompress'))
-			$formats[GITPHP_COMPRESS_BZ2] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
+		$strategy = new GitPHP_Archive_Bzip2(GitPHP_GitExe::GetInstance());
+		if ($strategy->Valid())
+			$formats[GITPHP_COMPRESS_BZ2] = $strategy->Extension();
 
-		if (function_exists('gzencode'))
-			$formats[GITPHP_COMPRESS_GZ] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
+		$strategy = new GitPHP_Archive_Gzip(GitPHP_GitExe::GetInstance());
+		if ($strategy->Valid())
+			$formats[GITPHP_COMPRESS_GZ] = $strategy->Extension();
 
 		return $formats;
 	}
