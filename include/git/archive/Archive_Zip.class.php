@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Archive
  */
 class GitPHP_Archive_Zip implements GitPHP_ArchiveStrategy_Interface
 {
