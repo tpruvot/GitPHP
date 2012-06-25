@@ -1078,9 +1078,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		// PHP Parsing of git history require this.
 		if (!$a->GetProject()->GetCompat()) {
-			if ($a->GetParent()->GetHash() == $b->GetHash())
+			if ($a->GetParent()
+			    && $a->GetParent()->GetHash() == $b->GetHash())
 				return -1;
-			if ($a->GetHash() == $b->GetParent()->GetHash())
+			if ($b->GetParent()
+			    && $a->GetHash() == $b->GetParent()->GetHash())
 				return 1;
 		}
 		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
