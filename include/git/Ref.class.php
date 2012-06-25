@@ -43,39 +43,6 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * Gets the hash for this ref (overrides base)
-	 *
-	 * @param boolean $abbreviate true to abbreviate hash
-	 * @return string object hash
-	 */
-	public function GetHash($abbreviate = false)
-	{
-		if (empty($this->hash))
-			$this->FindHash();
-
-		return parent::GetHash($abbreviate);
-	}
-
-	/**
-	 * Looks up the hash for the ref
-	 *
-	 * @throws Exception if hash is not found
-	 */
-	protected function FindHash()
-	{
-		$args = array();
-		$args[] = '--hash';
-		$args[] = '--verify';
-		$args[] = $this->GetRefPath();
-		$hash = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_SHOW_REF, $args));
-
-		if (empty($hash))
-			throw new Exception('Invalid ref ' . $this->GetRefPath());
-
-		$this->SetHash($hash);
-	}
-
-	/**
 	 * Gets the ref name
 	 *
 	 * @return string ref name
