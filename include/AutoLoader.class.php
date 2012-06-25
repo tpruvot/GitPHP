@@ -63,6 +63,8 @@ class GitPHP_AutoLoader
 			$path = 'git/tag/';
 		} else if (($classname == 'Tree') || (strncmp($classname, 'TreeLoad', 8) === 0)) {
 			$path = 'git/tree/';
+		} else if (strncmp($classname, 'Archive', 7) === 0) {
+			$path = 'git/archive/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
 		} else if (in_array($classname, array(
