@@ -718,11 +718,6 @@ class GitPHP_Project
 	public function SetCompat($compat)
 	{
 		$this->compat = $compat;
-
-		if ($this->headList)
-			$this->headList->SetCompat($compat);
-		if ($this->tagList)
-			$this->tagList->SetCompat($compat);
 	}
 
 /*}}}2*/
