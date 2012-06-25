@@ -31,6 +31,13 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $memoryCache = null;
 
 	/**
+	 * Compatibility mode
+	 *
+	 * @var boolean
+	 */
+	protected $compat = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -94,6 +101,26 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Gets the compatibility mode
+	 *
+	 * @return boolean
+	 */
+	public function GetCompat()
+	{
+		return $this->compat;
+	}
+
+	/**
+	 * Sets the compatibility mode
+	 *
+	 * @param boolean $compat compatibility mode
+	 */
+	public function SetCompat($compat)
+	{
+		$this->compat = $compat;
+	}
+
+	/**
 	 * Get a commit
 	 *
 	 * @param string $hash commit hash
@@ -117,9 +144,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$commit = $this->cache->Get($key);
 			}
 
-			$compat = $this->project->GetCompat();
 			$strategy = null;
-			if ($compat) {
+			if ($this->compat) {
 				$strategy = new GitPHP_CommitLoad_Git(GitPHP_GitExe::GetInstance());
 			} else {
 				$strategy = new GitPHP_CommitLoad_Raw($this->project->GetObjectLoader(), GitPHP_GitExe::GetInstance());
@@ -166,9 +192,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$tagObj = $this->cache->Get($key);
 			}
 
-			$compat = $this->project->GetCompat();
 			$strategy = null;
-			if ($compat) {
+			if ($this->compat) {
 				$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
 			} else {
 				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());
@@ -241,9 +266,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$blob = $this->cache->Get($key);
 			}
 
-			$compat = $this->project->GetCompat();
 			$strategy = null;
-			if ($compat) {
+			if ($this->compat) {
 				$strategy = new GitPHP_BlobLoad_Git(GitPHP_GitExe::GetInstance());
 			} else {
 				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
@@ -287,9 +311,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$tree = $this->cache->Get($key);
 			}
 
-			$compat = $this->project->GetCompat();
 			$strategy = null;
-			if ($compat) {
+			if ($this->compat) {
 				$strategy = new GitPHP_TreeLoad_Git(GitPHP_GitExe::GetInstance());
 			} else {
 				$strategy = new GitPHP_TreeLoad_Raw($this->project->GetObjectLoader(), GitPHP_GitExe::GetInstance());
