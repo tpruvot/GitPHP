@@ -113,7 +113,14 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), GitPHP_Controller_Feed::FeedItemCount);
+		$compat = $this->GetProject()->GetCompat();
+		$strategy = null;
+		if ($compat) {
+			$strategy = new GitPHP_LogLoad_Git(GitPHP_GitExe::GetInstance());
+		} else {
+			$strategy = new GitPHP_LogLoad_Raw();
+		}
+		$log = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), $strategy, GitPHP_Controller_Feed::FeedItemCount);
 		$log->FilterOldCommits(48*60*60, 20);
 
 		$this->tpl->assign('log', $log);

@@ -78,6 +78,16 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 	}
 
 	/**
+	 * Gets the project
+	 *
+	 * @return GitPHP_Project project
+	 */
+	public function GetProject()
+	{
+		return $this->project;
+	}
+
+	/**
 	 * Gets the count
 	 *
 	 * @return int count
@@ -172,6 +182,16 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 			$this->SetHeadHash($head->GetHash());
 		else
 			$this->SetHeadHash(null);
+	}
+
+	/**
+	 * Gets the head hash this log will walk from
+	 *
+	 * @return string hash
+	 */
+	public function GetHeadHash()
+	{
+		return $this->hash;
 	}
 
 	/**

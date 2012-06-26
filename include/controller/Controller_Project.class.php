@@ -61,11 +61,14 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 		if (!$head)
 			$this->tpl->assign('enablesearch', false);
 
-		$revlist = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), 17);
-		$revlist->SetCompat($this->GetProject()->GetCompat());
-		if ($this->config->HasKey('largeskip')) {
-			$revlist->SetSkipFallback($this->config->GetValue('largeskip'));
+		$compat = $this->GetProject()->GetCompat();
+		$strategy = null;
+		if ($compat) {
+			$strategy = new GitPHP_LogLoad_Git(GitPHP_GitExe::GetInstance());
+		} else {
+			$strategy = new GitPHP_LogLoad_Raw();
 		}
+		$revlist = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), $strategy, 17);
 
 		if ($revlist->GetCount() > 16) {
 			$this->tpl->assign('hasmorerevs', true);

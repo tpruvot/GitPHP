@@ -80,11 +80,15 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 
-		$revlist = new GitPHP_Log($this->GetProject(), $commit, 101, ($this->params['page'] * 100));
-		$revlist->SetCompat($this->GetProject()->GetCompat());
-		if ($this->config->HasKey('largeskip')) {
-			$revlist->SetSkipFallback($this->config->GetValue('largeskip'));
+		$compat = $this->GetProject()->GetCompat();
+		$skip = $this->params['page'] * 100;
+		$strategy = null;
+		if ($compat || ($skip > $this->config->GetValue('largeskip', 200))) {
+			$strategy = new GitPHP_LogLoad_Git(GitPHP_GitExe::GetInstance());
+		} else {
+			$strategy = new GitPHP_LogLoad_Raw();
 		}
+		$revlist = new GitPHP_Log($this->GetProject(), $commit, $strategy, 101, $skip);
 
 		if ($revlist->GetCount() > 100) {
 			$this->tpl->assign('hasmorerevs', true);
