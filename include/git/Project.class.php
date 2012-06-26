@@ -205,6 +205,13 @@ class GitPHP_Project
 	 */
 	protected $objectManager;
 
+	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_ProjectLoadStrategy_Interface
+	 */
+	protected $strategy;
+
 /*}}}1*/
 
 /* class methods {{{1*/
@@ -215,10 +222,13 @@ class GitPHP_Project
 	 * @param string $projectRoot project root
 	 * @param string $project project
 	 */
-	public function __construct($projectRoot, $project)
+	public function __construct($projectRoot, $project, GitPHP_ProjectLoadStrategy_Interface $strategy = null)
 	{
 		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
+
+		if ($strategy)
+			$this->SetStrategy($strategy);
 	}
 
 /*}}}1*/
@@ -579,40 +589,7 @@ class GitPHP_Project
 	{
 		$this->readHeadRef = true;
 
-		if ($this->GetCompat()) {
-			$this->ReadHeadCommitGit();
-		} else {
-			$this->ReadHeadCommitRaw();
-		}
-	}
-
-	/**
-	 * Read head commit using git executable
-	 */
-	private function ReadHeadCommitGit()
-	{
-		$args = array();
-		$args[] = '--verify';
-		$args[] = 'HEAD';
-		$this->head = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_PARSE, $args));
-	}
-
-	/**
-	 * Read head commit using raw git head pointer
-	 */
-	private function ReadHeadCommitRaw()
-	{
-		$headPointer = trim(file_get_contents($this->GetPath() . '/HEAD'));
-		if (preg_match('/^([0-9A-Fa-f]{40})$/', $headPointer, $regs)) {
-			/* Detached HEAD */
-			$this->head = $regs[1];
-		} else if (preg_match('/^ref: (.+)$/', $headPointer, $regs)) {
-			/* standard pointer to head */
-			$head = substr($regs[1], strlen('refs/heads/'));
-
-			if ($this->GetHeadList()->Exists($head))
-				$this->head = $this->GetHeadList()->GetHead($head)->GetHash();
-		}
+		$this->head = $this->strategy->LoadHead($this);
 	}
 
 /*}}}2*/
@@ -652,48 +629,7 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
-		if ($this->GetCompat()) {
-			$this->ReadEpochGit();
-		} else {
-			$this->ReadEpochRaw();
-		}
-	}
-
-	/**
-	 * Reads this project's epoch using git executable
-	 */
-	private function ReadEpochGit()
-	{
-		$args = array();
-		$args[] = '--format="%(committer)"';
-		$args[] = '--sort=-committerdate';
-		$args[] = '--count=1';
-		$args[] = 'refs/heads';
-
-		$epochstr = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args));
-
-		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
-			$this->epoch = $regs[1];
-		}
-	}
-
-	/**
-	 * Reads this project's epoch using raw objects
-	 */
-	private function ReadEpochRaw()
-	{
-		$epoch = 0;
-		foreach ($this->GetHeadList() as $headObj) {
-			$commit = $headObj->GetCommit();
-			if ($commit) {
-				if ($commit->GetCommitterEpoch() > $epoch) {
-					$epoch = $commit->GetCommitterEpoch();
-				}
-			}
-		}
-		if ($epoch > 0) {
-			$this->epoch = $epoch;
-		}
+		$this->epoch = $this->strategy->LoadEpoch($this);
 	}
 
 /*}}}2*/
@@ -721,6 +657,19 @@ class GitPHP_Project
 	}
 
 /*}}}2*/
+
+	/**
+	 * Set data load strategy
+	 *
+	 * @param GitPHP_ProjectLoadStrategy_Interface $strategy strategy
+	 */
+	public function SetStrategy(GitPHP_ProjectLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
+	}
 
 /*}}}1*/
 
@@ -930,73 +879,7 @@ class GitPHP_Project
 	 */
 	public function AbbreviateHash($hash)
 	{
-		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
-			return $hash;
-		}
-
-		if ($this->GetCompat()) {
-			return $this->AbbreviateHashGit($hash);
-		} else {
-			return $this->AbbreviateHashRaw($hash);
-		}
-	}
-
-	/**
-	 * Abbreviates a hash using the git executable
-	 *
-	 * @param string $hash hash to abbreviate
-	 * @return string abbreviated hash
-	 */
-	private function AbbreviateHashGit($hash)
-	{
-		$args = array();
-		$args[] = '-1';
-		$args[] = '--format=format:%h';
-		$args[] = $hash;
-
-		$abbrevData = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
-		if (empty($abbrevData[0])) {
-			return $hash;
-		}
-		if (substr_compare(trim($abbrevData[0]), 'commit', 0, 6) !== 0) {
-			return $hash;
-		}
-
-		if (empty($abbrevData[1])) {
-			return $hash;
-		}
-
-		return trim($abbrevData[1]);
-	}
-
-	/**
-	 * Default raw abbreviation length
-	 *
-	 * @const
-	 */
-	const HashAbbreviateLength = 7;
-
-	/**
-	 * Abbreviates a hash using raw git objects
-	 *
-	 * @param string $hash hash to abbreviate
-	 * @return string abbreviated hash
-	 */
-	private function AbbreviateHashRaw($hash)
-	{
-		$abbrevLen = GitPHP_Project::HashAbbreviateLength;
-
-		if ($this->abbreviateLength > 0) {
-			$abbrevLen = max(4, min($this->abbreviateLength, 40));
-		}
-
-		$prefix = substr($hash, 0, $abbrevLen);
-
-		if (!$this->uniqueAbbreviation) {
-			return $prefix;
-		}
-
-		return $this->GetObjectLoader()->EnsureUniqueHash($hash, $prefix);
+		return $this->strategy->AbbreviateHash($this, $hash);
 	}
 
 	/**
@@ -1007,43 +890,7 @@ class GitPHP_Project
 	 */
 	public function ExpandHash($abbrevHash)
 	{
-		if (!(preg_match('/[0-9A-Fa-f]{4,39}/', $abbrevHash))) {
-			return $abbrevHash;
-		}
-
-		if ($this->GetCompat()) {
-			return $this->ExpandHashGit($abbrevHash);
-		}  else {
-			return $this->GetObjectLoader()->ExpandHash($abbrevHash);
-		}
-	}
-
-	/**
-	 * Expands a hash using the git executable
-	 *
-	 * @param string $abbrevHash
-	 * @return string full hash
-	 */
-	private function ExpandHashGit($abbrevHash)
-	{
-		$args = array();
-		$args[] = '-1';
-		$args[] = '--format=format:%H';
-		$args[] = $abbrevHash;
-
-		$fullData = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
-		if (empty($fullData[0])) {
-			return $abbrevHash;
-		}
-		if (substr_compare(trim($fullData[0]), 'commit', 0, 6) !== 0) {
-			return $abbrevHash;
-		}
-
-		if (empty($fullData[1])) {
-			return $abbrevHash;
-		}
-
-		return trim($fullData[1]);
+		return $this->strategy->ExpandHash($this, $abbrevHash);
 	}
 
 /*}}}2*/

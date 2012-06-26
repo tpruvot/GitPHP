@@ -235,6 +235,12 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$compat = $project->GetCompat();
 
+		if ($compat) {
+			$project->SetStrategy(new GitPHP_ProjectLoad_Git(GitPHP_GitExe::GetInstance()));
+		} else {
+			$project->SetStrategy(new GitPHP_ProjectLoad_Raw());
+		}
+
 		$headListStrategy = null;
 		if ($compat) {
 			$headListStrategy = new GitPHP_HeadListLoad_Git(GitPHP_GitExe::GetInstance());
