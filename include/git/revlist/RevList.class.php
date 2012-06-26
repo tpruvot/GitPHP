@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\RevList
  */
 abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 {

@@ -55,6 +55,8 @@ class GitPHP_AutoLoader
 			$path = 'git/taglist/';
 		} else if (strncmp($classname, 'HeadList', 8) === 0) {
 			$path = 'git/headlist/';
+		} else if (strncmp($classname, 'RevList', 7) === 0) {
+			$path = 'git/revlist/';
 		} else if (($classname == 'Blob') || (strncmp($classname, 'BlobLoad', 8) === 0)) {
 			$path = 'git/blob/';
 		} else if (($classname == 'Commit') || (strncmp($classname, 'CommitLoad', 10) === 0)) {
