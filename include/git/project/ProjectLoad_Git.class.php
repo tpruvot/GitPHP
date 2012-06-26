@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Project
  */
 class GitPHP_ProjectLoad_Git implements GitPHP_ProjectLoadStrategy_Interface
 {
@@ -19,7 +19,7 @@ class GitPHP_ProjectLoad_Git implements GitPHP_ProjectLoadStrategy_Interface
 	/**
 	 * Constructor
 	 *
-	 * @var GitPHP_Exe $exe git exe
+	 * @param GitPHP_Exe $exe git exe
 	 */
 	public function __construct($exe)
 	{

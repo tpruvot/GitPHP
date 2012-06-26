@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Project
  */
 class GitPHP_Project
 {
@@ -221,6 +221,7 @@ class GitPHP_Project
 	 *
 	 * @param string $projectRoot project root
 	 * @param string $project project
+	 * @param GitPHP_ProjectLoadStrategy_Interface $strategy load strategy
 	 */
 	public function __construct($projectRoot, $project, GitPHP_ProjectLoadStrategy_Interface $strategy = null)
 	{
