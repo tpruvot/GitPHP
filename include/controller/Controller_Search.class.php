@@ -136,15 +136,15 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		switch ($this->params['searchtype']) {
 
 			case GitPHP_Controller_Search::AuthorSearch:
-				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::AuthorType, $this->params['search'], $co, 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::AuthorType, $this->params['search'], GitPHP_GitExe::GetInstance(), $co, 101, $skip);
 				break;
 
 			case GitPHP_Controller_Search::CommitterSearch:
-				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitterType, $this->params['search'], $co, 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitterType, $this->params['search'], GitPHP_GitExe::GetInstance(), $co, 101, $skip);
 				break;
 
 			case GitPHP_Controller_Search::CommitSearch:
-				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitType, $this->params['search'], $co, 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitType, $this->params['search'], GitPHP_GitExe::GetInstance(), $co, 101, $skip);
 				break;
 
 			case GitPHP_Controller_Search::FileSearch:

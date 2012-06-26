@@ -45,16 +45,31 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	protected $search;
 
 	/**
+	 * Git exe
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
+	 * Load strategy
+	 *
+	 * @var GitPHP_RevList_Git
+	 */
+	protected $strategy;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
 	 * @param int $type search type
 	 * @param string $search search string
+	 * @param GitPHP_GitExe $exe git exe
 	 * @param GitPHP_Commit $head head to walk back from
 	 * @param int $limit limit of revisions to walk
 	 * @param int $skip number of revisions to skip
 	 */
-	public function __construct($project, $type, $search, $head = null, $limit = 50, $skip = 0)
+	public function __construct($project, $type, $search, $exe, $head = null, $limit = 50, $skip = 0)
 	{
 		parent::__construct($project, $head, $limit, $skip);
 
@@ -68,6 +83,9 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 
 		$this->type = $type;
 		$this->search = $search;
+
+		$this->exe = $exe;
+		$this->strategy = new GitPHP_RevList_Git($exe);
 	}
 
 	/**
@@ -137,7 +155,7 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 
 		$args = array();
 
-		if (GitPHP_GitExe::GetInstance()->CanIgnoreRegexpCase())
+		if ($this->exe->CanIgnoreRegexpCase())
 			$args[] = '--regexp-ignore-case';
 
 		switch ($this->type) {
@@ -152,7 +170,7 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 				break;
 		}
 
-		$this->hashList = $this->RevList($args);
+		$this->hashList = $this->strategy->RevList($this->project, $this->hash, $this->limit, $this->skip, $args);
 	}
 
 }

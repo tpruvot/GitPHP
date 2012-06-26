@@ -296,45 +296,4 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 		$this->dataLoaded = false;
 	}
 
-	/**
-	 * Common code for using rev-list command
-	 *
-	 * @param array $args args to give to rev-list
-	 * @return string[] array of hashes
-	 */
-	protected function RevList($args = array())
-	{
-		if ($this->limit < 1)
-			return;
-
-		$canSkip = true;
-		
-		if ($this->skip > 0)
-			$canSkip = GitPHP_GitExe::GetInstance()->CanSkip();
-
-		if ($canSkip) {
-			$args[] = '--max-count=' . $this->limit;
-			if ($this->skip > 0) {
-				$args[] = '--skip=' . $this->skip;
-			}
-		} else {
-			$args[] = '--max-count=' . ($this->limit + $this->skip);
-		}
-
-		$args[] = $this->hash;
-
-		$revlist = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->project->GetPath(), GIT_REV_LIST, $args));
-
-		if (!$revlist[count($revlist)-1]) {
-			/* the last newline creates a null entry */
-			array_splice($revlist, -1, 1);
-		}
-
-		if (($this->skip > 0) && (!$canSkip)) {
-			return array_slice($revlist, $this->skip, $this->limit);
-		}
-
-		return $revlist;
-	}
-
 }
