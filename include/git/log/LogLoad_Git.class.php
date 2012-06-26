@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Log
  */
 class GitPHP_LogLoad_Git extends GitPHP_RevList_Git implements GitPHP_LogLoadStrategy_Interface
 {

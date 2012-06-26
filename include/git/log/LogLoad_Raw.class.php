@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Log
  */
 class GitPHP_LogLoad_Raw implements GitPHP_LogLoadStrategy_Interface
 {
