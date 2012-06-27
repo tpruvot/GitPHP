@@ -45,13 +45,21 @@ class GitPHP_FileBlame
 	protected $dataLoaded = false;
 
 	/**
+	 * Executable
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
 	 * @param GitPHP_Commit $commit commit to trace blame from
 	 * @param string $path file path to trace blame of
+	 * @param GitPHP_GitExe $exe git executable
 	 */
-	public function __construct($project, $commit, $path)
+	public function __construct($project, $commit, $path, $exe)
 	{
 		if (!$project)
 			throw new Exception('Project is required');
@@ -62,11 +70,16 @@ class GitPHP_FileBlame
 		if (empty($path))
 			throw new Exception('Path is required');
 
+		if (!$exe)
+			throw new Exception('Git exe is required');
+
 		$this->project = $project;
 
 		$this->commitHash = $commit->GetHash();
 
 		$this->path = $path;
+
+		$this->exe = $exe;
 	}
 
 	/**
@@ -132,7 +145,7 @@ class GitPHP_FileBlame
 		$args[] = '--';
 		$args[] = $this->path;
 
-		$blamelines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->project->GetPath(), GIT_BLAME, $args));
+		$blamelines = explode("\n", $this->exe->Execute($this->project->GetPath(), GIT_BLAME, $args));
 
 		$lastcommit = '';
 		foreach ($blamelines as $line) {
