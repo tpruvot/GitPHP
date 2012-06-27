@@ -87,6 +87,13 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	protected $memoryCache = null;
 
 	/**
+	 * Executable for all projects
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe = null;
+
+	/**
 	 * Observers
 	 *
 	 * @var GitPHP_Observer_Interface[]
@@ -164,6 +171,26 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	}
 
 	/**
+	 * Get executable
+	 *
+	 * @return GitPHP_GitExe executable
+	 */
+	public function GetExe()
+	{
+		return $this->exe;
+	}
+
+	/**
+	 * Set executable
+	 *
+	 * @param GitPHP_GitExe $exe executable
+	 */
+	public function SetExe($exe)
+	{
+		$this->exe = $exe;
+	}
+
+	/**
 	 * Test if the projectlist contains the given project
 	 *
 	 * @return boolean true if project exists in list
@@ -236,14 +263,14 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		$compat = $project->GetCompat();
 
 		if ($compat) {
-			$project->SetStrategy(new GitPHP_ProjectLoad_Git(GitPHP_GitExe::GetInstance()));
+			$project->SetStrategy(new GitPHP_ProjectLoad_Git($this->exe));
 		} else {
 			$project->SetStrategy(new GitPHP_ProjectLoad_Raw());
 		}
 
 		$headListStrategy = null;
 		if ($compat) {
-			$headListStrategy = new GitPHP_HeadListLoad_Git(GitPHP_GitExe::GetInstance());
+			$headListStrategy = new GitPHP_HeadListLoad_Git($this->exe);
 		} else {
 			$headListStrategy = new GitPHP_HeadListLoad_Raw();
 		}
@@ -252,7 +279,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$tagListStrategy = null;
 		if ($compat) {
-			$tagListStrategy = new GitPHP_TagListLoad_Git(GitPHP_GitExe::GetInstance());
+			$tagListStrategy = new GitPHP_TagListLoad_Git($this->exe);
 		} else {
 			$tagListStrategy = new GitPHP_TagListLoad_Raw();
 		}
@@ -266,7 +293,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$manager = new GitPHP_GitObjectManager($project);
 		$manager->SetCompat($compat);
-		$manager->SetExe(GitPHP_GitExe::GetInstance());
+		$manager->SetExe($this->exe);
 		if ($this->memoryCache) {
 			$manager->SetMemoryCache($this->memoryCache);
 		}

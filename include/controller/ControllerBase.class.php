@@ -74,6 +74,13 @@ abstract class GitPHP_ControllerBase
 	protected $log;
 
 	/**
+	 * Git executable instance
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct()
@@ -83,6 +90,8 @@ abstract class GitPHP_ControllerBase
 		$log = GitPHP_DebugLog::GetInstance();
 		if ($log && $log->GetEnabled())
 			$this->log = $log;
+
+		$this->exe = GitPHP_GitExe::GetInstance();
 
 		$this->InitializeProjectList();
 
@@ -122,6 +131,8 @@ abstract class GitPHP_ControllerBase
 		} else {
 			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
+
+		$this->projectList->SetExe($this->exe);
 
 		if ($this->log)
 			$this->projectList->AddObserver($this->log);
