@@ -148,7 +148,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 				break;
 
 			case GitPHP_Controller_Search::FileSearch:
-				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], 101, $skip);
+				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], GitPHP_GitExe::GetInstance(), 101, $skip);
 				break;
 
 			default:

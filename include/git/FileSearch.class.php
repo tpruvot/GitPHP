@@ -73,6 +73,13 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	protected $dataLoaded = false;
 
 	/**
+	 * Executable
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -81,7 +88,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	 * @param int $limit limit of results to return
 	 * @param int $skip number of results to skip
 	 */
-	public function __construct($project, $tree, $search, $limit = 50, $skip = 0)
+	public function __construct($project, $tree, $search, $exe, $limit = 50, $skip = 0)
 	{
 		if (!$project) {
 			throw new Exception('Project is required');
@@ -95,12 +102,18 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 			throw new Exception('Search is required');
 		}
 
+		if (!$exe) {
+			throw new Exception('Git exe is required');
+		}
+
 		$this->project = $project;
 
 		$this->treeHash = $tree->GetHash();
 		$this->treePath = $tree->GetPath();
 
 		$this->search = $search;
+
+		$this->exe = $exe;
 
 		$this->limit = $limit;
 		
@@ -371,7 +384,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 		$args[] = '"' . addslashes($this->search) . '"';
 		$args[] = $this->treeHash;
 
-		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->project->GetPath(), GIT_GREP, $args));
+		$lines = explode("\n", $this->exe->Execute($this->project->GetPath(), GIT_GREP, $args));
 
 
 		foreach ($lines as $line) {
