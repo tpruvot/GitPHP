@@ -53,16 +53,30 @@ class GitPHP_TreeDiff implements Iterator
 	protected $dataRead = false;
 
 	/**
+	 * Executable
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
+	 * @param GitPHP_GitExe $exe executable
 	 * @param string $toHash to commit hash
 	 * @param string $fromHash from commit hash
 	 * @param boolean $renames whether to detect file renames
 	 */
-	public function __construct($project, $toHash, $fromHash = '', $renames = false)
+	public function __construct($project, $exe, $toHash, $fromHash = '', $renames = false)
 	{
+		if (!$project)
+			throw new Exception('Project is required');
 		$this->project = $project;
+
+		if (!$exe)
+			throw new Exception('Git executable is required');
+		$this->exe = $exe;
 
 		$toCommit = $project->GetCommit($toHash);
 		$this->toHash = $toHash;
@@ -111,7 +125,7 @@ class GitPHP_TreeDiff implements Iterator
 
 		$args[] = $this->toHash;
 
-		$diffTreeLines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
+		$diffTreeLines = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
 		foreach ($diffTreeLines as $line) {
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {

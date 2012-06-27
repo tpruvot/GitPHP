@@ -124,6 +124,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 		$log->FilterOldCommits(48*60*60, 20);
 
 		$this->tpl->assign('log', $log);
+
+		$this->tpl->assign('gitexe', GitPHP_GitExe::GetInstance());
 	}
 
 }

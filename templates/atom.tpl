@@ -35,7 +35,7 @@
         {/foreach}
         </p>
         <ul>
-        {foreach from=$logitem->DiffToParent() item=diffline}
+        {foreach from=$logitem->DiffToParent($gitexe) item=diffline}
           <li>{$diffline->GetToFile()|htmlspecialchars}</li>
         {/foreach}
         </ul>

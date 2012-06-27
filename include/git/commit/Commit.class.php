@@ -544,11 +544,12 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	/**
 	 * Diffs this commit with its immediate parent
 	 *
+	 * @param GitPHP_GitExe $exe git executable
 	 * @return GitPHP_TreeDiff Tree diff
 	 */
-	public function DiffToParent()
+	public function DiffToParent($exe)
 	{
-		return new GitPHP_TreeDiff($this->GetProject(), $this->hash);
+		return new GitPHP_TreeDiff($this->GetProject(), $exe, $this->hash);
 	}
 
 	/**

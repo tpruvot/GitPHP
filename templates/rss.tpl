@@ -26,7 +26,7 @@
           {foreach from=$logitem->GetComment() item=line}
             {$line}<br />
           {/foreach}
-          {foreach from=$logitem->DiffToParent() item=diffline}
+          {foreach from=$logitem->DiffToParent($gitexe) item=diffline}
             {$diffline->GetToFile()}<br />
           {/foreach}
           ]]>

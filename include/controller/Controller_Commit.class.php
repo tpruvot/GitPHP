@@ -71,7 +71,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 		$commit = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('tree', $commit->GetTree());
-		$treediff = $commit->DiffToParent();
+		$treediff = $commit->DiffToParent(GitPHP_GitExe::GetInstance());
 		$treediff->SetRenames(true);
 		$this->tpl->assign('treediff', $treediff);
 	}
