@@ -24,7 +24,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
-		$this->exe = GitPHP_GitExe::GetInstance();
+		$this->InitializeGitExe();
 
 		$this->InitializeProjectList();
 

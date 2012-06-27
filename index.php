@@ -108,13 +108,6 @@ try {
 		GitPHP_DebugLog::GetInstance()->SetStartMemory(GITPHP_START_MEM);
 	}
 
-	/*
-	 * Check for required executables
-	 */
-	if (!GitPHP_GitExe::GetInstance()->Valid()) {
-		throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), GitPHP_GitExe::GetInstance()->GetBinary(), 'gitbin'), true, 500);
-	}
-
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
 		$controller->RenderHeaders();

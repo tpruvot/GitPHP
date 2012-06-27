@@ -16,6 +16,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
+		$this->InitializeGitExe(false);
+
 		try {
 			$this->InitializeProjectList();
 		} catch (Exception $e) {

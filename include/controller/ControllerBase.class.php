@@ -91,7 +91,7 @@ abstract class GitPHP_ControllerBase
 		if ($log && $log->GetEnabled())
 			$this->log = $log;
 
-		$this->exe = GitPHP_GitExe::GetInstance();
+		$this->InitializeGitExe();
 
 		$this->InitializeProjectList();
 
@@ -119,6 +119,19 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * Initialize executable
+	 *
+	 * @param boolean $validate whether the exe should be validated
+	 */
+	protected function InitializeGitExe($validate = true)
+	{
+		$this->exe = GitPHP_GitExe::GetInstance();
+		if ($validate && !$this->exe->Valid()) {
+			throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), GitPHP_GitExe::GetInstance()->GetBinary(), 'gitbin'), true, 500);
+		}
 	}
 
 	/**
