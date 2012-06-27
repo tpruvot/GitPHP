@@ -38,6 +38,13 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $compat = false;
 
 	/**
+	 * Executable
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -48,6 +55,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			throw new Exception('Project is required');
 
 		$this->project = $project;
+	}
+
+	/**
+	 * Set executable
+	 *
+	 * @param GitPHP_GitExe $exe executable
+	 */
+	public function SetExe($exe)
+	{
+		$this->exe = $exe;
 	}
 
 	/**
@@ -146,9 +163,9 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$strategy = null;
 			if ($this->compat) {
-				$strategy = new GitPHP_CommitLoad_Git(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_CommitLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_CommitLoad_Raw($this->project->GetObjectLoader(), GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_CommitLoad_Raw($this->project->GetObjectLoader(), $this->exe);
 			}
 
 			if ($commit) {
@@ -194,7 +211,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$strategy = null;
 			if ($this->compat) {
-				$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_TagLoad_Git($this->exe);
 			} else {
 				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());
 			}
@@ -268,7 +285,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$strategy = null;
 			if ($this->compat) {
-				$strategy = new GitPHP_BlobLoad_Git(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_BlobLoad_Git($this->exe);
 			} else {
 				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
 			}
@@ -313,9 +330,9 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$strategy = null;
 			if ($this->compat) {
-				$strategy = new GitPHP_TreeLoad_Git(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_TreeLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_TreeLoad_Raw($this->project->GetObjectLoader(), GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_TreeLoad_Raw($this->project->GetObjectLoader(), $this->exe);
 			}
 			if ($tree) {
 				$tree->SetProject($this->project);

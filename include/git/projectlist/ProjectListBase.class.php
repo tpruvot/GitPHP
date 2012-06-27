@@ -266,6 +266,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$manager = new GitPHP_GitObjectManager($project);
 		$manager->SetCompat($compat);
+		$manager->SetExe(GitPHP_GitExe::GetInstance());
 		if ($this->memoryCache) {
 			$manager->SetMemoryCache($this->memoryCache);
 		}
