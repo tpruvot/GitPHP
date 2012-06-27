@@ -87,9 +87,7 @@ abstract class GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
-		$log = GitPHP_DebugLog::GetInstance();
-		if ($log && $log->GetEnabled())
-			$this->log = $log;
+		$this->EnableLogging();
 
 		$this->InitializeGitExe();
 
@@ -192,6 +190,26 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
+	 * Enable logging
+	 */
+	public function EnableLogging()
+	{
+		if ($this->log)
+			return;
+
+		$debug = $this->config->GetValue('debug', false);
+		if ($debug) {
+			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark', false));
+			$this->log->SetStartTime(GITPHP_START_TIME);
+			$this->log->SetStartMemory(GITPHP_START_MEM);
+			if ($this->exe)
+				$this->exe->AddObserver($this->log);
+			if ($this->projectList)
+				$this->projectList->AddObserver($this->log);
+		}
+	}
+
+	/**
 	 * Disable logging
 	 */
 	protected function DisableLogging()
@@ -200,6 +218,7 @@ abstract class GitPHP_ControllerBase
 			return;
 
 		$this->projectList->RemoveObserver($this->log);
+		$this->exe->RemoveObserver($this->log);
 
 		$this->log->SetEnabled(false);
 

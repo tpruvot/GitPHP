@@ -9,13 +9,6 @@
 class GitPHP_DebugLog implements GitPHP_Observer_Interface
 {
 	/**
-	 * Stores the singleton instance
-	 *
-	 * @var GitPHP_DebugLog
-	 */
-	protected static $instance;
-
-	/**
 	 * Stores whether logging is enabled
 	 *
 	 * @var boolean
@@ -51,35 +44,12 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	protected $entries = array();
 
 	/**
-	 * Returns the singleton instance
-	 *
-	 * @return GitPHP_DebugLog instance of logging class
-	 */
-	public static function GetInstance()
-	{
-		if (!self::$instance) {
-			$config = GitPHP_Config::GetInstance();
-			self::$instance = new GitPHP_DebugLog($config->GetValue('debug', false), $config->GetValue('benchmark', false));
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * Releases the singleton instance
-	 */
-	public static function DestroyInstance()
-	{
-		self::$instance = null;
-	}
-
-	/**
 	 * Constructor
 	 *
 	 * @param boolean $enabled whether log should be enabled
 	 * @param boolean $benchmark whether benchmarking should be enabled
 	 */
-	private function __construct($enabled = false, $benchmark = false)
+	public function __construct($enabled = false, $benchmark = false)
 	{
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();

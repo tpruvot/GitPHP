@@ -101,14 +101,6 @@ try {
 		GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale', 'en_US'));
 	}
 
-	/*
-	 * Debug
-	 */
-	if (GitPHP_DebugLog::GetInstance()->GetEnabled()) {
-		GitPHP_DebugLog::GetInstance()->SetStartTime(GITPHP_START_TIME);
-		GitPHP_DebugLog::GetInstance()->SetStartMemory(GITPHP_START_MEM);
-	}
-
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
 		$controller->RenderHeaders();
@@ -147,17 +139,17 @@ try {
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 
-$log = $controller->GetLog();
-if ($log && $log->GetEnabled()) {
-	$entries = $log->GetEntries();
-	foreach ($entries as $logline) {
-		echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
+if (isset($controller)) {
+	$log = $controller->GetLog();
+	if ($log && $log->GetEnabled()) {
+		$entries = $log->GetEntries();
+		foreach ($entries as $logline) {
+			echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
+		}
+		unset($logline);
+		unset($entries);
 	}
-	unset($logline);
-	unset($entries);
+	unset($controller);
 }
-unset($controller);
-
-GitPHP_DebugLog::DestroyInstance();
 
 ?>
