@@ -146,7 +146,6 @@ try {
 
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
-GitPHP_GitExe::DestroyInstance();
 
 if (GitPHP_DebugLog::GetInstance()->GetEnabled()) {
 	$entries = GitPHP_DebugLog::GetInstance()->GetEntries();

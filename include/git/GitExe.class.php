@@ -67,13 +67,6 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 {
 
 	/**
-	 * The singleton instance
-	 *
-	 * @var GitPHP_GitExe
-	 */
-	protected static $instance;
-
-	/**
 	 * The binary path
 	 *
 	 * @var string
@@ -102,33 +95,11 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	protected $observers = array();
 
 	/**
-	 * Returns the singleton instance
-	 *
-	 * @return GitPHP_GitExe instance of git exe classe
-	 */
-	public static function GetInstance()
-	{
-		if (!self::$instance) {
-			self::$instance = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
-			self::$instance->AddObserver(GitPHP_DebugLog::GetInstance());
-		}
-		return self::$instance;
-	}
-
-	/**
-	 * Releases the singleton instance
-	 */
-	public static function DestroyInstance()
-	{
-		self::$instance = null;
-	}
-
-	/**
 	 * Constructor
 	 *
 	 * @param string $binary path to git binary
 	 */
-	protected function __construct($binary)
+	public function __construct($binary)
 	{
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();

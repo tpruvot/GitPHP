@@ -128,9 +128,11 @@ abstract class GitPHP_ControllerBase
 	 */
 	protected function InitializeGitExe($validate = true)
 	{
-		$this->exe = GitPHP_GitExe::GetInstance();
+		$this->exe = new GitPHP_GitExe($this->config->GetValue('gitbin'));
+		if ($this->log)
+			$this->exe->AddObserver($this->log);
 		if ($validate && !$this->exe->Valid()) {
-			throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), GitPHP_GitExe::GetInstance()->GetBinary(), 'gitbin'), true, 500);
+			throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $this->exe->GetBinary(), 'gitbin'), true, 500);
 		}
 	}
 
