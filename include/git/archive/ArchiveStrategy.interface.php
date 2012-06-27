@@ -10,6 +10,13 @@
 interface GitPHP_ArchiveStrategy_Interface
 {
 	/**
+	 * Set executable for this archive
+	 *
+	 * @param GitPHP_GitExe $exe git exe
+	 */
+	public function SetExe($exe);
+
+	/**
 	 * Open a descriptor for this archive
 	 *
 	 * @param GitPHP_Archive $archive archive

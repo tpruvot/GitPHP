@@ -96,20 +96,21 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$strategy = null;
 		if ($this->params['format'] == GITPHP_COMPRESS_TAR) {
-			$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+			$strategy = new GitPHP_Archive_Tar();
 		} else if ($this->params['format'] == GITPHP_COMPRESS_BZ2) {
-			$strategy = new GitPHP_Archive_Bzip2(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			$strategy = new GitPHP_Archive_Bzip2($this->config->GetValue('compresslevel'));
 			if (!$strategy->Valid())
-				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_Archive_Tar();
 		} else if ($this->params['format'] == GITPHP_COMPRESS_GZ) {
-			$strategy = new GitPHP_Archive_Gzip(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			$strategy = new GitPHP_Archive_Gzip($this->config->GetValue('compresslevel'));
 			if (!$strategy->Valid())
-				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_Archive_Tar();
 		} else if ($this->params['format'] == GITPHP_COMPRESS_ZIP) {
-			$strategy = new GitPHP_Archive_Zip(GitPHP_GitExe::GetInstance(), $this->config->GetValue('compresslevel'));
+			$strategy = new GitPHP_Archive_Zip($this->config->GetValue('compresslevel'));
 			if (!$strategy->Valid())
-				$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_Archive_Tar();
 		}
+		$strategy->SetExe(GitPHP_GitExe::GetInstance());
 
 		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 		$commit = null;

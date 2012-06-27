@@ -303,19 +303,19 @@ class GitPHP_Archive
 	{
 		$formats = array();
 
-		$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Tar();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_TAR] = $strategy->Extension();
 	
-		$strategy = new GitPHP_Archive_Zip(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Zip();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_ZIP] = $strategy->Extension();
 
-		$strategy = new GitPHP_Archive_Bzip2(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Bzip2();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_BZ2] = $strategy->Extension();
 
-		$strategy = new GitPHP_Archive_Gzip(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Gzip();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_GZ] = $strategy->Extension();
 
