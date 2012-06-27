@@ -84,7 +84,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		$skip = $this->params['page'] * 100;
 		$strategy = null;
 		if ($compat || ($skip > $this->config->GetValue('largeskip', 200))) {
-			$strategy = new GitPHP_LogLoad_Git(GitPHP_GitExe::GetInstance());
+			$strategy = new GitPHP_LogLoad_Git($this->exe);
 		} else {
 			$strategy = new GitPHP_LogLoad_Raw();
 		}

@@ -64,7 +64,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 		$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
 		if ($compat) {
-			$strategy = new GitPHP_LogLoad_Git(GitPHP_GitExe::GetInstance());
+			$strategy = new GitPHP_LogLoad_Git($this->exe);
 		} else {
 			$strategy = new GitPHP_LogLoad_Raw();
 		}

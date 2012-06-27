@@ -88,7 +88,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		$blame = new GitPHP_FileBlame($this->GetProject(), $commit, $this->params['file'], GitPHP_GitExe::GetInstance());
+		$blame = new GitPHP_FileBlame($this->GetProject(), $commit, $this->params['file'], $this->exe);
 
 		$this->tpl->assign('blame', $blame->GetBlame());
 

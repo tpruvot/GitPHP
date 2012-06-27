@@ -23,6 +23,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+
+		$this->exe = GitPHP_GitExe::GetInstance();
+
 		$this->InitializeProjectList();
 
 		if (isset($_GET['p'])) {
@@ -110,7 +113,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			if (!$strategy->Valid())
 				$strategy = new GitPHP_Archive_Tar();
 		}
-		$strategy->SetExe(GitPHP_GitExe::GetInstance());
+		$strategy->SetExe($this->exe);
 
 		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 		$commit = null;
