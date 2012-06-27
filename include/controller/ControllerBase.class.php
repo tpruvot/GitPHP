@@ -377,8 +377,8 @@ abstract class GitPHP_ControllerBase
 			$fullscripturl = 'http://';
 		$fullscripturl .= $_SERVER['HTTP_HOST'] . $scripturl;
 
-		if (GitPHP_Config::GetInstance()->HasKey('self')) {
-			$selfurl = GitPHP_Config::GetInstance()->GetValue('self');
+		if ($this->config->HasKey('self')) {
+			$selfurl = $this->config->GetValue('self');
 			if (!empty($selfurl)) {
 				if (substr($selfurl, -4) != '.php') {
 					$selfurl = GitPHP_Util::AddSlash($selfurl);
