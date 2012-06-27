@@ -45,13 +45,21 @@ class GitPHP_FileHistory implements Iterator
 	protected $dataLoaded = false;
 
 	/**
+	 * Executable
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
 	 * @param GitPHP_Commit $commit commit to start history from
 	 * @param string $path file path to trace history of
+	 * @param GitPHP_GitExe $exe git exe
 	 */
-	public function __construct($project, $commit, $path)
+	public function __construct($project, $commit, $path, $exe)
 	{
 		if (!$project)
 			throw new Exception('Project is required');
@@ -62,11 +70,16 @@ class GitPHP_FileHistory implements Iterator
 		if (empty($path))
 			throw new Exception('Path is required');
 
+		if (!$exe)
+			throw new Exception('Git exe is required');
+
 		$this->project = $project;
 
 		$this->commitHash = $commit->GetHash();
 
 		$this->path = $path;
+
+		$this->exe = $exe;
 	}
 
 	/**
@@ -122,7 +135,7 @@ class GitPHP_FileHistory implements Iterator
 		$args = array();
 		$args[] = $this->commitHash;
 		$args[] = '|';
-		$args[] = GitPHP_GitExe::GetInstance()->GetBinary();
+		$args[] = $this->exe->GetBinary();
 		$args[] = '--git-dir=' . $this->project->GetPath();
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
@@ -130,7 +143,7 @@ class GitPHP_FileHistory implements Iterator
 		$args[] = '--';
 		$args[] = $this->path;
 		
-		$historylines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->project->GetPath(), GIT_REV_LIST, $args));
+		$historylines = explode("\n", $this->exe->Execute($this->project->GetPath(), GIT_REV_LIST, $args));
 
 		$commitHash = null;
 		foreach ($historylines as $line) {
