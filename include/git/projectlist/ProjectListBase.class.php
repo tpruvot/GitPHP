@@ -129,7 +129,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Get memory cache instance
 	 *
-	 * @access public
 	 * @return GitPHP_MemoryCache|null
 	 */
 	public function GetMemoryCache()
@@ -140,7 +139,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Set memory cache instance
 	 *
-	 * @access public
 	 * @param GitPHP_MemoryCache|null $memoryCache memory cache instance
 	 */
 	public function SetMemoryCache($memoryCache)
@@ -151,7 +149,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Get object cache instance
 	 *
-	 * @access public
 	 * @return GitPHP_Cache|null object cache
 	 */
 	public function GetCache()
@@ -162,7 +159,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Set object cache instance
 	 *
-	 * @access public
 	 * @param GitPHP_Cache|null $cache object cache instance
 	 */
 	public function SetCache($cache)
