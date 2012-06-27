@@ -182,6 +182,16 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
+	 * Get log instance
+	 *
+	 * @return GitPHP_DebugLog
+	 */
+	public function GetLog()
+	{
+		return $this->log;
+	}
+
+	/**
 	 * Disable logging
 	 */
 	protected function DisableLogging()

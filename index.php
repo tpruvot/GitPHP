@@ -84,6 +84,7 @@ if ((!isset($_COOKIE[GitPHP_Resource::LocaleCookie])) || empty($_COOKIE[GitPHP_R
 
 }
 
+$log = null;
 
 try {
 
@@ -113,7 +114,6 @@ try {
 		$controller->RenderHeaders();
 		$controller->Render();
 	}
-	unset($controller);
 
 } catch (Exception $e) {
 
@@ -129,32 +129,34 @@ try {
 		GitPHP_Resource::Instantiate('en_US');
 	}
 
-	$controller = new GitPHP_Controller_Message();
-	$controller->SetParam('message', $e->getMessage());
+	$messageController = new GitPHP_Controller_Message();
+	$messageController->SetParam('message', $e->getMessage());
 	if ($e instanceof GitPHP_MessageException) {
-		$controller->SetParam('error', $e->Error);
-		$controller->SetParam('statuscode', $e->StatusCode);
+		$messageController->SetParam('error', $e->Error);
+		$messageController->SetParam('statuscode', $e->StatusCode);
 	} else {
-		$controller->SetParam('error', true);
+		$messageController->SetParam('error', true);
 	}
-	$controller->RenderHeaders();
-	$controller->Render();
+	$messageController->RenderHeaders();
+	$messageController->Render();
 
-	unset($controller);
+	unset($messageController);
 
 }
 
 GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 
-if (GitPHP_DebugLog::GetInstance()->GetEnabled()) {
-	$entries = GitPHP_DebugLog::GetInstance()->GetEntries();
+$log = $controller->GetLog();
+if ($log && $log->GetEnabled()) {
+	$entries = $log->GetEntries();
 	foreach ($entries as $logline) {
 		echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
 	}
 	unset($logline);
 	unset($entries);
 }
+unset($controller);
 
 GitPHP_DebugLog::DestroyInstance();
 
