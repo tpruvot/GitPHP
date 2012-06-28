@@ -25,7 +25,7 @@ class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interf
 			return false;
 
 		$mime = '';
-		$finfo = @finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb', null));
+		$finfo = @finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb'));
 		if ($finfo) {
 			$mime = finfo_buffer($finfo, $data, FILEINFO_MIME);
 			if ($mime && strpos($mime, '/')) {

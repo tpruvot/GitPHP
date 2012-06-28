@@ -82,7 +82,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				$headers = array();
 
 				$mime = null;
-				if ($this->config->GetValue('filemimetype', true)) {
+				if ($this->config->GetValue('filemimetype')) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
@@ -139,7 +139,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
-		if ($this->config->GetValue('filemimetype', true)) {
+		if ($this->config->GetValue('filemimetype')) {
 			$mimeReader = new GitPHP_FileMimeTypeReader($blob);
 			$mimetype = $mimeReader->GetMimeType(true);
 			if ($mimetype == 'image') {
@@ -150,7 +150,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 		}
 
-		if ($this->config->GetValue('geshi', true)) {
+		if ($this->config->GetValue('geshi')) {
 			include_once(GITPHP_GESHIDIR . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');

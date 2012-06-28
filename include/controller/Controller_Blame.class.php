@@ -98,7 +98,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
-		if ($this->config->GetValue('geshi', true)) {
+		if ($this->config->GetValue('geshi')) {
 			include_once(GITPHP_GESHIDIR . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');

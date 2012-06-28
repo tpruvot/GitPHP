@@ -163,13 +163,13 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->merge_compiled_includes = true;
 		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
-		if ($this->config->GetValue('cache', false)) {
+		if ($this->config->GetValue('cache')) {
 			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
 			if ($this->config->HasKey('cachelifetime')) {
 				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
 			}
 
-			$servers = $this->config->GetValue('memcache', null);
+			$servers = $this->config->GetValue('memcache');
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
 				$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
 				$this->tpl->caching_type = 'memcache';
@@ -197,9 +197,9 @@ abstract class GitPHP_ControllerBase
 		if ($this->log)
 			return;
 
-		$debug = $this->config->GetValue('debug', false);
+		$debug = $this->config->GetValue('debug');
 		if ($debug) {
-			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark', false));
+			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark'));
 			$this->log->SetStartTime(GITPHP_START_TIME);
 			$this->log->SetStartMemory(GITPHP_START_MEM);
 			if ($this->exe)
@@ -343,31 +343,39 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->assign('version', $gitphp_version);
 
-		$stylesheet = $this->config->GetValue('stylesheet', 'gitphpskin.css');
+		$stylesheet = $this->config->GetValue('stylesheet');
 		if ($stylesheet == 'gitphp.css') {
 			// backwards compatibility
 			$stylesheet = 'gitphpskin.css';
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
-		$this->tpl->assign('javascript', $this->config->GetValue('javascript', true));
-		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs', false));
-		$this->tpl->assign('pagetitle', $this->config->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', $this->config->GetValue('homelink', __('projects')));
+		$this->tpl->assign('javascript', $this->config->GetValue('javascript'));
+		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs'));
+		if ($this->config->HasKey('title')) {
+			$this->tpl->assign('pagetitle', $this->config->GetValue('title'));
+		} else {
+			$this->tpl->assign('pagetitle', $gitphp_appstring);
+		}
+		if ($this->config->HasKey('homelink')) {
+			$this->tpl->assign('homelink', $this->config->GetValue('homelink'));
+		} else {
+			$this->tpl->assign('homelink', __('projects'));
+		}
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->GetProject());
-		if ($this->config->GetValue('search', true))
+		if ($this->config->GetValue('search'))
 			$this->tpl->assign('enablesearch', true);
-		if ($this->config->GetValue('filesearch', true))
+		if ($this->config->GetValue('filesearch'))
 			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
 		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
-		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales($this->config->GetValue('debug', false)));
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales($this->config->GetValue('debug')));
 
 		$scripturl = $_SERVER['SCRIPT_NAME'];
 		$fullscripturl = '';
@@ -425,7 +433,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
-		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
+		if (($this->config->GetValue('cache') == true) && ($this->config->GetValue('cacheexpire') === true))
 			$this->CacheExpire();
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {

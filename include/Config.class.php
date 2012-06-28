@@ -44,6 +44,13 @@ class GitPHP_Config
 	protected $values = array();
 
 	/**
+	 * Stores the default values
+	 *
+	 * @var array
+	 */
+	protected $defaults = array();
+
+	/**
 	 * Stores the config files
 	 *
 	 * @var string[]
@@ -76,6 +83,7 @@ class GitPHP_Config
 	 */
 	private function __construct()
 	{
+		$this->InitializeDefaults();
 	}
 
 	/**
@@ -117,15 +125,15 @@ class GitPHP_Config
 	 * Gets a config value
 	 *
 	 * @param string $key config key to fetch
-	 * @param mixed $default default config value to return
 	 * @return mixed config value
 	 */
-	public function GetValue($key, $default = null)
+	public function GetValue($key)
 	{
 		if ($this->HasKey($key)) {
 			return $this->values[$key];
 		}
-		return $default;
+
+		return null;
 	}
 
 	/**
@@ -158,6 +166,30 @@ class GitPHP_Config
 			return false;
 		}
 		return isset($this->values[$key]);
+	}
+
+	/**
+	 * Initializes default config values
+	 */
+	private function InitializeDefaults()
+	{
+		$this->values['objectmemory'] = 0;
+		$this->values['objectcache'] = false;
+		$this->values['objectcachelifetime'] = 86400;
+		$this->values['cache'] = false;
+		$this->values['debug'] = false;
+		$this->values['benchmark'] = false;
+		$this->values['stylesheet'] = 'gitphpskin.css';
+		$this->values['javascript'] = true;
+		$this->values['googlejs'] = false;
+		$this->values['search'] = true;
+		$this->values['filesearch'] = true;
+		$this->values['cacheexpire'] = true;
+		$this->values['largeskip'] = 200;
+		$this->values['filemimetype'] = true;
+		$this->values['geshi'] = true;
+		$this->values['exportedonly'] = false;
+		$this->values['compressformat'] = GITPHP_COMPRESS_ZIP;
 	}
 
 }

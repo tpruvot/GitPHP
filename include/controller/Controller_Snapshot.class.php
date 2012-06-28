@@ -89,7 +89,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($_GET['fmt']))
 			$this->params['format'] = $_GET['fmt'];
 		else
-			$this->params['format'] = $this->config->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+			$this->params['format'] = $this->config->GetValue('compressformat');
 	}
 
 	/**
@@ -146,7 +146,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->LoadData();
 
-		$cache = $this->config->GetValue('cache', false);
+		$cache = $this->config->GetValue('cache');
 		$cachehandle = false;
 		$cachefile = '';
 		if ($cache && is_dir(GITPHP_CACHEDIR)) {
