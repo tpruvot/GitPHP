@@ -190,6 +190,7 @@ class GitPHP_Config
 		$this->values['geshi'] = true;
 		$this->values['exportedonly'] = false;
 		$this->values['compressformat'] = GITPHP_COMPRESS_ZIP;
+		$this->values['locale'] = 'en_US';
 	}
 
 }

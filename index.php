@@ -96,7 +96,7 @@ try {
 	 * with en_US as the fallback
 	 */
 	if (!GitPHP_Resource::Instantiated()) {
-		GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale', 'en_US'));
+		GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale'));
 	}
 
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
@@ -107,7 +107,7 @@ try {
 
 } catch (Exception $e) {
 
-	if (GitPHP_Config::GetInstance()->GetValue('debug', false) && !($e instanceof GitPHP_MessageException)) {
+	if (GitPHP_Config::GetInstance()->GetValue('debug') && !($e instanceof GitPHP_MessageException)) {
 		throw $e;
 	}
 
