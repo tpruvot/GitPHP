@@ -25,16 +25,28 @@ function smarty_function_localfiletype($params, Smarty_Internal_Template $templa
 
 	switch ($type) {
 		case GitPHP_FilesystemObject::FileType:
-			$output = $resource->translate('file');
+			if ($resource)
+				$output = $resource->translate('file');
+			else
+				$output = 'file';
 			break;
 		case GitPHP_FilesystemObject::SymlinkType:
-			$output = $resource->translate('symlink');
+			if ($resource)
+				$output = $resource->translate('symlink');
+			else
+				$output = 'symlink';
 			break;
 		case GitPHP_FilesystemObject::DirectoryType:
-			$output = $resource->translate('directory');
+			if ($resource)
+				$output = $resource->translate('directory');
+			else
+				$output = 'directory';
 			break;
 		default:
-			$output = $resource->translate('unknown');
+			if ($resource)
+				$output = $resource->translate('unknown');
+			else
+				$output = 'unknown';
 			break;
 	}
 
