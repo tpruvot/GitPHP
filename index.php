@@ -84,8 +84,6 @@ if ((!isset($_COOKIE[GitPHP_Resource::LocaleCookie])) || empty($_COOKIE[GitPHP_R
 
 }
 
-$log = null;
-
 try {
 
 	/*
