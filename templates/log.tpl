@@ -41,7 +41,7 @@
  </div>
  {foreach from=$revlist item=rev}
    <div class="title">
-     <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$rev->GetHash()}" class="title"><span class="age">{$rev->GetAge()|agestring}</span>{$rev->GetTitle()|escape:'html'}</a>
+     <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$rev->GetHash()}" class="title"><span class="age">{agestring age=$rev->GetAge()}</span>{$rev->GetTitle()|escape:'html'}</a>
      {include file='refbadges.tpl' commit=$rev}
    </div>
    <div class="title_text">
@@ -90,7 +90,7 @@
    </div>
    <div class="page_body">
      {if $commit}
-       {assign var=commitage value=$commit->GetAge()|agestring}
+       {agestring age=$commit->GetAge() assign=commitage}
        {t 1=$commitage}Last change %1{/t}
      {else}
      <em>{t}No commits{/t}</em>

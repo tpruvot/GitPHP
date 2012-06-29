@@ -15,7 +15,7 @@
 	   {assign var=object value=$tag->GetObject()}
 	   {assign var=tagcommit value=$tag->GetCommit()}
 	   {assign var=objtype value=$tag->GetType()}
-           <td><em>{if $tagcommit}{$tagcommit->GetAge()|agestring}{else}{$tag->GetAge()|agestring}{/if}</em></td>
+           <td><em>{if $tagcommit}{agestring age=$tagcommit->GetAge()}{else}{agestring age=$tag->GetAge()}{/if}</em></td>
            <td>
 	   {if $objtype == 'commit'}
 		   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$object->GetHash()}" class="list"><strong>{$tag->GetName()}</strong></a>

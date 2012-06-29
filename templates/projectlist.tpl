@@ -87,11 +87,11 @@ git source code archive
       <td class="projectAge">
         {if $projecthead}
           {if $proj->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
-            <span class="agehighlight"><strong><em>{$proj->GetAge()|agestring}</em></strong></span>
+            <span class="agehighlight"><strong><em>{agestring age=$proj->GetAge()}</em></strong></span>
           {elseif $proj->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
-            <span class="agehighlight"><em>{$proj->GetAge()|agestring}</em></span>
+            <span class="agehighlight"><em>{agestring age=$proj->GetAge()}</em></span>
           {else}
-            <em>{$proj->GetAge()|agestring}</em>
+            <em>{agestring age=$proj->GetAge()}</em>
           {/if}
 	{else}
 	  <em class="empty">{t}No commits{/t}</em>
