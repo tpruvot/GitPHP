@@ -9,6 +9,33 @@
  */
 abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 {
+	/**
+	 * Unknown type
+	 *
+	 * @const
+	 */
+	const UnknownType = 0;
+
+	/**
+	 * Directory type
+	 *
+	 * @const
+	 */
+	const DirectoryType = 1;
+
+	/**
+	 * Symlink type
+	 *
+	 * @const
+	 */
+	const SymlinkType = 2;
+
+	/**
+	 * File type
+	 *
+	 * @const
+	 */
+	const FileType = 3;
 
 	/**
 	 * The object path
@@ -238,6 +265,27 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 		if (count($this->pathTree) > 0) {
 			$this->pathTree = array_reverse($this->pathTree);
 		}
+	}
+
+	/**
+	 * Gets a filesystem object type from its octal mode
+	 *
+	 * @param string $octMode octal mode
+	 * @return int file type
+	 */
+	public static function ObjectType($octMode)
+	{
+		$mode = octdec($octMode);
+
+		if (($mode & 0x4000) == 0x4000) {
+			return GitPHP_FilesystemObject::DirectoryType;
+		} else if (($mode & 0xA000) == 0xA000) {
+			return GitPHP_FilesystemObject::SymlinkType;
+		} else if (($mode & 0x8000) == 0x8000) {
+			return GitPHP_FilesystemObject::FileType;
+		}
+
+		return GitPHP_FilesystemObject::UnknownType;
 	}
 
 	/**

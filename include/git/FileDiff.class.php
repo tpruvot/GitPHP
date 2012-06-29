@@ -390,29 +390,27 @@ class GitPHP_FileDiff
 	/**
 	 * Gets the from file type
 	 *
-	 * @param boolean $local true if caller wants localized type
-	 * @return string from file type
+	 * @return int from file type
 	 */
-	public function GetFromFileType($local = false)
+	public function GetFromFileType()
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->fromMode, $local);
+		return GitPHP_FilesystemObject::ObjectType($this->fromMode);
 	}
 
 	/**
 	 * Gets the to file type
 	 *
-	 * @param boolean $local true if caller wants localized type
-	 * @return string to file type
+	 * @return int to file type
 	 */
-	public function GetToFileType($local = false)
+	public function GetToFileType()
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->toMode, $local);
+		return GitPHP_FilesystemObject::ObjectType($this->toMode);
 	}
 
 	/**
