@@ -183,6 +183,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.', $exception->Executable, 'gitbin');
 		}
 
+		if ($exception instanceof GitPHP_MissingProjectrootException) {
+			if ($this->resource)
+				return $this->resource->translate('A projectroot must be set in the config');
+			return 'A projectroot must be set in the config';
+		}
+
 		return $exception->getMessage();
 	}
 

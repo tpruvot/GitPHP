@@ -76,7 +76,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		$this->projects = array();
 		$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
 		if (empty($this->projectRoot)) {
-			throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true, 500);
+			throw new GitPHP_MissingProjectrootException();
 		}
 		if (!$this->IsDir($this->projectRoot)) {
 			throw new Exception(sprintf(__('%1$s is not a directory'), $this->projectRoot));
