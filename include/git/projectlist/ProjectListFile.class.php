@@ -120,7 +120,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 		$fileString = file_get_contents($this->projectConfig);
 		
 		if ($fileString === false) {
-			throw new GitPHP_MessageException(sprintf(__('Failed to open project list file %1$s'), $this->projectConfig));
+			throw new GitPHP_ProjectListFileReadException($this->projectConfig);
 		}
 
 		$this->fileContents = array();
