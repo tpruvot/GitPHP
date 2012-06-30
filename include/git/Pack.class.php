@@ -83,7 +83,7 @@ class GitPHP_Pack
 			throw new Exception('Project is required');
 
 		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
-			throw new GitPHP_MessageException(sprintf(__('Invalid hash %1$s'), $hash));
+			throw new GitPHP_InvalidHashException($hash);
 		}
 
 		if (!$objectLoader)

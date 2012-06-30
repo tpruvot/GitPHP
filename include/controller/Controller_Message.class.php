@@ -178,6 +178,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf($exception->MinimumLength == 1 ? 'You must enter search text of at least %1$d character' : 'You must enter search text of at least %1$d characters', $exception->MinimumLength);
 		}
 
+		if ($exception instanceof GitPHP_InvalidHashException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Invalid hash %1$s'), $exception->Hash);
+			return sprintf('Invalid hash %1$s', $exception->Hash);
+		}
+
 		return $exception->getMessage();
 	}
 
