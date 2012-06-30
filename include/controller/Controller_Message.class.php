@@ -184,6 +184,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('Invalid hash %1$s', $exception->Hash);
 		}
 
+		if ($exception instanceof GitPHP_InvalidGitExecutableException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $exception->Executable, 'gitbin');
+			return sprintf('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.', $exception->Executable, 'gitbin');
+		}
+
 		return $exception->getMessage();
 	}
 
