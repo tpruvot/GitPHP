@@ -189,6 +189,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return 'A projectroot must be set in the config';
 		}
 
+		if ($exception instanceof GitPHP_MissingMemcacheException) {
+			if ($this->resource)
+				return $this->resource->translate('The Memcached or Memcache PHP extension is required for Memcache support');
+			return 'The Memcached or Memcache PHP extension is required for Memcache support';
+		}
+
 		return $exception->getMessage();
 	}
 
