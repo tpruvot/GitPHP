@@ -38,8 +38,8 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('tags');
+		if ($local && $this->resource) {
+			return $this->resource->translate('tags');
 		}
 		return 'tags';
 	}

@@ -41,8 +41,8 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('tree');
+		if ($local && $this->resource) {
+			return $this->resource->translate('tree');
 		}
 		return 'tree';
 	}

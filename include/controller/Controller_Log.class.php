@@ -42,13 +42,13 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	public function GetName($local = false)
 	{
 		if (isset($this->params['short']) && ($this->params['short'] === true)) {
-			if ($local) {
-				return __('shortlog');
+			if ($local && $this->resource) {
+				return $this->resource->translate('shortlog');
 			}
 			return 'shortlog';
 		}
-		if ($local) {
-			return __('log');
+		if ($local && $this->resource) {
+			return $this->resource->translate('log');
 		}
 		return 'log';
 	}

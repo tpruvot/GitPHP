@@ -81,8 +81,8 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('search');
+		if ($local && $this->resource) {
+			return $this->resource->translate('search');
 		}
 		return 'search';
 	}

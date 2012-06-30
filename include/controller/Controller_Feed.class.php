@@ -73,13 +73,13 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	public function GetName($local = false)
 	{
 		if ($this->params['format'] == GitPHP_Controller_Feed::RssFormat) {
-			if ($local)
-				return __('rss');
+			if ($local && $this->resource)
+				return $this->resource->translate('rss');
 			else
 				return 'rss';
 		} else if ($this->params['format'] == GitPHP_Controller_Feed::AtomFormat) {
-			if ($local)
-				return __('atom');
+			if ($local && $this->resource)
+				return $this->resource->translate('atom');
 			else
 				return 'atom';
 		}

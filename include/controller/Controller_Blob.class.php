@@ -40,8 +40,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('blob');
+		if ($local && $this->resource) {
+			return $this->resource->translate('blob');
 		}
 		return 'blob';
 	}

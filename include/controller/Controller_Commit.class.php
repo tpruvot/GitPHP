@@ -41,8 +41,8 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('commit');
+		if ($local && $this->resource) {
+			return $this->resource->translate('commit');
 		}
 		return 'commit';
 	}

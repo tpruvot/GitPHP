@@ -18,6 +18,13 @@ abstract class GitPHP_ControllerBase
 	protected $config;
 
 	/**
+	 * Resource handler instance
+	 *
+	 * @var GitPHP_Resource
+	 */
+	protected $resource;
+
+	/**
 	 * Smarty instance
 	 *
 	 * @var Smarty
@@ -86,6 +93,9 @@ abstract class GitPHP_ControllerBase
 	public function __construct()
 	{
 		$this->config = GitPHP_Config::GetInstance();
+
+		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetLocale() != 'en_US'));
+			$this->resource = GitPHP_Resource::GetInstance();
 
 		$this->EnableLogging();
 
@@ -360,7 +370,10 @@ abstract class GitPHP_ControllerBase
 		if ($this->config->HasKey('homelink')) {
 			$this->tpl->assign('homelink', $this->config->GetValue('homelink'));
 		} else {
-			$this->tpl->assign('homelink', __('projects'));
+			if ($this->resource)
+				$this->tpl->assign('homelink', $this->resource->translate('projects'));
+			else
+				$this->tpl->assign('homelink', 'projects');
 		}
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));

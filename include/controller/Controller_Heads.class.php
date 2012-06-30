@@ -38,8 +38,8 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('heads');
+		if ($local && $this->resource) {
+			return $this->resource->translate('heads');
 		}
 		return 'heads';
 	}

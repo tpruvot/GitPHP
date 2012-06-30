@@ -38,8 +38,8 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('history');
+		if ($local && $this->resource) {
+			return $this->resource->translate('history');
 		}
 		return 'history';
 	}

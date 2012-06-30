@@ -41,8 +41,8 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('blobdiff');
+		if ($local && $this->resource) {
+			return $this->resource->translate('blobdiff');
 		}
 		return 'blobdiff';
 	}

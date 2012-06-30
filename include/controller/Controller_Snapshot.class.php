@@ -72,8 +72,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('snapshot');
+		if ($local && $this->resource) {
+			return $this->resource->translate('snapshot');
 		}
 		return 'snapshot';
 	}
