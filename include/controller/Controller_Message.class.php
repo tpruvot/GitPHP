@@ -59,7 +59,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return sha1($this->params['message']) . '|' . ($this->params['error'] ? '1' : '0');;
+		return sha1(serialize($this->params['exception']));
 	}
 
 	/**
@@ -90,8 +90,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['statuscode']) && !empty($this->params['statuscode'])) {
-			$partialHeader = $this->StatusCodeHeader($this->params['statuscode']);
+		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->StatusCode)) {
+			$partialHeader = $this->StatusCodeHeader($this->params['exception']->StatusCode);
 			if (!empty($partialHeader)) {
 				if (substr(php_sapi_name(), 0, 8) == 'cgi-fcgi') {
 					/*
@@ -110,8 +110,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('message', $this->params['message']);
-		if (isset($this->params['error']) && ($this->params['error'])) {
+		$this->tpl->assign('message', $this->params['exception']->getMessage());
+		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->Error)) {
 			$this->tpl->assign('error', true);
 		}
 		if ($this->project) {

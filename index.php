@@ -120,13 +120,7 @@ try {
 	}
 
 	$messageController = new GitPHP_Controller_Message();
-	$messageController->SetParam('message', $e->getMessage());
-	if ($e instanceof GitPHP_MessageException) {
-		$messageController->SetParam('error', $e->Error);
-		$messageController->SetParam('statuscode', $e->StatusCode);
-	} else {
-		$messageController->SetParam('error', true);
-	}
+	$messageController->SetParam('exception', $e);
 	$messageController->RenderHeaders();
 	$messageController->Render();
 
