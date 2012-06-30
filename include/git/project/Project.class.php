@@ -265,7 +265,7 @@ class GitPHP_Project
 		}
 
 		if (!is_file($fullPath . '/HEAD')) {
-			throw new GitPHP_MessageException(sprintf(__('%1$s is not a git repository'), $project));
+			throw new GitPHP_InvalidGitRepositoryException($project);
 		}
 
 		if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {

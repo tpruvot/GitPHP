@@ -214,6 +214,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('%1$s is not a file', $exception->File);
 		}
 
+		if ($exception instanceof GitPHP_InvalidGitRepositoryException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is not a git repository'), $exception->Repository);
+			return sprintf('%1$s is not a git repository', $exception->Repository);
+		}
+
 		return $exception->getMessage();
 	}
 
