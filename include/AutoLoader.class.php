@@ -71,12 +71,13 @@ class GitPHP_AutoLoader
 			$path = 'git/log/';
 		} else if (strncmp($classname, 'Archive', 7) === 0) {
 			$path = 'git/archive/';
+		} else if ((strlen($classname) > 9) && (substr_compare($classname, 'Exception', -9, 9) === 0)) {
+			$path = 'exception/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
 		} else if (in_array($classname, array(
 				'Config',
 				'DebugLog',
-				'MessageException',
 				'Resource',
 				'Util'
 			))) {
