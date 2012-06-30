@@ -97,8 +97,6 @@ class GitPHP_Resource
 	 */
 	public static function LocaleToName($locale)
 	{
-		$localeName = __('English');		// for xgettext extraction
-
 		$localeReader = null;
 		if (self::$currentLocale == $locale) {
 			$localeReader = self::$instance;
