@@ -102,6 +102,10 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		}
 
+		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch)) {
+			throw new GitPHP_MessageException(__('Invalid search type'), true);
+		}
+
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
 			throw new GitPHP_MessageException(sprintf(__n('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
 		}
@@ -149,10 +153,6 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 			case GitPHP_Controller_Search::FileSearch:
 				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], $this->exe, 101, $skip);
-				break;
-
-			default:
-				throw new GitPHP_MessageException(__('Invalid search type'));
 				break;
 		}
 
