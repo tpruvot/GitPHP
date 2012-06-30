@@ -113,7 +113,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			throw new GitPHP_MissingProjectrootException();
 		}
 		if (!is_dir($this->projectRoot)) {
-			throw new GitPHP_MessageException(sprintf(__('%1$s is not a directory'), $this->projectRoot), true, 500);
+			throw new GitPHP_InvalidDirectoryConfigurationException($this->projectRoot);
 		}
 
 		$this->memoryCache = new GitPHP_MemoryCache(GitPHP_Config::GetInstance()->GetValue('objectmemory'));
