@@ -16,6 +16,9 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
+		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetLocale() != 'en_US'));
+			$this->resource = GitPHP_Resource::GetInstance();
+
 		$this->InitializeGitExe(false);
 
 		try {
@@ -138,6 +141,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		if (!$exception)
 			return;
+
+		if ($exception instanceof GitPHP_InvalidProjectParameterException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Invalid project %1$s'), $exception->Project);
+			return sprintf('Invalid project %1$s', $exception->Project);
+		}
 
 		return $exception->getMessage();
 	}

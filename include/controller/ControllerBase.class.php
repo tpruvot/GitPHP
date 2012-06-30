@@ -112,7 +112,7 @@ abstract class GitPHP_ControllerBase
 		if (isset($_GET['p'])) {
 			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+				throw new GitPHP_InvalidProjectParameterException($_GET['p']);
 			}
 			$this->project = $project->GetProject();
 		}
