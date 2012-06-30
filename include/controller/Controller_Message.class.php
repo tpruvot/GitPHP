@@ -166,6 +166,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			}
 		}
 
+		if ($exception instanceof GitPHP_InvalidSearchTypeException) {
+			if ($this->resource)
+				return $this->resource->translate('Invalid search type');
+			return 'Invalid search type';
+		}
+
 		return $exception->getMessage();
 	}
 

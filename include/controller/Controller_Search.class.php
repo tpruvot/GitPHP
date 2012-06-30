@@ -103,7 +103,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		}
 
 		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch)) {
-			throw new GitPHP_MessageException(__('Invalid search type'), true);
+			throw new GitPHP_InvalidSearchTypeException();
 		}
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
