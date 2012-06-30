@@ -154,6 +154,18 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return 'Project is required';
 		}
 
+		if ($exception instanceof GitPHP_SearchDisabledException) {
+			if ($exception->FileSearch) {
+				if ($this->resource)
+					return $this->resource->translate('File search has been disabled');
+				return 'File search has been disabled';
+			} else {
+				if ($this->resource)
+					return $this->resource->translate('Search has been disabled');
+				return 'Search has been disabled';
+			}
+		}
+
 		return $exception->getMessage();
 	}
 
