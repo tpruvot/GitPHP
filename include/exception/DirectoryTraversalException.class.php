@@ -23,7 +23,7 @@ class GitPHP_DirectoryTraversalException extends GitPHP_MessageException
 	 * @param string $message message
 	 * @param int $code exception code
 	 */
-	public function __construct($file, $message = '', $code = 0)
+	public function __construct($path, $message = '', $code = 0)
 	{
 		$this->Path = $path;
 		if (empty($message))
