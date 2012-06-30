@@ -226,6 +226,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('Failed to open project list file %1$s', $exception->File);
 		}
 
+		if ($exception instanceof GitPHP_DirectoryTraversalException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is attempting directory traversal'), $exception->Path);
+			return sprintf('%1$s is attempting directory traversal', $exception->Path);
+		}
+
 		return $exception->getMessage();
 	}
 

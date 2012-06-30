@@ -269,7 +269,7 @@ class GitPHP_Project
 		}
 
 		if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {
-			throw new GitPHP_MessageException(sprintf(__('%1$s is attempting directory traversal'), $project));
+			throw new GitPHP_DirectoryTraversalException($project);
 		}
 
 		$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
