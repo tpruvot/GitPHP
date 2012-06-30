@@ -275,7 +275,7 @@ class GitPHP_Project
 		$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
 		if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
-			throw new GitPHP_MessageException(sprintf(__('%1$s is outside of the projectroot'), $project));
+			throw new GitPHP_ProjectrootBoundException($project);
 		}
 
 		$this->project = $project;

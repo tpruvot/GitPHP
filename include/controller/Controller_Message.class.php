@@ -232,6 +232,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('%1$s is attempting directory traversal', $exception->Path);
 		}
 
+		if ($exception instanceof GitPHP_ProjectrootBoundException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is outside of the projectroot'), $exception->Path);
+			return sprintf('%1$s is outside of the projectroot', $exception->Path);
+		}
+
 		return $exception->getMessage();
 	}
 
