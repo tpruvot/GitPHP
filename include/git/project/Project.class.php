@@ -718,7 +718,9 @@ class GitPHP_Project
 		}
 
 		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
-			return $this->GetCommit($this->ExpandHash($hash));
+			$fullHash = $this->ExpandHash($hash);
+			if ($fullHash != $hash)
+				return $this->GetCommit($fullHash);
 		}
 
 		return null;
