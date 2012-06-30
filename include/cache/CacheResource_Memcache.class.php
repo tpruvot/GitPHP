@@ -79,7 +79,7 @@ class GitPHP_CacheResource_Memcache extends Smarty_CacheResource_KeyValueStore
 			}
 
 		} else {
-			throw new GitPHP_MessageException(__('The Memcached or Memcache PHP extension is required for Memcache support'), true, 500);
+			throw new GitPHP_MissingMemcacheException();
 		}
 
 		$this->servers = $servers;
