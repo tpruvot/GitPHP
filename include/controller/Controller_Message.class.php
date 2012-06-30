@@ -172,6 +172,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return 'Invalid search type';
 		}
 
+		if ($exception instanceof GitPHP_SearchLengthException) {
+			if ($this->resource)
+				return sprintf($this->resource->ngettext('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', $exception->MinimumLength), $exception->MinimumLength);
+			return sprintf($exception->MinimumLength == 1 ? 'You must enter search text of at least %1$d character' : 'You must enter search text of at least %1$d characters', $exception->MinimumLength);
+		}
+
 		return $exception->getMessage();
 	}
 

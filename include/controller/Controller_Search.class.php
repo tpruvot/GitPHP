@@ -107,7 +107,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		}
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-			throw new GitPHP_MessageException(sprintf(__n('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
+			throw new GitPHP_SearchLengthException(2);
 		}
 
 		if (isset($_GET['h']))
