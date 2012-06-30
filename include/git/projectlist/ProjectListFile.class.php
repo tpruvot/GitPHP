@@ -34,7 +34,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	public function __construct($projectRoot, $projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new GitPHP_MessageException(sprintf(__('%1$s is not a file'), $projectFile));
+			throw new GitPHP_InvalidFileException($projectFile);
 		}
 
 		$this->projectConfig = $projectFile;
