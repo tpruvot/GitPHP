@@ -140,6 +140,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 				return sprintf($this->resource->translate('Invalid project %1$s'), $exception->Project);
 			return sprintf('Invalid project %1$s', $exception->Project);
 		}
+		
+		if ($exception instanceof GitPHP_MissingProjectParameterException) {
+			if ($this->resource)
+				return $this->resource->translate('Project is required');
+			return 'Project is required';
+		}
 
 		return $exception->getMessage();
 	}

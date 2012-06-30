@@ -108,7 +108,7 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if (!($this->project || $this->multiProject)) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new GitPHP_MissingProjectParameterException();
 		}
 
 		if ($this->multiProject) {
