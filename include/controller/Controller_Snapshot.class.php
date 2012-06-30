@@ -37,7 +37,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		}
 
 		if (!$this->project) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
+			throw new GitPHP_MissingProjectParameterException();
 		}
 
 		$this->preserveWhitespace = true;
