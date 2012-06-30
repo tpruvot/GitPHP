@@ -23,7 +23,10 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 		} catch (Exception $e) {
 		}
 
-		$this->InitializeSmarty();
+		try {
+			$this->InitializeSmarty();
+		} catch (Exception $e) {
+		}
 
 		if (isset($_GET['p']) && $this->projectList) {
 			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
@@ -115,9 +118,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			$this->tpl->assign('error', true);
 		}
 		if ($this->project) {
-			$co = $this->GetProject()->GetCommit($this->params['hash']);
-			if ($co) {
-				$this->tpl->assign('commit', $co);
+			try {
+				$co = $this->GetProject()->GetCommit($this->params['hash']);
+				if ($co) {
+					$this->tpl->assign('commit', $co);
+				}
+			} catch (Exception $e) {
 			}
 		}
 	}
