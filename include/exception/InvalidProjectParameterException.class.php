@@ -20,12 +20,14 @@ class GitPHP_InvalidProjectParameterException extends GitPHP_MessageException
 	 * Constructor
 	 *
 	 * @param string $project project
+	 * @param string $message message
 	 * @param int $code code
 	 */
-	public function __construct($project, $code = 0)
+	public function __construct($project, $message = '', $code = 0)
 	{
 		$this->Project = $project;
-		$message = sprintf('Invalid project %1$s', $project);
+		if (empty($message))
+			$message = sprintf('Invalid project %1$s', $project);
 		parent::__construct($message, true, 200, $code); 
 	}
 }
