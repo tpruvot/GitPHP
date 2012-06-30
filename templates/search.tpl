@@ -35,6 +35,7 @@
 
 {include file='title.tpl' titlecommit=$commit}
 
+{if $results}
 <table>
   {* Print each match *}
   {foreach from=$results item=result}
@@ -73,5 +74,10 @@
     </tr>
   {/if}
 </table>
+{else}
+<div class="message">
+{t 1=$search}No matches for "%1"{/t}
+</div>
+{/if}
 
 {/block}

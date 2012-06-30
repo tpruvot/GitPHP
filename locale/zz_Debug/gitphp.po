@@ -425,8 +425,8 @@ msgstr "{Invălĩd sėąrch typė••••••}"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:165
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "{Nō mątchēs fōr \"*%1$s*\"•••••••}"
+msgid "No matches for \"%1\""
+msgstr "{Nō mątchēs fōr \"*%1*\"•••••••}"
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:179

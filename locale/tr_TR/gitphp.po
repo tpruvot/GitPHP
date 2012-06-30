@@ -500,8 +500,8 @@ msgstr "Geçersiz arama türü"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:168
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "\"%1$s\" için eşleşme yok"
+msgid "No matches for \"%1\""
+msgstr "\"%1\" için eşleşme yok"
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:166

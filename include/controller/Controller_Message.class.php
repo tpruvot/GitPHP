@@ -113,7 +113,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('message', $this->params['exception']->getMessage());
+		$this->tpl->assign('message', $this->ExceptionToMessage($this->params['exception']));
 		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->Error)) {
 			$this->tpl->assign('error', true);
 		}
@@ -126,6 +126,20 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			} catch (Exception $e) {
 			}
 		}
+	}
+
+	/**
+	 * Gets the user-displayed message for an exception
+	 *
+	 * @param Exception $exception exception
+	 * @return string message
+	 */
+	private function ExceptionToMessage($exception)
+	{
+		if (!$exception)
+			return;
+
+		return $exception->getMessage();
 	}
 
 	/**

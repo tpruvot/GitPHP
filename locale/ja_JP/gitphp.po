@@ -437,8 +437,8 @@ msgstr "無効な検索タイプ"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:168
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "\"%1$s\"にマッチするものはありません"
+msgid "No matches for \"%1\""
+msgstr "\"%1\"にマッチするものはありません"
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:166

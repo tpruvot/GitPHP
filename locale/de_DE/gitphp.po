@@ -428,8 +428,8 @@ msgstr "Ungültiger Suchparameter"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:165
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "Keine Ergebnisse für \"%1$s\""
+msgid "No matches for \"%1\""
+msgstr "Keine Ergebnisse für \"%1\""
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:179

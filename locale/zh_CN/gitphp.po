@@ -429,8 +429,8 @@ msgstr "错误的搜索类型"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:168
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "与找到与 \"%1$s\" 匹配的项目"
+msgid "No matches for \"%1\""
+msgstr "与找到与 \"%1\" 匹配的项目"
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:162

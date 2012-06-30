@@ -501,8 +501,8 @@ msgstr "Tipo de búsqueda inválido"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:168
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "No se han encontrado coincidencias para \"%1$s\""
+msgid "No matches for \"%1\""
+msgstr "No se han encontrado coincidencias para \"%1\""
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:166

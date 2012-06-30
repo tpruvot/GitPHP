@@ -156,16 +156,14 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 				break;
 		}
 
-		if ($results->GetCount() < 1) {
-			throw new GitPHP_MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
+		if ($results->GetCount() > 0) {
+			$this->tpl->assign('results', $results);
 		}
 
 		if ($results->GetCount() > 100) {
 			$this->tpl->assign('hasmore', true);
 			$results->SetLimit(100);
 		}
-
-		$this->tpl->assign('results', $results);
 
 		$this->tpl->assign('tree', $co->GetTree());
 
