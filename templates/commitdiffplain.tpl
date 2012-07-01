@@ -21,5 +21,7 @@ X-Git-Url: {$fullscripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit
 
 
 {foreach from=$treediff item=filediff}
+{if !$filediff->IsBinary()}
 {$filediff->GetDiff()}
+{/if}
 {/foreach}
