@@ -325,7 +325,7 @@ abstract class GitPHP_ControllerBase
 			$cacheKeyPrefix = 'en_US';
 
 		if ($this->projectList) {
-			$cacheKeyPrefix .= '|' . sha1(serialize($this->projectList->GetConfig())) . '|' . sha1(serialize($this->projectList->GetSettings()));
+			$cacheKeyPrefix .= '|' . sha1(serialize($this->projectList->GetProjectListConfig())) . '|' . sha1(serialize($this->projectList->GetProjectSettings()));
 		}
 		if ($this->project && $projectKeys) {
 			$cacheKeyPrefix .= '|' . sha1($this->project);

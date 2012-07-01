@@ -47,7 +47,7 @@ class GitPHP_ProjectList
 		}
 
 		if (isset($git_projects_settings) && !$legacy)
-			$instance->SetSettings($git_projects_settings);
+			$instance->SetProjectSettings($git_projects_settings);
 
 		return $instance;
 	}

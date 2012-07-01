@@ -295,7 +295,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	 *
 	 * @return mixed project config
 	 */
-	public function GetConfig()
+	public function GetProjectListConfig()
 	{
 		return $this->projectConfig;
 	}
@@ -305,7 +305,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	 *
 	 * @return array
 	 */
-	public function GetSettings()
+	public function GetProjectSettings()
 	{
 		return $this->projectSettings;
 	}
@@ -580,7 +580,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	 *
 	 * @param array $settings the array of settings
 	 */
-	public function SetSettings($settings)
+	public function SetProjectSettings($settings)
 	{
 		if ((!$settings) || (count($settings) < 1))
 			return;
