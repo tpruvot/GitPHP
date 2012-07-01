@@ -459,6 +459,25 @@ class GitPHP_FileDiff
 	}
 
 	/**
+	 * Gets whether one or both files are binary files
+	 *
+	 * @return boolean true if binary
+	 */
+	public function IsBinary()
+	{
+		if (!$this->diffInfoRead)
+			$this->ReadDiffInfo();
+
+		if (($this->status != 'A') && $this->GetFromBlob()->IsBinary())
+			return true;
+
+		if (($this->status != 'D') && $this->GetToBlob()->IsBinary())
+			return true;
+
+		return false;
+	}
+
+	/**
 	 * Tests if filetype changed
 	 *
 	 * @return boolean true if file type changed
@@ -669,19 +688,16 @@ class GitPHP_FileDiff
 	{
 		$fromData = '';
 		$toData = '';
-		$isBinary = false;
 		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
 			$fromBlob = $this->GetFromBlob();
-			$isBinary = $isBinary || $fromBlob->IsBinary();
 			$fromData = $fromBlob->GetData(false);
 		}
 		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
 			$toBlob = $this->GetToBlob();
-			$isBinary = $isBinary || $toBlob->IsBinary();
 			$toData = $toBlob->GetData(false);
 		}
 		$output = '';
-		if ($isBinary) {
+		if ($this->IsBinary()) {
 			$output = sprintf(__('Binary files %1$s and %2$s differ'), $this->GetFromLabel($file), $this->GetToLabel($file)) . "\n";
 		} else {
 			if ($header) {
