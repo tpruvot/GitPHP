@@ -37,9 +37,6 @@ cd "${PKGVERDIR}"
 # Remove the gitignore files
 find . -iname '.gitignore' -exec rm {} ';'
 
-# Remove the debug locale, it's not useful in the released version
-rm -rf ./locale/zz_Debug
-
 # Build the translations
 ./util/msgfmt.sh
 

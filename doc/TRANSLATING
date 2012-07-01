@@ -34,8 +34,7 @@ Parameters that are passed into the string - for example, dynamic counts or
 info from the page itself - appear as %[num] with an optional $[type] behind it,
 for example %1 or %2$d.  These should stay intact in your string, and the
 parameters will be inserted at runtime.
-You can look at the debugging locale locale/zz_Debug/gitphp.po or any of the
-other existing locales as an example.
+You can look at any of the other existing locales as an example.
 
 Note:
 One special string is 'English'.  I've made a note for the string, but don't
