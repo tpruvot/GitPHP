@@ -126,7 +126,6 @@ class GitPHP_Resource
 	 * Gets the list of supported locales and their languages
 	 *
 	 * @param boolean $includeNames true to include native names of languages
-	 * @param boolean $debug true if debug locales should be included
 	 * @return string[] array of locales mapped to languages
 	 */
 	public static function SupportedLocales($includeNames = true)

@@ -20,7 +20,7 @@ class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interf
 	/**
 	 * Constructor
 	 *
-	 * @var string $magicdb magic db
+	 * @param string $magicdb magic db
 	 */
 	public function __construct($magicdb = null)
 	{
