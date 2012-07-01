@@ -184,7 +184,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	private function GetMimeStrategy()
 	{
-		$strategy = new GitPHP_FileMimeType_Fileinfo();
+		$strategy = new GitPHP_FileMimeType_Fileinfo($this->config->GetValue('magicdb'));
 		if ($strategy->Valid())
 			return $strategy;
 

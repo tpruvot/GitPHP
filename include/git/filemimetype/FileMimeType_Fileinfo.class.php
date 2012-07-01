@@ -9,6 +9,24 @@
  */
 class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interface
 {
+
+	/**
+	 * Magic database
+	 *
+	 * @var string
+	 */
+	protected $magicdb = null;
+
+	/**
+	 * Constructor
+	 *
+	 * @var string $magicdb magic db
+	 */
+	public function __construct($magicdb = null)
+	{
+		$this->magicdb = $magicdb;
+	}
+
 	/**
 	 * Gets the mime type for a blob
 	 *
@@ -25,7 +43,7 @@ class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interf
 			return false;
 
 		$mime = '';
-		$finfo = @finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb'));
+		$finfo = @finfo_open(FILEINFO_MIME, $this->magicdb);
 		if ($finfo) {
 			$mime = finfo_buffer($finfo, $data, FILEINFO_MIME);
 			if ($mime && strpos($mime, '/')) {
@@ -46,7 +64,7 @@ class GitPHP_FileMimeType_Fileinfo implements GitPHP_FileMimeTypeStrategy_Interf
 	 */
 	public function Valid()
 	{
-		return function_exists('finfo_buffer');
+		return function_exists('finfo_buffer') && (($this->magicdb == null) || is_readable($this->magicdb));
 	}
 
 }
