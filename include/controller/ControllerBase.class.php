@@ -240,6 +240,16 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
+	 * Get config instance
+	 *
+	 * @return GitPHP_Config
+	 */
+	public function GetConfig()
+	{
+		return $this->config;
+	}
+
+	/**
 	 * Get log instance
 	 *
 	 * @return GitPHP_DebugLog

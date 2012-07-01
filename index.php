@@ -42,7 +42,6 @@ spl_autoload_register(array('GitPHP_AutoLoader', 'AutoLoad'));
 
 date_default_timezone_set('UTC');
 
-
 try {
 
 	/*
@@ -58,11 +57,13 @@ try {
 
 } catch (Exception $e) {
 
-	if (GitPHP_Config::GetInstance()->GetValue('debug') && !($e instanceof GitPHP_MessageException)) {
+	$messageController = new GitPHP_Controller_Message();
+
+	$config = $messageController->GetConfig();
+	if ($config && $config->GetValue('debug')) {
 		throw $e;
 	}
 
-	$messageController = new GitPHP_Controller_Message();
 	$messageController->SetParam('exception', $e);
 	$messageController->RenderHeaders();
 	$messageController->Render();
