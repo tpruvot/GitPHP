@@ -196,6 +196,15 @@ abstract class GitPHP_ControllerBase
 			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
 
+		$this->projectList->SetMemoryCache(new GitPHP_MemoryCache($this->config->GetValue('objectmemory')));
+		if ($this->config->GetValue('objectcache')) {
+			$cache = new GitPHP_Cache();
+			$cache->SetServers($this->config->GetValue('memcache'));
+			$cache->SetEnabled(true);
+			$cache->SetLifetime($this->config->GetValue('objectcachelifetime'));
+			$this->projectList->SetCache($cache);
+		}
+
 		$this->projectList->SetExe($this->exe);
 
 		if ($this->log)
