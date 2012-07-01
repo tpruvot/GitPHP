@@ -28,14 +28,6 @@ define('GITPHP_COMPRESS_ZIP', 'zip');
  */
 class GitPHP_Config
 {
-	
-	/**
-	 * Stores the singleton instance
-	 *
-	 * @var GitPHP_Config
-	 */
-	protected static $instance;
-
 	/**
 	 * Stores the config values
 	 *
@@ -58,30 +50,9 @@ class GitPHP_Config
 	protected $configs = array();
 
 	/**
-	 * Returns the singleton instance
-	 *
-	 * @return GitPHP_Config instance of config class
-	 */
-	public static function GetInstance()
-	{
-		if (!self::$instance) {
-			self::$instance = new GitPHP_Config();
-		}
-		return self::$instance;
-	}
-
-	/**
-	 * Releases the singleton instance
-	 */
-	public static function DestroyInstance()
-	{
-		self::$instance = null;
-	}
-
-	/**
 	 * Class constructor
 	 */
-	private function __construct()
+	public function __construct()
 	{
 		$this->InitializeDefaults();
 	}

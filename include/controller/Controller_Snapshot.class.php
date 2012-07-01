@@ -22,7 +22,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		$this->config = GitPHP_Config::GetInstance();
+		$this->InitializeConfig();
 
 		$this->InitializeGitExe();
 

@@ -14,7 +14,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		$this->config = GitPHP_Config::GetInstance();
+		$this->InitializeConfig();
 
 		$this->InitializeResource();
 

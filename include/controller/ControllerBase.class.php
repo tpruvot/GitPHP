@@ -92,7 +92,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		$this->config = GitPHP_Config::GetInstance();
+		$this->InitializeConfig();
 
 		$this->InitializeResource();
 
@@ -126,6 +126,15 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * Initialize config
+	 */
+	protected function InitializeConfig()
+	{
+		$this->config = new GitPHP_Config();
+		$this->config->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 	}
 
 	/**

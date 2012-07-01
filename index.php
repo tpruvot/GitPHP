@@ -44,11 +44,6 @@ date_default_timezone_set('UTC');
 
 try {
 
-	/*
-	 * Configuration
-	 */
-	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
-
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
 		$controller->RenderHeaders();
@@ -71,8 +66,6 @@ try {
 	unset($messageController);
 
 }
-
-GitPHP_Config::DestroyInstance();
 
 if (isset($controller)) {
 	$log = $controller->GetLog();
