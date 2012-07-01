@@ -503,8 +503,51 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * FileTypeChanged
+	 * Gets the from label
 	 *
+	 * @param string $file override file name
+	 * @return string from label
+	 */
+	public function GetFromLabel($file = null)
+	{
+		if ($this->status == 'A')
+			return '/dev/null';
+
+		if (!empty($file))
+			return 'a/' . $file;
+
+		$fromFile = $this->GetFromFile();
+		if (!empty($fromFile))
+			return 'a/' . $fromFile;
+
+		return 'a/' . $this->GetFromHash();
+	}
+
+	/**
+	 * Gets the to label
+	 *
+	 * @param string $file override file name
+	 * @return string to label
+	 */
+	public function GetToLabel($file = null)
+	{
+		if (!$this->diffInfoRead)
+			$this->ReadDiffInfo();
+
+		if ($this->status == 'D')
+			return '/dev/null';
+
+		if (!empty($file))
+			return 'b/' . $file;
+
+		$toFile = $this->GetToFile();
+		if (!empty($toFile))
+			return 'b/' . $toFile;
+
+		return 'b/' . $this->GetToHash();
+	}
+
+	/**
 	 * Tests if filetype changed
 	 *
 	 * @access public
@@ -807,42 +850,24 @@ class GitPHP_FileDiff
 		$fromData = '';
 		$toData = '';
 		$isBinary = false;
-		$fromName = '/dev/null';
-		$toName = '/dev/null';
 		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
 			$fromBlob = $this->GetFromBlob();
 			$isBinary = $isBinary || $fromBlob->IsBinary();
 			$fromData = $fromBlob->GetData(false);
 			unset($fromBlob);
-			$fromName = 'a/';
-			if (!empty($file)) {
-				$fromName .= $file;
-			} else if (!empty($this->fromFile)) {
-				$fromName .= $this->fromFile;
-			} else {
-				$fromName .= $this->fromHash;
-			}
 		}
 		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
 			$toBlob = $this->GetToBlob();
 			$isBinary = $isBinary || $toBlob->IsBinary();
 			$toData = $toBlob->GetData(false);
 			unset($toBlob);
-			$toName = 'b/';
-			if (!empty($file)) {
-				$toName .= $file;
-			} else if (!empty($this->toFile)) {
-				$toName .= $this->toFile;
-			} else {
-				$toName .= $this->toHash;
-			}
 		}
 		$output = '';
 		if ($isBinary) {
-			$output = sprintf(__('Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
+			$output = sprintf(__('Binary files %1$s and %2$s differ'), $this->GetFromLabel($file), $this->GetToLabel($file)) . "\n";
 		} else {
 			if ($header) {
-				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
+				$output = '--- ' . $this->GetFromLabel($file) . "\n" . '+++ ' . $this->GetToLabel($file) . "\n";
 			}
 
 			$cacheKey = 'project|' . $this->project . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
