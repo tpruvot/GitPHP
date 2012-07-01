@@ -30,12 +30,18 @@
      {* Display the from -> to diff header *}
      {t}blob{/t}:<a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
    </div>
-   {if $sidebyside}
-   {* Display the sidebysidediff *}
-   {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
+   {if $filediff->IsBinary()}
+<pre>
+ {t 1=$filediff->GetFromLabel($file) 2=$filediff->GetToLabel($file)}Binary files %1 and %2 differ{/t}
+</pre>
    {else}
-   {* Display the diff *}
-   {include file='filediff.tpl' diff=$filediff->GetDiff($file, false, true)}
+     {if $sidebyside}
+       {* Display the sidebysidediff *}
+       {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
+     {else}
+       {* Display the diff *}
+       {include file='filediff.tpl' diff=$filediff->GetDiff($file, false, true)}
+     {/if}
    {/if}
  </div>
 

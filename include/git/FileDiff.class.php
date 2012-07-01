@@ -697,34 +697,30 @@ class GitPHP_FileDiff
 			$toData = $toBlob->GetData(false);
 		}
 		$output = '';
-		if ($this->IsBinary()) {
-			$output = sprintf(__('Binary files %1$s and %2$s differ'), $this->GetFromLabel($file), $this->GetToLabel($file)) . "\n";
-		} else {
-			if ($header) {
-				$output = '--- ' . $this->GetFromLabel($file) . "\n" . '+++ ' . $this->GetToLabel($file) . "\n";
-			}
-
-			$diffOutput = false;
-			$cacheKey = null;
-			if ($this->cache) {
-				$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
-				$diffOutput = $this->cache->Get($cacheKey);
-			}
-			if ($diffOutput === false) {
-
-				if ($this->UseXDiff()) {
-					$diffOutput = $this->GetXDiff($fromData, $toData, $context);
-				} else {
-					$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
-				}
-
-				if ($this->cache) {
-					$this->cache->Set($cacheKey, $diffOutput);
-				}
-			}
-			$output .= $diffOutput;
-
+		if ($header) {
+			$output = '--- ' . $this->GetFromLabel($file) . "\n" . '+++ ' . $this->GetToLabel($file) . "\n";
 		}
+
+		$diffOutput = false;
+		$cacheKey = null;
+		if ($this->cache) {
+			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+			$diffOutput = $this->cache->Get($cacheKey);
+		}
+		if ($diffOutput === false) {
+
+			if ($this->UseXDiff()) {
+				$diffOutput = $this->GetXDiff($fromData, $toData, $context);
+			} else {
+				$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
+			}
+
+			if ($this->cache) {
+				$this->cache->Set($cacheKey, $diffOutput);
+			}
+		}
+		$output .= $diffOutput;
+
 		return $output;
 	}
 

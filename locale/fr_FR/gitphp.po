@@ -687,8 +687,8 @@ msgstr "(tous)"
 # %2$s: the filename of the second file
 #: include/git/FileDiff.class.php:810
 #, php-format
-msgid "Binary files %1$s and %2$s differ"
-msgstr "Fichiers %1$s et %2$s différents"
+msgid "Binary files %1 and %2 differ"
+msgstr "Fichiers %1 et %2 différents"
 
 # Used to label the url of the website of the project
 #: templates/project.tpl

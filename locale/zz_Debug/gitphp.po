@@ -678,7 +678,7 @@ msgstr ""
 # %2$s: the filename of the second file
 #: include/git/FileDiff.class.php:810
 #, php-format
-msgid "Binary files %1$s and %2$s differ"
+msgid "Binary files %1 and %2 differ"
 msgstr ""
 
 # Used to label the url of the website of the project

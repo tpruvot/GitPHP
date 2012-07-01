@@ -107,10 +107,16 @@ GitPHPJSModules = ['commitdiff'];
        {/if}
      {/if}
      </div>
-     {if $sidebyside}
-        {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
+     {if $filediff->IsBinary()}
+<pre>
+ {t 1=$filediff->GetFromLabel() 2=$filediff->GetToLabel()}Binary files %1 and %2 differ{/t}
+</pre>
      {else}
-        {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
+       {if $sidebyside}
+          {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
+       {else}
+          {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
+       {/if}
      {/if}
      </div>
    {/foreach}
