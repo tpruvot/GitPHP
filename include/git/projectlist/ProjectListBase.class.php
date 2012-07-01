@@ -52,7 +52,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	protected $projectsLoaded = false;
 
 	/**
-	 * The project configuration
+	 * The projectlist configuration
 	 *
 	 * @var string
 	 */
@@ -94,6 +94,13 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	protected $exe = null;
 
 	/**
+	 * Config provider
+	 *
+	 * @var GitPHP_Config
+	 */
+	protected $config = null;
+
+	/**
 	 * Observers
 	 *
 	 * @var GitPHP_Observer_Interface[]
@@ -115,6 +122,26 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if (!is_dir($this->projectRoot)) {
 			throw new GitPHP_InvalidDirectoryConfigurationException($this->projectRoot);
 		}
+	}
+
+	/**
+	 * Get config provider
+	 *
+	 * @return GitPHP_Config
+	 */
+	public function GetConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Set config provider
+	 *
+	 * @param GitPHP_Config $config config provider
+	 */
+	public function SetConfig($config)
+	{
+		$this->config = $config;
 	}
 
 	/**
@@ -381,30 +408,31 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if (!$project)
 			return;
 
-		$config = GitPHP_Config::GetInstance();
+		if (!$this->config)
+			return;
 
-		if ($config->HasKey('cloneurl')) {
-			$project->SetCloneUrl(GitPHP_Util::AddSlash($config->GetValue('cloneurl'), false) . $project->GetProject());
+		if ($this->config->HasKey('cloneurl')) {
+			$project->SetCloneUrl(GitPHP_Util::AddSlash($this->config->GetValue('cloneurl'), false) . $project->GetProject());
 		}
 
-		if ($config->HasKey('pushurl')) {
-			$project->SetPushUrl(GitPHP_Util::AddSlash($config->GetValue('pushurl'), false) . $project->GetProject());
+		if ($this->config->HasKey('pushurl')) {
+			$project->SetPushUrl(GitPHP_Util::AddSlash($this->config->GetValue('pushurl'), false) . $project->GetProject());
 		}
 
-		if ($config->HasKey('bugpattern')) {
-			$project->SetBugPattern($config->GetValue('bugpattern'));
+		if ($this->config->HasKey('bugpattern')) {
+			$project->SetBugPattern($this->config->GetValue('bugpattern'));
 		}
 
-		if ($config->HasKey('bugurl')) {
-			$project->SetBugUrl($config->GetValue('bugurl'));
+		if ($this->config->HasKey('bugurl')) {
+			$project->SetBugUrl($this->config->GetValue('bugurl'));
 		}
 
-		if ($config->HasKey('compat')) {
-			$project->SetCompat($config->GetValue('compat'));
+		if ($this->config->HasKey('compat')) {
+			$project->SetCompat($this->config->GetValue('compat'));
 		}
 
-		if ($config->HasKey('uniqueabbrev')) {
-			$project->SetUniqueAbbreviation($config->GetValue('uniqueabbrev'));
+		if ($this->config->HasKey('uniqueabbrev')) {
+			$project->SetUniqueAbbreviation($this->config->GetValue('uniqueabbrev'));
 		}
 	}
 

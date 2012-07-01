@@ -47,6 +47,8 @@ class GitPHP_ProjectList
 			$instance = new GitPHP_ProjectListDirectory($projectRoot, $config->GetValue('exportedonly'));
 		}
 
+		$instance->SetConfig($config);
+
 		if (isset($git_projects_settings) && !$legacy)
 			$instance->SetProjectSettings($git_projects_settings);
 
