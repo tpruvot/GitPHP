@@ -8,6 +8,7 @@
  * @subpackage Smarty
  *
  * @param array $params parameter array
+ * @param Smarty_Internal_Template $template smarty template
  * @return string human readable string
  */
 function smarty_function_agestring($params, Smarty_Internal_Template $template)

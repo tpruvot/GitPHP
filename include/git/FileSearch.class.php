@@ -85,6 +85,7 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 	 * @param GitPHP_Project $project project
 	 * @param GitPHP_Tree $tree tree to search
 	 * @param string $search string to search
+	 * @param GitPHP_GitExe $exe git executable
 	 * @param int $limit limit of results to return
 	 * @param int $skip number of results to skip
 	 */
