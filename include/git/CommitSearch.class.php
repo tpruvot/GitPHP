@@ -12,21 +12,21 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 	/**
 	 * Commit search type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const CommitType = 1;
 
 	/**
 	 * Author search type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const AuthorType = 2;
 
 	/**
 	 * Committer search type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const CommitterType = 3;
 

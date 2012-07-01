@@ -12,7 +12,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	/**
 	 * No category indicator
 	 *
-	 * @const
+	 * @var string
 	 */
 	const NoCategory = 'none';
 

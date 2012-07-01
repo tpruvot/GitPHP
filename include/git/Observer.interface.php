@@ -12,14 +12,14 @@ interface GitPHP_Observer_Interface
 	/**
 	 * Change type for data that can be cached
 	 *
-	 * @const
+	 * @var int
 	 */
 	const CacheableDataChange = 1;
 
 	/**
 	 * Change type for logger message
 	 *
-	 * @const
+	 * @var int
 	 */
 	const LoggableChange = 2;
 

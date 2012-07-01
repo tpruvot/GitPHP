@@ -12,28 +12,28 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	/**
 	 * Unknown type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const UnknownType = 0;
 
 	/**
 	 * Directory type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const DirectoryType = 1;
 
 	/**
 	 * Symlink type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const SymlinkType = 2;
 
 	/**
 	 * File type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const FileType = 3;
 

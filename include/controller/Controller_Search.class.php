@@ -13,28 +13,28 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	/**
 	 * Commit search type
 	 *
-	 * @const
+	 * @var string
 	 */
 	const CommitSearch = 'commit';
 
 	/**
 	 * Author search type
 	 *
-	 * @const
+	 * @var string
 	 */
 	const AuthorSearch = 'author';
 
 	/**
 	 * Committer search type
 	 *
-	 * @const
+	 * @var string
 	 */
 	const CommitterSearch = 'committer';
 
 	/**
 	 * File search type
 	 *
-	 * @const
+	 * @var string
 	 */
 	const FileSearch = 'file';
 

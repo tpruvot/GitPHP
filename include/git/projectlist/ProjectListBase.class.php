@@ -12,28 +12,28 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Project name sort
 	 *
-	 * @const
+	 * @var string
 	 */
 	const ProjectSort = 'project';
 
 	/**
 	 * Project description sort
 	 *
-	 * @const
+	 * @var string
 	 */
 	const DescriptionSort = 'descr';
 
 	/**
 	 * Project owner sort
 	 *
-	 * @const
+	 * @var string
 	 */
 	const OwnerSort = 'owner';
 
 	/**
 	 * Project age sort
 	 *
-	 * @const
+	 * @var string
 	 */
 	const AgeSort = 'age';
 

@@ -80,7 +80,7 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 	/**
 	 * Default raw abbreviation length
 	 *
-	 * @const
+	 * @var int
 	 */
 	const HashAbbreviateLength = 7;
 

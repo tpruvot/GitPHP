@@ -13,21 +13,21 @@ class GitPHP_GitConfig
 	/**
 	 * Default config value type (no conversion)
 	 *
-	 * @const
+	 * @var int
 	 */
 	const TypeDefault = 1;
 
 	/**
 	 * Integer config value type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const TypeInteger = 2;
 
 	/**
 	 * Boolean config value type
 	 *
-	 * @const
+	 * @var int
 	 */
 	const TypeBoolean = 3;
 	

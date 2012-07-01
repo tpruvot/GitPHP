@@ -16,14 +16,14 @@ class GitPHP_Resource
 	/**
 	 * Constant of the locale cookie in the user's browser
 	 *
-	 * @const
+	 * @var string
 	 */
 	const LocaleCookie = 'GitPHPLocale';
 
 	/**
 	 * Locale cookie lifetime
 	 *
-	 * @const
+	 * @var int
 	 */
 	const LocaleCookieLifetime = 31536000;	// 1 year
 	

@@ -12,28 +12,28 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	/**
 	 * Unified diff mode
 	 *
-	 * @const
+	 * @var int
 	 */
 	const UnifiedDiff = 1;
 
 	/**
 	 * Side by side diff mode
 	 *
-	 * @const
+	 * @var int
 	 */
 	const SideBySideDiff = 2;
 
 	/**
 	 * Diff mode cookie name
 	 *
-	 * @const
+	 * @var string
 	 */
 	const DiffModeCookie = 'GitPHPDiffMode';
 
 	/**
 	 * Diff mode cookie lifetime
 	 *
-	 * @const
+	 * @var int
 	 */
 	const DiffModeCookieLifetime = 31536000;			// 1 year
 	

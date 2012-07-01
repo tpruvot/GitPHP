@@ -13,21 +13,21 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	/**
 	 * Number of items to put in feed
 	 *
-	 * @const
+	 * @var int
 	 */
 	const FeedItemCount = 150;
 
 	/**
 	 * Rss feed format
 	 *
-	 * @const
+	 * @var string
 	 */
 	const RssFormat = 'rss';
 
 	/**
 	 * Atom feed format
 	 *
-	 * @const
+	 * @var string
 	 */
 	const AtomFormat = 'atom';
 
