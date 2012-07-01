@@ -695,3 +695,10 @@ msgstr ""
 #: include/Resource.class.php:121
 msgid "English"
 msgstr "Gibberish"
+
+# Message when the config file failed to load
+# %1$s: the config file that we tried to load
+#: include/controller/Controller_Message.class.php:245
+#, php-format
+msgid "Could not load config file %1$s"
+msgstr ""
