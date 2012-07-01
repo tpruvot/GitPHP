@@ -13,15 +13,16 @@ class GitPHP_ProjectList
 	/**
 	 * Instantiates the project list
 	 *
+	 * @param GitPHP_Config $config config provider
 	 * @param string $file config file with git projects
 	 * @param boolean $legacy true if this is the legacy project config
 	 * @throws Exception if there was an error reading the file
 	 */
-	public static function Instantiate($file = null, $legacy = false)
+	public static function Instantiate($config, $file = null, $legacy = false)
 	{
 		$instance = null;
 			
-		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+		$projectRoot = $config->GetValue('projectroot');
 
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (isset($git_projects)) {
@@ -43,7 +44,7 @@ class GitPHP_ProjectList
 
 		if (!$instance) {
 
-			$instance = new GitPHP_ProjectListDirectory($projectRoot, GitPHP_Config::GetInstance()->GetValue('exportedonly'));
+			$instance = new GitPHP_ProjectListDirectory($projectRoot, $config->GetValue('exportedonly'));
 		}
 
 		if (isset($git_projects_settings) && !$legacy)

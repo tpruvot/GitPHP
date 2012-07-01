@@ -191,9 +191,9 @@ abstract class GitPHP_ControllerBase
 	protected function InitializeProjectList()
 	{
 		if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
-			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
+			$this->projectList = GitPHP_ProjectList::Instantiate($this->config, GITPHP_CONFIGDIR . 'projects.conf.php', false);
 		} else {
-			$this->projectList = GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
+			$this->projectList = GitPHP_ProjectList::Instantiate($this->config, GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
 		}
 
 		$this->projectList->SetMemoryCache(new GitPHP_MemoryCache($this->config->GetValue('objectmemory')));
