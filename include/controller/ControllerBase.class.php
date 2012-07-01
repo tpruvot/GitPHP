@@ -94,7 +94,7 @@ abstract class GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
-		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetLocale() != 'en_US'));
+		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetInstance()->GetLocale() != 'en_US'));
 			$this->resource = GitPHP_Resource::GetInstance();
 
 		$this->EnableLogging();
@@ -269,7 +269,10 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix($projectKeys = true)
 	{
-		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
+		if ($this->resource)
+			$cacheKeyPrefix = $this->resource->GetLocale();
+		else
+			$cacheKeyPrefix = 'en_US';
 
 		if ($this->projectList) {
 			$cacheKeyPrefix .= '|' . sha1(serialize($this->projectList->GetConfig())) . '|' . sha1(serialize($this->projectList->GetSettings()));
@@ -387,9 +390,13 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
-		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
-		$this->tpl->assign('resource', GitPHP_Resource::GetInstance());
-		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales($this->config->GetValue('debug')));
+		if ($this->resource) {
+			$this->tpl->assign('currentlocale', $this->resource->GetLocale());
+			$this->tpl->assign('resource', $this->resource);
+		} else {
+			$this->tpl->assign('currentlocale', 'en_US');
+		}
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales(true, $this->config->GetValue('debug')));
 
 		$scripturl = $_SERVER['SCRIPT_NAME'];
 		$fullscripturl = '';

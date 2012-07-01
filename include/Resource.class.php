@@ -39,7 +39,14 @@ class GitPHP_Resource
 	 *
 	 * @var string
 	 */
-	protected static $currentLocale = '';
+	protected $locale = '';
+
+	/**
+	 * Stores the current locale reader
+	 *
+	 * @var gettext_reader
+	 */
+	protected $localeReader;
 
 	/**
 	 * Returns the singleton instance
@@ -70,13 +77,64 @@ class GitPHP_Resource
 	}
 
 	/**
+	 * Constructor
+	 *
+	 * @param string $locale locale to instantiate
+	 * @param boolean $cache true to cache strings
+	 */
+	public function __construct($locale, $cache = true)
+	{
+		if (!(($locale == 'en_US') || ($locale == 'en'))) {
+
+			if (!is_readable(GITPHP_LOCALEDIR . $locale . '/gitphp.mo'))
+				throw new Exception('Invalid locale');
+
+			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
+			if (!$reader) {
+				throw new Exception('Invalid locale');
+			}
+
+			$this->localeReader = new gettext_reader($reader, $cache);
+		}
+		$this->locale = $locale;
+	}
+
+	/**
+	 * Translate a string
+	 *
+	 * @param string $string string
+	 */
+	public function translate($string)
+	{
+		if (!$this->localeReader)
+			return $string;
+
+		return $this->localeReader->translate($string);
+	}
+
+	/**
+	 * Translate a pluralized string
+	 *
+	 * @param string $singular singular form
+	 * @param string $plural plural form
+	 * @param int $count count
+	 */
+	public function ngettext($singular, $plural, $count)
+	{
+		if (!$this->localeReader)
+			return $count == 1 ? $singular : $plural;
+
+		return $this->localeReader->ngettext($singular, $plural, $count);
+	}
+
+	/**
 	 * Gets the currently instantiated locale
 	 *
 	 * @return string locale identifier
 	 */
-	public static function GetLocale()
+	public function GetLocale()
 	{
-		return self::$currentLocale;
+		return $this->locale;
 	}
 
 	/**
@@ -84,37 +142,16 @@ class GitPHP_Resource
 	 *
 	 * @return string locale name
 	 */
-	public static function GetLocaleName()
+	public function GetLocaleName()
 	{
-		return GitPHP_Resource::LocaleToName(self::$currentLocale);
-	}
+		if (!$this->localeReader)
+			return 'English';
 
-	/**
-	 * Given a locale, returns a human readable name
-	 *
-	 * @param string $locale locale
-	 * @return string name
-	 */
-	public static function LocaleToName($locale)
-	{
-		$localeReader = null;
-		if (self::$currentLocale == $locale) {
-			$localeReader = self::$instance;
-		}
-		if (!$localeReader) {
-			$localeReader = GitPHP_Resource::CreateLocale($locale, false);
-		}
-		if (!$localeReader) {
+		$localeName = $this->localeReader->translate('English');
+
+		if ($localeName == 'English') {
+			// someone didn't translate the language name - don't mislabel it as english
 			return '';
-		}
-
-		$localeName = $localeReader->translate('English');
-
-		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			if ($localeName == 'English') {
-				// someone didn't translate the language name - don't mislabel it as english
-				return '';
-			}
 		}
 
 		return $localeName;
@@ -123,14 +160,18 @@ class GitPHP_Resource
 	/**
 	 * Gets the list of supported locales and their languages
 	 *
+	 * @param boolean $includeNames true to include native names of languages
 	 * @param boolean $debug true if debug locales should be included
 	 * @return string[] array of locales mapped to languages
 	 */
-	public static function SupportedLocales($debug = false)
+	public static function SupportedLocales($includeNames = true, $debug = false)
 	{
 		$locales = array();
 
-		$locales['en_US'] = GitPHP_Resource::LocaleToName('en_US');
+		if ($includeNames)
+			$locales['en_US'] = 'English';
+		else
+			$locales[] = 'en_US';
 
 		if ($dh = opendir(GITPHP_LOCALEDIR)) {
 			while (($file = readdir($dh)) !== false) {
@@ -139,12 +180,19 @@ class GitPHP_Resource
 					if ($file == 'zz_Debug' && !$debug) {
 						continue;
 					}
-					$locales[$file] = GitPHP_Resource::LocaleToName($file);
+
+					if ($includeNames) {
+						$resource = new GitPHP_Resource($file, false);
+						$locales[$file] = $resource->GetLocaleName();
+					} else {
+						$locales[] = $file;
+					}
 				}
 			}
 		}
 
-		ksort($locales);
+		if ($includeNames)
+			ksort($locales);
 		
 		return $locales;
 	}
@@ -177,14 +225,14 @@ class GitPHP_Resource
 		}
 		krsort($localePref);
 
-		$supportedLocales = GitPHP_Resource::SupportedLocales();
+		$supportedLocales = GitPHP_Resource::SupportedLocales(false);
 
 		foreach ($localePref as $quality => $qualityArray) {
 			foreach ($qualityArray as $browserLocale) {
 				$locale = str_replace('-', '_', $browserLocale);
 				$loclen = strlen($locale);
 
-				foreach ($supportedLocales as $l => $lang) {
+				foreach ($supportedLocales as $lang) {
 					/* 
 					 * using strncasecmp with length of the preferred
 					 * locale means we can match both full
@@ -192,8 +240,8 @@ class GitPHP_Resource
 					 * (en_US) as well as just language specifications
 					 * (en)
 					 */
-					if (strncasecmp($locale, $l, $loclen) === 0) {
-						return $l;
+					if (strncasecmp($locale, $lang, $loclen) === 0) {
+						return $lang;
 					}
 				}
 			}
@@ -209,37 +257,7 @@ class GitPHP_Resource
 	 */
 	public static function Instantiate($locale)
 	{
-		self::$instance = null;
-		self::$currentLocale = '';
-
-		$localeReader = GitPHP_Resource::CreateLocale($locale);
-		if (!$localeReader) {
-			return false;
-		}
-
-		self::$instance = $localeReader;
-		self::$currentLocale = $locale;
-		return true;
-	}
-
-	/**
-	 * Creates a locale reader object
-	 *
-	 * @param string $locale locale to create
-	 * @param boolean $cache false to disable caching
-	 * @return gettext_reader|null locale reader object or null on failure
-	 */
-	private static function CreateLocale($locale, $cache = true)
-	{
-		$reader = null;
-		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
-			if (!$reader) {
-				return null;
-			}
-		}
-
-		return new gettext_reader($reader, $cache);
+		self::$instance = new GitPHP_Resource($locale);
 	}
 
 }
