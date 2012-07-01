@@ -55,7 +55,7 @@ try {
 	$messageController = new GitPHP_Controller_Message();
 
 	$config = $messageController->GetConfig();
-	if ($config && $config->GetValue('debug')) {
+	if ($config && $config->GetValue('debug') && !($e instanceof GitPHP_MessageException)) {
 		throw $e;
 	}
 
