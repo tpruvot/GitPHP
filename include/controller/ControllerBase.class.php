@@ -175,8 +175,12 @@ abstract class GitPHP_ControllerBase
 			$locale = $this->config->GetValue('locale');
 		}
 
-		if (!empty($locale) && ($locale != 'en_US'))
-			$this->resource = new GitPHP_Resource($locale);
+		if (!empty($locale) && ($locale != 'en_US')) {
+			try {
+				$this->resource = new GitPHP_Resource($locale);
+			} catch (Exception $e) {
+			}
+		}
 	}
 
 	/**
