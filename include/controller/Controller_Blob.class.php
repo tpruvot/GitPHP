@@ -91,7 +91,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 					$blob->SetPath($this->params['file']);
 
-					$mimeReader = new GitPHP_FileMimeTypeReader($blob);
+					$mimeReader = new GitPHP_FileMimeTypeReader($blob, $this->GetMimeStrategy());
 					$mime = $mimeReader->GetMimeType();
 				}
 
@@ -140,7 +140,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $head);
 
 		if ($this->config->GetValue('filemimetype')) {
-			$mimeReader = new GitPHP_FileMimeTypeReader($blob);
+			$mimeReader = new GitPHP_FileMimeTypeReader($blob, $this->GetMimeStrategy());
 			$mimetype = $mimeReader->GetMimeType(true);
 			if ($mimetype == 'image') {
 				$this->tpl->assign('datatag', true);
@@ -177,6 +177,24 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		$this->tpl->assign('bloblines', $blob->GetData(true));
+	}
+
+	/**
+	 * Get valid mime strategy
+	 */
+	private function GetMimeStrategy()
+	{
+		$strategy = new GitPHP_FileMimeType_Fileinfo();
+		if ($strategy->Valid())
+			return $strategy;
+
+		$strategy = new GitPHP_FileMimeType_FileExe();
+		if ($strategy->Valid())
+			return $strategy;
+
+		$strategy = new GitPHP_FileMimeType_Extension();
+		if ($strategy->Valid())
+			return $strategy;
 	}
 
 }

@@ -33,7 +33,7 @@ class GitPHP_FileMimeTypeReader
 	/**
 	 * Stores the specific mime type strategy
 	 *
-	 * @var GitPHP_FileMimeTypeStrategy
+	 * @var GitPHP_FileMimeTypeStrategy_Interface
 	 */
 	protected $strategy;
 
@@ -41,14 +41,17 @@ class GitPHP_FileMimeTypeReader
 	 * Constructor
 	 *
 	 * @param GitPHP_Blob $blob blob
-	 * @param GitPHP_FileMimeTypeStrategy force a strategy
+	 * @param GitPHP_FileMimeTypeStrategy_Interface strategy
 	 */
-	public function __construct($blob, $strategy = null)
+	public function __construct($blob, GitPHP_FileMimeTypeStrategy_Interface $strategy)
 	{
 		if (!$blob)
 			throw new Exception('Blob is required');
 
 		$this->blob = $blob;
+
+		if (!$strategy)
+			throw new Exception('File mimetype strategy is required');
 
 		$this->strategy = $strategy;
 	}
@@ -87,38 +90,10 @@ class GitPHP_FileMimeTypeReader
 	{
 		$this->mimeTypeRead = true;
 
-		if ($this->strategy) {
-			/* forced strategy */
-			$this->ReadMimeTypeStrategy($this->strategy);
-			return;
-		}
-
-		if ($this->ReadMimeTypeStrategy(new GitPHP_FileMimeType_Fileinfo()))
+		if (!$this->strategy)
 			return;
 
-		if ($this->ReadMimeTypeStrategy(new GitPHP_FileMimeType_FileExe()))
-			return;
-
-		$this->ReadMimeTypeStrategy(new GitPHP_FileMimeType_Extension());
+		$this->mimeType = $this->strategy->GetMime($this->blob);
 	}
 
-	/**
-	 * Read the mime type using a specific strategy
-	 *
-	 * @param GitPHP_FileMimeTypeStrategy $strategy mime strategy
-	 * @return bool true if successful
-	 */
-	public function ReadMimeTypeStrategy($strategy)
-	{
-		if (!$strategy)
-			return false;
-
-		if (!$strategy->Valid())
-			return false;
-
-		$this->mimeType = $strategy->GetMime($this->blob);
-
-		return !empty($this->mimeType);
-	}
-	
 }
