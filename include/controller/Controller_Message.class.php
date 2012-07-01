@@ -16,8 +16,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
-		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetInstance()->GetLocale() != 'en_US'));
-			$this->resource = GitPHP_Resource::GetInstance();
+		$this->InitializeResource();
 
 		$this->InitializeGitExe(false);
 

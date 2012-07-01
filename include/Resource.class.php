@@ -28,13 +28,6 @@ class GitPHP_Resource
 	const LocaleCookieLifetime = 31536000;	// 1 year
 	
 	/**
-	 * Stores the singleton instance of the resource provider
-	 *
-	 * @var gettext_reader
-	 */
-	protected static $instance = null;
-
-	/**
 	 * Stores the currently instantiated locale identifier
 	 *
 	 * @var string
@@ -47,34 +40,6 @@ class GitPHP_Resource
 	 * @var gettext_reader
 	 */
 	protected $localeReader;
-
-	/**
-	 * Returns the singleton instance
-	 *
-	 * @return gettext_reader instance of resource class
-	 */
-	public static function GetInstance()
-	{
-		return self::$instance;
-	}
-
-	/**
-	 * Releases the singleton instance
-	 */
-	public static function DestroyInstance()
-	{
-		self::$instance = null;
-	}
-
-	/**
-	 * Tests if the resource provider has been instantiated
-	 *
-	 * @return boolean true if resource provider is instantiated
-	 */
-	public static function Instantiated()
-	{
-		return (self::$instance !== null);
-	}
 
 	/**
 	 * Constructor
@@ -247,17 +212,6 @@ class GitPHP_Resource
 			}
 		}
 		return '';
-	}
-
-	/**
-	 * Instantiates the singleton instance
-	 *
-	 * @param string $locale locale to instantiate
-	 * @return boolean true if resource provider was instantiated successfully
-	 */
-	public static function Instantiate($locale)
-	{
-		self::$instance = new GitPHP_Resource($locale);
 	}
 
 }

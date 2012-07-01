@@ -94,8 +94,7 @@ abstract class GitPHP_ControllerBase
 	{
 		$this->config = GitPHP_Config::GetInstance();
 
-		if (GitPHP_Resource::Instantiated() && (GitPHP_Resource::GetInstance()->GetLocale() != 'en_US'));
-			$this->resource = GitPHP_Resource::GetInstance();
+		$this->InitializeResource();
 
 		$this->EnableLogging();
 
@@ -127,6 +126,48 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * Initialize resource manager
+	 */
+	protected function InitializeResource()
+	{
+		$locale = null;
+
+		if (!empty($_GET['l'])) {
+			/*
+			 * User picked something
+			 */
+			setcookie(GitPHP_Resource::LocaleCookie, $_GET['l'], time()+GitPHP_Resource::LocaleCookieLifetime);
+			$locale = $_GET['l'];
+		} else if (!empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
+			/**
+			 * Returning user with a preference
+			 */
+			$locale = $_COOKIE[GITPHP_Resource::LocaleCookie];
+		} else {
+			/*
+			 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
+			 */
+			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+				$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				$locale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				if (!empty($locale)) {
+					setcookie(GitPHP_Resource::LocaleCookie, $locale, time()+GitPHP_Resource::LocaleCookieLifetime);
+				}
+			}
+		}
+
+		if (empty($locale)) {
+			/*
+			 * No preference, fall back on setting
+			 */
+			$locale = $this->config->GetValue('locale');
+		}
+
+		if (!empty($locale) && ($locale != 'en_US'))
+			$this->resource = new GitPHP_Resource($locale);
 	}
 
 	/**

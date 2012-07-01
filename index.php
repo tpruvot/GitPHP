@@ -43,61 +43,12 @@ spl_autoload_register(array('GitPHP_AutoLoader', 'AutoLoad'));
 date_default_timezone_set('UTC');
 
 
-/*
- * Set the locale based on the user's preference
- */
-if ((!isset($_COOKIE[GitPHP_Resource::LocaleCookie])) || empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
-
-	/*
-	 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
-	 */
-	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-		$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		$preferredLocale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		if (!empty($preferredLocale)) {
-			setcookie(GitPHP_Resource::LocaleCookie, $preferredLocale, time()+GitPHP_Resource::LocaleCookieLifetime);
-			GitPHP_Resource::Instantiate($preferredLocale);
-		}
-	}
-
-	if (!GitPHP_Resource::Instantiated()) {
-		/*
-		 * Create a dummy cookie to prevent browser delay
-		 */
-		setcookie(GitPHP_Resource::LocaleCookie, 0, time()+GitPHP_Resource::LocaleCookieLifetime);
-	}
-
-} else if (isset($_GET['l']) && !empty($_GET['l'])) {
-
-	/*
-	 * User picked something
-	 */
-	setcookie(GitPHP_Resource::LocaleCookie, $_GET['l'], time()+GitPHP_Resource::LocaleCookieLifetime);
-	GitPHP_Resource::Instantiate($_GET['l']);
-
-} else if (isset($_COOKIE[GitPHP_Resource::LocaleCookie]) && !empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
-
-	/*
-	 * Returning visitor with a preference
-	 */
-	GitPHP_Resource::Instantiate($_COOKIE[GitPHP_Resource::LocaleCookie]);
-
-}
-
 try {
 
 	/*
 	 * Configuration
 	 */
 	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
-
-	/*
-	 * Use the default language in the config if user has no preference
-	 * with en_US as the fallback
-	 */
-	if (!GitPHP_Resource::Instantiated()) {
-		GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale'));
-	}
 
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
@@ -111,14 +62,6 @@ try {
 		throw $e;
 	}
 
-	if (!GitPHP_Resource::Instantiated()) {
-		/*
-		 * In case an error was thrown before instantiating
-		 * the resource manager
-		 */
-		GitPHP_Resource::Instantiate('en_US');
-	}
-
 	$messageController = new GitPHP_Controller_Message();
 	$messageController->SetParam('exception', $e);
 	$messageController->RenderHeaders();
@@ -128,7 +71,6 @@ try {
 
 }
 
-GitPHP_Resource::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 
 if (isset($controller)) {
