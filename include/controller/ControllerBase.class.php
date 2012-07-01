@@ -168,7 +168,7 @@ abstract class GitPHP_ControllerBase
 			}
 		}
 
-		if (empty($locale)) {
+		if (empty($locale) && $this->config) {
 			/*
 			 * No preference, fall back on setting
 			 */
