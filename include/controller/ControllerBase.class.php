@@ -465,7 +465,7 @@ abstract class GitPHP_ControllerBase
 		} else {
 			$this->tpl->assign('currentlocale', 'en_US');
 		}
-		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales(true, $this->config->GetValue('debug')));
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales(true));
 
 		$scripturl = $_SERVER['SCRIPT_NAME'];
 		$fullscripturl = '';

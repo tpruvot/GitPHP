@@ -129,7 +129,7 @@ class GitPHP_Resource
 	 * @param boolean $debug true if debug locales should be included
 	 * @return string[] array of locales mapped to languages
 	 */
-	public static function SupportedLocales($includeNames = true, $debug = false)
+	public static function SupportedLocales($includeNames = true)
 	{
 		$locales = array();
 
@@ -142,10 +142,6 @@ class GitPHP_Resource
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = GITPHP_LOCALEDIR . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath) && is_file($fullPath . '/gitphp.mo')) {
-					if ($file == 'zz_Debug' && !$debug) {
-						continue;
-					}
-
 					if ($includeNames) {
 						$resource = new GitPHP_Resource($file, false);
 						$locales[$file] = $resource->GetLocaleName();
