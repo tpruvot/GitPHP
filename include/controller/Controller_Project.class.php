@@ -93,11 +93,11 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('revlist', $revlist);
 		}
 
-		$taglist = $this->GetProject()->GetTags(17);
+		$taglist = $this->GetProject()->GetTags(7);
 		if ($taglist) {
-			if (count($taglist) > 16) {
+			if (count($taglist) > 6) {
 				$this->tpl->assign('hasmoretags', true);
-				$taglist = array_slice($taglist, 0, 16);
+				$taglist = array_slice($taglist, 0, 6);
 			}
 			$this->tpl->assign('taglist', $taglist);
 		}
@@ -111,11 +111,11 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('headlist', $headlist);
 		}
 
-		$remotelist = $this->GetProject()->GetRemotes(6);
+		$remotelist = $this->GetProject()->GetRemotes(10);
 		if ($remotelist) {
-			if (count($remotelist) > 6) {
+			if (count($remotelist) > 9) {
 				$this->tpl->assign('hasmoreremotes', true);
-				$remotelist = array_slice($remotelist, 0, 6);
+				$remotelist = array_slice($remotelist, 0, 9);
 			}
 			$this->tpl->assign('remotelist', $remotelist);
 		}
