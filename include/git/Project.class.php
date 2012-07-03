@@ -289,18 +289,17 @@ class GitPHP_Project
 /* class methods {{{1*/
 
 	/**
-	 * .repo bare folders (by tpruvot)
+	 * .repo folders (by tpruvot)
 	 */
 	public $isAndroidRepo = false;
 	public $repoRemote = "origin";
 	public $repoBranch = "master";
 
+	public $showRemotes = false;
+
 	/**
-	 * __construct
-	 *
 	 * Class constructor
 	 *
-	 * @access public
 	 * @param string $projectRoot project root
 	 * @param string $project project
 	 * @throws Exception if project is invalid or outside of projectroot
@@ -310,9 +309,12 @@ class GitPHP_Project
 		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
 
-		if (is_file($this->GetPath() . '/.repopickle_config')) {
+		if (is_file(GitPHP_Util::AddSlash($this->GetPath()) . '.repopickle_config')) {
 			//.repo projects doesn't store refs/heads
 			$this->isAndroidRepo = true;
+			$this->showRemotes = true;
+		} else {
+			$this->showRemotes = GitPHP_Config::GetInstance()->GetValue('showremotes', false);
 		}
 	}
 
@@ -996,7 +998,7 @@ class GitPHP_Project
 		$isRemote = false;
 
 		$array = $this->heads;
-		if (empty($array) && $this->isAndroidRepo) {
+		if (empty($array) && $this->showRemotes) {
 			$array = $this->remotes;
 			//only use selected branch if set, faster
 			$selected = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
@@ -1193,6 +1195,15 @@ class GitPHP_Project
 				return $tags;
 		}
 
+		if ($type == 'remotes') {
+			// return only remote heads for badges "github/ics" => "32abdc..."
+			$heads = array();
+			foreach ($this->remotes as $head => $rh) {
+				$heads[$rh->GetName()] = $rh->GetHash();
+			}
+			return $heads;
+		}
+
 		$heads = array();
 		if ($type !== 'tags') {
 			foreach ($this->heads as $head => $hash) {
@@ -1205,15 +1216,6 @@ class GitPHP_Project
 				$heads[$rh->GetName()] = $rh->GetHash();
 			}
 
-		}
-
-		if ($type == 'remoteheads') {
-			// return only remote heads for badges "github/ics" => "32abdc..."
-			$heads = array();
-			foreach ($this->remotes as $head => $rh) {
-				$heads[$rh->GetName()] = $rh->GetHash();
-			}
-			return $heads;
 		}
 
 		return array_merge($heads, $tags);
@@ -1247,15 +1249,17 @@ class GitPHP_Project
 	private function ReadRefListGit()
 	{
 		$args = array();
-		$args[] = '--heads';
-		$args[] = '--tags';
+		if (!$this->showRemotes) {
+			$args[] = '--heads';
+			$args[] = '--tags';
+		}
 		$args[] = '--dereference';
 		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_SHOW_REF, $args);
 
 		$lines = explode("\n", $ret);
 
 		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads)\/([^^]+)(\^{})?$/', $line, $regs)) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads|remotes)\/([^^]+)(\^{})?$/', $line, $regs)) {
 				try {
 					$key = 'refs/' . $regs[2] . '/' . $regs[3];
 					if ($regs[2] == 'tags') {
@@ -1270,7 +1274,14 @@ class GitPHP_Project
 							$this->tags[$regs[3]] = $regs[1];
 						}
 					} else if ($regs[2] == 'heads') {
+
 						$this->heads[$regs[3]] = $regs[1];
+
+					} else if ($this->showRemotes && $regs[2] == 'remotes') {
+						// Todo: convert to ref => hash
+						// $this->remotes[$regs[3]] = $regs[1];
+						if (!isset($this->remotes[$key]) && substr($key, -5) != '/HEAD')
+							$this->remotes[$key] = new GitPHP_RemoteHead($this, $regs[3], $regs[1]);
 					}
 				} catch (Exception $e) {
 				}
@@ -1353,7 +1364,7 @@ class GitPHP_Project
 						if (!isset($this->heads[$regs[3]])) {
 							$this->heads[$regs[3]] = $regs[1];
 						}
-					} else if ($this->isAndroidRepo && $regs[2] == 'remotes') {
+					} else if ($this->showRemotes && $regs[2] == 'remotes') {
 						if (!isset($this->remotes[$key])) {
 							$this->remotes[$key] = new GitPHP_RemoteHead($this, $regs[3], $regs[1]);
 						}
@@ -1363,7 +1374,7 @@ class GitPHP_Project
 		}
 
 		// double check the remote heads refs
-		if ($this->isAndroidRepo ) {
+		if ($this->showRemotes ) {
 
 			if (count($this->heads) == 1) {
 				// set branch as default HEAD, if alone
@@ -1602,16 +1613,16 @@ class GitPHP_Project
 /* head loading methods {{{2*/
 
 	/**
-	 * GetRemotes
+	 * list of remote branches for the project
 	 *
-	 * Gets list of remotes for this project
-	 *
-	 * @access public
 	 * @param integer $count number of tags to load
 	 * @return array array of heads
 	 */
 	public function GetRemotes($count = 0)
 	{
+		if (!$this->showRemotes)
+			return null;
+
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
@@ -1621,12 +1632,10 @@ class GitPHP_Project
 			return $this->GetRemotesRaw($count);
 		}
 	}
+
 	/**
-	 * GetRemotesGit
+	 * Gets the list of sorted remote heads using the git executable
 	 *
-	 * Gets the list of sorted heads using the git executable
-	 *
-	 * @access private
 	 * @param integer $count number of tags to load
 	 * @return array array of heads
 	 */
@@ -1655,11 +1664,8 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetRemotesRaw
+	 * Gets the list of sorted remote heads using raw git objects
 	 *
-	 * Gets the list of sorted heads using raw git objects
-	 *
-	 * @access private
 	 * @param integer $count number of tags to load
 	 * @return array array of heads
 	 */

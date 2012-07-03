@@ -30,6 +30,30 @@ throw new Exception('The defaults file should not be used as your config.');
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 
 /*
+ * bareonly
+ * Include working copies (projet/.git) in projects list
+ */
+$gitphp_conf['bareonly'] = true;
+
+/*
+ * reposupport
+ * List projects in .repo folders (android source)
+ */
+$gitphp_conf['reposupport'] = false;
+
+/*
+ * recursive listing (ie android repo)
+ * Search in subfolders to list projects
+ */
+$gitphp_conf['subfolder_levels'] = 1;
+
+/*
+ * showremotes
+ * Display the remote branches and their badges in project summary
+ */
+$gitphp_conf['showremotes'] = false;
+
+/*
  * exportedonly
  * When listing all projects in the project root,
  * (not specifying any projects manually or using a project list file)
@@ -125,7 +149,7 @@ $gitphp_conf['bugurl'] = 'https://android-review.googlesource.com/#q,${1},n,z';
  * will try to guess the correct URL, but you can override
  * it here if it's not being guessed correctly.
  */
-$gitphp_conf['self'] = 'http://localhost/gitphp/';
+//$gitphp_conf['self'] = 'http://localhost/gitphp/';
 
 /*
  * stylesheet

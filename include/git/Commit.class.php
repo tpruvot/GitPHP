@@ -682,7 +682,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$heads = array();
 
-		$projectRefs = $this->GetProject()->GetRefs('remoteheads');
+		$projectRefs = $this->GetProject()->GetRefs('remotes');
 
 		foreach ($projectRefs as $ref => $hash) {
 			if ($hash == $this->hash) {

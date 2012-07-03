@@ -40,6 +40,11 @@
  */
 //$gitphp_conf['subfolder_levels'] = 1;
 
+/*
+ * showremotes
+ * Display the remote branches and their badges in project summary
+ */
+//$gitphp_conf['showremotes'] = true;
 
 /*
  * cache
