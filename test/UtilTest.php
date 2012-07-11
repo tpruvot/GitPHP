@@ -87,7 +87,19 @@ class GitPHP_UtilTest extends PHPUnit_Framework_TestCase
 
 	public function testListDir()
 	{
-		// TODO: look into vfsStream to test this
-		$this->markTestIncomplete();
+		$datadir = dirname(__FILE__) . '/resources/testdir';
+		$listed = GitPHP_Util::ListDir($datadir);
+		$this->assertCount(5, $listed);
+
+		$expected = array(
+			$datadir . '/.hiddentestfile',
+			$datadir . '/testfile1.txt',
+			$datadir . '/testdir2/testfile2.txt',
+			$datadir . '/testdir2/testdir4/testfile4.txt',
+			$datadir . '/testdir3/testfile3.txt'
+		);
+
+		$this->assertCount(0, array_diff($listed, $expected));
+		$this->assertCount(0, array_diff($expected, $listed));
 	}
 }
