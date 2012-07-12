@@ -139,7 +139,7 @@ class GitPHP_MemoryCache
 
 		if ($this->autoManaged) {
 			$project = $this->ExtractProject($key);
-			if (empty($this->lastProject) || ($this->lastProject != $project)) {
+			if (!empty($project) && (empty($this->lastProject) || ($this->lastProject != $project))) {
 				if (count($this->objects) > 0) {
 					$this->Clear();
 				}
@@ -158,6 +158,32 @@ class GitPHP_MemoryCache
 		}
 
 		$this->objects[$key] = $object;
+	}
+
+	/**
+	 * Check if a key exists in the cache
+	 *
+	 * @return bool true if key exists
+	 */
+	public function Exists($key)
+	{
+		if (empty($key))
+			return false;
+
+		return isset($this->objects[$key]);
+	}
+
+	/**
+	 * Delete a key from the cache
+	 *
+	 * @param string $key key
+	 */
+	public function Delete($key)
+	{
+		if (!$this->Exists($key))
+			return;
+
+		unset($this->objects[$key]);
 	}
 
 	/**
