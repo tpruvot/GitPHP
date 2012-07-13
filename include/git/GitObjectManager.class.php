@@ -170,7 +170,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			if ($commit) {
 				$commit->SetProject($this->project);
-				$blob->SetStrategy($strategy);
+				$commit->SetStrategy($strategy);
 			} else {
 				$commit = new GitPHP_Commit($this->project, $hash, $strategy);
 			}
