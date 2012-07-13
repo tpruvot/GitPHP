@@ -10,57 +10,43 @@
 class GitPHP_Cache
 {
 	/**
-	 * Cache template
+	 * Cache strategy
+	 *
+	 * @var GitPHP_CacheStrategy_Interface
 	 */
-	const Template = 'data.tpl';
+	protected $strategy;
 
 	/**
-	 * Smarty instance
+	 * Cache lifetime in seconds
 	 *
-	 * @var Smarty
+	 * @var int
 	 */
-	protected $tpl = null;
+	protected $lifetime = 86400;
 
 	/**
-	 * Stores whether the cache is enabled
+	 * Constructor
 	 *
-	 * @var boolean
+	 * @param GitPHP_CacheStrategy_Interface $strategy cache strategy
 	 */
-	protected $enabled = false;
-
-	/**
-	 * Stores memcache servers
-	 *
-	 * @var array[]
-	 */
-	protected $servers = null;
-
-	/**
-	 * Gets whether the cache is enabled
-	 *
-	 * @return boolean true if enabled
-	 */
-	public function GetEnabled()
+	public function __construct(GitPHP_CacheStrategy_Interface $strategy)
 	{
-		return $this->enabled;
+		if (!$strategy)
+			throw new Exception('Cache strategy is required');
+
+		$this->SetStrategy($strategy);
 	}
 
 	/**
-	 * Sets whether the cache is enabled
+	 * Set the cache strategy
 	 *
-	 * @param boolean $enable true to enable, false to disable
+	 * @param GitPHP_CacheStrategy_Interface $strategy cache strategy
 	 */
-	public function SetEnabled($enable)
+	public function SetStrategy(GitPHP_CacheStrategy_Interface $strategy)
 	{
-		if ($enable == $this->enabled)
+		if (!$strategy)
 			return;
 
-		$this->enabled = $enable;
-
-		if ($this->enabled)
-			$this->CreateSmarty();
-		else
-			$this->DestroySmarty();
+		$this->strategy = $strategy;
 	}
 
 	/**
@@ -70,10 +56,7 @@ class GitPHP_Cache
 	 */
 	public function GetLifetime()
 	{
-		if (!$this->enabled)
-			return false;
-
-		return $this->tpl->cache_lifetime;
+		return $this->lifetime;
 	}
 
 	/**
@@ -83,40 +66,11 @@ class GitPHP_Cache
 	 */
 	public function SetLifetime($lifetime)
 	{
-		if (!$this->enabled)
+		if (!is_int($lifetime))
 			return;
 
-		$this->tpl->cache_lifetime = $lifetime;
+		$this->lifetime = $lifetime;
 	}
-
-	/**
-	 * Gets memcache server array
-	 *
-	 * @return array[] memcache array
-	 */
-	public function GetServers()
-	{
-		return $this->servers;
-	}
-
-	/**
-	 * Sets memcache server array
-	 *
-	 * @param array[] $servers server array
-	 */
-	public function SetServers($servers)
-	{
-		if (($this->servers === null) && ($servers === null))
-			return;
-
-		$this->servers = $servers;
-
-		if ($this->enabled) {
-			$this->DestroySmarty();
-			$this->CreateSmarty();
-		}
-	}
-	 
 
 	/**
 	 * Get an item from the cache
@@ -124,20 +78,12 @@ class GitPHP_Cache
 	 * @param string $key cache key
 	 * @return mixed the cached object, or false
 	 */
-	public function Get($key = null)
+	public function Get($key)
 	{
 		if (empty($key))
 			return false;
 
-		if (!$this->enabled)
-			return false;
-
-		if (!$this->tpl->isCached(GitPHP_Cache::Template, $key))
-			return false;
-
-		$data = $this->tpl->fetch(GitPHP_Cache::Template, $key);
-
-		return unserialize(trim($data));
+		return $this->strategy->Get($key);
 	}
 
 	/**
@@ -147,31 +93,15 @@ class GitPHP_Cache
 	 * @param mixed $value value
 	 * @param int $lifetime override the lifetime for this data
 	 */
-	public function Set($key = null, $value = null, $lifetime = null)
+	public function Set($key, $value, $lifetime = null)
 	{
 		if (empty($key) || empty($value))
 			return;
 
-		if (!$this->enabled)
-			return;
+		if ($lifetime === null)
+			$lifetime = $this->lifetime;
 
-		$oldLifetime = null;
-		if ($lifetime !== null) {
-			$oldLifetime = $this->tpl->cache_lifetime;
-			$this->tpl->cache_lifetime = $lifetime;
-		}
-
-		$this->Delete($key);
-		$this->tpl->clearAllAssign();
-		$this->tpl->assign('data', serialize($value));
-
-		// Force it into smarty's cache
-		$tmp = $this->tpl->fetch(GitPHP_Cache::Template, $key);
-		unset($tmp);
-
-		if ($lifetime !== null) {
-			$this->tpl->cache_lifetime = $oldLifetime;
-		}
+		$this->strategy->Set($key, $value, $lifetime);
 	}
 
 	/**
@@ -180,15 +110,12 @@ class GitPHP_Cache
 	 * @param string $key cache key
 	 * @return boolean true if cached, false otherwise
 	 */
-	public function Exists($key = null)
+	public function Exists($key)
 	{
 		if (empty($key))
 			return false;
 
-		if (!$this->enabled)
-			return false;
-
-		return $this->tpl->isCached(GitPHP_Cache::Template, $key);
+		return $this->strategy->Exists($key);
 	}
 
 	/**
@@ -196,15 +123,12 @@ class GitPHP_Cache
 	 *
 	 * @param string $key cache key
 	 */
-	public function Delete($key = null)
+	public function Delete($key)
 	{
 		if (empty($key))
 			return;
 
-		if (!$this->enabled)
-			return;
-
-		$this->tpl->clearCache(GitPHP_Cache::Template, $key);
+		$this->strategy->Delete($key);
 	}
 
 	/**
@@ -212,42 +136,7 @@ class GitPHP_Cache
 	 */
 	public function Clear()
 	{
-		if (!$this->enabled)
-			return;
-
-		$this->tpl->clearAllCache();
-	}
-
-	/**
-	 * Instantiates Smarty cache
-	 */
-	private function CreateSmarty()
-	{
-		if ($this->tpl)
-			return;
-
-		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
-		$this->tpl = new Smarty;
-		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
-
-		$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
-
-		if (isset($this->servers) && is_array($this->servers) && (count($this->servers) > 0)) {
-			$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($this->servers));
-			$this->tpl->caching_type = 'memcache';
-		}
-
-	}
-
-	/**
-	 * Destroys Smarty cache
-	 */
-	private function DestroySmarty()
-	{
-		if (!$this->tpl)
-			return;
-
-		$this->tpl = null;
+		$this->strategy->Clear();
 	}
 
 }
