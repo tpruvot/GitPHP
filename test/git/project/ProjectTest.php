@@ -68,6 +68,7 @@ class GitPHP_ProjectTest extends PHPUnit_Framework_TestCase
 
 		$project = new GitPHP_Project(GITPHP_TEST_PROJECTROOT, 'testrepo.git', $strategymock);
 		$this->assertEquals('refs/heads/master', $project->GetHeadReference());
+		$this->assertEquals('refs/heads/master', $project->GetHeadReference());		//cached
 	}
 
 	public function testEpoch()
@@ -77,6 +78,7 @@ class GitPHP_ProjectTest extends PHPUnit_Framework_TestCase
 
 		$project = new GitPHP_Project(GITPHP_TEST_PROJECTROOT, 'testrepo.git', $strategymock);
 		$this->assertEquals('12345678', $project->GetEpoch());
+		$this->assertEquals('12345678', $project->GetEpoch());		//cached
 	}
 
 	public function testAbbreviateHash()
