@@ -376,7 +376,7 @@ class GitPHP_Project
 	{
 		if (!$this->readDescription) {
 			if (file_exists($this->GetPath() . '/description')) {
-				$this->description = file_get_contents($this->GetPath() . '/description');
+				$this->description = trim(file_get_contents($this->GetPath() . '/description'));
 			}
 			$this->readDescription = true;
 		}
@@ -574,6 +574,21 @@ class GitPHP_Project
 			$this->ReadHeadCommit();
 
 		return $this->GetCommit($this->head);
+	}
+
+	/**
+	 * Gets the head reference for this project
+	 *
+	 * Only returns the raw pointer of the HEAD branch
+	 *
+	 * @return string head reference
+	 */
+	public function GetHeadReference()
+	{
+		if (!$this->readHeadRef)
+			$this->ReadHeadCommit();
+
+		return $this->head;
 	}
 
 	/**
