@@ -15,7 +15,7 @@ class GitPHP_ProjectLoad_GitTest extends PHPUnit_Framework_TestCase
 		$projectmock->expects($this->any())->method('GetPath')->will($this->returnValue(GITPHP_TEST_PROJECTROOT . '/testrepo.git'));
 
 		$exemock = $this->getMock('GitPHP_GitExe');
-		$exemock->expects($this->once())->method('Execute')->with(GITPHP_TEST_PROJECTROOT . '/testrepo.git', 'for-each-ref')->will($this->returnValue('Chris Han <xiphux@gmail.com> 1342244666 -0500'));
+		$exemock->expects($this->once())->method('Execute')->with($this->equalTo(GITPHP_TEST_PROJECTROOT . '/testrepo.git'), $this->equalTo('for-each-ref'))->will($this->returnValue('Chris Han <xiphux@gmail.com> 1342244666 -0500'));
 
 		$strategy = new GitPHP_ProjectLoad_Git($exemock);
 		$this->assertEquals('1342244666', $strategy->LoadEpoch($projectmock));
@@ -27,7 +27,7 @@ class GitPHP_ProjectLoad_GitTest extends PHPUnit_Framework_TestCase
 		$projectmock->expects($this->any())->method('GetPath')->will($this->returnValue(GITPHP_TEST_PROJECTROOT . '/testrepo.git'));
 
 		$exemock = $this->getMock('GitPHP_GitExe');
-		$exemock->expects($this->once())->method('Execute')->with(GITPHP_TEST_PROJECTROOT . '/testrepo.git', 'rev-parse')->will($this->returnValue('1234567890abcdef1234567890ABCDEF12345678'));
+		$exemock->expects($this->once())->method('Execute')->with($this->equalTo(GITPHP_TEST_PROJECTROOT . '/testrepo.git'), $this->equalTo('rev-parse'))->will($this->returnValue('1234567890abcdef1234567890ABCDEF12345678'));
 
 		$strategy = new GitPHP_ProjectLoad_Git($exemock);
 		$this->assertEquals('1234567890abcdef1234567890ABCDEF12345678', $strategy->LoadHead($projectmock));
@@ -39,7 +39,7 @@ class GitPHP_ProjectLoad_GitTest extends PHPUnit_Framework_TestCase
 		$projectmock->expects($this->any())->method('GetPath')->will($this->returnValue(GITPHP_TEST_PROJECTROOT . '/testrepo.git'));
 
 		$exemock = $this->getMock('GitPHP_GitExe');
-		$exemock->expects($this->once())->method('Execute')->with(GITPHP_TEST_PROJECTROOT . '/testrepo.git', 'rev-list')->will($this->returnValue("commit 1234567890abcdef1234567890ABCDEF12345678\n1234567890abcdef1234567890ABCDEF12345678"));
+		$exemock->expects($this->once())->method('Execute')->with($this->equalTo(GITPHP_TEST_PROJECTROOT . '/testrepo.git'), $this->equalTo('rev-list'))->will($this->returnValue("commit 1234567890abcdef1234567890ABCDEF12345678\n1234567890abcdef1234567890ABCDEF12345678"));
 
 		$strategy = new GitPHP_ProjectLoad_Git($exemock);
 		$this->assertEquals('1234567890abcdef1234567890ABCDEF12345678', $strategy->ExpandHash($projectmock, '12345678'));
@@ -51,7 +51,7 @@ class GitPHP_ProjectLoad_GitTest extends PHPUnit_Framework_TestCase
 		$projectmock->expects($this->any())->method('GetPath')->will($this->returnValue(GITPHP_TEST_PROJECTROOT . '/testrepo.git'));
 
 		$exemock = $this->getMock('GitPHP_GitExe');
-		$exemock->expects($this->once())->method('Execute')->with(GITPHP_TEST_PROJECTROOT . '/testrepo.git', 'rev-list')->will($this->returnValue("commit 1234567890abcdef1234567890ABCDEF12345678\n12345678"));
+		$exemock->expects($this->once())->method('Execute')->with($this->equalTo(GITPHP_TEST_PROJECTROOT . '/testrepo.git'), $this->equalTo('rev-list'))->will($this->returnValue("commit 1234567890abcdef1234567890ABCDEF12345678\n12345678"));
 
 		$strategy = new GitPHP_ProjectLoad_Git($exemock);
 		$this->assertEquals('12345678', $strategy->AbbreviateHash($projectmock, '1234567890abcdef1234567890ABCDEF12345678'));

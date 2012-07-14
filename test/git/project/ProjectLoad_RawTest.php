@@ -17,7 +17,7 @@ class GitPHP_ProjectLoad_RawTest extends PHPUnit_Framework_TestCase
 		$headmock->expects($this->any())->method('GetCommit')->will($this->returnValue($commitmock));
 
 		$headlistmock = $this->getMockBuilder('GitPHP_HeadList')->disableOriginalConstructor()->getMock();
-		$headlistmock->expects($this->once())->method('GetOrderedHeads')->with('-committerdate', 1)->will($this->returnValue(array($headmock)));
+		$headlistmock->expects($this->once())->method('GetOrderedHeads')->with($this->equalTo('-committerdate'), $this->equalTo(1))->will($this->returnValue(array($headmock)));
 
 		$projectmock = $this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock();
 		$projectmock->expects($this->any())->method('GetHeadList')->will($this->returnValue($headlistmock));
@@ -36,8 +36,8 @@ class GitPHP_ProjectLoad_RawTest extends PHPUnit_Framework_TestCase
 		$headlistmock = $this->getMock('GitPHP_HeadList', array('Exists', 'GetHead'), array($project, $this->getMock('GitPHP_HeadListLoadStrategy_Interface')));
 		$headmock = $this->getMock('GitPHP_Head', array('GetHash'), array($project, 'master'));
 		$headmock->expects($this->any())->method('GetHash')->will($this->returnValue('1234567890abcdef1234567890ABCDEF12345678'));
-		$headlistmock->expects($this->any())->method('Exists')->with('master')->will($this->returnValue(true));
-		$headlistmock->expects($this->any())->method('GetHead')->with('master')->will($this->returnValue($headmock));
+		$headlistmock->expects($this->any())->method('Exists')->with($this->equalTo('master'))->will($this->returnValue(true));
+		$headlistmock->expects($this->any())->method('GetHead')->with($this->equalTo('master'))->will($this->returnValue($headmock));
 		$project->SetHeadList($headlistmock);
 		$this->assertEquals('1234567890abcdef1234567890ABCDEF12345678', $strategy->LoadHead($project));
 
@@ -48,7 +48,7 @@ class GitPHP_ProjectLoad_RawTest extends PHPUnit_Framework_TestCase
 	public function testExpandHash()
 	{
 		$loadermock = $this->getMockBuilder('GitPHP_GitObjectLoader')->disableOriginalConstructor()->getMock();
-		$loadermock->expects($this->once())->method('ExpandHash')->with('1234')->will($this->returnValue('12345678'));
+		$loadermock->expects($this->once())->method('ExpandHash')->with($this->equalTo('1234'))->will($this->returnValue('12345678'));
 
 		$strategy = new GitPHP_ProjectLoad_Raw($loadermock);
 		$this->assertEquals('12345678', $strategy->ExpandHash($this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock(), '1234'));
@@ -59,7 +59,7 @@ class GitPHP_ProjectLoad_RawTest extends PHPUnit_Framework_TestCase
 		$fullhash = '1234567890abcdef1234567890ABCDEF12345678';
 
 		$loadermock = $this->getMockBuilder('GitPHP_GitObjectLoader')->disableOriginalConstructor()->GetMock();
-		$loadermock->expects($this->once())->method('EnsureUniqueHash')->with($fullhash, '1234')->will($this->returnValue('123456'));
+		$loadermock->expects($this->once())->method('EnsureUniqueHash')->with($this->equalTo($fullhash), $this->equalTo('1234'))->will($this->returnValue('123456'));
 		$projectmock = $this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock();
 		$projectmock->expects($this->any())->method('GetAbbreviateLength')->will($this->onConsecutiveCalls(null, 1, 45, 4));
 		$projectmock->expects($this->any())->method('GetUniqueAbbreviation')->will($this->onConsecutiveCalls(false, false, false, true));

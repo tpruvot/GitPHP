@@ -23,7 +23,7 @@ class GitPHP_CommitLoad_GitTest extends PHPUnit_Framework_TestCase
 		$projectmock = $this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock();
 		$projectmock->expects($this->any())->method('GetPath')->will($this->returnValue(GITPHP_TEST_PROJECTROOT . '/testrepo.git'));
 		$exemock = $this->getMock('GitPHP_GitExe');
-		$exemock->expects($this->once())->method('Execute')->with(GITPHP_TEST_PROJECTROOT . '/testrepo.git', 'rev-list')->will($this->returnValue($exedata));
+		$exemock->expects($this->once())->method('Execute')->with($this->equalTo(GITPHP_TEST_PROJECTROOT . '/testrepo.git'), $this->equalTo('rev-list'))->will($this->returnValue($exedata));
 
 		$commitmock = $this->getMockBuilder('GitPHP_Commit')->disableOriginalConstructor()->getMock();
 		$commitmock->expects($this->any())->method('GetProject')->will($this->returnValue($projectmock));
