@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage GitPHP\Test\Project
+ * @subpackage Test\Git\Project
  */
 class GitPHP_ProjectTest extends PHPUnit_Framework_TestCase
 {

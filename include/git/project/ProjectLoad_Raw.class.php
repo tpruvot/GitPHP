@@ -115,8 +115,9 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 
 		$abbrevLen = GitPHP_ProjectLoad_Raw::HashAbbreviateLength;
 
-		if ($project->GetAbbreviateLength() > 0) {
-			$abbrevLen = max(4, min($project->GetAbbreviateLength(), 40));
+		$projAbbrevLen = $project->GetAbbreviateLength();
+		if ($projAbbrevLen > 0) {
+			$abbrevLen = max(4, min($projAbbrevLen, 40));
 		}
 
 		$prefix = substr($hash, 0, $abbrevLen);
