@@ -10,6 +10,26 @@
 class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 {
 	/**
+	 * Git object loader
+	 *
+	 * @var GitPHP_GitObjectLoader
+	 */
+	protected $objectLoader;
+
+	/**
+	 * Constructor
+	 *
+	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 */
+	public function __construct($objectLoader)
+	{
+		if (!$objectLoader)
+			throw new Exception('Git object loader is required');
+
+		$this->objectLoader = $objectLoader;
+	}
+
+	/**
 	 * Load a project's epoch
 	 *
 	 * @param GitPHP_Project $project project
@@ -74,7 +94,7 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 			return $abbrevHash;
 		}
 
-		return $project->GetObjectLoader()->ExpandHash($abbrevHash);
+		return $this->objectLoader->ExpandHash($abbrevHash);
 	}
 
 	/**
@@ -112,6 +132,6 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 			return $prefix;
 		}
 
-		return $project->GetObjectLoader()->EnsureUniqueHash($hash, $prefix);
+		return $this->objectLoader->EnsureUniqueHash($hash, $prefix);
 	}
 }

@@ -45,6 +45,13 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $exe;
 
 	/**
+	 * Object loader
+	 *
+	 * @var GitPHP_GitObjectLoader
+	 */
+	protected $objectLoader;
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -65,6 +72,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	public function SetExe($exe)
 	{
 		$this->exe = $exe;
+	}
+
+	/**
+	 * Set object loader
+	 *
+	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 */
+	public function SetObjectLoader($objectLoader)
+	{
+		$this->objectLoader = $objectLoader;
 	}
 
 	/**
@@ -165,7 +182,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			if ($this->compat) {
 				$strategy = new GitPHP_CommitLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_CommitLoad_Raw($this->project->GetObjectLoader(), $this->exe);
+				$strategy = new GitPHP_CommitLoad_Raw($this->objectLoader, $this->exe);
 			}
 
 			if ($commit) {
@@ -213,7 +230,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			if ($this->compat) {
 				$strategy = new GitPHP_TagLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());
+				$strategy = new GitPHP_TagLoad_Raw($this->objectLoader);
 			}
 
 			if ($tagObj) {
@@ -287,7 +304,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			if ($this->compat) {
 				$strategy = new GitPHP_BlobLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
+				$strategy = new GitPHP_BlobLoad_Raw($this->objectLoader);
 			}
 
 			if ($blob) {
@@ -332,7 +349,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			if ($this->compat) {
 				$strategy = new GitPHP_TreeLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_TreeLoad_Raw($this->project->GetObjectLoader(), $this->exe);
+				$strategy = new GitPHP_TreeLoad_Raw($this->objectLoader, $this->exe);
 			}
 			if ($tree) {
 				$tree->SetProject($this->project);

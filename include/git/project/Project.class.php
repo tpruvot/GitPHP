@@ -192,13 +192,6 @@ class GitPHP_Project
 /*}}}2*/
 
 	/**
-	 * The raw git object loader
-	 *
-	 * @var GitPHP_GitObjectLoader
-	 */
-	protected $objectLoader;
-
-	/**
 	 * The git object manager
 	 *
 	 * @var GitPHP_GitObjectManager
@@ -784,29 +777,6 @@ class GitPHP_Project
 /*}}}2*/
 
 /* object loader/manager methods {{{2*/
-
-	/**
-	 * Gets the git object loader for this project
-	 *
-	 * @return GitPHP_GitObjectLoader
-	 */
-	public function GetObjectLoader()
-	{
-		return $this->objectLoader;
-	}
-
-	/**
-	 * Sets the git object loader for this project
-	 *
-	 * @param GitPHP_GitObjectLoader $objectLoader object loader
-	 */
-	public function SetObjectLoader($objectLoader)
-	{
-		if ($objectLoader && ($objectLoader->GetProject() !== $this))
-			throw new Exception('Invalid object loader for this project');
-
-		$this->objectLoader = $objectLoader;
-	}
 
 	/**
 	 * Get the git object manager for this project
