@@ -175,12 +175,26 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetParent()
 	{
+		$hash = $this->GetParentHash();
+		if ($hash) {
+			return $this->GetProject()->GetCommit($hash);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the hash of the main parent of this commit
+	 *
+	 * @return string commit hash for parent
+	 */
+	public function GetParentHash()
+	{
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		if (isset($this->parents[0])) {
-			return $this->GetProject()->GetCommit($this->parents[0]);
-		}
+		if (isset($this->parents[0]))
+			return $this->parents[0];
 
 		return null;
 	}
@@ -192,14 +206,27 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetParents()
 	{
-		if (!$this->dataRead)
-			$this->ReadData();
+		$parenthashes = $this->GetParentHashes();
 
 		$parents = array();
-		foreach ($this->parents as $parent) {
+		foreach ($parenthashes as $parent) {
 			$parents[] = $this->GetProject()->GetCommit($parent);
 		}
 
+		return $parents;
+	}
+
+	/**
+	 * Gets an array of parent hashes for this commit
+	 *
+	 * @return string[] array of hashes
+	 */
+	public function GetParentHashes()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		$parents = $this->parents;
 		return $parents;
 	}
 
@@ -210,19 +237,31 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetTree()
 	{
-		if (!$this->dataRead)
-			$this->ReadData();
+		$treehash = $this->GetTreeHash();
 
-		if (empty($this->tree))
+		if (empty($treehash))
 			return null;
 
-		$tree = $this->GetProject()->GetObjectManager()->GetTree($this->tree);
+		$tree = $this->GetProject()->GetObjectManager()->GetTree($treehash);
 		if ($tree) {
 			$tree->SetCommitHash($this->hash);
 			$tree->SetPath(null);
 		}
 
 		return $tree;
+	}
+
+	/**
+	 * Gets the tree hash for this commit
+	 *
+	 * @return string tree hash
+	 */
+	public function GetTreeHash()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return $this->tree;
 	}
 
 	/**
@@ -522,13 +561,25 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetContainingTag()
 	{
+		$tag = $this->GetContainingTagName();
+
+		if (empty($tag))
+			return null;
+
+		return $this->GetProject()->GetTagList()->GetTag($tag);
+	}
+
+	/**
+	 * Gets the name of the tag that contains the changes in this commit
+	 *
+	 * @return string tag name
+	 */
+	public function GetContainingTagName()
+	{
 		if (!$this->containingTagRead)
 			$this->ReadContainingTag();
 
-		if (empty($this->containingTag))
-			return null;
-
-		return $this->GetProject()->GetTagList()->GetTag($this->containingTag);
+		return $this->containingTag;
 	}
 
 	/**
@@ -618,7 +669,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	{
 		if ($a->GetAge() === $b->GetAge()) {
 			// fall back on author epoch
-			return GitPHP_Commit::CompareAuthorEpoch($a, $b);
+			return 0 - GitPHP_Commit::CompareAuthorEpoch($a, $b);
 		}
 		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
@@ -635,7 +686,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
 			return 0;
 		}
-		return ($a->GetAuthorEpoch() > $b->GetAuthorEpoch() ? -1 : 1);
+		return ($a->GetAuthorEpoch() < $b->GetAuthorEpoch() ? -1 : 1);
 	}
 
 	/**
