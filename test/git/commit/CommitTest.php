@@ -212,10 +212,11 @@ class GitPHP_CommitTest extends PHPUnit_Framework_TestCase
 
 		$observer = $this->getMock('GitPHP_Observer_Interface');
 		$matcher = $this->once();
-		$observer->expects($matcher)->method('ObjectChanged')->with($this->isInstanceOf('GitPHP_Commit'), GitPHP_Observer_Interface::CacheableDataChange);
+		$observer->expects($matcher)->method('ObjectChanged')->with($this->isInstanceOf('GitPHP_Commit'), $this->equalTo(GitPHP_Observer_Interface::CacheableDataChange));
 
 		$commit->AddObserver($observer);
 		$title = $commit->GetTitle();
+		$title = $commit->GetTitle();	//cached
 		
 		$this->assertEquals(1, $matcher->getInvocationCount());
 	}
