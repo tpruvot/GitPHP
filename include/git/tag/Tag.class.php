@@ -176,7 +176,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 					$this->commitHash = $this->object;
 				} else if ($this->type == 'tag') {
 					$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
-					$this->commitHash = $tag->GetCommit()->GetHash();
+					$this->commitHash = $tag->GetCommitHash();
 				}
 			}
 		}

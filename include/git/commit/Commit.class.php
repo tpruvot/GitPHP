@@ -545,7 +545,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 		foreach ($projectRefs as $ref) {
 			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
-				if ($ref->GetCommit()->GetHash() === $this->hash) {
+				if ($ref->GetCommitHash() === $this->hash) {
 					$tags[] = $ref;
 				}
 			}
