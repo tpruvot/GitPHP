@@ -133,29 +133,55 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
+	 * Gets the identifier of the object this tag points to
+	 *
+	 * @return string identifier
+	 */
+	public function GetObjectIdentifier()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return $this->object;
+	}
+
+	/**
 	 * Gets the commit this tag points to
 	 *
 	 * @return GitPHP_Commit commit for this tag
 	 */
 	public function GetCommit()
 	{
-		if ($this->commitHash)
-			return $this->GetProject()->GetCommit($this->commitHash);
+		$hash = $this->GetCommitHash();
+		if ($hash)
+			return $this->GetProject()->GetCommit($hash);
 
-		if (!$this->dataRead) {
-			$this->ReadData();
-		}
+		return null;
+	}
 
+	/**
+	 * Gets the hash of the commit this tag points to
+	 *
+	 * @return string commit hash for this tag
+	 */
+	public function GetCommitHash()
+	{
 		if (!$this->commitHash) {
-			if ($this->type == 'commit') {
-				$this->commitHash = $this->object;
-			} else if ($this->type == 'tag') {
-				$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
-				$this->commitHash = $tag->GetCommit()->GetHash();
+			if (!$this->dataRead) {
+				$this->ReadData();
+			}
+
+			if (!$this->commitHash) {
+				if ($this->type == 'commit') {
+					$this->commitHash = $this->object;
+				} else if ($this->type == 'tag') {
+					$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
+					$this->commitHash = $tag->GetCommit()->GetHash();
+				}
 			}
 		}
 
-		return $this->GetProject()->GetCommit($this->commitHash);
+		return $this->commitHash;
 	}
 
 	/**
