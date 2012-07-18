@@ -13,6 +13,7 @@
 <div class="page_nav">
 {include file='nav.tpl' commit=$head current='graph'}
 <br />
+<br />
 {if $graphtype=='commitactivity'}
   {t}commit activity{/t}
 {else}

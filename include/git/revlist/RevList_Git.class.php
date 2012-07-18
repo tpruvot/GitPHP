@@ -34,7 +34,7 @@ class GitPHP_RevList_Git
 	 *
 	 * @param GitPHP_Project $project project
 	 * @param string $hash hash to look back from
-	 * @param int $count number to return
+	 * @param int $count number to return (0 for all)
 	 * @param int $skip number of items to skip
 	 * @param array $args extra arguments
 	 */
@@ -43,21 +43,22 @@ class GitPHP_RevList_Git
 		if (!$project || empty($hash))
 			return;
 
-		if ($count < 1)
-			return;
-
 		$canSkip = true;
 		
 		if ($skip > 0)
 			$canSkip = $this->exe->CanSkip();
 
 		if ($canSkip) {
-			$args[] = '--max-count=' . $count;
+			if ($count > 0) {
+				$args[] = '--max-count=' . $count;
+			}
 			if ($skip > 0) {
 				$args[] = '--skip=' . $skip;
 			}
 		} else {
-			$args[] = '--max-count=' . ($count + $skip);
+			if ($count > 0) {
+				$args[] = '--max-count=' . ($count + $skip);
+			}
 		}
 
 		$args[] = $hash;
@@ -70,7 +71,11 @@ class GitPHP_RevList_Git
 		}
 
 		if (($skip > 0) && (!$canSkip)) {
-			return array_slice($revlist, $skip, $count);
+			if ($count > 0) {
+				return array_slice($revlist, $skip, $count);
+			} else {
+				return array_slice($revlist, $skip);
+			}
 		}
 
 		return $revlist;

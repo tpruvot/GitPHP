@@ -122,10 +122,10 @@ abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 			return;
 
 		if ($this->dataLoaded) {
-			if ($limit < $this->limit) {
+			if (($limit < $this->limit) && ($limit > 0)) {
 				/* want less data, just trim the array */
 				$this->hashList = array_slice($this->hashList, 0, $limit);
-			} else if ($limit > $this->limit) {
+			} else if (($limit > $this->limit) || ($limit < 1)) {
 				/* want more data, have to reload */
 				$this->Clear();
 			}

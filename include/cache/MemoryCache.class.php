@@ -161,6 +161,17 @@ class GitPHP_MemoryCache
 	}
 
 	/**
+	 * Removes an object from the cache
+	 *
+	 * @param string $key key
+	 */
+	public function Delete($key)
+	{
+		if (isset($this->objects[$key]))
+			unset($this->objects[$key]);
+	}
+
+	/**
 	 * Gets the count of items in this cache
 	 *
 	 * @return int count

@@ -94,6 +94,9 @@ class GitPHP_Controller
 			case 'graph':
 				$controller = new GitPHP_Controller_Graph();
 				break;
+			case 'graphdata':
+				$controller = new GitPHP_Controller_GraphData();
+				break;
 			default:
 				if (isset($_GET['p'])) {
 					$controller = new GitPHP_Controller_Project();
