@@ -17,6 +17,13 @@ class GitPHP_TagList extends GitPHP_RefList
 	protected $strategy;
 
 	/**
+	 * Dereferenced tag commits
+	 *
+	 * @var array
+	 */
+	protected $commits = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
@@ -58,7 +65,10 @@ class GitPHP_TagList extends GitPHP_RefList
 		$tags = array();
 
 		foreach ($this->refs as $tag => $hash) {
-			$tags[] = $this->project->GetObjectManager()->GetTag($tag, $hash);
+			$tagObj = $this->project->GetObjectManager()->GetTag($tag, $hash);
+			if (isset($this->commits[$tag]))
+				$tagObj->SetCommitHash($this->commits[$tag]);
+			$tags[] = $tagObj;
 		}
 
 		return $tags;
@@ -71,7 +81,7 @@ class GitPHP_TagList extends GitPHP_RefList
 	{
 		$this->dataLoaded = true;
 
-		$this->refs = $this->strategy->Load($this);
+		list($this->refs, $this->commits) = $this->strategy->Load($this);
 	}
 
 	/**
@@ -91,7 +101,10 @@ class GitPHP_TagList extends GitPHP_RefList
 		if (!isset($this->refs[$tag]))
 			return;
 
-		return $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
+		$tagObj = $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
+		if (isset($this->commits[$tag]))
+			$tagObj->SetCommitHash($this->commits[$tag]);
+		return $tagObj;
 	}
 
 	/**
@@ -117,7 +130,12 @@ class GitPHP_TagList extends GitPHP_RefList
 			$this->LoadData();
 		}
 
-		return $this->project->GetObjectManager()->GetTag(key($this->refs), current($this->refs));
+		$tag = key($this->refs);
+		$tagObj = $this->project->GetObjectManager()->GetTag($tag, current($this->refs));
+		if (isset($this->commits[$tag])) {
+			$tagObj->SetCommitHash($this->commits[$tag]);
+		}
+		return $tagObj;
 	}
 
 }

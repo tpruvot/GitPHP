@@ -17,7 +17,7 @@ class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_Ta
 	 */
 	public function Load($tagList)
 	{
-		return $this->GetRefs($tagList, 'tags');
+		return array($this->GetRefs($tagList, 'tags'), array());
 	}
 
 	/**

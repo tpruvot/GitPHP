@@ -181,6 +181,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
 			return;
 
+		if ($this->type == 'blob')
+			return;
+
 		if (!$this->commitHash)
 			$this->commitHash = $hash;
 	}
@@ -315,6 +318,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 			$this->taggerTimezone,
 			$this->comment
 		) = $this->strategy->Load($this);
+
+		if (($this->type == 'blob') && (!empty($this->commitHash)))
+			$this->commitHash = null;
 
 		if (!empty($commitHash))
 			$this->commitHash = $commitHash;

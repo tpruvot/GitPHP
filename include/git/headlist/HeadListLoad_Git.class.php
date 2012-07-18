@@ -17,7 +17,8 @@ class GitPHP_HeadListLoad_Git extends GitPHP_RefListLoad_Git implements GitPHP_H
 	 */
 	public function Load($headList)
 	{
-		return $this->GetRefs($headList, 'heads');
+		$data = $this->GetRefs($headList, 'heads');
+		return $data[0];
 	}
 
 	/** 

@@ -34,7 +34,7 @@ abstract class GitPHP_RefListLoad_Git
 	 *
 	 * @param GitPHP_RefList $refList ref list
 	 * @param string $type ref type
-	 * @return array array of refs
+	 * @return array array of ref array and commit array
 	 */
 	protected function GetRefs($refList, $type)
 	{
@@ -46,19 +46,25 @@ abstract class GitPHP_RefListLoad_Git
 
 		$args = array();
 		$args[] = '--' . $type;
+		$args[] = '--dereference';
 		$ret = $this->exe->Execute($refList->GetProject()->GetPath(), GIT_SHOW_REF, $args);
 
 		$lines = explode("\n", $ret);
 
 		$refs = array();
+		$commits = array();
 
 		foreach ($lines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40}) refs\/' . $type . '\/([^^]+)(\^{})?$/', $line, $regs)) {
-				$refs[$regs[2]] = $regs[1];
+				if (!empty($regs[3]) && ($regs[3] == '^{}')) {
+					$commits[$regs[2]] = $regs[1];
+				} else {
+					$refs[$regs[2]] = $regs[1];
+				}
 			}
 		}
 
-		return $refs;
+		return array($refs, $commits);
 	}
 
 	/**
