@@ -91,6 +91,9 @@ class GitPHP_Controller
 				$controller = new GitPHP_Controller_ProjectList();
 				$controller->SetParam('opml', true);
 				break;
+			case 'graph':
+				$controller = new GitPHP_Controller_Graph();
+				break;
 			default:
 				if (isset($_GET['p'])) {
 					$controller = new GitPHP_Controller_Project();
