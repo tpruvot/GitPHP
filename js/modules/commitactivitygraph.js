@@ -31,6 +31,7 @@ define(["modules/geturl", "modules/getproject", "d3"],
 		var subhistogramdata = null;
 
 		var xaxis = null;
+		var yaxis = null;
 
 		var start = null;
 		var end = null;
@@ -127,6 +128,16 @@ define(["modules/geturl", "modules/getproject", "d3"],
 				svg.append("g")
 					.attr("class", "xaxis")
 					.attr("transform", "translate(30," + (height+20) + ")");
+
+				yaxis = d3.svg.axis()
+					.scale(y)
+					.ticks(10)
+					.orient("right");
+
+				svg.append("g")
+					.attr("class", "yaxis")
+					.attr("transform", "translate(" + (width+30) + ",20)")
+					.call(yaxis);
 
 				redraw();
 
