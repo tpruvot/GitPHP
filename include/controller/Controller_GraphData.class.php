@@ -74,14 +74,51 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 	{
 		$head = $this->GetProject()->GetHeadCommit();
 
-		$data = array();
+		$data = null;
 
-		$log = new GitPHP_Log($this->GetProject(), $head, new GitPHP_LogLoad_Git($this->exe), 0, 0);
-		$cache = $this->GetProject()->GetObjectManager()->GetMemoryCache();
+		if ($this->params['graphtype'] == 'commitactivity') {
 
-		foreach ($log as $commit) {
-			$data[] = (int)$commit->GetCommitterEpoch();
-			$cache->Delete($commit->GetCacheKey());
+			$data = array();
+
+			$log = new GitPHP_Log($this->GetProject(), $head, new GitPHP_LogLoad_Git($this->exe), 0, 0);
+			$cache = $this->GetProject()->GetObjectManager()->GetMemoryCache();
+
+			foreach ($log as $commit) {
+				$data[] = (int)$commit->GetCommitterEpoch();
+				$cache->Delete($commit->GetCacheKey());
+			}
+
+		} else if ($this->params['graphtype'] == 'languagedist') {
+
+			$data = array();
+
+			include_once(GITPHP_GESHIDIR . "geshi.php");
+			$geshi = new GeSHi("",'php');
+
+			$files = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), 'ls-tree', array('-r', '--name-only', $head->GetTree()->GetHash())));
+			foreach ($files as $file) {
+				$filename = GitPHP_Util::BaseName($file);
+				$lang = GitPHP_Util::GeshiFilenameToLanguage($filename);
+				if (empty($lang)) {
+					$lang = $geshi->get_language_name_from_extension(substr(strrchr($filename, '.'), 1));
+					if (empty($lang)) {
+						$lang = 'Other';
+					}
+				}
+
+				if (!empty($lang) && ($lang !== 'Other')) {
+					$fulllang = $geshi->get_language_fullname($lang);
+					if (!empty($fulllang))
+						$lang = $fulllang;
+				}
+
+				if (isset($data[$lang])) {
+					$data[$lang]++;
+				} else {
+					$data[$lang] = 1;
+				}
+			}
+
 		}
 
 		$this->tpl->assign('data', json_encode($data));

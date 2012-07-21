@@ -8,6 +8,23 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=javascriptpaths}
+GitPHPJSPaths.d3 = "ext/d3.v2.min"
+{if $graphtype=='languagedist' && file_exists('js/languagedist.min.js')}
+GitPHPJSPaths.languagedist = "languagedist.min";
+{elseif $graphtype=='commitactivity' && file_exists('js/commitactivity.min.js')}
+GitPHPJSPaths.commitactivity = "commitactivity.min";
+{/if}
+{/block}
+
+{block name=javascriptmodules}
+{if $graphtype}
+GitPHPJSModules = ['{$graphtype}'];
+{else}
+GitPHPJSModules = ['common'];
+{/if}
+{/block}
+
 {block name=main}
 
 <div class="page_nav">
@@ -19,15 +36,17 @@
 {else}
   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=graph&g=commitactivity">{t}commit activity{/t}</a>
 {/if}
+|
+{if $graphtype=='languagedist'}
+  {t}language distribution{/t}
+{else}
+  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=graph&g=languagedist">{t}language distribution{/t}</a>
+{/if}
 </div>
 
 {include file='title.tpl'}
 
-{if $graphtype}
 <div id="graph">
 </div>
-{else}
-Select a graph type
-{/if}
 
 {/block}
