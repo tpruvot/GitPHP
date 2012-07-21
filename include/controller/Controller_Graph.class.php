@@ -50,6 +50,8 @@ class GitPHP_Controller_Graph extends GitPHP_ControllerBase
 	{
 		if (isset($_GET['g']))
 			$this->params['graphtype'] = $_GET['g'];
+		else
+			$this->params['graphtype'] = 'commitactivity';
 	}
 
 	/**
