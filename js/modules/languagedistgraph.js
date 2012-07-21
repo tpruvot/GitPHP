@@ -68,7 +68,8 @@ define(["modules/geturl", "modules/getproject", "d3"],
 			langLabel = centerGroup.append("text")
 				.attr("dy", -25)
 				.attr("font-size", "16")
-				.attr("text-anchor", "middle");
+				.attr("text-anchor", "middle")
+				.style('opacity', 0);
 
 			countLabel = centerGroup.append("text")
 				.attr("dy", 0)
@@ -120,14 +121,14 @@ define(["modules/geturl", "modules/getproject", "d3"],
 						d3.select(this).transition()
 							.duration(250)
 							.attr("d", grownArc);
-						langLabel.text(d.data.key);
+						langLabel.transition().style('opacity', 1).text(d.data.key);
 						countLabel.text(d.data.value);
 					})
 					.on("mouseout", function(d) {
 						d3.select(this).transition()
 							.duration(250)
 							.attr("d", arc);
-						langLabel.text("");
+						langLabel.transition().style('opacity', 0);
 						countLabel.text(count);
 					});
 
