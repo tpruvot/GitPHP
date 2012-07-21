@@ -174,6 +174,12 @@ class GitPHP_Router
 			'action' => 'shortlog'
 		), $projectroute);
 
+		// project-specific graphs
+		$this->routes[] = new GitPHP_Route(':action/:graphtype', array(
+			'action' => 'graphs',
+			'graphtype' => '[a-z]+',
+		), array(), $projectroute);
+
 		// project-specific tag
 		$this->routes[] = new GitPHP_Route(':action/:tag', array(
 			'action' => 'tags',
@@ -201,7 +207,7 @@ class GitPHP_Router
 
 		// project-specific action only
 		$this->routes[] = new GitPHP_Route(':action', array(
-			'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|trees|blobs|history|commitdiff|blobdiff'
+			'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
 		), array(), $projectroute);
 
 		$this->routes[] = $projectroute;
@@ -225,6 +231,7 @@ class GitPHP_Router
 			'hash' => 'h',
 			'hashbase' => 'hb',
 			'hashparent' => 'hp',
+			'graphtype' => 'g',
 			'output' => 'o',
 			'format' => 'fmt',
 			'tag' => 't',
@@ -477,6 +484,15 @@ class GitPHP_Router
 			case 'opml':
 				$controller = new GitPHP_Controller_ProjectList();
 				$controller->SetParam('opml', true);
+				break;
+
+			case 'graph':
+			case 'graphs':
+				$controller = new GitPHP_Controller_Graph();
+				break;
+
+			case 'graphdata':
+				$controller = new GitPHP_Controller_GraphData();
 				break;
 
 			default:

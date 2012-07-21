@@ -44,3 +44,11 @@
    {else}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree{if $treecommit}&amp;hb={$treecommit->GetHash()}{/if}{if $tree}&amp;h={$tree->GetHash()}{/if}">{t}tree{/t}</a>
    {/if}
+{if $enablegraphs}
+   |
+   {if $current=='graph' || !$commit}
+     {t}graph{/t}
+   {else}
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=graph">{t}graph{/t}</a>
+   {/if}
+{/if}
