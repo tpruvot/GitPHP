@@ -84,7 +84,7 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 			$cache = $this->GetProject()->GetObjectManager()->GetMemoryCache();
 
 			foreach ($log as $commit) {
-				$data[] = (int)$commit->GetCommitterEpoch();
+				$data[] = array('CommitEpoch' => (int)$commit->GetCommitterEpoch());
 				$cache->Delete($commit->GetCacheKey());
 			}
 
