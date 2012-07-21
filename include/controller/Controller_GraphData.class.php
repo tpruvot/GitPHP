@@ -106,11 +106,10 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 
 				if (!empty($lang) && ($lang !== 'Other')) {
 
-					/** buggy ? and uncatchable (error 500, no logs)
+					/* if you have a bug here, check the "match the langname" regexp */
 					$fulllang = $geshi->get_language_fullname($lang);
 					if (!empty($fulllang))
 						$lang = $fulllang;
-					**/
 				}
 
 				if (isset($data[$lang])) {
