@@ -162,6 +162,7 @@ class GitPHP_Config
 		$this->values['exportedonly'] = false;
 		$this->values['compressformat'] = GITPHP_COMPRESS_ZIP;
 		$this->values['locale'] = 'en_US';
+		$this->values['graphs'] = false;
 	}
 
 }

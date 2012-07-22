@@ -10,6 +10,18 @@
 class GitPHP_Controller_Graph extends GitPHP_ControllerBase
 {
 	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+
+		if (!$this->config->GetValue('graphs')) {
+			throw new Exception('Graphing has been disabled');
+		}
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename

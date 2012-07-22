@@ -15,6 +15,11 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		parent::__construct();
+
+		if (!$this->config->GetValue('graphs')) {
+			throw new Exception('Graphing has been disabled');
+		}
+
 		$this->preserveWhitespace = true;
 		$this->DisableLogging();
 	}
