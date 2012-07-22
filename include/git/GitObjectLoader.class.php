@@ -162,7 +162,7 @@ class GitPHP_GitObjectLoader
 			return $prefix;
 		}
 
-		for ($len = $abbrevLen+1; $len < 40; $len++) {
+		for ($len = strlen($prefix)+1; $len < 40; $len++) {
 			$prefix = substr($hash, 0, $len);
 
 			foreach ($hashMap as $matchingHash => $val) {
