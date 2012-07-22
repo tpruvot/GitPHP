@@ -348,6 +348,14 @@ $gitphp_conf['cachelifetime'] = 3600;
 $gitphp_conf['objectcachelifetime'] = 86400;
 
 /*
+ * objectcachecompress
+ * Sets the size threshold at which objects will be compressed
+ * when being stored into the object cache.  Compression saves
+ * cache space but adds a very slight decompression overhead.
+ */
+$gitphp_conf['objectcachecompress'] = 500;
+
+/*
  * memcache
  * Enables memcache support for caching data, instead of
  * Smarty's standard on-disk cache.

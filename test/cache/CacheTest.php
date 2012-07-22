@@ -46,6 +46,30 @@ class GitPHP_CacheTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($cache->Get('testkey3|testkey4'));
 	}
 
+	public function testFileCompressed()
+	{
+		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects'), 20);
+		$cache->Clear();
+
+		$this->assertFalse($cache->Exists('testkey1|testkey2'));
+		$cache->Set('testkey1|testkey2', '12345678');
+		$this->assertTrue($cache->Exists('testkey1|testkey2'));
+		$this->assertEquals('12345678', $cache->Get('testkey1|testkey2'));
+
+		$this->assertFalse($cache->Get('testkey3|testkey4'));
+		$cache->Set('testkey3|testkey4', '12345678901234567890');
+		$this->assertTrue($cache->Exists('testkey3|testkey4'));
+		$this->assertEquals('12345678901234567890', $cache->Get('testkey3|testkey4'));
+
+		$cache->Delete('testkey1|testkey2');
+		$this->assertFalse($cache->Exists('testkey1|testkey2'));
+
+		$this->assertTrue($cache->Exists('testkey3|testkey4'));
+
+		$cache->Clear();
+		$this->assertFalse($cache->Exists('testkey3|testkey4'));
+	}
+
 	public function testMemcache()
 	{
 		if (!class_exists('Memcache')) {

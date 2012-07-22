@@ -17,11 +17,19 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 	protected $cacheDir;
 
 	/**
+	 * Compression threshold
+	 *
+	 * @var int
+	 */
+	protected $compressThreshold = 0;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $cacheDir cache dir
+	 * @param int $compressThreshold threshold to start compressing data at
 	 */
-	public function __construct($cacheDir)
+	public function __construct($cacheDir, $compressThreshold = 0)
 	{
 		if (file_exists($cacheDir)) {
 			if (!is_dir($cacheDir)) {
@@ -36,6 +44,12 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 		}
 
 		$this->cacheDir = GitPHP_Util::AddSlash($cacheDir, true);
+
+		if (!(is_int($compressThreshold) && ($compressThreshold >= 0))) {
+			throw new Exception('Invalid compression threshold');
+		}
+
+		$this->compressThreshold = $compressThreshold;
 	}
 
 	/**
@@ -71,7 +85,8 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 		$expire = '';
 		if ($lifetime >= 0)
 			$expire = time() + $lifetime;
-		file_put_contents($this->cacheDir . $this->KeyToFile($key), $expire . "\n" . serialize($value));
+
+		$this->Save($key, serialize($value), $expire);
 	}
 
 	/**
@@ -137,19 +152,44 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 			return false;
 		}
 
-		$expire = strtok($contents, "\n");
+		$flags = strtok($contents, "\n");
+		$expire = strtok($flags, "|");
+		$compressed = strtok("|");
+
 		if (!empty($expire) && ($expire < time())) {
 			unlink($file);
 			return false;
 		}
 
-		$data = substr($contents, strlen($expire) + 1);
+		$data = substr($contents, strlen($flags) + 1);
 		if (empty($data)) {
 			unlink($file);
 			return false;
 		}
 
+		if ($compressed == '1')
+			$data = gzuncompress($data);
+
 		return $data;
+	}
+
+	/**
+	 * Save a key's serialized data
+	 *
+	 * @param string $key cache key
+	 * @param string $data serialized data
+	 * @param int $expire expiration instant
+	 */
+	private function Save($key, $data, $expire = '')
+	{
+		$flags = $expire;
+
+		if (($this->compressThreshold > 0) && (strlen($data) > $this->compressThreshold)) {
+			$data = gzcompress($data);
+			$flags .= '|1';
+		}
+
+		file_put_contents($this->cacheDir . $this->KeyToFile($key), $flags . "\n" . $data);
 	}
 
 	/**

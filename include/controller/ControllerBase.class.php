@@ -222,7 +222,7 @@ abstract class GitPHP_ControllerBase
 					throw new GitPHP_MissingMemcacheException();
 				}
 			} else {
-				$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects');
+				$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', $this->config->GetValue('objectcachecompress'));
 			}
 			$cache = new GitPHP_Cache($strategy);
 			$cache->SetLifetime($this->config->GetValue('objectcachelifetime'));
