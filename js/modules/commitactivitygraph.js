@@ -200,7 +200,7 @@ define(["modules/geturl", "modules/getproject", "d3"],
 					.call(yaxis);
 
 				instructions.transition().duration(500)
-					.text("Use the arrow keys to navigate")
+					.text("<- Use the arrow keys to navigate ->")
 					.style("opacity", 1);
 
 				redraw();
