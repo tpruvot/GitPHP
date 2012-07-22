@@ -15,6 +15,10 @@ define(["modules/geturl", "modules/getproject", "d3"],
 		var url = null;
 		var project = null;
 
+		var labelrect = null;
+		var label = null;
+		var label2 = null;
+
 		var width = 960;
 		var height = 500;
 
@@ -63,7 +67,27 @@ define(["modules/geturl", "modules/getproject", "d3"],
 						return x(d.x) - .5;
 					}
 				})
-				.attr("height", 0);
+				.attr("height", 0)
+				.on("mouseover", function(d) {
+					var labeltext = d3.time.format("%B %Y")(d.x)
+					var label2text = d.y + " commits";
+					label.transition().duration(500)
+						.style("opacity", 1)
+						.text(labeltext);
+					label2.transition().duration(500)
+						.style("opacity", 1)
+						.text(label2text);
+					labelrect.transition().duration(500)
+						.style("opacity", 1);
+				})
+				.on("mouseout", function(d) {
+					label.transition().duration(500)
+						.style("opacity", 0);
+					label2.transition().duration(500)
+						.style("opacity", 0);
+					labelrect.transition().duration(500)
+						.style("opacity", 0);
+				});
 
 			bardata.transition().duration(500)
 				.attr("x", function(d, i) { return x(d.x) - .5; })
@@ -98,6 +122,30 @@ define(["modules/geturl", "modules/getproject", "d3"],
 			barGroup = svg.append("g")
 				.attr("transform", "translate(20," + (height+20) + ")scale(1,-1)");
 
+			var labelgroup = svg.append("g");
+			labelrect = labelgroup.append("rect")
+				.attr("width", 150)
+				.attr("height", 70)
+				.attr("x", (width/2)-75)
+				.attr("y", (height/4)-30)
+				.attr("stroke", "#EDECE6")
+				.attr("stroke-width", 1)
+				.attr("fill", "white")
+				.style("opacity", 0);
+
+			label = labelgroup.append("text")
+				.attr("font-size", "16")
+				.attr("text-anchor", "middle")
+				.attr("dx", width/2)
+				.attr("dy", (height/4))
+				.text("Loading commits...");
+			label2 = labelgroup.append("text")
+				.attr("font-size", "16")
+				.attr("text-anchor", "middle")
+				.attr("dx", width/2)
+				.attr("dy", (height/4)+20)
+				.style("opacity", 0);
+
 			d3.json(url + "?p=" + project + "&a=graphdata&g=commitactivity", function(data) {
 				data.forEach(function(d) {
 					d.CommitEpoch = new Date(d.CommitEpoch * 1000);
@@ -119,6 +167,9 @@ define(["modules/geturl", "modules/getproject", "d3"],
 				end = histogramdata.length;
 
 				y.domain([0, d3.max(histogramdata, function(d) { return d.y; })]);
+
+				label.transition().duration(500)
+					.style("opacity", 0);
 
 				xaxis = d3.svg.axis()
 					.scale(x)
