@@ -20,7 +20,7 @@ class GitPHP_AutoLoader
 		if (empty($filename))
 			return;
 
-		$path = __DIR__ . '/' . $filename;
+		$path = dirname(__FILE__) . '/' . $filename;
 
 		if (is_readable($path))
 			require($path);
