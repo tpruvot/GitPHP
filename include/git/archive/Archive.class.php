@@ -259,6 +259,16 @@ class GitPHP_Archive
 	}
 
 	/**
+	 * Gets the mime type for this archive
+	 *
+	 * @return string mime type
+	 */
+	public function GetMimeType()
+	{
+		return $this->strategy->MimeType();
+	}
+
+	/**
 	 * Opens a descriptor for reading archive data
 	 *
 	 * @return boolean true on success
