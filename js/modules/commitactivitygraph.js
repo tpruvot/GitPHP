@@ -40,6 +40,8 @@ define(["modules/geturl", "modules/getproject", "d3"],
 		var start = null;
 		var end = null;
 
+		var instructions = null;
+
 		var redraw = function(mode) {
 			if (end == histogramdata.length) {
 				subhistogramdata = histogramdata.slice(start);
@@ -115,6 +117,13 @@ define(["modules/geturl", "modules/getproject", "d3"],
 			y = d3.scale.linear()
 				.range([height, 0]);
 
+			instructions = d3.select(graphContainer).append("div")
+				.style("text-align", "center")
+				.style("padding-top", "10px")
+				.style("width", width + "px")
+				.style("height", "20px")
+				.style("opacity", 0);
+
 			svg = d3.select(graphContainer).append("svg")
 				.attr("width", width + 60)
 				.attr("height", height + 60);
@@ -189,6 +198,10 @@ define(["modules/geturl", "modules/getproject", "d3"],
 					.attr("class", "yaxis")
 					.attr("transform", "translate(" + (width+30) + ",20)")
 					.call(yaxis);
+
+				instructions.transition().duration(500)
+					.text("Use the arrow keys to navigate")
+					.style("opacity", 1);
 
 				redraw();
 
