@@ -99,7 +99,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 *
 	 * @param string $binary path to git binary
 	 */
-	public function __construct($binary)
+	public function __construct($binary = '')
 	{
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();

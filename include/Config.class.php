@@ -36,20 +36,6 @@ class GitPHP_Config
 	protected $values = array();
 
 	/**
-	 * Stores the default values
-	 *
-	 * @var array
-	 */
-	protected $defaults = array();
-
-	/**
-	 * Stores the config files
-	 *
-	 * @var string[]
-	 */
-	protected $configs = array();
-
-	/**
 	 * Class constructor
 	 */
 	public function __construct()
@@ -79,8 +65,6 @@ class GitPHP_Config
 
 		if (isset($gitphp_conf) && is_array($gitphp_conf))
 			$this->values = array_merge($this->values, $gitphp_conf);
-
-		$this->configs[] = $configFile;
 	}
 
 	/**
@@ -89,7 +73,7 @@ class GitPHP_Config
 	public function ClearConfig()
 	{
 		$this->values = array();
-		$this->configs = array();
+		$this->InitializeDefaults();
 	}
 
 	/**
@@ -163,6 +147,7 @@ class GitPHP_Config
 		$this->values['compressformat'] = GITPHP_COMPRESS_ZIP;
 		$this->values['locale'] = 'en_US';
 		$this->values['graphs'] = false;
+		$this->values['objectcachecompress'] = 500;
 	}
 
 }

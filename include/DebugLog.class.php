@@ -180,6 +180,14 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Clears the log
+	 */
+	public function Clear()
+	{
+		$this->entries = array();
+	}
+
+	/**
 	 * Notify that observable object changed
 	 *
 	 * @param GitPHP_Observable_Interface $object object

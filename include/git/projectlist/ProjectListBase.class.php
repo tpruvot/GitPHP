@@ -276,10 +276,12 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$compat = $project->GetCompat();
 
+		$loader = null;
 		if ($compat) {
 			$project->SetStrategy(new GitPHP_ProjectLoad_Git($this->exe));
 		} else {
-			$project->SetStrategy(new GitPHP_ProjectLoad_Raw());
+			$loader = new GitPHP_GitObjectLoader($project);
+			$project->SetStrategy(new GitPHP_ProjectLoad_Raw($loader));
 		}
 
 		$headListStrategy = null;
@@ -300,13 +302,11 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		$tagList = new GitPHP_TagList($project, $tagListStrategy);
 		$project->SetTagList($tagList);
 
-		if (!$compat) {
-			$loader = new GitPHP_GitObjectLoader($project);
-			$project->SetObjectLoader($loader);
-		}
-
 		$manager = new GitPHP_GitObjectManager($project);
 		$manager->SetCompat($compat);
+		if (!$compat) {
+			$manager->SetObjectLoader($loader);
+		}
 		$manager->SetExe($this->exe);
 		if ($this->memoryCache) {
 			$manager->SetMemoryCache($this->memoryCache);

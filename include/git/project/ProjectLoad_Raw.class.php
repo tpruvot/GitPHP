@@ -10,6 +10,26 @@
 class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 {
 	/**
+	 * Git object loader
+	 *
+	 * @var GitPHP_GitObjectLoader
+	 */
+	protected $objectLoader;
+
+	/**
+	 * Constructor
+	 *
+	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 */
+	public function __construct($objectLoader)
+	{
+		if (!$objectLoader)
+			throw new Exception('Git object loader is required');
+
+		$this->objectLoader = $objectLoader;
+	}
+
+	/**
 	 * Load a project's epoch
 	 *
 	 * @param GitPHP_Project $project project
@@ -20,18 +40,11 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 		if (!$project)
 			return;
 
-		$epoch = 0;
-		foreach ($project->GetHeadList() as $headObj) {
-			$commit = $headObj->GetCommit();
-			if ($commit) {
-				if ($commit->GetCommitterEpoch() > $epoch) {
-					$epoch = $commit->GetCommitterEpoch();
-				}
-			}
-		}
-		if ($epoch > 0) {
-			return $epoch;
-		}
+		$heads = $project->GetHeadList()->GetOrderedHeads('-committerdate', 1);
+		if (!$heads || (count($heads) < 1))
+			return;
+
+		return $heads[0]->GetCommit()->GetCommitterEpoch();
 	}
 
 	/**
@@ -74,7 +87,7 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 			return $abbrevHash;
 		}
 
-		return $project->GetObjectLoader()->ExpandHash($abbrevHash);
+		return $this->objectLoader->ExpandHash($abbrevHash);
 	}
 
 	/**
@@ -102,8 +115,9 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 
 		$abbrevLen = GitPHP_ProjectLoad_Raw::HashAbbreviateLength;
 
-		if ($project->GetAbbreviateLength() > 0) {
-			$abbrevLen = max(4, min($project->GetAbbreviateLength(), 40));
+		$projAbbrevLen = $project->GetAbbreviateLength();
+		if ($projAbbrevLen > 0) {
+			$abbrevLen = max(4, min($projAbbrevLen, 40));
 		}
 
 		$prefix = substr($hash, 0, $abbrevLen);
@@ -112,6 +126,6 @@ class GitPHP_ProjectLoad_Raw implements GitPHP_ProjectLoadStrategy_Interface
 			return $prefix;
 		}
 
-		return $project->GetObjectLoader()->EnsureUniqueHash($hash, $prefix);
+		return $this->objectLoader->EnsureUniqueHash($hash, $prefix);
 	}
 }

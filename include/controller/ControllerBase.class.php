@@ -211,9 +211,20 @@ abstract class GitPHP_ControllerBase
 
 		$this->projectList->SetMemoryCache(new GitPHP_MemoryCache($this->config->GetValue('objectmemory')));
 		if ($this->config->GetValue('objectcache')) {
-			$cache = new GitPHP_Cache();
-			$cache->SetServers($this->config->GetValue('memcache'));
-			$cache->SetEnabled(true);
+			$strategy = null;
+			$servers = $this->config->GetValue('memcache');
+			if ($servers) {
+				if (class_exists('Memcached')) {
+					$strategy = new GitPHP_Cache_Memcached($servers);
+				} else if (class_exists('Memcache')) {
+					$strategy = new GitPHP_Cache_Memcache($servers);
+				} else {
+					throw new GitPHP_MissingMemcacheException();
+				}
+			} else {
+				$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', $this->config->GetValue('objectcachecompress'));
+			}
+			$cache = new GitPHP_Cache($strategy);
 			$cache->SetLifetime($this->config->GetValue('objectcachelifetime'));
 			$this->projectList->SetCache($cache);
 		}

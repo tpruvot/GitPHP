@@ -192,13 +192,6 @@ class GitPHP_Project
 /*}}}2*/
 
 	/**
-	 * The raw git object loader
-	 *
-	 * @var GitPHP_GitObjectLoader
-	 */
-	protected $objectLoader;
-
-	/**
 	 * The git object manager
 	 *
 	 * @var GitPHP_GitObjectManager
@@ -383,7 +376,7 @@ class GitPHP_Project
 	{
 		if (!$this->readDescription) {
 			if (file_exists($this->GetPath() . '/description')) {
-				$this->description = file_get_contents($this->GetPath() . '/description');
+				$this->description = trim(file_get_contents($this->GetPath() . '/description'));
 			}
 			$this->readDescription = true;
 		}
@@ -581,6 +574,21 @@ class GitPHP_Project
 			$this->ReadHeadCommit();
 
 		return $this->GetCommit($this->head);
+	}
+
+	/**
+	 * Gets the head reference for this project
+	 *
+	 * Only returns the raw pointer of the HEAD branch
+	 *
+	 * @return string head reference
+	 */
+	public function GetHeadReference()
+	{
+		if (!$this->readHeadRef)
+			$this->ReadHeadCommit();
+
+		return $this->head;
 	}
 
 	/**
@@ -784,29 +792,6 @@ class GitPHP_Project
 /*}}}2*/
 
 /* object loader/manager methods {{{2*/
-
-	/**
-	 * Gets the git object loader for this project
-	 *
-	 * @return GitPHP_GitObjectLoader
-	 */
-	public function GetObjectLoader()
-	{
-		return $this->objectLoader;
-	}
-
-	/**
-	 * Sets the git object loader for this project
-	 *
-	 * @param GitPHP_GitObjectLoader $objectLoader object loader
-	 */
-	public function SetObjectLoader($objectLoader)
-	{
-		if ($objectLoader && ($objectLoader->GetProject() !== $this))
-			throw new Exception('Invalid object loader for this project');
-
-		$this->objectLoader = $objectLoader;
-	}
 
 	/**
 	 * Get the git object manager for this project

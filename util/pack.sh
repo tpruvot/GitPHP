@@ -51,6 +51,9 @@ rm -Rf lib/rhino
 # Remove the utility scripts
 rm -rf ./util
 
+# Remove test classes
+rm -rf ./test
+
 cd ..
 
 # Roll the tarballs
