@@ -359,6 +359,7 @@ $gitphp_conf['objectcachelifetime'] = 86400;
  * Sets the size threshold at which objects will be compressed
  * when being stored into the object cache.  Compression saves
  * cache space but adds a very slight decompression overhead.
+ * Set to 0 to disable compression.
  */
 $gitphp_conf['objectcachecompress'] = 500;
 
