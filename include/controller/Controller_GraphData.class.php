@@ -85,12 +85,11 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 
 			$data = array();
 
-			$log = new GitPHP_Log($this->GetProject(), $head, new GitPHP_LogLoad_Git($this->exe), 0, 0);
-			$cache = $this->GetProject()->GetObjectManager()->GetMemoryCache();
-
-			foreach ($log as $commit) {
-				$data[] = array('CommitEpoch' => (int)$commit->GetCommitterEpoch());
-				$cache->Delete($commit->GetCacheKey());
+			$commits = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), 'rev-list', array('--format=format:"%H %ct"', $head->GetHash())));
+			foreach ($commits as $commit) {
+				if (preg_match('/^([0-9a-fA-F]{40}) ([0-9]+)$/', $commit, $regs)) {
+					$data[] = array('CommitEpoch' => (int)$regs[2]);
+				}
 			}
 
 		} else if ($this->params['graphtype'] == 'languagedist') {
