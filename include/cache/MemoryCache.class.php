@@ -163,6 +163,7 @@ class GitPHP_MemoryCache
 	/**
 	 * Check if a key exists in the cache
 	 *
+	 * @param string $key key
 	 * @return bool true if key exists
 	 */
 	public function Exists($key)
