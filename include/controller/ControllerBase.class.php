@@ -248,6 +248,21 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
 		if ($this->config->GetValue('cache')) {
+			$cacheDir = GITPHP_CACHEDIR . 'templates';
+
+			if (file_exists($cacheDir)) {
+				if (!is_dir($cacheDir)) {
+					throw new Exception($cacheDir . ' exists but is not a directory');
+				} else if (!is_writable($cacheDir)) {
+					throw new Exception($cacheDir . ' is not writable');
+				}
+			} else {
+				if (!mkdir($cacheDir, 0777))
+					throw new Exception($cacheDir . ' could not be created');
+				chmod($cacheDir, 0777);
+			}
+			$this->tpl->setCacheDir($cacheDir);
+
 			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
 			if ($this->config->HasKey('cachelifetime')) {
 				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
