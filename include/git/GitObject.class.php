@@ -112,7 +112,7 @@ abstract class GitPHP_GitObject
 	 */
 	public function __sleep()
 	{
-		return array('project', 'hash');
+		return array('hash');
 	}
 
 	/**
