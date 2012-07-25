@@ -7,7 +7,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Pack
  */
 class GitPHP_Pack
 {

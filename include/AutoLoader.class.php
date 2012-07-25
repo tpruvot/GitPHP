@@ -71,6 +71,8 @@ class GitPHP_AutoLoader
 			$path = 'git/log/';
 		} else if (strncmp($classname, 'Archive', 7) === 0) {
 			$path = 'git/archive/';
+		} else if (strncmp($classname, 'Pack', 4) === 0) {
+			$path = 'git/pack/';
 		} else if ((strlen($classname) > 9) && (substr_compare($classname, 'Exception', -9, 9) === 0)) {
 			$path = 'exception/';
 		} else if (strpos($classname, 'Cache') !== false) {
