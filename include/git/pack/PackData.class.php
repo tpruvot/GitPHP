@@ -48,7 +48,7 @@ class GitPHP_PackData
 	public function __construct($path, $objectLoader)
 	{
 		if (!is_readable($path))
-			throw new Exception('Pack data file is not readable');
+			throw new Exception('Pack data file ' . $path . ' could not be read');
 
 		if (!$objectLoader)
 			throw new Exception('Object loader is required');
