@@ -83,11 +83,11 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		$compat = $this->GetProject()->GetCompat();
 		$skip = $this->params['page'] * 100;
 		$strategy = null;
-		if ($compat || ($skip > $this->config->GetValue('largeskip'))) {
+		//if ($compat || ($skip > $this->config->GetValue('largeskip'))) {
 			$strategy = new GitPHP_LogLoad_Git($this->exe);
-		} else {
-			$strategy = new GitPHP_LogLoad_Raw();
-		}
+		//} else {
+		//	$strategy = new GitPHP_LogLoad_Raw();
+		//}
 		$revlist = new GitPHP_Log($this->GetProject(), $commit, $strategy, 101, $skip);
 
 		if ($revlist->GetCount() > 100) {

@@ -115,11 +115,11 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	{
 		$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
-		if ($compat) {
+		//if ($compat) {
 			$strategy = new GitPHP_LogLoad_Git($this->exe);
-		} else {
-			$strategy = new GitPHP_LogLoad_Raw();
-		}
+		//} else {
+		//	$strategy = new GitPHP_LogLoad_Raw();
+		//}
 		$log = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), $strategy, GitPHP_Controller_Feed::FeedItemCount);
 		$log->FilterOldCommits(48*60*60, 20);
 

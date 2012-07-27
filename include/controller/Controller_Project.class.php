@@ -63,11 +63,11 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 
 		$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
-		if ($compat) {
+		//if ($compat) {
 			$strategy = new GitPHP_LogLoad_Git($this->exe);
-		} else {
-			$strategy = new GitPHP_LogLoad_Raw();
-		}
+		//} else {
+		//	$strategy = new GitPHP_LogLoad_Raw();
+		//}
 		$revlist = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), $strategy, 17);
 
 		if ($revlist->GetCount() > 16) {
