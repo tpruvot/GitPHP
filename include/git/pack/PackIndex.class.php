@@ -113,6 +113,9 @@ class GitPHP_PackIndex
 			return false;
 		}
 
+		if (!$this->Valid())
+			return false;
+
 		$offset = false;
 
 		$index = fopen($this->path, 'rb');
