@@ -108,6 +108,28 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
+	 * Given a hash, gets the associated tag name
+	 *
+	 * @param string $hash hash
+	 * @return string tag name
+	 */
+	public function GetTagNameFromHash($hash)
+	{
+		if (empty($hash))
+			return null;
+
+		if (!$this->dataLoaded)
+			$this->LoadData();
+
+		$tag = array_search($hash, $this->refs);
+
+		if ($tag === false)
+			return null;
+
+		return $tag;
+	}
+
+	/**
 	 * Gets tags in a specific order
 	 *
 	 * @param string $order order to use

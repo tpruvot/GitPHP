@@ -106,14 +106,7 @@ class GitPHP_TagLoad_Raw implements GitPHP_TagLoadStrategy_Interface
 				$commitHash = $objectHash;
 				break;
 			case 'tag':
-				$objectData = $this->objectLoader->GetObject($objectHash);
-				$lines = explode("\n", $objectData);
-				foreach ($lines as $i => $line) {
-					if (preg_match('/^tag (.+)$/', $line, $regs)) {
-						$name = trim($regs[1]);
-						$object = $name;
-					}
-				}
+				$object = $tag->GetProject()->GetTagList()->GetTagNameFromHash($objectHash);
 				break;
 			case 'blob':
 				$object = $objectHash;
