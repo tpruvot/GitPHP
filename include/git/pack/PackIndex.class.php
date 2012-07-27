@@ -135,9 +135,7 @@ class GitPHP_PackIndex
 	 */
 	private function SearchIndex($index, $hash)
 	{
-		$binaryHash = pack('H40', $hash);
-
-		list($low, $high) = $this->ReadFanout($index, $binaryHash, $this->strategy->FanoutAddress());
+		list($low, $high) = $this->ReadFanout($index, $hash, $this->strategy->FanoutAddress());
 		if ($low == $high)
 			return false;
 
@@ -166,8 +164,7 @@ class GitPHP_PackIndex
 		$index = fopen($this->path, 'rb');
 		flock($index, LOCK_SH);
 
-		$binaryPrefix = pack('H' . strlen($prefix), $prefix);
-		list($low, $high) = $this->ReadFanout($index, $binaryPrefix, $this->strategy->FanoutAddress());
+		list($low, $high) = $this->ReadFanout($index, $prefix, $this->strategy->FanoutAddress());
 
 		$matches = $this->strategy->FindHashes($index, $prefix, $low, $high);
 
@@ -181,12 +178,14 @@ class GitPHP_PackIndex
 	 * Finds the start/end index a hash will be located between, acconding to the fanout table
 	 *
 	 * @param resource $index index file pointer
-	 * @param string $binaryHash binary encoded hash to find
+	 * @param string $hash hash to find
 	 * @param int $offset offset in the index file where the fanout table is located
 	 * @return array Range where object can be located
 	 */
-	private function ReadFanout($index, $binaryHash, $offset)
+	private function ReadFanout($index, $hash, $offset)
 	{
+		$binaryHash = pack('H' . strlen($hash), $hash);
+
 		/*
 		 * fanout table has 255 4-byte integers
 		 * indexed by the first byte of the object name.
