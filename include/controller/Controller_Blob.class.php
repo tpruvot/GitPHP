@@ -199,9 +199,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	public function Plain()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] == true))
-			return true;
-
 		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
 			return true;
 

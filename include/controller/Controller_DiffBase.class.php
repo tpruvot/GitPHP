@@ -108,9 +108,6 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	 */
 	protected function Plain()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] == true))
-			return true;
-
 		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
 			return true;
 
