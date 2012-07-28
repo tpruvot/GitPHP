@@ -20,7 +20,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 		if (empty($this->params['hash']))
 			$this->params['hash'] = 'HEAD';
 
-		if (!empty($this->params['jstip']) && ($this->params['jstip'] == true))
+		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
 			$this->DisableLogging();
 	}
 
@@ -31,7 +31,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['jstip']) && $this->params['jstip']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'jstip')) {
 			return 'committip.tpl';
 		}
 		return 'commit.tpl';

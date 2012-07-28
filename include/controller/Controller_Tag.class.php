@@ -17,7 +17,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 
-		if (!empty($this->params['jstip']) && ($this->params['jstip'] == true))
+		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
 			$this->DisableLogging();
 	}
 
@@ -28,7 +28,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['jstip']) && $this->params['jstip']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'jstip')) {
 			return 'tagtip.tpl';
 		}
 		return 'tag.tpl';

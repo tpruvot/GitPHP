@@ -125,8 +125,8 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Tag();
 				if (!empty($_GET['h']))
 					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o']) && ($_GET['o'] == 'jstip'))
-					$controller->SetParam('jstip', true);
+				if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				break;
 
 
@@ -184,8 +184,8 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Commit();
 				if (!empty($_GET['h']))
 					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o']) && ($_GET['o'] == 'jstip'))
-					$controller->SetParam('jstip', true);
+				if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				break;
 
 
@@ -370,8 +370,8 @@ class GitPHP_Router
 						$query['h'] = rawurlencode($params['hash']);
 					}
 				}
-				if (!empty($params['jstip']) && ($params['jstip'] == true))
-					$query['o'] = 'jstip';
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
@@ -403,8 +403,8 @@ class GitPHP_Router
 			case 'commit':
 				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash']);
-				if (!empty($params['jstip']) && ($params['jstip'] == true))
-					$query['o'] = 'jstip';
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
