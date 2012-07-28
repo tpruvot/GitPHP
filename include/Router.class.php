@@ -40,8 +40,8 @@ class GitPHP_Router
 				if ($action === 'commitdiff_plain') {
 					$controller->SetParam('plain', true);
 				}
-				if (!empty($_GET['o'])) {
-					$controller->SetParam('diffmode', $_GET['o']);
+				if (!empty($_GET['d'])) {
+					$controller->SetParam('diffmode', $_GET['d']);
 				}
 				if (!empty($_GET['h']))
 					$controller->SetParam('hash', $_GET['h']);
@@ -55,8 +55,8 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Blobdiff();
 				if ($action === 'blobdiff_plain')
 					$controller->SetParam('plain', true);
-				if (!empty($_GET['o'])) {
-					$controller->SetParam('diffmode', $_GET['o']);
+				if (!empty($_GET['d'])) {
+					$controller->SetParam('diffmode', $_GET['d']);
 				}
 				if (!empty($_GET['f']))
 					$controller->SetParam('file', $_GET['f']);
@@ -291,14 +291,14 @@ class GitPHP_Router
 				if (!empty($params['hashparent']))
 					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
 				if (!empty($params['diffmode']))
-					$query['o'] = $params['diffmode'];
+					$query['d'] = $params['diffmode'];
 				break;
 
 
 			case 'blobdiff':
 			case 'blobdiff_plain':
 				if (!empty($params['diffmode']))
-					$query['o'] = $params['diffmode'];
+					$query['d'] = $params['diffmode'];
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
