@@ -29,7 +29,7 @@ GitPHPJSModules = ['blob'];
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{geturl project=$project action=blob_plain hash=$blob file=$blob->GetPath()}">{t}plain{/t}</a> | 
+   <a href="{geturl project=$project action=blob hash=$blob file=$blob->GetPath() output=plain}">{t}plain{/t}</a> | 
    {if ($commit->GetHash() != $head->GetHash()) && ($tree->PathToHash($blob->GetPath()))}
      <a href="{geturl project=$project action=blob hashbase=HEAD file=$blob->GetPath()}">{t}HEAD{/t}</a>
    {else}

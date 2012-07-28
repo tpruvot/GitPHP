@@ -28,7 +28,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && $this->params['plain'])
+		if ($this->Plain())
 			return 'blobplain.tpl';
 		return 'blob.tpl';
 	}
@@ -62,7 +62,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && $this->params['plain']) {
+		if ($this->Plain()) {
 
 			$this->DisableLogging();
 			$this->preserveWhitespace = true;
@@ -127,7 +127,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		if (isset($this->params['plain']) && $this->params['plain']) {
+		if ($this->Plain()) {
 			return;
 		}
 
@@ -190,6 +190,22 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$strategy = new GitPHP_FileMimeType_Extension();
 		if ($strategy->Valid())
 			return $strategy;
+	}
+
+	/**
+	 * Tests whether we are outputting a plaintext blob
+	 *
+	 * @return boolean true if plaintext blob
+	 */
+	public function Plain()
+	{
+		if (isset($this->params['plain']) && ($this->params['plain'] == true))
+			return true;
+
+		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
+			return true;
+
+		return false;
 	}
 
 }

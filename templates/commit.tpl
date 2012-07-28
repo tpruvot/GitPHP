@@ -114,7 +114,7 @@
          <td class="link">
 	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
-	   <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetFromFile()}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          {assign var=parent value=$commit->GetParent()}
@@ -134,7 +134,7 @@
 	    | 
 	   <a href="{geturl project=$project action=history hash=$parent file=$diffline->GetFromFile()}">{t}history{/t}</a>
 	    | 
-	   <a href="{geturl project=$project action=blob_plain hash=$diffline->GetFromHash() file=$diffline->GetFromFile()}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
@@ -195,7 +195,7 @@
 	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
 	     | <a href="{geturl project=$project action=history hash=$commit file=$diffline->GetFromFile()}">{t}history{/t}</a>
-             | <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetToFile()}">{t}plain{/t}</a>
+             | <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
@@ -223,7 +223,7 @@
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
 	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
-	    | <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetToFile()}">{t}plain{/t}</a>
+	    | <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {/if}
 

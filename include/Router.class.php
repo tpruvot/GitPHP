@@ -158,7 +158,9 @@ class GitPHP_Router
 			case 'blob_plain':	
 				$controller = new GitPHP_Controller_Blob();
 				if ($action === 'blob_plain')
-					$controller->SetParam('plain', true);
+					$controller->SetParam('output', 'plain');
+				else if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				if (!empty($_GET['hb']))
 					$controller->SetParam('hashbase', $_GET['hb']);
 				if (!empty($_GET['f']))
@@ -393,6 +395,8 @@ class GitPHP_Router
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 

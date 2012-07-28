@@ -23,7 +23,7 @@
 	 | 
 	<a href="{geturl project=$project action=history hash=$commit file=$treeitem->GetPath()}">{t}history{/t}</a>
 	 | 
-	<a href="{geturl project=$project action=blob_plain hash=$treeitem file=$treeitem->GetPath()}">{t}plain{/t}</a>
+	<a href="{geturl project=$project action=blob hash=$treeitem file=$treeitem->GetPath() output=plain}">{t}plain{/t}</a>
       </td>
     {elseif $treeitem instanceof GitPHP_Tree}
       <td class="filesize"></td>
