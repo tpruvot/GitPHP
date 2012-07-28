@@ -18,7 +18,7 @@
    <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file diffmode=sidebyside}">{t}side by side{/t}</a>
    {/if}
     |
-   <a href="{geturl project=$project action=blobdiff_plain hash=$blob hashparent=$blobparent file=$file}">{t}plain{/t}</a>
+   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent file=$file output=plain}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}

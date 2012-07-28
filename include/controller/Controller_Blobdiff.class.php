@@ -17,7 +17,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return 'blobdiffplain.tpl';
 		}
 		return 'blobdiff.tpl';
@@ -54,7 +54,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	{
 		parent::LoadHeaders();
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			$this->preserveWhitespace = true;
 		}
 	}
@@ -70,7 +70,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		$filediff = $this->GetProject()->GetObjectManager()->GetFileDiff($this->params['hashparent'], $this->params['hash']);
 		$this->tpl->assign('filediff', $filediff);
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return;
 		}
 

@@ -17,7 +17,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return 'commitdiffplain.tpl';
 		}
 		return 'commitdiff.tpl';
@@ -58,7 +58,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	{
 		parent::LoadHeaders();
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
 			$this->preserveWhitespace = true;
 		}

@@ -44,7 +44,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 
-		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+		if ($this->Plain()) {
 
 			if ($this->DiffMode(isset($this->params['diffmode']) ? $this->params['diffmode'] : '') == GitPHP_Controller_DiffBase::SideBySideDiff) {
 				$this->params['sidebyside'] = true;
@@ -95,10 +95,26 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			$this->DisableLogging();
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
 		}
+	}
+
+	/**
+	 * Tests if this is a plaintext diff
+	 *
+	 * @return boolean true if plaintext
+	 */
+	protected function Plain()
+	{
+		if (isset($this->params['plain']) && ($this->params['plain'] == true))
+			return true;
+
+		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
+			return true;
+
+		return false;
 	}
 
 }

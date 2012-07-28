@@ -30,7 +30,7 @@ GitPHPJSModules = ['commitdiff'];
    {else}
    <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent diffmode=sidebyside}">{t}side by side{/t}</a>
    {/if}
-   | <a href="{geturl project=$project action=commitdiff_plain hash=$commit hashparent=$hashparent}">{t}plain{/t}</a>
+   | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent output=plain}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}

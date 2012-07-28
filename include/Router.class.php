@@ -37,9 +37,10 @@ class GitPHP_Router
 			case 'commitdiff':
 			case 'commitdiff_plain':
 				$controller = new GitPHP_Controller_Commitdiff();
-				if ($action === 'commitdiff_plain') {
-					$controller->SetParam('plain', true);
-				}
+				if ($action === 'commitdiff_plain')
+					$controller->SetParam('output', 'plain');
+				else if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				if (!empty($_GET['d'])) {
 					$controller->SetParam('diffmode', $_GET['d']);
 				}
@@ -54,7 +55,9 @@ class GitPHP_Router
 			case 'blobdiff_plain':
 				$controller = new GitPHP_Controller_Blobdiff();
 				if ($action === 'blobdiff_plain')
-					$controller->SetParam('plain', true);
+					$controller->SetParam('output', 'plain');
+				else if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				if (!empty($_GET['d'])) {
 					$controller->SetParam('diffmode', $_GET['d']);
 				}
@@ -292,6 +295,8 @@ class GitPHP_Router
 					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
 				if (!empty($params['diffmode']))
 					$query['d'] = $params['diffmode'];
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
@@ -307,6 +312,8 @@ class GitPHP_Router
 					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
 				if (!empty($params['hashparent']))
 					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
