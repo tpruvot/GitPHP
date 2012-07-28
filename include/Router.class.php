@@ -1,13 +1,12 @@
 <?php
 /**
- * Controller factory
+ * Request router
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Controller
  */
-class GitPHP_Controller
+class GitPHP_Router
 {
 
 	/**
