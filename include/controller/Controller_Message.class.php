@@ -33,19 +33,15 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 		} catch (Exception $e) {
 		}
 
-		if (isset($_GET['p']) && $this->projectList) {
-			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
+		if (!empty($this->params['project']) && $this->projectList) {
+			$project = $this->projectList->GetProject($this->params['project']);
 			if ($project) {
 				$this->project = $project->GetProject();
 			}
 		}
 
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
-		if (isset($_GET['st']))
-			$this->params['searchtype'] = $_GET['st'];
-
-		$this->ReadQuery();
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
 	}
 
 	/**
@@ -80,17 +76,6 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	{
 		// This isn't a real controller
 		return '';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
 	}
 
 	/**

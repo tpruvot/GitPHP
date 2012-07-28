@@ -42,10 +42,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$this->InitializeProjectList();
 
-		if (isset($_GET['p'])) {
-			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
+		if (isset($this->params['project'])) {
+			$project = $this->projectList->GetProject($this->params['project']);
 			if (!$project) {
-				throw new GitPHP_InvalidProjectParameterException($_GET['p']);
+				throw new GitPHP_InvalidProjectParameterException($this->params['project']);
 			}
 			$this->project = $project->GetProject();
 		}
@@ -56,7 +56,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$this->preserveWhitespace = true;
 
-		$this->ReadQuery();
+		if (empty($this->params['format']))
+			$this->params['format'] = $this->config->GetValue('compressformat');
 
 		$this->InitializeArchive();
 
@@ -109,20 +110,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			return $this->resource->translate('snapshot');
 		}
 		return 'snapshot';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
-		if (isset($_GET['f'])) $this->params['path'] = $_GET['f'];
-		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
-		if (isset($_GET['fmt']))
-			$this->params['format'] = $_GET['fmt'];
-		else
-			$this->params['format'] = $this->config->GetValue('compressformat');
 	}
 
 	/**

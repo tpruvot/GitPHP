@@ -108,10 +108,10 @@ abstract class GitPHP_ControllerBase
 			$this->projectList->LoadProjects();
 		}
 
-		if (isset($_GET['p'])) {
-			$project = $this->projectList->GetProject(str_replace(chr(0), '', $_GET['p']));
+		if (!empty($this->params['project'])) {
+			$project = $this->projectList->GetProject($this->params['project']);
 			if (!$project) {
-				throw new GitPHP_InvalidProjectParameterException($_GET['p']);
+				throw new GitPHP_InvalidProjectParameterException($this->params['project']);
 			}
 			$this->project = $project->GetProject();
 		}
@@ -119,13 +119,6 @@ abstract class GitPHP_ControllerBase
 		if (!($this->project || $this->multiProject)) {
 			throw new GitPHP_MissingProjectParameterException();
 		}
-
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
-		if (isset($_GET['st']))
-			$this->params['searchtype'] = $_GET['st'];
-
-		$this->ReadQuery();
 	}
 
 	/**
@@ -144,12 +137,12 @@ abstract class GitPHP_ControllerBase
 	{
 		$locale = null;
 
-		if (!empty($_GET['l'])) {
+		if (!empty($this->params['lang'])) {
 			/*
 			 * User picked something
 			 */
-			setcookie(GitPHP_Resource::LocaleCookie, $_GET['l'], time()+GitPHP_Resource::LocaleCookieLifetime);
-			$locale = $_GET['l'];
+			setcookie(GitPHP_Resource::LocaleCookie, $this->params['lang'], time()+GitPHP_Resource::LocaleCookieLifetime);
+			$locale = $this->params['lang'];
 		} else if (!empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
 			/**
 			 * Returning user with a preference
@@ -413,11 +406,6 @@ abstract class GitPHP_ControllerBase
 	public abstract function GetName($local = false);
 
 	/**
-	 * Read query into parameters
-	 */
-	protected abstract function ReadQuery();
-
-	/**
 	 * Set a parameter
 	 *
 	 * @param string $key key to set
@@ -430,6 +418,9 @@ abstract class GitPHP_ControllerBase
 
 		if (empty($value))
 			unset($this->params[$key]);
+
+		if (is_string($value))
+			$value = str_replace(chr(0), '', $value);
 
 		$this->params[$key] = $value;
 	}

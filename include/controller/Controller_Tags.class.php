@@ -45,13 +45,6 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-	}
-
-	/**
 	 * Loads data for this template
 	 */
 	protected function LoadData()

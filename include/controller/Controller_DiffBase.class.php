@@ -38,13 +38,15 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	const DiffModeCookieLifetime = 31536000;			// 1 year
 	
 	/**
-	 * Read query into parameters
+	 * Initialize controller
 	 */
-	protected function ReadQuery()
+	public function Initialize()
 	{
+		parent::Initialize();
+
 		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
 
-			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == GitPHP_Controller_DiffBase::SideBySideDiff) {
+			if ($this->DiffMode(isset($this->params['diffmode']) ? $this->params['diffmode'] : '') == GitPHP_Controller_DiffBase::SideBySideDiff) {
 				$this->params['sidebyside'] = true;
 			}
 

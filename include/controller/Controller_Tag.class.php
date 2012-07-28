@@ -11,6 +11,17 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (!empty($this->params['jstip']) && ($this->params['jstip'] == true))
+			$this->DisableLogging();
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -45,21 +56,6 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 			return $this->resource->translate('tag');
 		}
 		return 'tag';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
-			$this->params['jstip'] = true;
-			$this->DisableLogging();
-		}
 	}
 
 	/**

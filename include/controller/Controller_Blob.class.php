@@ -11,6 +11,17 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hashbase']))
+			$this->params['hashbase'] = 'HEAD';
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -44,22 +55,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			return $this->resource->translate('blob');
 		}
 		return 'blob';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		else
-			$this->params['hashbase'] = 'HEAD';
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
 	}
 
 	/**

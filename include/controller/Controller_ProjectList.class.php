@@ -16,7 +16,11 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	public function Initialize()
 	{
 		$this->multiProject = true;
+
 		parent::Initialize();
+
+		if (empty($this->params['order']))
+			$this->params['order'] = 'project';
 	}
 
 	/**
@@ -72,19 +76,6 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 			return $this->resource->translate('projects');
 		}
 		return 'projects';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['o']))
-			$this->params['order'] = $_GET['o'];
-		else
-			$this->params['order'] = 'project';
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
 	}
 
 	/**

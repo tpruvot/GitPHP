@@ -86,13 +86,6 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-	}
-
-	/**
 	 * Loads headers for this template
 	 */
 	protected function LoadHeaders()

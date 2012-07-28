@@ -48,6 +48,29 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		if (!$this->config->GetValue('search')) {
 			throw new GitPHP_SearchDisabledException();
 		}
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+
+		if (!isset($this->params['searchtype']))
+			$this->params['searchtype'] = GitPHP_Controller_Search::CommitSearch;
+
+		if ($this->params['searchtype'] == GitPHP_Controller_Search::FileSearch) {
+			if (!$this->config->GetValue('filesearch')) {
+				throw new GitPHP_SearchDisabledException(true);
+			}
+
+		}
+
+		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch)) {
+			throw new GitPHP_InvalidSearchTypeException();
+		}
+
+		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
+			throw new GitPHP_SearchLengthException(2);
+		}
 	}
 
 	/**
@@ -85,39 +108,6 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			return $this->resource->translate('search');
 		}
 		return 'search';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (!isset($this->params['searchtype']))
-			$this->params['searchtype'] = GitPHP_Controller_Search::CommitSearch;
-
-		if ($this->params['searchtype'] == GitPHP_Controller_Search::FileSearch) {
-			if (!$this->config->GetValue('filesearch')) {
-				throw new GitPHP_SearchDisabledException(true);
-			}
-
-		}
-
-		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch) && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch)) {
-			throw new GitPHP_InvalidSearchTypeException();
-		}
-
-		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-			throw new GitPHP_SearchLengthException(2);
-		}
-
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
-		if (isset($_GET['pg']))
-			$this->params['page'] = $_GET['pg'];
-		else
-			$this->params['page'] = 0;
 	}
 
 	/**

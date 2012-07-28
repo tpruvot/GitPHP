@@ -11,6 +11,20 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -51,23 +65,6 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 			return $this->resource->translate('log');
 		}
 		return 'log';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
-		if (isset($_GET['pg']))
-			$this->params['page'] = $_GET['pg'];
-		else
-			$this->params['page'] = 0;
-		if (isset($_GET['m']))
-			$this->params['mark'] = $_GET['m'];
 	}
 
 	/**

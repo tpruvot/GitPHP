@@ -48,23 +48,6 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		parent::ReadQuery();
-
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		if (isset($_GET['hp']))
-			$this->params['hashparent'] = $_GET['hp'];
-	}
-
-	/**
 	 * Loads headers for this template
 	 */
 	protected function LoadHeaders()

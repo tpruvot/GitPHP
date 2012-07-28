@@ -11,6 +11,17 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -42,20 +53,6 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 			return $this->resource->translate('history');
 		}
 		return 'history';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		} else {
-			$this->params['hash'] = 'HEAD';
-		}
 	}
 
 	/**

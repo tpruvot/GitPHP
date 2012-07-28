@@ -19,6 +19,9 @@ class GitPHP_Controller_Graph extends GitPHP_ControllerBase
 		if (!$this->config->GetValue('graphs')) {
 			throw new Exception('Graphing has been disabled');
 		}
+
+		if (empty($this->params['graphtype']))
+			$this->params['graphtype'] = 'commitactivity';
 	}
 
 	/**
@@ -53,17 +56,6 @@ class GitPHP_Controller_Graph extends GitPHP_ControllerBase
 			return $this->resource->translate('graph');
 		}
 		return 'graph';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['g']))
-			$this->params['graphtype'] = $_GET['g'];
-		else
-			$this->params['graphtype'] = 'commitactivity';
 	}
 
 	/**

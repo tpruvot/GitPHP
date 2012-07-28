@@ -11,6 +11,20 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hashbase']))
+			$this->params['hashbase'] = 'HEAD';
+		if (!empty($this->params['js']) && ($this->params['js'] == true)) {
+			$this->DisableLogging();
+		}
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -45,26 +59,6 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 			return $this->resource->translate('blame');
 		}
 		return 'blame';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		else
-			$this->params['hashbase'] = 'HEAD';
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
-		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
-			$this->params['js'] = true;
-			$this->DisableLogging();
-		}
 	}
 
 	/**

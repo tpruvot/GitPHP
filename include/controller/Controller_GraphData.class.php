@@ -56,15 +56,6 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['g']))
-			$this->params['graphtype'] = $_GET['g'];
-	}
-
-	/**
 	 * Loads headers for this template
 	 */
 	protected function LoadHeaders()

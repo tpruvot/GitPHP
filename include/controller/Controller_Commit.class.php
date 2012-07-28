@@ -11,6 +11,20 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+
+		if (!empty($this->params['jstip']) && ($this->params['jstip'] == true))
+			$this->DisableLogging();
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -45,22 +59,6 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 			return $this->resource->translate('commit');
 		}
 		return 'commit';
-	}
-
-	/**
-	 * Read query into parameters
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
-			$this->params['jstip'] = true;
-			$this->DisableLogging();
-		}
 	}
 
 	/**
