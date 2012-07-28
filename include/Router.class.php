@@ -12,11 +12,14 @@ class GitPHP_Router
 	/**
 	 * Gets a controller for an action
 	 *
-	 * @param string $action action
 	 * @return mixed controller object
 	 */
-	public static function GetController($action)
+	public static function GetController()
 	{
+		$action = null;
+		if (isset($_GET['a']))
+			$action = $_GET['a'];
+
 		$controller = null;
 
 		switch ($action) {
