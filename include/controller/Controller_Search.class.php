@@ -39,11 +39,11 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	const FileSearch = 'file';
 
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
-		parent::__construct();
+		parent::Initialize();
 
 		if (!$this->config->GetValue('search')) {
 			throw new GitPHP_SearchDisabledException();

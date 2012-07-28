@@ -10,11 +10,11 @@
 class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 {
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
-		parent::__construct();
+		parent::Initialize();
 
 		if (!$this->config->GetValue('graphs')) {
 			throw new Exception('Graphing has been disabled');

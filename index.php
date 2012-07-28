@@ -46,6 +46,7 @@ try {
 
 	$controller = GitPHP_Router::GetController();
 	if ($controller) {
+		$controller->Initialize();
 		$controller->RenderHeaders();
 		$controller->Render();
 	}
@@ -53,6 +54,7 @@ try {
 } catch (Exception $e) {
 
 	$messageController = new GitPHP_Controller_Message();
+	$messageController->Initialize();
 
 	$config = $messageController->GetConfig();
 	if ($config && $config->GetValue('debug') && !($e instanceof GitPHP_MessageException)) {

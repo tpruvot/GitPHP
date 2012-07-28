@@ -11,12 +11,12 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 {
 
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		$this->multiProject = true;
-		parent::__construct();
+		parent::Initialize();
 	}
 
 	/**

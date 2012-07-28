@@ -32,11 +32,11 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	const AtomFormat = 'atom';
 
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
-		parent::__construct();
+		parent::Initialize();
 		$this->preserveWhitespace = true;
 		$this->DisableLogging();
 	}

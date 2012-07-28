@@ -88,9 +88,9 @@ abstract class GitPHP_ControllerBase
 	protected $exe;
 
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		$this->InitializeConfig();
 

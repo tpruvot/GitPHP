@@ -32,9 +32,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	private $cachedFile;
 
 	/**
-	 * Constructor
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		$this->InitializeConfig();
 

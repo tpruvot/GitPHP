@@ -12,7 +12,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	/**
 	 * Constructor
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		try {
 			$this->InitializeConfig();
