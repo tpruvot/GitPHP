@@ -13,12 +13,12 @@
    {include file='nav.tpl' treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=unified">{t}unified{/t}</a>
+   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file diffmode=unified}">{t}unified{/t}</a>
    {else}
-   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}&amp;o=sidebyside">{t}side by side{/t}</a>
+   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file diffmode=sidebyside}">{t}side by side{/t}</a>
    {/if}
     |
-   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff_plain&amp;h={$blob->GetHash()}&amp;hp={$blobparent->GetHash()}&amp;f={$file}">{t}plain{/t}</a>
+   <a href="{geturl project=$project action=blobdiff_plain hash=$blob hashparent=$blobparent file=$file}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -28,7 +28,7 @@
  <div class="page_body">
    <div class="diff_info">
      {* Display the from -> to diff header *}
-     {t}blob{/t}:<a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
+     {t}blob{/t}:<a href="{geturl project=$project action=blob hash=$blobparent hashbase=$commit file=$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{geturl project=$project action=blob hash=$blob hashbase=$commit file=$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
    </div>
    {if $filediff->IsBinary()}
 <pre>

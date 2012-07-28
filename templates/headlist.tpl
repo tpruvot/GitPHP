@@ -15,13 +15,13 @@
        {assign var=headcommit value=$head->GetCommit()}
        <tr class="{cycle values="light,dark"}">
          <td><em>{agestring age=$headcommit->GetAge()}</em></td>
-         <td><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h=refs/heads/{$head->GetName()}" class="list"><strong>{$head->GetName()}</strong></a></td>
-         <td class="link"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h=refs/heads/{$head->GetName()}">{t}shortlog{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=log&amp;h=refs/heads/{$head->GetName()}">{t}log{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;hb={$headcommit->GetHash()}">{t}tree{/t}</a></td>
+         <td><a href="{geturl project=$project action=shortlog hash=$head}" class="list"><strong>{$head->GetName()}</strong></a></td>
+         <td class="link"><a href="{geturl project=$project action=shortlog hash=$head}">{t}shortlog{/t}</a> | <a href="{geturl project=$project action=log hash=$head}">{t}log{/t}</a> | <a href="{geturl project=$project action=tree hashbase=$headcommit}">{t}tree{/t}</a></td>
        </tr>
    {/foreach}
    {if $hasmoreheads}
        <tr>
-       <td><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=heads">&hellip;</a></td>
+       <td><a href="{geturl project=$project action=heads}">&hellip;</a></td>
        </tr>
    {/if}
  </table>

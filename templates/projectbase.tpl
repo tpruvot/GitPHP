@@ -15,13 +15,13 @@
 {/block}
 
 {block name=feeds}
-  <link rel="alternate" title="{$project->GetProject()|escape} log (Atom)" href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom" type="application/atom+xml" />
-  <link rel="alternate" title="{$project->GetProject()|escape} log (RSS)" href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=rss" type="application/rss+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (Atom)" href="{geturl project=$project action=atom}" type="application/atom+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (RSS)" href="{geturl project=$project action=rss}" type="application/rss+xml" />
 {/block}
 
 {block name=header}
-  <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
-  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=summary">{$project->GetProject()}</a>
+  <a href="{geturl}">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
+  <a href="{geturl project=$project}">{$project->GetProject()}</a>
   {if $actionlocal}
      / {$actionlocal}
   {/if}
@@ -52,6 +52,6 @@
   {$project->GetDescription()}
   {/if}
   </div>
-  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=rss" class="rss_logo">{t}RSS{/t}</a>
-  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=atom" class="rss_logo">{t}Atom{/t}</a>
+  <a href="{geturl project=$project action=rss}" class="rss_logo">{t}RSS{/t}</a>
+  <a href="{geturl project=$project action=atom}" class="rss_logo">{t}Atom{/t}</a>
 {/block}

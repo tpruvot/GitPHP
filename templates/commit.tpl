@@ -58,14 +58,14 @@
      </tr>
      <tr>
        <td>{t}tree{/t}</td>
-       <td class="monospace"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
-       <td class="link"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}">{t}tree{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=snapshot&amp;h={$commit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a></td>
+       <td class="monospace"><a href="{geturl project=$project action=tree hash=$tree hashbase=$commit}" class="list">{$tree->GetHash()}</a></td>
+       <td class="link"><a href="{geturl project=$project action=tree hash=$tree hashbase=$commit}">{t}tree{/t}</a> | <a href="{geturl project=$project action=snapshot hash=$commit}" class="snapshotTip">{t}snapshot{/t}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
        <tr>
          <td>{t}parent{/t}</td>
-	 <td class="monospace"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$par->GetHash()}" class="list">{$par->GetHash()}</a></td>
-         <td class="link"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$par->GetHash()}">{t}commit{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}&amp;hp={$par->GetHash()}">{t}commitdiff{/t}</a></td>
+	 <td class="monospace"><a href="{geturl project=$project action=commit hash=$par}" class="list">{$par->GetHash()}</a></td>
+         <td class="link"><a href="{geturl project=$project action=commit hash=$par}">{t}commit{/t}</a> | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$par}">{t}commitdiff{/t}</a></td>
        </tr>
      {/foreach}
    </table>
@@ -94,7 +94,7 @@
 	 
        {if $diffline->GetStatus() == "A"}
          <td>
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -112,14 +112,14 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetFromFile()}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          {assign var=parent value=$commit->GetParent()}
          <td>
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -130,20 +130,20 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=history&amp;h={$parent->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}history{/t}</a>
+	   <a href="{geturl project=$project action=history hash=$parent file=$diffline->GetFromFile()}">{t}history{/t}</a>
 	    | 
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$diffline->GetFromHash()}&amp;f={$diffline->GetFromFile()}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob_plain hash=$diffline->GetFromHash() file=$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
            {if $diffline->GetToHash() != $diffline->GetFromHash()}
-             <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}" class="list">
+             <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {else}
-             <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}" class="list">
+             <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {/if}
@@ -190,22 +190,22 @@
 	   {/if}
 	 </td>
          <td class="link">
-           <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
+           <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}diff{/t}</a>
+	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
-	     | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}">{t}history{/t}</a>
-             | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile()}">{t}plain{/t}</a>
+	     | <a href="{geturl project=$project action=history hash=$commit file=$diffline->GetFromFile()}">{t}history{/t}</a>
+             | <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetToFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	     {$diffline->GetToFile()}</a>
 	 </td>
          <td>
 	   <span class="movedfile">
 	     {capture assign=fromfilelink}
-	     <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
+	     <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
 	     {/capture}
 	     [
 	     {assign var=similarity value=$diffline->GetSimilarity()}
@@ -219,11 +219,11 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$diffline->GetToHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$diffline->GetToHash()}&amp;hp={$diffline->GetFromHash()}&amp;hb={$commit->GetHash()}&amp;f={$diffline->GetToFile()}">{t}diff{/t}</a>
+	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
-	    | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$diffline->GetToHash()}&amp;f={$diffline->GetToFile()}">{t}plain{/t}</a>
+	    | <a href="{geturl project=$project action=blob_plain hash=$diffline->GetToHash() file=$diffline->GetToFile()}">{t}plain{/t}</a>
 	 </td>
        {/if}
 

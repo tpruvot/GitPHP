@@ -245,4 +245,210 @@ class GitPHP_Router
 		return $controller;
 	}
 
+	/**
+	 * Generate a url
+	 *
+	 * @param string $baseurl base request url
+	 * @param array $params request parameters
+	 */
+	public static function GetUrl($baseurl, $params = array())
+	{
+		if (count($params) < 1)
+			return $baseurl;
+
+		$query = array();
+
+		$action = null;
+		if (!empty($params['action'])) {
+			$action = $params['action'];
+			$query['a'] = $action;
+		}
+
+		if (!empty($params['project'])) {
+			if ($params['project'] instanceof GitPHP_Project)
+				$query['p'] = rawurlencode($params['project']->GetProject());
+			else if (is_string($params['project']))
+				$query['p'] = rawurlencode($params['project']);
+		}
+
+		switch ($action) {
+			case 'search':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['page']))
+					$query['pg'] = $params['page'];
+				if (!empty($params['search']))
+					$query['s'] = rawurlencode($params['search']);
+				if (!empty($params['searchtype']))
+					$query['st'] = $params['searchtype'];
+				break;
+
+
+			case 'commitdiff':
+			case 'commitdiff_plain':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['hashparent']))
+					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
+				if (!empty($params['diffmode']))
+					$query['o'] = $params['diffmode'];
+				break;
+
+
+			case 'blobdiff':
+			case 'blobdiff_plain':
+				if (!empty($params['diffmode']))
+					$query['o'] = $params['diffmode'];
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['hashbase']))
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+				if (!empty($params['hashparent']))
+					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
+				break;
+
+
+			case 'history':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
+				break;
+
+
+			case 'shortlog':
+			case 'log':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['page']))
+					$query['pg'] = $params['page'];
+				if (!empty($params['mark']))
+					$query['m'] = GitPHP_Router::GetHash($params['mark']);
+				break;
+
+
+			case 'snapshot':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['path']))
+					$query['f'] = rawurlencode($params['path']);
+				if (!empty($params['prefix']))
+					$query['prefix'] = $params['prefix'];
+				if (!empty($params['fmt']))
+					$query['fmt'] = $params['fmt'];
+				break;
+
+
+			case 'tree':
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['hashbase']))
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+				if (!empty($params['js']) && ($params['js'] == true))
+					$query['o'] = 'js';
+				break;
+
+
+			case 'tag':
+				if (!empty($params['hash'])) {
+					if ($params['hash'] instanceof GitPHP_Tag) {
+						$query['h'] = rawurlencode($params['hash']->GetName());
+					} else if (is_string($params['hash'])) {
+						$query['h'] = rawurlencode($params['hash']);
+					}
+				}
+				if (!empty($params['jstip']) && ($params['jstip'] == true))
+					$query['o'] = 'jstip';
+				break;
+
+
+			case 'blame':
+				if (!empty($params['hashbase']))
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['js']) && ($params['js'] == true))
+					$query['o'] = 'js';
+				break;
+
+
+			case 'blob':
+			case 'blob_plain':
+				if (!empty($params['hashbase']))
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				break;
+
+
+			case 'commit':
+				if (!empty($params['hash']))
+					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+				if (!empty($params['jstip']) && ($params['jstip'] == true))
+					$query['o'] = 'jstip';
+				break;
+
+
+			case 'graph':
+				if (!empty($params['graphtype']))
+					$query['g'] = $params['graphtype'];
+				break;
+
+
+			case 'graphdata':
+				if (!empty($params['graphtype']))
+					$query['g'] = $params['graphtype'];
+				break;
+
+
+			default:
+				if (empty($params['project'])) {
+					if (!empty($params['order']))
+						$query['o'] = $params['order'];
+				}
+		}
+
+		if (count($query) < 1)
+			return $baseurl;
+
+		$url = $baseurl . '?';
+		$first = true;
+		foreach ($query as $var => $val) {
+			if (empty($val))
+				continue;
+			if (!$first)
+				$url .= '&';
+			$url .= $var . '=' . $val;
+			$first = false;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Gets a hash for a string or hash-identified object
+	 *
+	 * @param string|GitPHP_GitObject $value string or hashed object
+	 * @return string hash
+	 */
+	private static function GetHash($value)
+	{
+		if ($value instanceof GitPHP_Ref)
+			return rawurlencode($value->GetRefPath());
+		else if ($value instanceof GitPHP_GitObject)
+			return $value->GetHash();
+		else if (is_string($value))
+			return $value;
+
+		return null;
+	}
+
 }

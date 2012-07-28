@@ -26,10 +26,10 @@
      <tr class="{cycle values="light,dark"}">
        <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{agestring age=$historycommit->GetAge()}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$historycommit->GetAge()}{/if}</em></td>
        <td><em>{$historycommit->GetAuthorName()}</em></td>
-       <td><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$historycommit->GetHash()}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()|escape}"{/if}><strong>{$historycommit->GetTitle(50)|escape:'html'}</strong></a>
+       <td><a href="{geturl project=$project action=commit hash=$historycommit}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()|escape}"{/if}><strong>{$historycommit->GetTitle(50)|escape:'html'}</strong></a>
        {include file='refbadges.tpl' commit=$historycommit}
        </td>
-       <td class="link"><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$historycommit->GetHash()}">{t}commit{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commitdiff&amp;h={$historycommit->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$historyitem->GetToHash()}&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}">{t}diff to current{/t}</a>{/if}
+       <td class="link"><a href="{geturl project=$project action=commit hash=$historycommit}">{t}commit{/t}</a> | <a href="{geturl project=$project action=commitdiff hash=$historycommit}">{t}commitdiff{/t}</a> | <a href="{geturl project=$project action=blob hashbase=$historycommit file=$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$historyitem->GetToHash() file=$blob->GetPath() hashbase=$historycommit}">{t}diff to current{/t}</a>{/if}
        </td>
      </tr>
    {/foreach}

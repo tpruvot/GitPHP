@@ -18,35 +18,35 @@
            <td><em>{if $tagcommit}{agestring age=$tagcommit->GetAge()}{else}{agestring age=$tag->GetAge()}{/if}</em></td>
            <td>
 	   {if $objtype == 'commit'}
-		   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$object->GetHash()}" class="list"><strong>{$tag->GetName()}</strong></a>
+		   <a href="{geturl project=$project action=commit hash=$object}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {elseif $objtype == 'tag'}
-		   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$tag->GetName()}" class="list"><strong>{$tag->GetName()}</strong></a>
+		   <a href="{geturl project=$project action=tag hash=$tag}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {elseif $objtype == 'blob'}
-		   <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$tag->GetName()}" class="list"><strong>{$tag->GetName()}</strong></a>
+		   <a href="{geturl project=$project action=blob hash=$object}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {/if}
 	   </td>
            <td>
 	     {assign var=comment value=$tag->GetComment()}
              {if count($comment) > 0}
-               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$tag->GetName()}">{$comment[0]}</a>
+               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{geturl project=$project action=tag hash=$tag}">{$comment[0]}</a>
              {/if}
            </td>
            <td class="link">
              {if !$tag->LightTag()}
-   	       <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tag&amp;h={$tag->GetName()}">{t}tag{/t}</a> | 
+   	       <a href="{geturl project=$project action=tag hash=$tag}">{t}tag{/t}</a> | 
              {/if}
 	     {if $objtype == 'blob'}
-		<a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=blob&amp;h={$object->GetHash()}">{t}blob{/t}</a>
+		<a href="{geturl project=$project action=blob hash=$object}">{t}blob{/t}</a>
 	     {else}
-             <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$tagcommit->GetHash()}">{t}commit{/t}</a>
-	      | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h={$tagcommit->GetHash()}">{t}shortlog{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=log&amp;h={$tagcommit->GetHash()}">{t}log{/t}</a> | <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=snapshot&amp;h={$tagcommit->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a>
+             <a href="{geturl project=$project action=commit hash=$tagcommit}">{t}commit{/t}</a>
+	      | <a href="{geturl project=$project action=shortlog hash=$tagcommit}">{t}shortlog{/t}</a> | <a href="{geturl project=$project action=log hash=$tagcommit}">{t}log{/t}</a> | <a href="{geturl project=$project action=snapshot hash=$tagcommit}" class="snapshotTip">{t}snapshot{/t}</a>
 	      {/if}
            </td>
        </tr>
      {/foreach}
      {if $hasmoretags}
        <tr>
-         <td><a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=tags">&hellip;</a></td>
+         <td><a href="{geturl project=$project action=tags}">&hellip;</a></td>
        </tr>
      {/if}
    </table>

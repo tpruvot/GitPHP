@@ -43,22 +43,22 @@ git source code archive
         {if $order == "project"}
           <th>{t}Project{/t}</th>
         {else}
-          <th><a class="header" href="{$scripturl}?o=project">{t}Project{/t}</a></th>
+          <th><a class="header" href="{geturl order=project}">{t}Project{/t}</a></th>
         {/if}
         {if $order == "descr"}
           <th>{t}Description{/t}</th>
         {else}
-          <th><a class="header" href="{$scripturl}?o=descr">{t}Description{/t}</a></th>
+          <th><a class="header" href="{geturl order=descr}">{t}Description{/t}</a></th>
         {/if}
         {if $order == "owner"}
           <th>{t}Owner{/t}</th>
         {else}
-          <th><a class="header" href="{$scripturl}?o=owner">{t}Owner{/t}</a></th>
+          <th><a class="header" href="{geturl order=owner}">{t}Owner{/t}</a></th>
         {/if}
         {if $order == "age"}
           <th>{t}Last Change{/t}</th>
         {else}
-          <th><a class="header" href="{$scripturl}?o=age">{t}Last Change{/t}</a></th>
+          <th><a class="header" href="{geturl order=age}">{t}Last Change{/t}</a></th>
         {/if}
         <th>{t}Actions{/t}</th>
       </tr>
@@ -79,9 +79,9 @@ git source code archive
 
     <tr class="{cycle values="light,dark"} projectRow">
       <td class="projectName">
-        <a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{geturl project=$proj}" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td class="projectDescription"><a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td class="projectDescription"><a href="{geturl project=$proj}" class="list">{$proj->GetDescription()}</a></td>
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
@@ -98,13 +98,13 @@ git source code archive
 	{/if}
       </td>
       <td class="link">
-        <a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=summary">{t}summary{/t}</a>
+        <a href="{geturl project=$proj}">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
-	<a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=shortlog">{t}shortlog{/t}</a> | 
-	<a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=log">{t}log{/t}</a> | 
-	<a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=tree">{t}tree{/t}</a> | 
-	<a href="{$scripturl}?p={$proj->GetProject()|rawurlencode}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
+	<a href="{geturl project=$proj action=shortlog}">{t}shortlog{/t}</a> | 
+	<a href="{geturl project=$proj action=log}">{t}log{/t}</a> | 
+	<a href="{geturl project=$proj action=tree}">{t}tree{/t}</a> | 
+	<a href="{geturl project=$proj action=snapshot hash=HEAD}" class="snapshotTip">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>
@@ -121,7 +121,7 @@ git source code archive
 {/block}
 
 {block name=footer}
-  <a href="{$scripturl}?a=opml" class="rss_logo">{t}OPML{/t}</a>
-  <a href="{$scripturl}?a=project_index" class="rss_logo">{t}TXT{/t}</a>
+  <a href="{geturl action=opml}" class="rss_logo">{t}OPML{/t}</a>
+  <a href="{geturl action=project_index}" class="rss_logo">{t}TXT{/t}</a>
 {/block}
 
