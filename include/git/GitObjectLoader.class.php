@@ -201,11 +201,14 @@ class GitPHP_GitObjectLoader
 			$matches = array_merge($matches, $pack->FindHashes($abbrevHash));
 		}
 
+		$matches = array_unique($matches);
+
 		if (count($matches) < 1)
 			return $abbrevHash;
 
-		if (count($matches) > 1)
+		if (count($matches) > 1) {
 			throw new GitPHP_AmbiguousHashException($abbrevHash);
+		}
 
 		return $matches[0];
 	}
