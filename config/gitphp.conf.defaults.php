@@ -272,6 +272,18 @@ $gitphp_conf['graphs'] = false;
  */
 $gitphp_conf['abbreviateurl'] = false;
 
+/*
+ * cleanurl
+ * Uses clean, rest-style urls throughout gitphp.
+ * This requires additional setup in your web server
+ * to rewrite urls (mod_rewrite on Apache, HttpRewriteModule
+ * on Nginx, etc).  URLs must be rewritten to point
+ * to index.php?q={query}.
+ * For more instructions on how to set this up, see
+ * [wiki page].
+ */
+$gitphp_conf['cleanurl'] = false;
+
 
 /*********************************************************
  * Executable/filesystem options
