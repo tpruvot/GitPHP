@@ -12,8 +12,7 @@
 define(
 	function() {
 		return function() {
-			var url = window.location.href.match(/^([^\?]+\/)/);
-			return url ? url[1] : null;
+			return GitPHP.BaseUrl;
 		}
 	}
 );

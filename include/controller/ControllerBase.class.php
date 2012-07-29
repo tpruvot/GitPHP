@@ -510,6 +510,13 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('scripturl', $scripturl);
 		$this->tpl->assign('fullscripturl', $fullscripturl);
 
+		$baseurl = $scripturl;
+		if (substr_compare($baseurl, '.php', -4) === 0) {
+			$baseurl = dirname($baseurl);
+		}
+		$baseurl = rtrim($baseurl, "\\");
+		$this->tpl->assign('baseurl', $baseurl);
+		
 		if ($this->config->GetValue('abbreviateurl')) {
 			$this->tpl->assign('abbreviateurl', true);
 		}

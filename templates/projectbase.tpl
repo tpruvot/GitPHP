@@ -26,7 +26,7 @@
      / {$actionlocal}
   {/if}
   {if $enablesearch}
-    <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
+    <form method="get" action="{geturl}" enctype="application/x-www-form-urlencoded">
       <div class="search">
         <input type="hidden" name="p" value="{$project->GetProject()}" />
         <input type="hidden" name="a" value="search" />

@@ -22,5 +22,7 @@ GitPHP.Resources = {ldelim}
 GitPHP.Snapshot = {ldelim}
 	Formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
 {rdelim}
+
+GitPHP.BaseUrl = '{$baseurl}/';
 		
 </script>

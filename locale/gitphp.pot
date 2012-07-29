@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.7\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2012-07-01 11:07-0500\n"
+"POT-Creation-Date: 2012-07-29 00:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: templates/treelist.tpl
 #: templates/searchfiles.tpl
 #: templates/history.tpl
-#: include/controller/Controller_Blob.class.php:44
+#: include/controller/Controller_Blob.class.php:55
 msgid "blob"
 msgstr ""
 
@@ -35,7 +35,7 @@ msgstr ""
 #: templates/treelist.tpl
 #: templates/searchfiles.tpl
 #: templates/blob.tpl
-#: include/controller/Controller_History.class.php:42
+#: include/controller/Controller_History.class.php:53
 msgid "history"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 #: templates/log.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Tree.class.php:45
+#: include/controller/Controller_Tree.class.php:61
 msgid "tree"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 #: templates/treelist.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Snapshot.class.php:76
+#: include/controller/Controller_Snapshot.class.php:110
 msgid "snapshot"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgstr ""
 #: templates/history.tpl
 #: templates/shortloglist.tpl
 #: templates/projectbase.tpl
-#: include/controller/Controller_Commit.class.php:45
+#: include/controller/Controller_Commit.class.php:59
 msgid "commit"
 msgstr ""
 
@@ -88,7 +88,7 @@ msgstr ""
 #: templates/tag.tpl
 #: templates/tagtip.tpl
 #: templates/taglist.tpl
-#: include/controller/Controller_Tag.class.php:45
+#: include/controller/Controller_Tag.class.php:56
 msgid "tag"
 msgstr ""
 
@@ -273,7 +273,7 @@ msgstr ""
 #: templates/taglist.tpl
 #: templates/title.tpl
 #: templates/projectlist.tpl
-#: include/controller/Controller_Log.class.php:46
+#: include/controller/Controller_Log.class.php:60
 msgid "shortlog"
 msgstr ""
 
@@ -282,7 +282,7 @@ msgstr ""
 #: templates/nav.tpl
 #: templates/taglist.tpl
 #: templates/projectlist.tpl
-#: include/controller/Controller_Log.class.php:51
+#: include/controller/Controller_Log.class.php:65
 msgid "log"
 msgstr ""
 
@@ -296,8 +296,8 @@ msgstr ""
 # Link back to the list of projects
 #: templates/main.tpl
 #: templates/projectbase.tpl
-#: include/controller/ControllerBase.class.php:446
-#: include/controller/Controller_ProjectList.class.php:72
+#: include/controller/ControllerBase.class.php:467
+#: include/controller/Controller_ProjectList.class.php:76
 msgid "projects"
 msgstr ""
 
@@ -309,7 +309,7 @@ msgstr ""
 
 # Used as title for search page, and also is the label for the search box
 #: templates/projectbase.tpl
-#: include/controller/Controller_Search.class.php:85
+#: include/controller/Controller_Search.class.php:108
 msgid "search"
 msgstr ""
 
@@ -421,12 +421,12 @@ msgstr ""
 
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 #: templates/blob.tpl
-#: include/controller/Controller_Blame.class.php:45
+#: include/controller/Controller_Blame.class.php:59
 msgid "blame"
 msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
-#: include/controller/Controller_Message.class.php:155
+#: include/controller/Controller_Message.class.php:140
 msgid "Project is required"
 msgstr ""
 
@@ -443,35 +443,35 @@ msgstr ""
 
 # Error message when user tries to access a project that doesn't exist
 # %1$s: the project the user tried to access
-#: include/controller/Controller_Message.class.php:149
+#: include/controller/Controller_Message.class.php:134
 #, php-format
 msgid "Invalid project %1$s"
 msgstr ""
 
 # Used as the title for the opml controller
 # OPML is a standard XML outline format
-#: include/controller/Controller_ProjectList.class.php:62
+#: include/controller/Controller_ProjectList.class.php:66
 msgid "opml"
 msgstr ""
 
 # Used as the title of the project index controller
-#: include/controller/Controller_ProjectList.class.php:67
+#: include/controller/Controller_ProjectList.class.php:71
 msgid "project index"
 msgstr ""
 
 # Error message when a user tries to search but searching has been disabled in the config
-#: include/controller/Controller_Message.class.php:166
+#: include/controller/Controller_Message.class.php:151
 msgid "Search has been disabled"
 msgstr ""
 
 # Error message when a user tries to do a file search but searching files has been disabled in the config
-#: include/controller/Controller_Message.class.php:162
+#: include/controller/Controller_Message.class.php:147
 msgid "File search has been disabled"
 msgstr ""
 
 # Error message when a user's search query is too short
 # %1$d: the minimum number of characters
-#: include/controller/Controller_Message.class.php:179
+#: include/controller/Controller_Message.class.php:164
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"
@@ -479,7 +479,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Error message when the user enters an unsupported search type
-#: include/controller/Controller_Message.class.php:173
+#: include/controller/Controller_Message.class.php:158
 msgid "Invalid search type"
 msgstr ""
 
@@ -508,49 +508,49 @@ msgstr ""
 
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
-#: include/controller/Controller_Message.class.php:209
+#: include/controller/Controller_Message.class.php:194
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/controller/Controller_Message.class.php:221
+#: include/controller/Controller_Message.class.php:206
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/controller/Controller_Message.class.php:233
+#: include/controller/Controller_Message.class.php:218
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/controller/Controller_Message.class.php:239
+#: include/controller/Controller_Message.class.php:224
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
 
 # Error message when user tries to specify a file with a list of the projects, but it isn't a file
 # %1$s: the path the user specified
-#: include/controller/Controller_Message.class.php:215
+#: include/controller/Controller_Message.class.php:200
 #, php-format
 msgid "%1$s is not a file"
 msgstr ""
 
 # Error message when user tries to specify a file with a list of the projects, but the system can't read the file
 # %1$s: the file the user specified
-#: include/controller/Controller_Message.class.php:227
+#: include/controller/Controller_Message.class.php:212
 #, php-format
 msgid "Failed to open project list file %1$s"
 msgstr ""
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
-#: include/controller/Controller_Message.class.php:185
+#: include/controller/Controller_Message.class.php:170
 #, php-format
 msgid "Invalid hash %1$s"
 msgstr ""
@@ -625,7 +625,7 @@ msgstr ""
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: include/controller/Controller_Message.class.php:197
+#: include/controller/Controller_Message.class.php:182
 msgid "A projectroot must be set in the config"
 msgstr ""
 
@@ -707,7 +707,7 @@ msgstr ""
 
 # Used as an error message when memcache is turned
 # on without the appropriate PHP extension installed
-#: include/controller/Controller_Message.class.php:203
+#: include/controller/Controller_Message.class.php:188
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
 msgstr ""
@@ -727,7 +727,7 @@ msgstr ""
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: include/controller/Controller_Message.class.php:191
+#: include/controller/Controller_Message.class.php:176
 #, php-format
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
@@ -768,7 +768,31 @@ msgstr ""
 
 # Message when the config file failed to load
 # %1$s: the config file that we tried to load
-#: include/controller/Controller_Message.class.php:245
+#: include/controller/Controller_Message.class.php:230
 #, php-format
 msgid "Could not load config file %1$s"
+msgstr ""
+
+# Used as a link to and title of the graph page
+#: templates/nav.tpl
+#: include/controller/Controller_Graph.class.php:56
+msgid "graph"
+msgstr ""
+
+# Name of the commit activity graph
+#: templates/graph.tpl
+msgid "commit activity"
+msgstr ""
+
+# Name of the language distribution graph
+#: templates/graph.tpl
+msgid "language distribution"
+msgstr ""
+
+# Message displayed when an abbreviated hash is given
+# but it is ambiguous because there are multiple hashes
+# in the system with this abbreviation
+#: include/controller/Controller_Message.class.php:236
+#, php-format
+msgid "Ambiguous abbreviated hash %1$s"
 msgstr ""
