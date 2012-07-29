@@ -111,7 +111,7 @@ define(["jquery", "modules/geturl"],
 		var expanderClick = function() {
 			var jThis = $(this);
 
-			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
+			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{4,40}|HEAD)/);
 			if (!treeHash) {
 				return false;
 			}
