@@ -84,7 +84,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					}
 
 					$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
-					$blob->SetPath($this->params['file']);
+					if (!empty($this->params['file']))
+						$blob->SetPath($this->params['file']);
 
 					$mimeReader = new GitPHP_FileMimeTypeReader($blob, $this->GetMimeStrategy());
 					$mime = $mimeReader->GetMimeType();

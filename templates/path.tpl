@@ -18,7 +18,7 @@
 		{/foreach}
 		{if $pathobject instanceof GitPHP_Blob}
 			{if $target == 'blobplain'}
-				<a href="{geturl project=$project action=blob hash=$pathobject hashbase=$pathobjectcommit file=$pathobject->GetPath() output=plain}"><strong>{$pathobject->GetName()|escape}</strong></a>
+				<a href="{geturl project=$project action=blob hash=$pathobject file=$pathobject->GetPath() output=plain}"><strong>{$pathobject->GetName()|escape}</strong></a>
 			{elseif $target == 'blob'}
 				<a href="{geturl project=$project action=blob hash=$pathobject hashbase=$pathobjectcommit file=$pathobject->GetPath()}"><strong>{$pathobject->GetName()|escape}</strong></a>
 			{else}
