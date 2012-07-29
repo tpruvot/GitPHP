@@ -17,6 +17,9 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 
 		function getCommitHash(element) {
 			var hash = element.attr('href').match(/h=([0-9a-fA-F]{4,40}|HEAD)/);
+			if (!hash) {
+				hash = element.attr('href').match(/\/commit\/([0-9a-fA-F]{4,40}|HEAD)/);
+			}
 			return hash ? hash[1] : null;
 		}
 

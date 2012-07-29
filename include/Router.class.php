@@ -284,7 +284,13 @@ class GitPHP_Router
 
 		$params = array();
 
-		if (preg_match('@project/([^/\?]+)$@', $url, $regs)) {
+		if (preg_match('@^project/([^/\?]+)/commit/([0-9A-Fa-f]{4,40}|HEAD)$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'commit';
+			$params['h'] = $regs[2];
+		}
+
+		if (preg_match('@^project/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 		}
 
@@ -352,13 +358,22 @@ class GitPHP_Router
 
 		if (!empty($params['action'])) {
 			switch ($params['action']) {
+
 				case 'opml':
 					$baseurl .= 'opml';
 					$exclude[] = 'action';
 					break;
+
 				case 'projectindex':
 					$baseurl .= 'projectindex';
 					$exclude[] = 'action';
+					break;
+
+				case 'commit':
+					$baseurl .= '/commit/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$exclude[] = 'action';
+					$exclude[] = 'hash';
+					break;
 			}
 		}
 
