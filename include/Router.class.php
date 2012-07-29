@@ -16,9 +16,11 @@ class GitPHP_Router
 	 */
 	public static function GetController()
 	{
+		$query = $_GET;
+
 		$action = null;
-		if (isset($_GET['a']))
-			$action = $_GET['a'];
+		if (isset($query['a']))
+			$action = $query['a'];
 
 		$controller = null;
 
@@ -27,10 +29,10 @@ class GitPHP_Router
 
 			case 'search':
 				$controller = new GitPHP_Controller_Search();
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['pg']))
-					$controller->SetParam('page', $_GET['pg']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['pg']))
+					$controller->SetParam('page', $query['pg']);
 				break;
 
 
@@ -39,15 +41,15 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Commitdiff();
 				if ($action === 'commitdiff_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
-				if (!empty($_GET['d'])) {
-					$controller->SetParam('diffmode', $_GET['d']);
+				else if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
+				if (!empty($query['d'])) {
+					$controller->SetParam('diffmode', $query['d']);
 				}
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['hp']))
-					$controller->SetParam('hashparent', $_GET['hp']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['hp']))
+					$controller->SetParam('hashparent', $query['hp']);
 				break;
 
 
@@ -56,28 +58,28 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Blobdiff();
 				if ($action === 'blobdiff_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
-				if (!empty($_GET['d'])) {
-					$controller->SetParam('diffmode', $_GET['d']);
+				else if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
+				if (!empty($query['d'])) {
+					$controller->SetParam('diffmode', $query['d']);
 				}
-				if (!empty($_GET['f']))
-					$controller->SetParam('file', $_GET['f']);
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['hb']))
-					$controller->SetParam('hashbase', $_GET['hb']);
-				if (!empty($_GET['hp']))
-					$controller->SetParam('hashparent', $_GET['hp']);
+				if (!empty($query['f']))
+					$controller->SetParam('file', $query['f']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['hb']))
+					$controller->SetParam('hashbase', $query['hb']);
+				if (!empty($query['hp']))
+					$controller->SetParam('hashparent', $query['hp']);
 				break;
 
 
 			case 'history':
 				$controller = new GitPHP_Controller_History();
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['f']))
-					$controller->SetParam('file', $_GET['f']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['f']))
+					$controller->SetParam('file', $query['f']);
 				break;
 
 
@@ -86,47 +88,47 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Log();
 				if ($action === 'shortlog')
 					$controller->SetParam('short', true);
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['pg']))
-					$controller->SetParam('page', $_GET['pg']);
-				if (!empty($_GET['m']))
-					$controller->SetParam('mark', $_GET['m']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['pg']))
+					$controller->SetParam('page', $query['pg']);
+				if (!empty($query['m']))
+					$controller->SetParam('mark', $query['m']);
 				break;
 
 
 			case 'snapshot':
 				$controller = new GitPHP_Controller_Snapshot();
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['f']))
-					$controller->SetParam('path', $_GET['f']);
-				if (!empty($_GET['prefix']))
-					$controller->SetParam('prefix', $_GET['prefix']);
-				if (!empty($_GET['fmt']))
-					$controller->SetParam('format', $_GET['fmt']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['f']))
+					$controller->SetParam('path', $query['f']);
+				if (!empty($query['prefix']))
+					$controller->SetParam('prefix', $query['prefix']);
+				if (!empty($query['fmt']))
+					$controller->SetParam('format', $query['fmt']);
 				break;
 
 
 			case 'tree':
 				$controller = new GitPHP_Controller_Tree();
-				if (!empty($_GET['f']))
-					$controller->SetParam('file', $_GET['f']);
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['hb']))
-					$controller->SetParam('hashbase', $_GET['hb']);
-				if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
+				if (!empty($query['f']))
+					$controller->SetParam('file', $query['f']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['hb']))
+					$controller->SetParam('hashbase', $query['hb']);
+				if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
 				break;
 
 
 			case 'tag':
 				$controller = new GitPHP_Controller_Tag();
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
 				break;
 
 
@@ -142,14 +144,14 @@ class GitPHP_Router
 
 			case 'blame':
 				$controller = new GitPHP_Controller_Blame();
-				if (!empty($_GET['hb']))
-					$controller->SetParam('hashbase', $_GET['hb']);
-				if (!empty($_GET['f']))
-					$controller->SetParam('file', $_GET['f']);
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o'])) {
-					$controller->SetParam('output', $_GET['o']);
+				if (!empty($query['hb']))
+					$controller->SetParam('hashbase', $query['hb']);
+				if (!empty($query['f']))
+					$controller->SetParam('file', $query['f']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['o'])) {
+					$controller->SetParam('output', $query['o']);
 				}
 				break;
 
@@ -159,14 +161,14 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Blob();
 				if ($action === 'blob_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
-				if (!empty($_GET['hb']))
-					$controller->SetParam('hashbase', $_GET['hb']);
-				if (!empty($_GET['f']))
-					$controller->SetParam('file', $_GET['f']);
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
+				else if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
+				if (!empty($query['hb']))
+					$controller->SetParam('hashbase', $query['hb']);
+				if (!empty($query['f']))
+					$controller->SetParam('file', $query['f']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
 				break;
 
 
@@ -182,10 +184,10 @@ class GitPHP_Router
 
 			case 'commit':
 				$controller = new GitPHP_Controller_Commit();
-				if (!empty($_GET['h']))
-					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o']))
-					$controller->SetParam('output', $_GET['o']);
+				if (!empty($query['h']))
+					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['o']))
+					$controller->SetParam('output', $query['o']);
 				break;
 
 
@@ -208,43 +210,43 @@ class GitPHP_Router
 
 			case 'graph':
 				$controller = new GitPHP_Controller_Graph();
-				if (!empty($_GET['g']))
-					$controller->SetParam('graphtype', $_GET['g']);
+				if (!empty($query['g']))
+					$controller->SetParam('graphtype', $query['g']);
 				break;
 
 
 			case 'graphdata':
 				$controller = new GitPHP_Controller_GraphData();
-				if (!empty($_GET['g']))
-					$controller->SetParam('graphtype', $_GET['g']);
+				if (!empty($query['g']))
+					$controller->SetParam('graphtype', $query['g']);
 				break;
 
 
 			default:
-				if (!empty($_GET['p'])) {
+				if (!empty($query['p'])) {
 					$controller = new GitPHP_Controller_Project();
 				} else {
 					$controller = new GitPHP_Controller_ProjectList();
-					if (!empty($_GET['o'])) {
-						$controller->SetParam('order', $_GET['o']);
+					if (!empty($query['o'])) {
+						$controller->SetParam('order', $query['o']);
 					}
 				}
 		}
 
-		if (!empty($_GET['p'])) {
-			$controller->SetParam('project', $_GET['p']);
+		if (!empty($query['p'])) {
+			$controller->SetParam('project', $query['p']);
 		}
 
-		if (!empty($_GET['s'])) {
-			$controller->SetParam('search', $_GET['s']);
+		if (!empty($query['s'])) {
+			$controller->SetParam('search', $query['s']);
 		}
 
-		if (!empty($_GET['st'])) {
-			$controller->SetParam('searchtype', $_GET['st']);
+		if (!empty($query['st'])) {
+			$controller->SetParam('searchtype', $query['st']);
 		}
 
-		if (!empty($_GET['l'])) {
-			$controller->SetParam('lang', $_GET['l']);
+		if (!empty($query['l'])) {
+			$controller->SetParam('lang', $query['l']);
 		}
 
 		return $controller;
