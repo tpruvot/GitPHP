@@ -89,7 +89,7 @@ GitPHPJSModules = ['commitdiff'];
      <div class="diffBlob" id="{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
-       {localfiletype type=$filediff->GetFromFileType()}:<a href="{geturl project=$project action=blob hash=$filediff->GetFromHash() hashbase=$commit file=$filediff->GetFromFile()}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
+       {localfiletype type=$filediff->GetFromFileType()}:<a href="{geturl project=$project action=blob hash=$filediff->GetFromBlob() hashbase=$commit file=$filediff->GetFromFile()}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
          {t}(deleted){/t}
        {/if}
@@ -100,7 +100,7 @@ GitPHPJSModules = ['commitdiff'];
      {/if}
 
      {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
-       {localfiletype type=$filediff->GetToFileType()}:<a href="{geturl project=$project action=blob hash=$filediff->GetToHash() hashbase=$commit file=$filediff->GetToFile()}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
+       {localfiletype type=$filediff->GetToFileType()}:<a href="{geturl project=$project action=blob hash=$filediff->GetToBlob() hashbase=$commit file=$filediff->GetToFile()}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
 
        {if $filediff->GetStatus() == 'A'}
          {t}(new){/t}
