@@ -122,6 +122,6 @@ git source code archive
 
 {block name=footer}
   <a href="{geturl action=opml}" class="rss_logo">{t}OPML{/t}</a>
-  <a href="{geturl action=project_index}" class="rss_logo">{t}TXT{/t}</a>
+  <a href="{geturl action=projectindex}" class="rss_logo">{t}TXT{/t}</a>
 {/block}
 

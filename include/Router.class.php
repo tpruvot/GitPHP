@@ -203,6 +203,7 @@ class GitPHP_Router
 
 
 			case 'project_index':
+			case 'projectindex':
 				$controller = new GitPHP_Controller_ProjectList();
 				$controller->SetParam('txt', true);
 				break;
@@ -287,6 +288,14 @@ class GitPHP_Router
 			$params['p'] = rawurldecode($regs[1]);
 		}
 
+		if (preg_match('@^opml$@', $url)) {
+			$params['a'] = 'opml';
+		}
+
+		if (preg_match('@^projectindex$@', $url)) {
+			$params['a'] = 'projectindex';
+		}
+
 		return $params;
 	}
 
@@ -341,6 +350,18 @@ class GitPHP_Router
 			}
 		}
 
+		if (!empty($params['action'])) {
+			switch ($params['action']) {
+				case 'opml':
+					$baseurl .= 'opml';
+					$exclude[] = 'action';
+					break;
+				case 'projectindex':
+					$baseurl .= 'projectindex';
+					$exclude[] = 'action';
+			}
+		}
+
 		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate, $exclude);
 		if (!empty($querystr))
 			$baseurl = GitPHP_Util::AddSlash($baseurl) . '?' . $querystr;
@@ -374,7 +395,7 @@ class GitPHP_Router
 		}
 
 		$action = null;
-		if (!empty($params['action'])) {
+		if (!(empty($params['action']) || in_array('action', $exclude))) {
 			$action = $params['action'];
 			$query['a'] = $action;
 		}
