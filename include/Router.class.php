@@ -296,6 +296,16 @@ class GitPHP_Router
 			$params['h'] = $regs[2];
 		}
 
+		if (preg_match('@^project/([^/\?]+)/atom$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'atom';
+		}
+
+		if (preg_match('@^project/([^/\?]+)/rss$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'rss';
+		}
+
 		if (preg_match('@^project/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 		}
@@ -372,6 +382,16 @@ class GitPHP_Router
 
 				case 'projectindex':
 					$baseurl .= 'projectindex';
+					$exclude[] = 'action';
+					break;
+
+				case 'atom':
+					$baseurl .= '/atom';
+					$exclude[] = 'action';
+					break;
+
+				case 'rss':
+					$baseurl .= '/rss';
 					$exclude[] = 'action';
 					break;
 
