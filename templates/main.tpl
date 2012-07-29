@@ -67,7 +67,7 @@
   </head>
   <body>
     <div class="page_header">
-      <a href="http://git-scm.com" title="git homepage">
+      <a href="http://git-scm.com" title="git homepage" rel="nofollow">
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
       {if $supportedlocales}
