@@ -405,6 +405,20 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	 */
 	public function GetFileDiff($fromHash, $toHash = '')
 	{
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $fromHash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($fromHash);
+			if ($fullHash == $fromHash)
+				throw new GitPHP_InvalidHashException($fromHash);
+			$fromHash = $fullHash;
+		}
+
+		if (!empty($toHash) && preg_match('/^[0-9A-Fa-f]{4,39}$/', $toHash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($toHash);
+			if ($fullHash == $toHash)
+				throw new GitPHP_InvalidHashException($toHash);
+			$toHash = $fullHash;
+		}
+
 		$fileDiff = new GitPHP_FileDiff($this->project, $fromHash, $toHash);
 		$fileDiff->SetCache($this->cache);
 		return $fileDiff;
