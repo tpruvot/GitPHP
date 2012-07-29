@@ -62,6 +62,10 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		$mode = GitPHP_Controller_DiffBase::UnifiedDiff;	// default
 
+		$baseurl = $_SERVER['SCRIPT_NAME'];
+		if (substr_compare($baseurl, '.php', -4) === 0)
+			$baseurl = dirname($baseurl);
+
 		/*
 		 * Check cookie
 		 */
@@ -71,7 +75,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 			/*
 			 * Create cookie to prevent browser delay
 			 */
-			setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, $mode, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
+			setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, $mode, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime, $baseurl);
 		}
 
 		if (!empty($overrideMode)) {
@@ -80,10 +84,10 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 			 */
 			if ($overrideMode == 'sidebyside') {
 				$mode = GitPHP_Controller_DiffBase::SideBySideDiff;
-				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::SideBySideDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
+				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::SideBySideDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime, $baseurl);
 			} else if ($overrideMode == 'unified') {
 				$mode = GitPHP_Controller_DiffBase::UnifiedDiff;
-				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::UnifiedDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime);
+				setcookie(GitPHP_Controller_DiffBase::DiffModeCookie, GitPHP_Controller_DiffBase::UnifiedDiff, time()+GitPHP_Controller_DiffBase::DiffModeCookieLifetime, $baseurl);
 			}
 		}
 

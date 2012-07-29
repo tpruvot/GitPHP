@@ -18,6 +18,12 @@ class GitPHP_Router
 	{
 		$query = $_GET;
 
+		if (!empty($query['q'])) {
+			$restquery = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
+			if (count($restquery) > 0)
+				$query = array_merge($query, $restquery);
+		}
+
 		$action = null;
 		if (isset($query['a']))
 			$action = $query['a'];
@@ -253,6 +259,38 @@ class GitPHP_Router
 	}
 
 	/**
+	 * Read a rest-style clean url
+	 *
+	 * @param string $url url
+	 * @return array request parameters from url
+	 */
+	private static function ReadCleanUrl($url)
+	{
+		$querypos = strpos($url, '?');
+		if ($querypos !== false)
+			$url = substr($url, 0, $querypos);
+
+		$url = rtrim($url, "/");
+
+		$baseurl = $_SERVER['SCRIPT_NAME'];
+		if (substr_compare($baseurl, '.php', -4) === 0)
+			$baseurl = dirname($baseurl);
+		$baseurl = GitPHP_Util::AddSlash($baseurl);
+
+		if (strncmp($baseurl, $url, strlen($baseurl)) === 0)
+			$url = substr($url, strlen($baseurl));
+
+
+		$params = array();
+
+		if (preg_match('@project/([^/\?]+)$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+		}
+
+		return $params;
+	}
+
+	/**
 	 * Generate a url
 	 *
 	 * @param string $baseurl base request url
@@ -264,15 +302,68 @@ class GitPHP_Router
 		if (count($params) < 1)
 			return $baseurl;
 
-		$query = array();
+		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate);
 
-		$action = null;
-		if (!empty($params['action'])) {
-			$action = $params['action'];
-			$query['a'] = $action;
+		if (empty($querystr))
+			return $baseurl;
+
+		return $baseurl . '?' . $querystr;
+	}
+
+	/**
+	 * Generate a clean url
+	 *
+	 * @param string $baseurl base request url
+	 * @param array $params request parameters
+	 * @param boolean $abbreviate true to abbreviate url hashes
+	 */
+	public static function GetCleanUrl($baseurl, $params = array(), $abbreviate = false)
+	{
+		if (substr_compare($baseurl, '.php', -4) === 0) {
+			$baseurl = dirname($baseurl);
 		}
+		$baseurl = GitPHP_Util::AddSlash($baseurl);
+
+		if (count($params) < 1)
+			return $baseurl;
+
+		$exclude = array();
 
 		if (!empty($params['project'])) {
+			if ($params['project'] instanceof GitPHP_Project) {
+				$baseurl .= 'project/' . rawurlencode($params['project']->GetProject());
+				if ($abbreviate && $params['project']->GetCompat())
+					$abbreviate = false;
+				$exclude[] = 'project';
+			} else if (is_string($params['project'])) {
+				$baseurl .= 'project/' . rawurlencode($params['project']);
+				$exclude[] = 'project';
+			}
+		}
+
+		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate, $exclude);
+		if (!empty($querystr))
+			$baseurl = GitPHP_Util::AddSlash($baseurl) . '?' . $querystr;
+
+		return $baseurl;
+	}
+
+	/**
+	 * Gets query parameters for a url
+	 *
+	 * @param array $params query parameters
+	 * @param boolean $abbreviate true to abbreviate url hashes
+	 * @param string[] $exclude array of parameter names to exclude
+	 * @return string query string
+	 */
+	private static function GetQueryParameters($params = array(), $abbreviate = false, $exclude = array())
+	{
+		if (count($params) < 1)
+			return null;
+
+		$query = array();
+
+		if (!(empty($params['project']) || in_array('project', $exclude))) {
 			if ($params['project'] instanceof GitPHP_Project) {
 				$query['p'] = rawurlencode($params['project']->GetProject());
 				if ($abbreviate && $params['project']->GetCompat())
@@ -280,6 +371,12 @@ class GitPHP_Router
 			} else if (is_string($params['project'])) {
 				$query['p'] = rawurlencode($params['project']);
 			}
+		}
+
+		$action = null;
+		if (!empty($params['action'])) {
+			$action = $params['action'];
+			$query['a'] = $action;
 		}
 
 		switch ($action) {
@@ -434,20 +531,19 @@ class GitPHP_Router
 		}
 
 		if (count($query) < 1)
-			return $baseurl;
+			return null;
 
-		$url = $baseurl . '?';
-		$first = true;
+		$querystr = null;
+
 		foreach ($query as $var => $val) {
 			if (empty($val))
 				continue;
-			if (!$first)
-				$url .= '&';
-			$url .= $var . '=' . $val;
-			$first = false;
+			if (!empty($querystr))
+				$querystr .= '&';
+			$querystr .= $var . '=' . $val;
 		}
 
-		return $url;
+		return $querystr;
 	}
 
 	/**

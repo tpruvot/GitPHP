@@ -137,11 +137,15 @@ abstract class GitPHP_ControllerBase
 	{
 		$locale = null;
 
+		$baseurl = $_SERVER['SCRIPT_NAME'];
+		if (substr_compare($baseurl, '.php', -4) === 0)
+			$baseurl = dirname($baseurl);
+
 		if (!empty($this->params['lang'])) {
 			/*
 			 * User picked something
 			 */
-			setcookie(GitPHP_Resource::LocaleCookie, $this->params['lang'], time()+GitPHP_Resource::LocaleCookieLifetime);
+			setcookie(GitPHP_Resource::LocaleCookie, $this->params['lang'], time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
 			$locale = $this->params['lang'];
 		} else if (!empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
 			/**
@@ -156,7 +160,7 @@ abstract class GitPHP_ControllerBase
 				$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 				$locale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 				if (!empty($locale)) {
-					setcookie(GitPHP_Resource::LocaleCookie, $locale, time()+GitPHP_Resource::LocaleCookieLifetime);
+					setcookie(GitPHP_Resource::LocaleCookie, $locale, time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
 				}
 			}
 		}
@@ -527,6 +531,10 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->assign('abbreviateurl', true);
 		}
 
+		if ($this->config->GetValue('cleanurl')) {
+			$this->tpl->assign('cleanurl', true);
+		}
+
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);
 		$getvarsmapped = array();
 		foreach ($getvars as $varstr) {
@@ -534,7 +542,7 @@ abstract class GitPHP_ControllerBase
 			if ($eqpos > 0) {
 				$var = substr($varstr, 0, $eqpos);
 				$val = substr($varstr, $eqpos + 1);
-				if (!(empty($var) || empty($val))) {
+				if (!(empty($var) || empty($val) || ($var == 'q'))) {
 					$getvarsmapped[$var] = urldecode($val);
 				}
 			}
