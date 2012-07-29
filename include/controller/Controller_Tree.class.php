@@ -21,7 +21,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			$this->params['hashbase'] = 'HEAD';
 		}
 
-		if (isset($this->params['js']) && ($this->params['js'] == true)) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			$this->DisableLogging();
 		}
 	}
@@ -33,7 +33,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return 'treelist.tpl';
 		}
 		return 'tree.tpl';

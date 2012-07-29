@@ -19,7 +19,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 
 		if (empty($this->params['hashbase']))
 			$this->params['hashbase'] = 'HEAD';
-		if (!empty($this->params['js']) && ($this->params['js'] == true)) {
+		if (!empty($this->params['output']) && ($this->params['output'] == 'js')) {
 			$this->DisableLogging();
 		}
 	}
@@ -31,7 +31,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return 'blamedata.tpl';
 		}
 		return 'blame.tpl';
@@ -86,7 +86,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 
 		$this->tpl->assign('blame', $blame->GetBlame());
 
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return;
 		}
 

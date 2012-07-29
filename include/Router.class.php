@@ -116,8 +116,8 @@ class GitPHP_Router
 					$controller->SetParam('hash', $_GET['h']);
 				if (!empty($_GET['hb']))
 					$controller->SetParam('hashbase', $_GET['hb']);
-				if (!empty($_GET['o']) && ($_GET['o'] == 'js'))
-					$controller->SetParam('js', true);
+				if (!empty($_GET['o']))
+					$controller->SetParam('output', $_GET['o']);
 				break;
 
 
@@ -148,8 +148,8 @@ class GitPHP_Router
 					$controller->SetParam('file', $_GET['f']);
 				if (!empty($_GET['h']))
 					$controller->SetParam('hash', $_GET['h']);
-				if (!empty($_GET['o']) && ($_GET['o'] == 'js')) {
-					$controller->SetParam('js', true);
+				if (!empty($_GET['o'])) {
+					$controller->SetParam('output', $_GET['o']);
 				}
 				break;
 
@@ -357,8 +357,8 @@ class GitPHP_Router
 					$query['h'] = GitPHP_Router::GetHash($params['hash']);
 				if (!empty($params['hashbase']))
 					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
-				if (!empty($params['js']) && ($params['js'] == true))
-					$query['o'] = 'js';
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
@@ -382,8 +382,8 @@ class GitPHP_Router
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash']);
-				if (!empty($params['js']) && ($params['js'] == true))
-					$query['o'] = 'js';
+				if (!empty($params['output']))
+					$query['o'] = $params['output'];
 				break;
 
 
