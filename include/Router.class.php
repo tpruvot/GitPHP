@@ -284,10 +284,11 @@ class GitPHP_Router
 
 		$params = array();
 
-		if (preg_match('@^project/([^/\?]+)/commit/([0-9A-Fa-f]{4,40}|HEAD)$@', $url, $regs)) {
+		if (preg_match('@^project/([^/\?]+)/commit(/[0-9A-Fa-f]{4,40}|HEAD)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'commit';
-			$params['h'] = $regs[2];
+			if (!empty($regs[2]))
+				$params['h'] = ltrim($regs[2], "/");
 		}
 
 		if (preg_match('@^project/([^/\?]+)/tag/([^/\?]+)$@', $url, $regs)) {
