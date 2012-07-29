@@ -113,6 +113,9 @@ define(["jquery", "modules/geturl"],
 
 			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{4,40}|HEAD)/);
 			if (!treeHash) {
+				treeHash = jThis.attr('href').match(/\/tree\/([0-9a-fA-F]{4,40})/);
+			}
+			if (!treeHash) {
 				return false;
 			}
 
