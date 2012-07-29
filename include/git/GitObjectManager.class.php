@@ -162,9 +162,18 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	 */
 	public function GetCommit($hash)
 	{
-		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
+		if (empty($hash))
 			return null;
 
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
+			$fullHash = $this->project->ExpandHash($hash);
+			if ($fullHash == $hash)
+				throw new GitPHP_InvalidHashException($hash);
+			$hash = $fullHash;
+		}
+
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
+			return null;
 
 		$key = GitPHP_Commit::CacheKey($this->project->GetProject(), $hash);
 
@@ -288,6 +297,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 		if (empty($hash))
 			return null;
 
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($hash);
+			if ($fullHash == $hash)
+				throw new GitPHP_InvalidHashException($hash);
+			$hash = $fullHash;
+		}
+
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
+			return null;
+
 		$key = GitPHP_Blob::CacheKey($this->project->GetProject(), $hash);
 
 		$blob = null;
@@ -332,6 +351,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	public function GetTree($hash)
 	{
 		if (empty($hash))
+			return null;
+
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($hash);
+			if ($fullHash == $hash)
+				throw new GitPHP_InvalidHashException($hash);
+			$hash = $fullHash;
+		}
+
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
 			return null;
 
 		$key = GitPHP_Tree::CacheKey($this->project->GetProject(), $hash);

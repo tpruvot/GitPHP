@@ -434,6 +434,10 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if ($this->config->HasKey('uniqueabbrev')) {
 			$project->SetUniqueAbbreviation($this->config->GetValue('uniqueabbrev'));
 		}
+
+		if ($this->config->GetValue('abbreviateurl')) {
+			$project->SetUniqueAbbreviation(true);
+		}
 	}
 
 	/**

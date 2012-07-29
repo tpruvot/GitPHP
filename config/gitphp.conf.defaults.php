@@ -256,6 +256,21 @@ $gitphp_conf['filemimetype'] = true;
  */
 $gitphp_conf['graphs'] = false;
 
+/*
+ * abbreviateurl
+ * Generates urls using abbreviated hashes instead of
+ * full hashes.
+ * Note that urls with abbreviated hashes are not safe
+ * to be saved long term (eg bookmarks), as future objects
+ * may be added to the repository that cause an abbreviated
+ * hash to no longer be unique.
+ * This option only takes effect with the 'compat' option
+ * turned off.
+ * Additionally, this option will automatically enable
+ * 'uniqueabbrev', as an abbreviated hash must be unique
+ * in order to resolve it to a full hash.
+ */
+$gitphp_conf['abbreviateurl'] = false;
 
 
 /*********************************************************

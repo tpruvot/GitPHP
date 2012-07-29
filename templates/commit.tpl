@@ -94,7 +94,7 @@
 	 
        {if $diffline->GetStatus() == "A"}
          <td>
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -112,14 +112,14 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          {assign var=parent value=$commit->GetParent()}
          <td>
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
 	   </a>
 	 </td>
@@ -130,20 +130,20 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
 	   <a href="{geturl project=$project action=history hash=$parent file=$diffline->GetFromFile()}">{t}history{/t}</a>
 	    | 
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetFromBlob() file=$diffline->GetFromFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
            {if $diffline->GetToHash() != $diffline->GetFromHash()}
-             <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
+             <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToBlob() hashparent=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {else}
-             <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
+             <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	       {$diffline->GetToFile()}
 	     </a>
            {/if}
@@ -190,22 +190,22 @@
 	   {/if}
 	 </td>
          <td class="link">
-           <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
+           <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
+	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToBlob() hashparent=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
 	     | <a href="{geturl project=$project action=history hash=$commit file=$diffline->GetFromFile()}">{t}history{/t}</a>
-             | <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
+             | <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}" class="list">
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetToFile()}" class="list">
 	     {$diffline->GetToFile()}</a>
 	 </td>
          <td>
 	   <span class="movedfile">
 	     {capture assign=fromfilelink}
-	     <a href="{geturl project=$project action=blob hash=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
+	     <a href="{geturl project=$project action=blob hash=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
 	     {/capture}
 	     [
 	     {assign var=similarity value=$diffline->GetSimilarity()}
@@ -219,11 +219,11 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
+	   <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() hashbase=$commit file=$diffline->GetToFile()}">{t}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToHash() hashparent=$diffline->GetFromHash() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
+	     | <a href="{geturl project=$project action=blobdiff hash=$diffline->GetToBlob() hashparent=$diffline->GetFromBlob() hashbase=$commit file=$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
-	    | <a href="{geturl project=$project action=blob hash=$diffline->GetToHash() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
+	    | <a href="{geturl project=$project action=blob hash=$diffline->GetToBlob() file=$diffline->GetToFile() output=plain}">{t}plain{/t}</a>
 	 </td>
        {/if}
 

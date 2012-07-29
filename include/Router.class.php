@@ -257,8 +257,9 @@ class GitPHP_Router
 	 *
 	 * @param string $baseurl base request url
 	 * @param array $params request parameters
+	 * @param boolean $abbreviate true to abbreviate url hashes
 	 */
-	public static function GetUrl($baseurl, $params = array())
+	public static function GetUrl($baseurl, $params = array(), $abbreviate = false)
 	{
 		if (count($params) < 1)
 			return $baseurl;
@@ -272,16 +273,19 @@ class GitPHP_Router
 		}
 
 		if (!empty($params['project'])) {
-			if ($params['project'] instanceof GitPHP_Project)
+			if ($params['project'] instanceof GitPHP_Project) {
 				$query['p'] = rawurlencode($params['project']->GetProject());
-			else if (is_string($params['project']))
+				if ($abbreviate && $params['project']->GetCompat())
+					$abbreviate = false;
+			} else if (is_string($params['project'])) {
 				$query['p'] = rawurlencode($params['project']);
+			}
 		}
 
 		switch ($action) {
 			case 'search':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
 				if (!empty($params['search']))
@@ -294,9 +298,9 @@ class GitPHP_Router
 			case 'commitdiff':
 			case 'commitdiff_plain':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['hashparent']))
-					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
+					$query['hp'] = GitPHP_Router::GetHash($params['hashparent'], $abbreviate);
 				if (!empty($params['diffmode']))
 					$query['d'] = $params['diffmode'];
 				if (!empty($params['output']))
@@ -311,11 +315,11 @@ class GitPHP_Router
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['hashparent']))
-					$query['hp'] = GitPHP_Router::GetHash($params['hashparent']);
+					$query['hp'] = GitPHP_Router::GetHash($params['hashparent'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -323,7 +327,7 @@ class GitPHP_Router
 
 			case 'history':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				break;
@@ -332,17 +336,17 @@ class GitPHP_Router
 			case 'shortlog':
 			case 'log':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
 				if (!empty($params['mark']))
-					$query['m'] = GitPHP_Router::GetHash($params['mark']);
+					$query['m'] = GitPHP_Router::GetHash($params['mark'], $abbreviate);
 				break;
 
 
 			case 'snapshot':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['path']))
 					$query['f'] = rawurlencode($params['path']);
 				if (!empty($params['prefix']))
@@ -356,9 +360,9 @@ class GitPHP_Router
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -379,11 +383,11 @@ class GitPHP_Router
 
 			case 'blame':
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -392,11 +396,11 @@ class GitPHP_Router
 			case 'blob':
 			case 'blob_plain':
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase']);
+					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -404,7 +408,7 @@ class GitPHP_Router
 
 			case 'commit':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash']);
+					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -450,14 +454,15 @@ class GitPHP_Router
 	 * Gets a hash for a string or hash-identified object
 	 *
 	 * @param string|GitPHP_GitObject $value string or hashed object
+	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string hash
 	 */
-	private static function GetHash($value)
+	private static function GetHash($value, $abbreviate = false)
 	{
 		if ($value instanceof GitPHP_Ref)
 			return rawurlencode($value->GetRefPath());
 		else if ($value instanceof GitPHP_GitObject)
-			return $value->GetHash();
+			return $value->GetHash($abbreviate);
 		else if (is_string($value))
 			return $value;
 

@@ -510,6 +510,10 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('scripturl', $scripturl);
 		$this->tpl->assign('fullscripturl', $fullscripturl);
 
+		if ($this->config->GetValue('abbreviateurl')) {
+			$this->tpl->assign('abbreviateurl', true);
+		}
+
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);
 		$getvarsmapped = array();
 		foreach ($getvars as $varstr) {
