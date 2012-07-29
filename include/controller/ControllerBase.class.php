@@ -516,6 +516,12 @@ abstract class GitPHP_ControllerBase
 		}
 		$baseurl = rtrim($baseurl, "\\");
 		$this->tpl->assign('baseurl', $baseurl);
+
+		$requesturl = $_SERVER['REQUEST_URI'];
+		$querypos = strpos($requesturl, '?');
+		if ($querypos !== false)
+			$requesturl = substr($requesturl, 0, $querypos);
+		$this->tpl->assign('requesturl', $requesturl);
 		
 		if ($this->config->GetValue('abbreviateurl')) {
 			$this->tpl->assign('abbreviateurl', true);

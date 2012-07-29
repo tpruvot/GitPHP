@@ -13,6 +13,9 @@ define(
 	function() {
 		return function() {
 			var project = window.location.href.match(/p=([^&]+)/);
+			if (!project) {
+				project = window.location.href.match(/project\/([^\/\?]+)/);
+			}
 			return project ? decodeURIComponent(project[1]) : null;
 		}
 	}

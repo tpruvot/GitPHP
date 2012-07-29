@@ -25,7 +25,7 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 				content: {
 					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GitPHP.Resources.Loading + '" />',
 					ajax: {
-						url: 'index.php',
+						url: url,
 						data: {
 							p: project,
 							a: 'commit',
