@@ -231,6 +231,13 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('Could not load config file %1$s', $exception->File);
 		}
 
+		if ($exception instanceof GitPHP_AmbiguousHashException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Ambiguous abbreviated hash %1$s'), $exception->Hash);
+			
+			return sprintf('Ambiguous abbreviated hash %1$s', $exception->Hash);
+		}
+
 		return $exception->getMessage();
 	}
 

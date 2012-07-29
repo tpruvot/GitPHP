@@ -192,22 +192,22 @@ class GitPHP_GitObjectLoader
 		}
 
 		$matches = $this->FindHashObjects($abbrevHash);
-		if (count($matches) > 0) {
-			return $matches[0];
-		}
 
 		if (!$this->packsRead) {
 			$this->ReadPacks();
 		}
 
 		foreach ($this->packs as $pack) {
-			$matches = $pack->FindHashes($abbrevHash);
-			if (count($matches) > 0) {
-				return $matches[0];
-			}
+			$matches = array_merge($matches, $pack->FindHashes($abbrevHash));
 		}
 
-		return $abbrevHash;
+		if (count($matches) < 1)
+			return $abbrevHash;
+
+		if (count($matches) > 1)
+			throw new GitPHP_AmbiguousHashException($abbrevHash);
+
+		return $matches[0];
 	}
 
 	/**
