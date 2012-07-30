@@ -313,6 +313,13 @@ class GitPHP_Router
 			$params['h'] = $regs[2];
 		}
 
+		if (preg_match('@^project/([^/\?]+)/graph(/[a-z]+)?$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'graph';
+			if (!empty($regs[2]))
+				$params['g'] = ltrim($regs[2], "/");
+		}
+
 		if (preg_match('@^project/([^/\?]+)/atom$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'atom';
@@ -452,6 +459,15 @@ class GitPHP_Router
 					}
 					$exclude[] = 'action';
 					$exclude[] = 'hash';
+					break;
+
+				case 'graph':
+					$baseurl .= '/graph';
+					if (!empty($params['graphtype'])) {
+						$baseurl .= '/' . $params['graphtype'];
+						$exclude[] = 'graphtype';
+					}
+					$exclude[] = 'action';
 					break;
 			}
 		}
@@ -633,7 +649,7 @@ class GitPHP_Router
 
 
 			case 'graph':
-				if (!empty($params['graphtype']))
+				if (!(empty($params['graphtype']) || in_array('graphtype', $exclude)))
 					$query['g'] = $params['graphtype'];
 				break;
 
