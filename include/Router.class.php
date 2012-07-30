@@ -298,10 +298,13 @@ class GitPHP_Router
 				$params['h'] = ltrim($regs[2], "/");
 		}
 
-		if (preg_match('@^project/([^/\?]+)/blob/([0-9A-Fa-f]{4,40})$@', $url, $regs)) {
+		if (preg_match('@^project/([^/\?]+)/blob/([0-9A-Fa-f]{4,40})(/plain)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'blob';
 			$params['h'] = $regs[2];
+			if (!empty($regs[3])) {
+				$params['o'] = ltrim($regs[3], "/");
+			}
 		}
 
 		if (preg_match('@^project/([^/\?]+)/tag/([^/\?]+)$@', $url, $regs)) {
@@ -442,6 +445,10 @@ class GitPHP_Router
 					$baseurl .= '/blob';
 					if (!empty($params['hash'])) {
 						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					}
+					if (!empty($params['output']) && ($params['output'] == 'plain')) {
+						$baseurl .= '/plain';
+						$exclude[] = 'output';
 					}
 					$exclude[] = 'action';
 					$exclude[] = 'hash';
@@ -610,9 +617,9 @@ class GitPHP_Router
 					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
-				if (!empty($params['hash']))
+				if (!(empty($params['hash']) || in_array('hash', $exclude)))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
-				if (!empty($params['output']))
+				if (!(empty($params['output']) || in_array('output', $exclude)))
 					$query['o'] = $params['output'];
 				break;
 
