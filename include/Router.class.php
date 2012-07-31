@@ -338,6 +338,14 @@ class GitPHP_Router
 				$params['h'] = ltrim($regs[2], "/");
 		}
 
+		if (preg_match('@^projects/([^/\?]+)/search(/([0-9A-Fa-f]{4,40}|HEAD))?$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'search';
+			if (!empty($regs[3])) {
+				$params['h'] = $regs[3];
+			}
+		}
+
 		if (preg_match('@^projects/([^/\?]+)/graphs(/[a-z]+)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'graph';
@@ -501,6 +509,15 @@ class GitPHP_Router
 					}
 					break;
 
+				case 'search':
+					$baseurl .= '/search';
+					$exclude[] = 'action';
+					if (!empty($params['hash'])) {
+						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+						$exclude[] = 'hash';
+					}
+					break;
+
 				case 'blob':
 					$baseurl .= '/blobs';
 					if (!empty($params['hash'])) {
@@ -571,7 +588,7 @@ class GitPHP_Router
 
 		switch ($action) {
 			case 'search':
-				if (!empty($params['hash']))
+				if (!(empty($params['hash']) || in_array('hash', $exclude)))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];

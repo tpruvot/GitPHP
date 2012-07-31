@@ -26,13 +26,13 @@
      / {$actionlocal}
   {/if}
   {if $enablesearch}
-    <form method="get" action="{geturl project=$project}" enctype="application/x-www-form-urlencoded">
+    <form method="get" action="{geturl project=$project action=search hash=$commit}" enctype="application/x-www-form-urlencoded">
       <div class="search">
         {if !$cleanurl}
 	<input type="hidden" name="p" value="{$project->GetProject()}" />
-	{/if}
         <input type="hidden" name="a" value="search" />
         <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{else}HEAD{/if}" />
+	{/if}
         <select name="st">
           <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}commit{/t}</option>
           <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}author{/t}</option>
