@@ -313,6 +313,16 @@ class GitPHP_Router
 			$params['h'] = $regs[2];
 		}
 
+		if (preg_match('@^projects/([^/\?]+)/tags$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'tags';
+		}
+
+		if (preg_match('@^projects/([^/\?]+)/heads$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'heads';
+		}
+
 		if (preg_match('@^projects/([^/\?]+)/graphs(/[a-z]+)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'graph';
@@ -446,6 +456,16 @@ class GitPHP_Router
 					}
 					$exclude[] = 'action';
 					$exclude[] = 'hash';
+					break;
+
+				case 'tags':
+					$baseurl .= '/tags';
+					$exclude[] = 'action';
+					break;
+
+				case 'heads':
+					$baseurl .= '/heads';
+					$exclude[] = 'action';
 					break;
 
 				case 'blob':
