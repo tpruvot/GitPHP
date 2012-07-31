@@ -18,7 +18,7 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 		function getTagName(element) {
 			var tag = element.attr('href').match(/h=([^&]+)/);
 			if (!tag) {
-				tag = element.attr('href').match(/\/tag\/([^\/\?]+)/);
+				tag = element.attr('href').match(/\/tags\/([^\/\?]+)/);
 			}
 			return tag ? tag[1] : null;
 		}

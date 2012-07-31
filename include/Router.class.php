@@ -284,21 +284,21 @@ class GitPHP_Router
 
 		$params = array();
 
-		if (preg_match('@^project/([^/\?]+)/commit(/[0-9A-Fa-f]{4,40}|HEAD)?$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/commits(/[0-9A-Fa-f]{4,40}|HEAD)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'commit';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
 		}
 
-		if (preg_match('@^project/([^/\?]+)/tree(/[0-9A-Fa-f]{4,40})?$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/trees(/[0-9A-Fa-f]{4,40})?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'tree';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
 		}
 
-		if (preg_match('@^project/([^/\?]+)/blob/([0-9A-Fa-f]{4,40})(/plain)?$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/blobs/([0-9A-Fa-f]{4,40})(/plain)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'blob';
 			$params['h'] = $regs[2];
@@ -307,30 +307,30 @@ class GitPHP_Router
 			}
 		}
 
-		if (preg_match('@^project/([^/\?]+)/tag/([^/\?]+)$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/tags/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'tag';
 			$params['h'] = $regs[2];
 		}
 
-		if (preg_match('@^project/([^/\?]+)/graph(/[a-z]+)?$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/graphs(/[a-z]+)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'graph';
 			if (!empty($regs[2]))
 				$params['g'] = ltrim($regs[2], "/");
 		}
 
-		if (preg_match('@^project/([^/\?]+)/atom$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/atom$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'atom';
 		}
 
-		if (preg_match('@^project/([^/\?]+)/rss$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)/rss$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'rss';
 		}
 
-		if (preg_match('@^project/([^/\?]+)$@', $url, $regs)) {
+		if (preg_match('@^projects/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 		}
 
@@ -386,12 +386,12 @@ class GitPHP_Router
 
 		if (!empty($params['project'])) {
 			if ($params['project'] instanceof GitPHP_Project) {
-				$baseurl .= 'project/' . rawurlencode($params['project']->GetProject());
+				$baseurl .= 'projects/' . rawurlencode($params['project']->GetProject());
 				if ($abbreviate && $params['project']->GetCompat())
 					$abbreviate = false;
 				$exclude[] = 'project';
 			} else if (is_string($params['project'])) {
-				$baseurl .= 'project/' . rawurlencode($params['project']);
+				$baseurl .= 'projects/' . rawurlencode($params['project']);
 				$exclude[] = 'project';
 			}
 		}
@@ -420,7 +420,7 @@ class GitPHP_Router
 					break;
 
 				case 'commit':
-					$baseurl .= '/commit';
+					$baseurl .= '/commits';
 					if (!empty($params['hash'])) {
 						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
 					}
@@ -429,7 +429,7 @@ class GitPHP_Router
 					break;
 
 				case 'tree':
-					$baseurl .= '/tree';
+					$baseurl .= '/trees';
 					if (!empty($params['hash'])) {
 						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
 					}
@@ -438,7 +438,7 @@ class GitPHP_Router
 					break;
 
 				case 'tag':
-					$baseurl .= '/tag/';
+					$baseurl .= '/tags/';
 					if ($params['hash'] instanceof GitPHP_Tag) {
 						$baseurl .= rawurlencode($params['hash']->GetName());
 					} else if (is_string($params['hash'])) {
@@ -449,7 +449,7 @@ class GitPHP_Router
 					break;
 
 				case 'blob':
-					$baseurl .= '/blob';
+					$baseurl .= '/blobs';
 					if (!empty($params['hash'])) {
 						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
 					}
@@ -462,7 +462,7 @@ class GitPHP_Router
 					break;
 
 				case 'graph':
-					$baseurl .= '/graph';
+					$baseurl .= '/graphs';
 					if (!empty($params['graphtype'])) {
 						$baseurl .= '/' . $params['graphtype'];
 						$exclude[] = 'graphtype';
