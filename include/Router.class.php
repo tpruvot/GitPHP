@@ -323,6 +323,20 @@ class GitPHP_Router
 			$params['a'] = 'heads';
 		}
 
+		if (preg_match('@^projects/([^/\?]+)/shortlog(/[^/\?]+)?$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'shortlog';
+			if (!empty($regs[2]))
+				$params['h'] = ltrim($regs[2], "/");
+		}
+
+		if (preg_match('@^projects/([^/\?]+)/log(/[^/\?]+)?$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'log';
+			if (!empty($regs[2]))
+				$params['h'] = ltrim($regs[2], "/");
+		}
+
 		if (preg_match('@^projects/([^/\?]+)/graphs(/[a-z]+)?$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'graph';
@@ -468,6 +482,24 @@ class GitPHP_Router
 					$exclude[] = 'action';
 					break;
 
+				case 'shortlog':
+					$baseurl .= '/shortlog';
+					$exclude[] = 'action';
+					if (!empty($params['hash'])) {
+						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+						$exclude[] = 'hash';
+					}
+					break;
+
+				case 'log':
+					$baseurl .= '/log';
+					$exclude[] = 'action';
+					if (!empty($params['hash'])) {
+						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+						$exclude[] = 'hash';
+					}
+					break;
+
 				case 'blob':
 					$baseurl .= '/blobs';
 					if (!empty($params['hash'])) {
@@ -589,7 +621,7 @@ class GitPHP_Router
 
 			case 'shortlog':
 			case 'log':
-				if (!empty($params['hash']))
+				if (!(empty($params['hash']) || in_array('hash', $exclude)))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
