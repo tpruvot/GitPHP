@@ -283,6 +283,8 @@ class GitPHP_Router
 					$paramval = call_user_func($transform, $paramval);
 				}
 
+				$paramval = rawurlencode($paramval);
+
 				if (!empty($route['constraints'][$paramname])) {
 					if (!preg_match($route['constraints'][$paramname], $paramval)) {
 						// param doesn't match constraint
@@ -756,7 +758,7 @@ class GitPHP_Router
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
 				if (!empty($params['search']))
-					$query['s'] = rawurlencode($params['search']);
+					$query['s'] = $params['search'];
 				if (!empty($params['searchtype']))
 					$query['st'] = $params['searchtype'];
 				break;
@@ -780,7 +782,7 @@ class GitPHP_Router
 				if (!empty($params['diffmode']))
 					$query['d'] = $params['diffmode'];
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['hashbase']))
@@ -796,7 +798,7 @@ class GitPHP_Router
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				break;
 
 
@@ -815,7 +817,7 @@ class GitPHP_Router
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				if (!empty($params['prefix']))
 					$query['prefix'] = $params['prefix'];
 				if (!empty($params['format']))
@@ -825,7 +827,7 @@ class GitPHP_Router
 
 			case 'tree':
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['hashbase']))
@@ -848,7 +850,7 @@ class GitPHP_Router
 				if (!empty($params['hashbase']))
 					$query['hb'] = $params['hashbase'];
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['output']))
@@ -861,7 +863,7 @@ class GitPHP_Router
 				if (!empty($params['hashbase']))
 					$query['hb'] = $params['hashbase'];
 				if (!empty($params['file']))
-					$query['f'] = rawurlencode($params['file']);
+					$query['f'] = $params['file'];
 				if (!empty($params['hash']))
 					$query['h'] = $params['hash'];
 				if (!empty($params['output']))
@@ -912,7 +914,7 @@ class GitPHP_Router
 				continue;
 			if (!empty($querystr))
 				$querystr .= '&';
-			$querystr .= $var . '=' . $val;
+			$querystr .= $var . '=' . rawurlencode($val);
 		}
 
 		return $querystr;
@@ -928,7 +930,7 @@ class GitPHP_Router
 	private static function GetHash($value, $abbreviate = false)
 	{
 		if ($value instanceof GitPHP_Ref)
-			return rawurlencode($value->GetRefPath());
+			return $value->GetRefPath();
 		else if ($value instanceof GitPHP_GitObject)
 			return $value->GetHash($abbreviate);
 		else if (is_string($value))
@@ -946,9 +948,9 @@ class GitPHP_Router
 	private static function GetTag($value)
 	{
 		if ($value instanceof GitPHP_Tag)
-			return rawurlencode($value->GetName());
+			return $value->GetName();
 		else if (is_string($value))
-			return rawurlencode($value);
+			return $value;
 		return null;
 	}
 
@@ -961,9 +963,9 @@ class GitPHP_Router
 	private static function GetProject($value)
 	{
 		if ($value instanceof GitPHP_Project) {
-			return rawurlencode($value->GetProject());
+			return $value->GetProject();
 		} else if (is_string($project)) {
-			return rawurlencode($value);
+			return $value;
 		}
 	}
 
