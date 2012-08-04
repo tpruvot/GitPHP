@@ -229,7 +229,7 @@ class GitPHP_Router
 	 * @param string $param parameter
 	 * @return string query parameter
 	 */
-	private static function GetQueryParameter($param)
+	private static function ParameterToQueryVar($param)
 	{
 		if (empty($param))
 			return null;
@@ -338,7 +338,7 @@ class GitPHP_Router
 						break;
 					}
 
-					$queryparam = GitPHP_Router::GetQueryParameter($routepiece);
+					$queryparam = GitPHP_Router::ParameterToQueryVar($routepiece);
 					if (!empty($queryparam)) {
 						$params[$queryparam] = rawurldecode($querypiece);
 					}
@@ -355,7 +355,7 @@ class GitPHP_Router
 
 			if (!empty($route['params'])) {
 				foreach ($route['params'] as $paramname => $paramval) {
-					$queryparam = GitPHP_Router::GetQueryParameter($paramname);
+					$queryparam = GitPHP_Router::ParameterToQueryVar($paramname);
 					if (!empty($queryparam))
 						$params[$queryparam] = $paramval;
 				}
@@ -719,7 +719,7 @@ class GitPHP_Router
 			$baseurl .= $queryurl;
 		}
 
-		$querystr = GitPHP_Router::GetQueryParameters($params, $exclude);
+		$querystr = GitPHP_Router::GetQueryString($params, $exclude);
 
 		if (empty($querystr))
 			return $baseurl;
@@ -734,7 +734,7 @@ class GitPHP_Router
 	 * @param string[] $exclude array of parameter names to exclude
 	 * @return string query string
 	 */
-	private function GetQueryParameters($params = array(), $exclude = array())
+	private function GetQueryString($params = array(), $exclude = array())
 	{
 		if (count($params) < 1)
 			return null;
@@ -904,7 +904,7 @@ class GitPHP_Router
 		$querystr = null;
 
 		foreach ($exclude as $excludeparam) {
-			$excludequeryvar = GitPHP_Router::GetQueryParameter($excludeparam);
+			$excludequeryvar = GitPHP_Router::ParameterToQueryVar($excludeparam);
 			if (!empty($excludequeryvar))
 				unset($query[$excludequeryvar]);
 		}
