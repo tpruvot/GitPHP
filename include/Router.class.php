@@ -64,9 +64,6 @@ class GitPHP_Router
 			'path' => 'projects/:project',
 			'constraints' => array(
 				'project' => '/^[^\/\?]+$/'
-			),
-			'transforms' => array(
-				'project' => array('GitPHP_Router', 'GetProject')
 			)
 		);
 
@@ -79,7 +76,6 @@ class GitPHP_Router
 				'output' => '/^plain$/'
 			),
 			'transforms' => array(
-				'hash' => array('GitPHP_Router', 'GetHash'),
 				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
@@ -92,7 +88,6 @@ class GitPHP_Router
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
 			),
 			'transforms' => array(
-				'hash' => array('GitPHP_Router', 'GetHash'),
 				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
@@ -103,9 +98,6 @@ class GitPHP_Router
 			'constraints' => array(
 				'action' => '/^shortlog|log$/',
 				'hash' => '/^[^\/\?]+$/'
-			),
-			'transforms' => array(
-				'hash' => array('GitPHP_Router', 'GetHash'),
 			)
 		));
 
@@ -115,9 +107,6 @@ class GitPHP_Router
 			'constraints' => array(
 				'action' => '/^search|snapshot$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
-			),
-			'transforms' => array(
-				'hash' => array('GitPHP_Router', 'GetHash'),
 			)
 		));
 
@@ -152,7 +141,6 @@ class GitPHP_Router
 				'tag' => '/^[^\/\?]+$/'
 			),
 			'transforms' => array(
-				'tag' => array('GitPHP_Router', 'GetTag'),
 				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
@@ -166,9 +154,6 @@ class GitPHP_Router
 				'constraints' => array(
 					'format' => $formatconstraint,
 					'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
-				),
-				'transforms' => array(
-					'hash' => array('GitPHP_Router', 'GetHash')
 				),
 				'params' => array(
 					'action' => 'snapshot'
@@ -268,9 +253,8 @@ class GitPHP_Router
 	 * Build route from url parameters
 	 *
 	 * @param array $urlparams url parameters
-	 * @param boolean $abbreviate true to abbreviate hashes
 	 */
-	private function BuildRoute($urlparams, $abbreviate = false)
+	private function BuildRoute($urlparams)
 	{
 		foreach ($this->routes as $route) {
 			$routepieces = explode("/", $route['path']);
@@ -296,12 +280,7 @@ class GitPHP_Router
 
 				if (!empty($paramval) && !empty($route['transforms'][$paramname])) {
 					$transform = $route['transforms'][$paramname];
-					if (is_array($transform) && ($transform[1] == 'GetHash')) {
-						// HACK
-						$paramval = call_user_func($transform, $paramval, $abbreviate);
-					} else {
-						$paramval = call_user_func($transform, $paramval);
-					}
+					$paramval = call_user_func($transform, $paramval);
 				}
 
 				if (!empty($route['constraints'][$paramname])) {
@@ -708,6 +687,23 @@ class GitPHP_Router
 				$abbreviate = false;
 		}
 
+		foreach ($params as $paramname => $paramval) {
+			switch ($paramname) {
+				case 'hash':
+				case 'hashbase':
+				case 'hashparent':
+				case 'mark':
+					$params[$paramname] = GitPHP_Router::GetHash($paramval, $abbreviate);
+					break;
+				case 'tag':
+					$params[$paramname] = GitPHP_Router::GetTag($paramval);
+					break;
+				case 'project':
+					$params[$paramname] = GitPHP_Router::GetProject($paramval);
+					break;
+			}
+		}
+
 		if ($this->cleanurl) {
 			if (substr_compare($baseurl, '.php', -4) === 0) {
 				$baseurl = dirname($baseurl);
@@ -717,11 +713,11 @@ class GitPHP_Router
 			if (count($params) < 1)
 				return $baseurl;
 
-			list($queryurl, $exclude) = $this->BuildRoute($params, $abbreviate);
+			list($queryurl, $exclude) = $this->BuildRoute($params);
 			$baseurl .= $queryurl;
 		}
 
-		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate, $exclude);
+		$querystr = GitPHP_Router::GetQueryParameters($params, $exclude);
 
 		if (empty($querystr))
 			return $baseurl;
@@ -733,11 +729,10 @@ class GitPHP_Router
 	 * Gets query parameters for a url
 	 *
 	 * @param array $params query parameters
-	 * @param boolean $abbreviate true to abbreviate url hashes
 	 * @param string[] $exclude array of parameter names to exclude
 	 * @return string query string
 	 */
-	private function GetQueryParameters($params = array(), $abbreviate = false, $exclude = array())
+	private function GetQueryParameters($params = array(), $exclude = array())
 	{
 		if (count($params) < 1)
 			return null;
@@ -745,7 +740,7 @@ class GitPHP_Router
 		$query = array();
 
 		if (!empty($params['project'])) {
-			$query['p'] = GitPHP_Router::GetProject($params['project']);
+			$query['p'] = $params['project'];
 		}
 
 		$action = null;
@@ -757,7 +752,7 @@ class GitPHP_Router
 		switch ($action) {
 			case 'search':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
 				if (!empty($params['search']))
@@ -770,9 +765,9 @@ class GitPHP_Router
 			case 'commitdiff':
 			case 'commitdiff_plain':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['hashparent']))
-					$query['hp'] = GitPHP_Router::GetHash($params['hashparent'], $abbreviate);
+					$query['hp'] = $params['hashparent'];
 				if (!empty($params['diffmode']))
 					$query['d'] = $params['diffmode'];
 				if (!empty($params['output']))
@@ -787,11 +782,11 @@ class GitPHP_Router
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
+					$query['hb'] = $params['hashbase'];
 				if (!empty($params['hashparent']))
-					$query['hp'] = GitPHP_Router::GetHash($params['hashparent'], $abbreviate);
+					$query['hp'] = $params['hashparent'];
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -799,7 +794,7 @@ class GitPHP_Router
 
 			case 'history':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				break;
@@ -808,17 +803,17 @@ class GitPHP_Router
 			case 'shortlog':
 			case 'log':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
 				if (!empty($params['mark']))
-					$query['m'] = GitPHP_Router::GetHash($params['mark'], $abbreviate);
+					$query['m'] = $params['mark'];
 				break;
 
 
 			case 'snapshot':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['prefix']))
@@ -832,9 +827,9 @@ class GitPHP_Router
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
+					$query['hb'] = $params['hashbase'];
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -842,7 +837,7 @@ class GitPHP_Router
 
 			case 'tag':
 				if (!empty($params['tag'])) {
-					$query['t'] = GitPHP_Router::GetTag($params['tag']);
+					$query['t'] = $params['tag'];
 				}
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
@@ -851,11 +846,11 @@ class GitPHP_Router
 
 			case 'blame':
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
+					$query['hb'] = $params['hashbase'];
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -864,11 +859,11 @@ class GitPHP_Router
 			case 'blob':
 			case 'blob_plain':
 				if (!empty($params['hashbase']))
-					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
+					$query['hb'] = $params['hashbase'];
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
@@ -876,7 +871,7 @@ class GitPHP_Router
 
 			case 'commit':
 				if (!empty($params['hash']))
-					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
+					$query['h'] = $params['hash'];
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
