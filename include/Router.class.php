@@ -223,7 +223,8 @@ class GitPHP_Router
 			'file' => 'f',
 			'mark' => 'm',
 			'prefix' => 'prefix',
-			'sort' => 'sort'
+			'sort' => 'sort',
+			'lang' => 'l'
 		);
 	}
 
@@ -459,10 +460,6 @@ class GitPHP_Router
 
 			case 'search':
 				$controller = new GitPHP_Controller_Search();
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['pg']))
-					$controller->SetParam('page', $query['pg']);
 				break;
 
 
@@ -471,15 +468,6 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Commitdiff();
 				if ($action === 'commitdiff_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
-				if (!empty($query['d'])) {
-					$controller->SetParam('diffmode', $query['d']);
-				}
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['hp']))
-					$controller->SetParam('hashparent', $query['hp']);
 				break;
 
 
@@ -488,28 +476,11 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Blobdiff();
 				if ($action === 'blobdiff_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
-				if (!empty($query['d'])) {
-					$controller->SetParam('diffmode', $query['d']);
-				}
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['hb']))
-					$controller->SetParam('hashbase', $query['hb']);
-				if (!empty($query['hp']))
-					$controller->SetParam('hashparent', $query['hp']);
 				break;
 
 
 			case 'history':
 				$controller = new GitPHP_Controller_History();
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
 				break;
 
 
@@ -518,39 +489,17 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Log();
 				if ($action === 'shortlog')
 					$controller->SetParam('short', true);
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['pg']))
-					$controller->SetParam('page', $query['pg']);
-				if (!empty($query['m']))
-					$controller->SetParam('mark', $query['m']);
 				break;
 
 
 			case 'snapshot':
 				$controller = new GitPHP_Controller_Snapshot();
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
-				if (!empty($query['prefix']))
-					$controller->SetParam('prefix', $query['prefix']);
-				if (!empty($query['fmt']))
-					$controller->SetParam('format', $query['fmt']);
 				break;
 
 
 			case 'tree':
 			case 'trees':
 				$controller = new GitPHP_Controller_Tree();
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['hb']))
-					$controller->SetParam('hashbase', $query['hb']);
-				if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
 				break;
 
 
@@ -561,10 +510,6 @@ class GitPHP_Router
 				}
 			case 'tag':
 				$controller = new GitPHP_Controller_Tag();
-				if (!empty($query['t']))
-					$controller->SetParam('tag', $query['t']);
-				if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
 				break;
 
 
@@ -575,15 +520,6 @@ class GitPHP_Router
 
 			case 'blame':
 				$controller = new GitPHP_Controller_Blame();
-				if (!empty($query['hb']))
-					$controller->SetParam('hashbase', $query['hb']);
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['o'])) {
-					$controller->SetParam('output', $query['o']);
-				}
 				break;
 
 
@@ -593,14 +529,6 @@ class GitPHP_Router
 				$controller = new GitPHP_Controller_Blob();
 				if ($action === 'blob_plain')
 					$controller->SetParam('output', 'plain');
-				else if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
-				if (!empty($query['hb']))
-					$controller->SetParam('hashbase', $query['hb']);
-				if (!empty($query['f']))
-					$controller->SetParam('file', $query['f']);
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
 				break;
 
 
@@ -617,10 +545,6 @@ class GitPHP_Router
 			case 'commit':
 			case 'commits':
 				$controller = new GitPHP_Controller_Commit();
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
-				if (!empty($query['o']))
-					$controller->SetParam('output', $query['o']);
 				break;
 
 
@@ -645,15 +569,11 @@ class GitPHP_Router
 			case 'graph':
 			case 'graphs':
 				$controller = new GitPHP_Controller_Graph();
-				if (!empty($query['g']))
-					$controller->SetParam('graphtype', $query['g']);
 				break;
 
 
 			case 'graphdata':
 				$controller = new GitPHP_Controller_GraphData();
-				if (!empty($query['g']))
-					$controller->SetParam('graphtype', $query['g']);
 				break;
 
 
@@ -662,26 +582,21 @@ class GitPHP_Router
 					$controller = new GitPHP_Controller_Project();
 				} else {
 					$controller = new GitPHP_Controller_ProjectList();
-					if (!empty($query['sort'])) {
-						$controller->SetParam('sort', $query['sort']);
-					}
 				}
 		}
 
-		if (!empty($query['p'])) {
-			$controller->SetParam('project', $query['p']);
-		}
+		foreach ($query as $queryparam => $queryval) {
+			if (empty($queryval))
+				continue;
 
-		if (!empty($query['s'])) {
-			$controller->SetParam('search', $query['s']);
-		}
+			if (($queryparam == 'a') || ($queryparam == 'q'))
+				continue;
 
-		if (!empty($query['st'])) {
-			$controller->SetParam('searchtype', $query['st']);
-		}
+			$paramname = $this->QueryVarToParameter($queryparam);
+			if (empty($paramname))
+				continue;
 
-		if (!empty($query['l'])) {
-			$controller->SetParam('lang', $query['l']);
+			$controller->SetParam($paramname, $queryval);
 		}
 
 		return $controller;
@@ -786,11 +701,17 @@ class GitPHP_Router
 		$query = array();
 
 		foreach ($params as $paramname => $paramval) {
-			if (!in_array($paramname, $exclude)) {
-				$queryvar = $this->ParameterToQueryVar($paramname);
-				if (!empty($queryvar))
-					$query[$queryvar] = $paramval;
-			}
+			if (empty($paramval))
+				continue;
+
+			if (in_array($paramname, $exclude))
+				continue;
+
+			$queryvar = $this->ParameterToQueryVar($paramname);
+			if (empty($queryvar))
+				continue;
+
+			$query[$queryvar] = $paramval;
 		}
 
 		if (count($query) < 1)
