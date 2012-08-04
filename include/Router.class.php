@@ -208,6 +208,9 @@ class GitPHP_Router
 	 */
 	private static function GetQueryParameter($param)
 	{
+		if (empty($param))
+			return null;
+
 		$queryparams = array(
 			'project' => 'p',
 			'action' => 'a',
@@ -659,29 +662,23 @@ class GitPHP_Router
 
 		if (!empty($params['project'])) {
 			if ($params['project'] instanceof GitPHP_Project) {
-				if (!in_array('project', $exclude)) {
-					$query['p'] = rawurlencode($params['project']->GetProject());
-				}
+				$query['p'] = rawurlencode($params['project']->GetProject());
 				if ($abbreviate && $params['project']->GetCompat())
 					$abbreviate = false;
 			} else if (is_string($params['project'])) {
-				if (!in_array('project', $exclude)) {
-					$query['p'] = rawurlencode($params['project']);
-				}
+				$query['p'] = rawurlencode($params['project']);
 			}
 		}
 
 		$action = null;
 		if (!empty($params['action'])) {
 			$action = $params['action'];
-			if (!in_array('action', $exclude)) {
-				$query['a'] = $action;
-			}
+			$query['a'] = $action;
 		}
 
 		switch ($action) {
 			case 'search':
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
@@ -732,7 +729,7 @@ class GitPHP_Router
 
 			case 'shortlog':
 			case 'log':
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['page']))
 					$query['pg'] = $params['page'];
@@ -742,13 +739,13 @@ class GitPHP_Router
 
 
 			case 'snapshot':
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['prefix']))
 					$query['prefix'] = $params['prefix'];
-				if (!(empty($params['format']) || in_array('format', $exclude)))
+				if (!empty($params['format']))
 					$query['fmt'] = $params['format'];
 				break;
 
@@ -756,7 +753,7 @@ class GitPHP_Router
 			case 'tree':
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['hashbase']))
 					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
@@ -766,7 +763,7 @@ class GitPHP_Router
 
 
 			case 'tag':
-				if (!(empty($params['hash']) || in_array('hash', $exclude))) {
+				if (!empty($params['hash'])) {
 					if ($params['hash'] instanceof GitPHP_Tag) {
 						$query['h'] = rawurlencode($params['hash']->GetName());
 					} else if (is_string($params['hash'])) {
@@ -796,15 +793,15 @@ class GitPHP_Router
 					$query['hb'] = GitPHP_Router::GetHash($params['hashbase'], $abbreviate);
 				if (!empty($params['file']))
 					$query['f'] = rawurlencode($params['file']);
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
-				if (!(empty($params['output']) || in_array('output', $exclude)))
+				if (!empty($params['output']))
 					$query['o'] = $params['output'];
 				break;
 
 
 			case 'commit':
-				if (!(empty($params['hash']) || in_array('hash', $exclude)))
+				if (!empty($params['hash']))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
@@ -812,7 +809,7 @@ class GitPHP_Router
 
 
 			case 'graph':
-				if (!(empty($params['graphtype']) || in_array('graphtype', $exclude)))
+				if (!empty($params['graphtype']))
 					$query['g'] = $params['graphtype'];
 				break;
 
@@ -834,6 +831,12 @@ class GitPHP_Router
 			return null;
 
 		$querystr = null;
+
+		foreach ($exclude as $excludeparam) {
+			$excludequeryvar = GitPHP_Router::GetQueryParameter($excludeparam);
+			if (!empty($excludequeryvar))
+				unset($query[$excludequeryvar]);
+		}
 
 		foreach ($query as $var => $val) {
 			if (empty($val))
