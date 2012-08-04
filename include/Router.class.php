@@ -290,6 +290,7 @@ class GitPHP_Router
 			if (!empty($regs[3])) {
 				$params['h'] = $regs[3];
 			}
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/trees(/[0-9A-Fa-f]{4,40})?$@', $url, $regs)) {
@@ -297,6 +298,7 @@ class GitPHP_Router
 			$params['a'] = 'tree';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/blobs/([0-9A-Fa-f]{4,40})(/plain)?$@', $url, $regs)) {
@@ -306,22 +308,26 @@ class GitPHP_Router
 			if (!empty($regs[3])) {
 				$params['o'] = ltrim($regs[3], "/");
 			}
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/tags/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'tag';
 			$params['h'] = $regs[2];
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/tags$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'tags';
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/heads$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'heads';
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/shortlog(/[^/\?]+)?$@', $url, $regs)) {
@@ -329,6 +335,7 @@ class GitPHP_Router
 			$params['a'] = 'shortlog';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/log(/[^/\?]+)?$@', $url, $regs)) {
@@ -336,6 +343,7 @@ class GitPHP_Router
 			$params['a'] = 'log';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/search(/([0-9A-Fa-f]{4,40}|HEAD))?$@', $url, $regs)) {
@@ -344,6 +352,7 @@ class GitPHP_Router
 			if (!empty($regs[3])) {
 				$params['h'] = $regs[3];
 			}
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/graphs(/[a-z]+)?$@', $url, $regs)) {
@@ -351,6 +360,7 @@ class GitPHP_Router
 			$params['a'] = 'graph';
 			if (!empty($regs[2]))
 				$params['g'] = ltrim($regs[2], "/");
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/snapshot(/[^/\?]+)?$@', $url, $regs)) {
@@ -358,6 +368,7 @@ class GitPHP_Router
 			$params['a'] = 'snapshot';
 			if (!empty($regs[2]))
 				$params['h'] = ltrim($regs[2], "/");
+			return $params;
 		}
 
 		$formats = GitPHP_Archive::SupportedFormats();
@@ -368,29 +379,35 @@ class GitPHP_Router
 				$params['fmt'] = $format;
 				if (!empty($regs[2]))
 					$params['h'] = ltrim($regs[2], "/");
+				return $params;
 			}
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/atom$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'atom';
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)/rss$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'rss';
+			return $params;
 		}
 
 		if (preg_match('@^projects/([^/\?]+)$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
+			return $params;
 		}
 
 		if (preg_match('@^opml$@', $url)) {
 			$params['a'] = 'opml';
+			return $params;
 		}
 
 		if (preg_match('@^projectindex$@', $url)) {
 			$params['a'] = 'projectindex';
+			return $params;
 		}
 
 		return $params;
