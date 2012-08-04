@@ -673,11 +673,7 @@ class GitPHP_Router
 		$query = array();
 
 		if (!empty($params['project'])) {
-			if ($params['project'] instanceof GitPHP_Project) {
-				$query['p'] = rawurlencode($params['project']->GetProject());
-			} else if (is_string($params['project'])) {
-				$query['p'] = rawurlencode($params['project']);
-			}
+			$query['p'] = GitPHP_Router::GetProject($params['project']);
 		}
 
 		$action = null;
@@ -774,11 +770,7 @@ class GitPHP_Router
 
 			case 'tag':
 				if (!empty($params['hash'])) {
-					if ($params['hash'] instanceof GitPHP_Tag) {
-						$query['h'] = rawurlencode($params['hash']->GetName());
-					} else if (is_string($params['hash'])) {
-						$query['h'] = rawurlencode($params['hash']);
-					}
+					$query['h'] = GitPHP_Router::GetTag($params['hash']);
 				}
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
