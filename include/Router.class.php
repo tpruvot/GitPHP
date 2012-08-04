@@ -175,6 +175,7 @@ class GitPHP_Router
 			)
 		);
 
+		usort($this->routes, array('GitPHP_Router', 'CompareRoutes'));
 	}
 
 	/**
@@ -334,6 +335,30 @@ class GitPHP_Router
 
 			return $params;
 		}
+	}
+
+	/**
+	 * Route comparison function
+	 *
+	 * @param array $a route a
+	 * @param array $b route b
+	 * @return int comparison result
+	 */
+	private static function CompareRoutes($a, $b)
+	{
+		$acount = substr_count($a['path'], ':');
+		$bcount = substr_count($b['path'], ':');
+
+		if ($acount == $bcount) {
+			$acount2 = substr_count($a['path'], '/');
+			$bcount2 = substr_count($b['path'], '/');
+			if ($acount2 == $bcount2)
+				return 0;
+
+			return $acount2 < $bcount2 ? 1 : -1;
+		}
+
+		return $acount < $bcount ? 1 : -1;
 	}
 
 	/**
