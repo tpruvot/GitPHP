@@ -14,7 +14,7 @@ class GitPHP_Router
 	 *
 	 * @return mixed controller object
 	 */
-	public static function GetController()
+	public function GetController()
 	{
 		$query = $_GET;
 
@@ -265,7 +265,7 @@ class GitPHP_Router
 	 * @param string $url url
 	 * @return array request parameters from url
 	 */
-	private static function ReadCleanUrl($url)
+	private function ReadCleanUrl($url)
 	{
 		$querypos = strpos($url, '?');
 		if ($querypos !== false)
@@ -420,7 +420,7 @@ class GitPHP_Router
 	 * @param array $params request parameters
 	 * @param boolean $abbreviate true to abbreviate url hashes
 	 */
-	public static function GetUrl($baseurl, $params = array(), $abbreviate = false)
+	public function GetUrl($baseurl, $params = array(), $abbreviate = false)
 	{
 		if (count($params) < 1)
 			return $baseurl;
@@ -440,7 +440,7 @@ class GitPHP_Router
 	 * @param array $params request parameters
 	 * @param boolean $abbreviate true to abbreviate url hashes
 	 */
-	public static function GetCleanUrl($baseurl, $params = array(), $abbreviate = false)
+	public function GetCleanUrl($baseurl, $params = array(), $abbreviate = false)
 	{
 		if (substr_compare($baseurl, '.php', -4) === 0) {
 			$baseurl = dirname($baseurl);
@@ -606,7 +606,7 @@ class GitPHP_Router
 	 * @param string[] $exclude array of parameter names to exclude
 	 * @return string query string
 	 */
-	private static function GetQueryParameters($params = array(), $abbreviate = false, $exclude = array())
+	private function GetQueryParameters($params = array(), $abbreviate = false, $exclude = array())
 	{
 		if (count($params) < 1)
 			return null;

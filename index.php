@@ -50,7 +50,8 @@ date_default_timezone_set('UTC');
 
 try {
 
-	$controller = GitPHP_Router::GetController();
+	$router = new GitPHP_Router();
+	$controller = $router->GetController();
 	if ($controller) {
 		$controller->Initialize();
 		$controller->RenderHeaders();
