@@ -603,6 +603,40 @@ class GitPHP_Router
 	}
 
 	/**
+	 * Get message controller
+	 *
+	 * @return GitPHP_ControllerBase
+	 */
+	public function GetMessageController()
+	{
+		$query = $_GET;
+
+		if (!empty($query['q'])) {
+			$restquery = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
+			if (count($restquery) > 0)
+				$query = array_merge($query, $restquery);
+		}
+
+		$controller = new GitPHP_Controller_Message();
+
+		foreach ($query as $queryparam => $queryval) {
+			if (empty($queryval))
+				continue;
+
+			if (($queryparam == 'a') || ($queryparam == 'q'))
+				continue;
+
+			$paramname = $this->QueryVarToParameter($queryparam);
+			if (empty($paramname))
+				continue;
+
+			$controller->SetParam($paramname, $queryval);
+		}
+
+		return $controller;
+	}
+
+	/**
 	 * Read a rest-style clean url
 	 *
 	 * @param string $url url

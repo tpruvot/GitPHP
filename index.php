@@ -48,9 +48,10 @@ spl_autoload_register(array('GitPHP_AutoLoader', 'AutoLoad'));
 
 date_default_timezone_set('UTC');
 
+$router = new GitPHP_Router();
+
 try {
 
-	$router = new GitPHP_Router();
 	$controller = $router->GetController();
 	if ($controller) {
 		$controller->Initialize();
@@ -60,17 +61,7 @@ try {
 
 } catch (Exception $e) {
 
-	$messageController = new GitPHP_Controller_Message();
-	if (!empty($_GET['h']))
-		$messageController->SetParam('hash', $_GET['h']);
-	if (!empty($_GET['p']))
-		$messageController->SetParam('project', $_GET['p']);
-	if (!empty($_GET['s']))
-		$messageController->SetParam('search', $_GET['s']);
-	if (!empty($_GET['st']))
-		$messageController->SetParam('searchtype', $_GET['st']);
-	if (!empty($_GET['l']))
-		$messageController->SetParam('lang', $_GET['l']);
+	$messageController = $router->GetMessageController();
 	$messageController->Initialize();
 
 	$config = $messageController->GetConfig();
