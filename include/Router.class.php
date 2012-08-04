@@ -210,10 +210,20 @@ class GitPHP_Router
 			'project' => 'p',
 			'action' => 'a',
 			'hash' => 'h',
+			'hashbase' => 'hb',
+			'hashparent' => 'hp',
 			'graphtype' => 'g',
 			'output' => 'o',
 			'format' => 'fmt',
-			'tag' => 't'
+			'tag' => 't',
+			'page' => 'pg',
+			'search' => 's',
+			'searchtype' => 'st',
+			'diffmode' => 'd',
+			'file' => 'f',
+			'mark' => 'm',
+			'prefix' => 'prefix',
+			'sort' => 'sort'
 		);
 	}
 
@@ -775,173 +785,18 @@ class GitPHP_Router
 
 		$query = array();
 
-		if (!empty($params['project'])) {
-			$query['p'] = $params['project'];
-		}
-
-		$action = null;
-		if (!empty($params['action'])) {
-			$action = $params['action'];
-			$query['a'] = $action;
-		}
-
-		switch ($action) {
-			case 'search':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['page']))
-					$query['pg'] = $params['page'];
-				if (!empty($params['search']))
-					$query['s'] = $params['search'];
-				if (!empty($params['searchtype']))
-					$query['st'] = $params['searchtype'];
-				break;
-
-
-			case 'commitdiff':
-			case 'commitdiff_plain':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['hashparent']))
-					$query['hp'] = $params['hashparent'];
-				if (!empty($params['diffmode']))
-					$query['d'] = $params['diffmode'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'blobdiff':
-			case 'blobdiff_plain':
-				if (!empty($params['diffmode']))
-					$query['d'] = $params['diffmode'];
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['hashbase']))
-					$query['hb'] = $params['hashbase'];
-				if (!empty($params['hashparent']))
-					$query['hp'] = $params['hashparent'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'history':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				break;
-
-
-			case 'shortlog':
-			case 'log':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['page']))
-					$query['pg'] = $params['page'];
-				if (!empty($params['mark']))
-					$query['m'] = $params['mark'];
-				break;
-
-
-			case 'snapshot':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				if (!empty($params['prefix']))
-					$query['prefix'] = $params['prefix'];
-				if (!empty($params['format']))
-					$query['fmt'] = $params['format'];
-				break;
-
-
-			case 'tree':
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['hashbase']))
-					$query['hb'] = $params['hashbase'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'tag':
-				if (!empty($params['tag'])) {
-					$query['t'] = $params['tag'];
-				}
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'blame':
-				if (!empty($params['hashbase']))
-					$query['hb'] = $params['hashbase'];
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'blob':
-			case 'blob_plain':
-				if (!empty($params['hashbase']))
-					$query['hb'] = $params['hashbase'];
-				if (!empty($params['file']))
-					$query['f'] = $params['file'];
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'commit':
-				if (!empty($params['hash']))
-					$query['h'] = $params['hash'];
-				if (!empty($params['output']))
-					$query['o'] = $params['output'];
-				break;
-
-
-			case 'graph':
-				if (!empty($params['graphtype']))
-					$query['g'] = $params['graphtype'];
-				break;
-
-
-			case 'graphdata':
-				if (!empty($params['graphtype']))
-					$query['g'] = $params['graphtype'];
-				break;
-
-
-			default:
-				if (empty($params['project'])) {
-					if (!empty($params['sort']))
-						$query['sort'] = $params['sort'];
-				}
+		foreach ($params as $paramname => $paramval) {
+			if (!in_array($paramname, $exclude)) {
+				$queryvar = $this->ParameterToQueryVar($paramname);
+				if (!empty($queryvar))
+					$query[$queryvar] = $paramval;
+			}
 		}
 
 		if (count($query) < 1)
 			return null;
 
 		$querystr = null;
-
-		foreach ($exclude as $excludeparam) {
-			$excludequeryvar = $this->ParameterToQueryVar($excludeparam);
-			if (!empty($excludequeryvar))
-				unset($query[$excludequeryvar]);
-		}
 
 		foreach ($query as $var => $val) {
 			if (empty($val))
