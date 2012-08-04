@@ -555,8 +555,8 @@ class GitPHP_Router
 					$controller = new GitPHP_Controller_Project();
 				} else {
 					$controller = new GitPHP_Controller_ProjectList();
-					if (!empty($query['o'])) {
-						$controller->SetParam('order', $query['o']);
+					if (!empty($query['sort'])) {
+						$controller->SetParam('sort', $query['sort']);
 					}
 				}
 		}
@@ -825,8 +825,8 @@ class GitPHP_Router
 
 			default:
 				if (empty($params['project'])) {
-					if (!empty($params['order']))
-						$query['o'] = $params['order'];
+					if (!empty($params['sort']))
+						$query['sort'] = $params['sort'];
 				}
 		}
 

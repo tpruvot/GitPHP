@@ -40,25 +40,25 @@ git source code archive
     {if $smarty.foreach.projects.first}
       {* Header *}
       <tr class="projectHeader">
-        {if $order == "project"}
+        {if $sort == "project"}
           <th>{t}Project{/t}</th>
         {else}
-          <th><a class="header" href="{geturl order=project}">{t}Project{/t}</a></th>
+          <th><a class="header" href="{geturl sort=project}">{t}Project{/t}</a></th>
         {/if}
-        {if $order == "descr"}
+        {if $sort == "descr"}
           <th>{t}Description{/t}</th>
         {else}
-          <th><a class="header" href="{geturl order=descr}">{t}Description{/t}</a></th>
+          <th><a class="header" href="{geturl sort=descr}">{t}Description{/t}</a></th>
         {/if}
-        {if $order == "owner"}
+        {if $sort == "owner"}
           <th>{t}Owner{/t}</th>
         {else}
-          <th><a class="header" href="{geturl order=owner}">{t}Owner{/t}</a></th>
+          <th><a class="header" href="{geturl sort=owner}">{t}Owner{/t}</a></th>
         {/if}
-        {if $order == "age"}
+        {if $sort == "age"}
           <th>{t}Last Change{/t}</th>
         {else}
-          <th><a class="header" href="{geturl order=age}">{t}Last Change{/t}</a></th>
+          <th><a class="header" href="{geturl sort=age}">{t}Last Change{/t}</a></th>
         {/if}
         <th>{t}Actions{/t}</th>
       </tr>

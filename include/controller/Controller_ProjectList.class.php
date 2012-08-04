@@ -19,8 +19,8 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 
 		parent::Initialize();
 
-		if (empty($this->params['order']))
-			$this->params['order'] = 'project';
+		if (empty($this->params['sort']))
+			$this->params['sort'] = 'project';
 	}
 
 	/**
@@ -50,7 +50,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			return '';
 		}
-		return $this->params['order'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
+		return $this->params['sort'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
 	}
 
 	/**
@@ -99,9 +99,9 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('order', $this->params['order']);
+		$this->tpl->assign('sort', $this->params['sort']);
 		
-		$this->projectList->Sort($this->params['order']);
+		$this->projectList->Sort($this->params['sort']);
 
 		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
 		    (empty($this->params['txt']) || ($this->params['txt'] !== true)) &&
