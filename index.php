@@ -34,6 +34,12 @@ define('GITPHP_LIBDIR', GITPHP_BASEDIR . 'lib/');
 define('GITPHP_SMARTYDIR', GITPHP_LIBDIR . 'smarty/libs/');
 define('GITPHP_GESHIDIR', GITPHP_LIBDIR . 'geshi/');
 
+define('GITPHP_COMPRESS_TAR', 'tar');
+define('GITPHP_COMPRESS_BZ2', 'tbz2');
+define('GITPHP_COMPRESS_GZ', 'tgz');
+define('GITPHP_COMPRESS_ZIP', 'zip');
+
+
 include(GITPHP_INCLUDEDIR . 'version.php');
 
 require(GITPHP_INCLUDEDIR . 'AutoLoader.class.php');

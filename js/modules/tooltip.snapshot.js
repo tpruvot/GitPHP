@@ -16,12 +16,18 @@ define(["jquery", "ext/jquery.qtip.min"],
 			var content = '<div>' + GitPHP.Resources.Snapshot + ': ';
 			var first = true;
 			var formats = GitPHP.Snapshot.Formats
+			var cleanurl = href.indexOf('/snapshot') != -1;
 			for (var type in formats) {
 				if (formats.hasOwnProperty(type)) {
 					if (!first) {
 						content += ' | ';
 					}
-					content += '<a href="' + href + '&fmt=' + type + '">' + formats[type] + '</a>';
+					if (cleanurl) {
+						var newhref = href.replace("/snapshot", "/" + type);
+						content += '<a href="' + newhref + '">' + formats[type] + '</a>';
+					} else {
+						content += '<a href="' + href + '&fmt=' + type + '">' + formats[type] + '</a>';
+					}
 					first = false;
 				}
 			}

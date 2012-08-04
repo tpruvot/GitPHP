@@ -1,25 +1,5 @@
 <?php
 /**
- * Constant for tar archive
- */
-define('GITPHP_COMPRESS_TAR', 'tar');
-
-/**
- * Constant for bz2 archive
- */
-define('GITPHP_COMPRESS_BZ2', 'tbz2');
-
-/**
- * Constant for gz archive
- */
-define('GITPHP_COMPRESS_GZ', 'tgz');
-
-/**
- * Constant for zip archive
- */
-define('GITPHP_COMPRESS_ZIP', 'zip');
-
-/**
  * Configfile reader class
  *
  * @author Christopher Han <xiphux@gmail.com>

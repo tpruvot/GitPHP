@@ -353,6 +353,24 @@ class GitPHP_Router
 				$params['g'] = ltrim($regs[2], "/");
 		}
 
+		if (preg_match('@^projects/([^/\?]+)/snapshot(/[^/\?]+)?$@', $url, $regs)) {
+			$params['p'] = rawurldecode($regs[1]);
+			$params['a'] = 'snapshot';
+			if (!empty($regs[2]))
+				$params['h'] = ltrim($regs[2], "/");
+		}
+
+		$formats = GitPHP_Archive::SupportedFormats();
+		foreach ($formats as $format => $extension) {
+			if (preg_match('@^projects/([^/\?]+)/' . $format . '(/[^/\?]+)?$@', $url, $regs)) {
+				$params['p'] = rawurldecode($regs[1]);
+				$params['a'] = 'snapshot';
+				$params['fmt'] = $format;
+				if (!empty($regs[2]))
+					$params['h'] = ltrim($regs[2], "/");
+			}
+		}
+
 		if (preg_match('@^projects/([^/\?]+)/atom$@', $url, $regs)) {
 			$params['p'] = rawurldecode($regs[1]);
 			$params['a'] = 'atom';
@@ -539,6 +557,20 @@ class GitPHP_Router
 					}
 					$exclude[] = 'action';
 					break;
+
+				case 'snapshot':
+					if (!empty($params['format'])) {
+						$baseurl .= '/' . $params['format'];
+						$exclude[] = 'format';
+					} else {
+						$baseurl .= '/snapshot';
+					}
+					if (!empty($params['hash'])) {
+						$baseurl .= '/' . GitPHP_Router::GetHash($params['hash'], $abbreviate);
+						$exclude[] = 'hash';
+					}
+					$exclude[] = 'action';
+					break;
 			}
 		}
 
@@ -649,14 +681,14 @@ class GitPHP_Router
 
 
 			case 'snapshot':
-				if (!empty($params['hash']))
+				if (!(empty($params['hash']) || in_array('hash', $exclude)))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
 				if (!empty($params['path']))
 					$query['f'] = rawurlencode($params['path']);
 				if (!empty($params['prefix']))
 					$query['prefix'] = $params['prefix'];
-				if (!empty($params['fmt']))
-					$query['fmt'] = $params['fmt'];
+				if (!(empty($params['format']) || in_array('format', $exclude)))
+					$query['fmt'] = $params['format'];
 				break;
 
 
