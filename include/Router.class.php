@@ -31,13 +31,22 @@ class GitPHP_Router
 	protected $cleanurl = false;
 
 	/**
+	 * Abbreviate hashes flag
+	 *
+	 * @var boolean
+	 */
+	protected $abbreviate = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param boolean $cleanurl true to generate clean urls
+	 * @param boolean $abbreviate true to abbreviate hashes
 	 */
-	public function __construct($cleanurl = false)
+	public function __construct($cleanurl = false, $abbreviate = false)
 	{
 		$this->cleanurl = $cleanurl;
+		$this->abbreviate = $abbreviate;
 		$this->InitializeRoutes();
 		$this->InitializeQueryParameters();
 	}
@@ -60,6 +69,26 @@ class GitPHP_Router
 	public function SetCleanUrl($cleanurl)
 	{
 		$this->cleanurl = $cleanurl;
+	}
+
+	/**
+	 * Get abbreviate hash setting
+	 *
+	 * @return boolean
+	 */
+	public function GetAbbreviate()
+	{
+		return $this->abbreviate;
+	}
+
+	/**
+	 * Set abbreviate hash setting
+	 *
+	 * @param boolean $abbreviate abbreviate
+	 */
+	public function SetAbbreviate($abbreviate)
+	{
+		$this->abbreviate = $abbreviate;
 	}
 
 	/**
@@ -672,14 +701,15 @@ class GitPHP_Router
 	 *
 	 * @param string $baseurl base request url
 	 * @param array $params request parameters
-	 * @param boolean $abbreviate true to abbreviate url hashes
 	 */
-	public function GetUrl($baseurl, $params = array(), $abbreviate = false)
+	public function GetUrl($baseurl, $params = array())
 	{
 		if (count($params) < 1)
 			return $baseurl;
 
 		$exclude = array();
+
+		$abbreviate = $this->abbreviate;
 
 		if (!empty($params['project']) && ($params['project'] instanceof GitPHP_Project)) {
 			if ($abbreviate && $params['project']->GetCompat())

@@ -553,6 +553,7 @@ abstract class GitPHP_ControllerBase
 		}
 		if ($this->router) {
 			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
+			$this->router->SetAbbreviate($this->config->GetValue('abbreviateurl') ? true : false);
 			$this->tpl->assign('router', $this->router);
 		}
 
