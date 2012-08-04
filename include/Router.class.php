@@ -37,9 +37,6 @@ class GitPHP_Router
 			),
 			'transforms' => array(
 				'project' => array('GitPHP_Router', 'GetProject')
-			),
-			'queryparameters' => array(
-				'project' => 'p'
 			)
 		);
 
@@ -53,10 +50,6 @@ class GitPHP_Router
 			'transforms' => array(
 				'hash' => array('GitPHP_Router', 'GetHash'),
 				'action' => array('GitPHP_Router', 'Pluralize')
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'hash' => 'h'
 			)
 		));
 
@@ -69,10 +62,6 @@ class GitPHP_Router
 			),
 			'transforms' => array(
 				'hash' => array('GitPHP_Router', 'GetHash'),
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'hash' => 'h'
 			)
 		));
 
@@ -85,10 +74,6 @@ class GitPHP_Router
 			),
 			'transforms' => array(
 				'hash' => array('GitPHP_Router', 'GetHash'),
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'hash' => 'h'
 			)
 		));
 
@@ -100,9 +85,6 @@ class GitPHP_Router
 			),
 			'transforms' => array(
 				'action' => array('GitPHP_Router', 'Pluralize')
-			),
-			'queryparameters' => array(
-				'action' => 'a'
 			)
 		));
 
@@ -115,10 +97,6 @@ class GitPHP_Router
 			),
 			'transforms' => array(
 				'action' => array('GitPHP_Router', 'Pluralize')
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'graphtype' => 'g'
 			)
 		));
 
@@ -127,9 +105,6 @@ class GitPHP_Router
 			'path' => ':action',
 			'constraints' => array(
 				'action' => '/^tags|heads|shortlog|log|search|atom|rss$/'
-			),
-			'queryparameters' => array(
-				'action' => 'a'
 			)
 		));
 
@@ -143,10 +118,6 @@ class GitPHP_Router
 			'transforms' => array(
 				'hash' => array('GitPHP_Router', 'GetTag'),
 				'action' => array('GitPHP_Router', 'Pluralize')
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'hash' => 'h'
 			)
 		));
 
@@ -161,11 +132,6 @@ class GitPHP_Router
 			'transforms' => array(
 				'hash' => array('GitPHP_Router', 'GetHash'),
 				'action' => array('GitPHP_Router', 'Pluralize')
-			),
-			'queryparameters' => array(
-				'action' => 'a',
-				'hash' => 'h',
-				'output' => 'o'
 			)
 		));
 
@@ -176,9 +142,6 @@ class GitPHP_Router
 			'path' => ':action',
 			'constraints' => array(
 				'action' => '/^opml|projectindex$/'
-			),
-			'queryparameters' => array(
-				'action' => 'a'
 			)
 		);
 
@@ -203,9 +166,29 @@ class GitPHP_Router
 			$finalroute['transforms'] = $parent['transforms'];
 		else if (!empty($child['transforms']) && is_array($child['transforms']))
 			$finalroute['transforms'] = $child['transforms'];
-		$finalroute['queryparameters'] = array_merge($parent['queryparameters'], $child['queryparameters']);
 
 		return $finalroute;
+	}
+
+	/**
+	 * Convert a parameter to a query parameter
+	 *
+	 * @param string $param parameter
+	 * @return string query parameter
+	 */
+	private static function GetQueryParameter($param)
+	{
+		$queryparams = array(
+			'project' => 'p',
+			'action' => 'a',
+			'hash' => 'h',
+			'graphtype' => 'g',
+			'output' => 'o'
+		);
+		if (!empty($queryparams[$param]))
+			return $queryparams[$param];
+	
+		return null;
 	}
 
 	/**
@@ -294,8 +277,9 @@ class GitPHP_Router
 						break;
 					}
 
-					if (!empty($route['queryparameters'][$routepiece])) {
-						$params[$route['queryparameters'][$routepiece]] = rawurldecode($querypiece);
+					$queryparam = GitPHP_Router::GetQueryParameter($routepiece);
+					if (!empty($queryparam)) {
+						$params[$queryparam] = rawurldecode($querypiece);
 					}
 				} else {
 					// literal string
@@ -589,7 +573,6 @@ class GitPHP_Router
 			$url = substr($url, strlen($baseurl));
 
 		$params = $this->FindRoute($url);
-		var_dump($params);
 
 		return $params;
 	}
