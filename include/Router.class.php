@@ -17,11 +17,41 @@ class GitPHP_Router
 	protected $routes;
 
 	/**
-	 * Constructor
+	 * Clean url flag
+	 *
+	 * @var boolean
 	 */
-	public function __construct()
+	protected $cleanurl = false;
+
+	/**
+	 * Constructor
+	 *
+	 * @param boolean $cleanurl true to generate clean urls
+	 */
+	public function __construct($cleanurl = false)
 	{
+		$this->cleanurl = $cleanurl;
 		$this->InitializeRoutes();
+	}
+
+	/**
+	 * Get clean url setting
+	 *
+	 * @return boolean
+	 */
+	public function GetCleanUrl()
+	{
+		return $this->cleanurl;
+	}
+
+	/**
+	 * Set clean url setting
+	 *
+	 * @param boolean $cleanurl true to generate clean urls
+	 */
+	public function SetCleanUrl($cleanurl)
+	{
+		$this->cleanurl = $cleanurl;
 	}
 
 	/**
@@ -589,39 +619,27 @@ class GitPHP_Router
 		if (count($params) < 1)
 			return $baseurl;
 
-		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate);
+		$exclude = array();
+
+		if ($this->cleanurl) {
+			if (substr_compare($baseurl, '.php', -4) === 0) {
+				$baseurl = dirname($baseurl);
+			}
+			$baseurl = GitPHP_Util::AddSlash($baseurl);
+
+			if (count($params) < 1)
+				return $baseurl;
+
+			list($queryurl, $exclude) = $this->BuildRoute($params);
+			$baseurl .= $queryurl;
+		}
+
+		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate, $exclude);
 
 		if (empty($querystr))
 			return $baseurl;
 
 		return $baseurl . '?' . $querystr;
-	}
-
-	/**
-	 * Generate a clean url
-	 *
-	 * @param string $baseurl base request url
-	 * @param array $params request parameters
-	 * @param boolean $abbreviate true to abbreviate url hashes
-	 */
-	public function GetCleanUrl($baseurl, $params = array(), $abbreviate = false)
-	{
-		if (substr_compare($baseurl, '.php', -4) === 0) {
-			$baseurl = dirname($baseurl);
-		}
-		$baseurl = GitPHP_Util::AddSlash($baseurl);
-
-		if (count($params) < 1)
-			return $baseurl;
-
-		list($queryurl, $exclude) = $this->BuildRoute($params);
-		$baseurl .= $queryurl;
-
-		$querystr = GitPHP_Router::GetQueryParameters($params, $abbreviate, $exclude);
-		if (!empty($querystr))
-			$baseurl = $baseurl . '?' . $querystr;
-
-		return $baseurl;
 	}
 
 	/**

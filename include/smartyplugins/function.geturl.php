@@ -40,12 +40,8 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 
 	$clean = $template->getTemplateVars('cleanurl');
 
-	$router = new GitPHP_Router();
-	if ($clean) {
-		$fullurl = $router->GetCleanUrl($url, $params, $abbreviate);
-	} else {
-		$fullurl = $router->GetUrl($url, $params, $abbreviate);
-	}
+	$router = new GitPHP_Router($clean);
+	$fullurl = $router->GetUrl($url, $params, $abbreviate);
 	if ($escape)
 		$fullurl = htmlspecialchars($fullurl);
 
