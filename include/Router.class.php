@@ -113,7 +113,7 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
-				'action' => '/^search$/',
+				'action' => '/^search|snapshot$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
 			),
 			'transforms' => array(
@@ -157,11 +157,41 @@ class GitPHP_Router
 			)
 		));
 
+		$formats = GitPHP_Archive::SupportedFormats();
+		if (count($formats) > 0) {
+			$formatconstraint = '/^' . implode("|", array_keys($formats)) . '$/';
+			// project specific snapshot format with hash
+			$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
+				'path' => ':format/:hash',
+				'constraints' => array(
+					'format' => $formatconstraint,
+					'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
+				),
+				'transforms' => array(
+					'hash' => array('GitPHP_Router', 'GetHash')
+				),
+				'params' => array(
+					'action' => 'snapshot'
+				)
+			));
+
+			// project specific snapshot format
+			$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
+				'path' => ':format',
+				'constraints' => array(
+					'format' => $formatconstraint
+				),
+				'params' => array(
+					'action' => 'snapshot'
+				)
+			));
+		}
+
 		// project-specific singular action only
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^tags|heads|shortlog|log|search|atom|rss$/'
+				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot$/'
 			)
 		));
 
@@ -197,6 +227,13 @@ class GitPHP_Router
 			$finalroute['transforms'] = $parent['transforms'];
 		else if (!empty($child['transforms']) && is_array($child['transforms']))
 			$finalroute['transforms'] = $child['transforms'];
+		if ((!empty($parent['params']) && is_array($parent['params'])) && (!empty($child['params']) && is_array($child['params'])))
+			$finalroute['params'] = array_merge($parent['params'], $child['params']);
+		else if (!empty($parent['params']) && is_array($parent['params']))
+			$finalroute['params'] = $parent['params'];
+		else if (!empty($child['params']) && is_array($child['params']))
+			$finalroute['params'] = $child['params'];
+
 
 		return $finalroute;
 	}
@@ -217,7 +254,8 @@ class GitPHP_Router
 			'action' => 'a',
 			'hash' => 'h',
 			'graphtype' => 'g',
-			'output' => 'o'
+			'output' => 'o',
+			'format' => 'fmt'
 		);
 		if (!empty($queryparams[$param]))
 			return $queryparams[$param];
@@ -332,6 +370,14 @@ class GitPHP_Router
 			}
 			if (!$match)
 				continue;
+
+			if (!empty($route['params'])) {
+				foreach ($route['params'] as $paramname => $paramval) {
+					$queryparam = GitPHP_Router::GetQueryParameter($paramname);
+					if (!empty($queryparam))
+						$params[$queryparam] = $paramval;
+				}
+			}
 
 			return $params;
 		}
