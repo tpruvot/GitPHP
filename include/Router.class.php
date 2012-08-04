@@ -228,8 +228,9 @@ class GitPHP_Router
 	 * Build route from url parameters
 	 *
 	 * @param array $urlparams url parameters
+	 * @param boolean $abbreviate true to abbreviate hashes
 	 */
-	public function BuildRoute($urlparams)
+	public function BuildRoute($urlparams, $abbreviate = false)
 	{
 		foreach ($this->routes as $route) {
 			$routepieces = explode("/", $route['path']);
@@ -254,7 +255,13 @@ class GitPHP_Router
 				$paramval = $urlparams[$paramname];
 
 				if (!empty($paramval) && !empty($route['transforms'][$paramname])) {
-					$paramval = call_user_func($route['transforms'][$paramname], $paramval);
+					$transform = $route['transforms'][$paramname];
+					if (is_array($transform) && ($transform[1] == 'GetHash')) {
+						// HACK
+						$paramval = call_user_func($transform, $paramval, $abbreviate);
+					} else {
+						$paramval = call_user_func($transform, $paramval);
+					}
 				}
 
 				if (!empty($route['constraints'][$paramname])) {
@@ -624,6 +631,11 @@ class GitPHP_Router
 
 		$exclude = array();
 
+		if (!empty($params['project']) && ($params['project'] instanceof GitPHP_Project)) {
+			if ($abbreviate && $params['project']->GetCompat())
+				$abbreviate = false;
+		}
+
 		if ($this->cleanurl) {
 			if (substr_compare($baseurl, '.php', -4) === 0) {
 				$baseurl = dirname($baseurl);
@@ -633,7 +645,7 @@ class GitPHP_Router
 			if (count($params) < 1)
 				return $baseurl;
 
-			list($queryurl, $exclude) = $this->BuildRoute($params);
+			list($queryurl, $exclude) = $this->BuildRoute($params, $abbreviate);
 			$baseurl .= $queryurl;
 		}
 
@@ -663,8 +675,6 @@ class GitPHP_Router
 		if (!empty($params['project'])) {
 			if ($params['project'] instanceof GitPHP_Project) {
 				$query['p'] = rawurlencode($params['project']->GetProject());
-				if ($abbreviate && $params['project']->GetCompat())
-					$abbreviate = false;
 			} else if (is_string($params['project'])) {
 				$query['p'] = rawurlencode($params['project']);
 			}
