@@ -32,8 +32,8 @@
          <td class="monospace"><a href="{geturl project=$project action=commit hash=$object}" class="list">{$object->GetHash()}</a></td>
          <td class="link"><a href="{geturl project=$project action=commit hash=$object}">{t}commit{/t}</a></td>
        {elseif $objtype == 'tag'}
-         <td class="monospace"><a href="{geturl project=$project action=tag hash=$object}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{geturl project=$project action=tag hash=$object}">{t}tag{/t}</a></td>
+         <td class="monospace"><a href="{geturl project=$project action=tag tag=$object}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{geturl project=$project action=tag tag=$object}">{t}tag{/t}</a></td>
        {elseif $objtype == 'blob'}
          <td class="monospace"><a href="{geturl project=$project action=blob hash=$object}" class="list">{$object->GetHash()}</a></td>
          <td class="link"><a href="{geturl project=$project action=blob hash=$object}">{t}blob{/t}</a></td>

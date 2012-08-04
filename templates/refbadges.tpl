@@ -17,7 +17,7 @@
 	{/foreach}
 	{foreach from=$commit->GetTags() item=committag}
 		<span class="tag">
-			<a href="{geturl project=$project action=tag hash=$committag}" {if !$committag->LightTag()}class="tagTip"{/if}>{$committag->GetName()}</a>
+			<a href="{geturl project=$project action=tag tag=$committag}" {if !$committag->LightTag()}class="tagTip"{/if}>{$committag->GetName()}</a>
 		</span>
 	{/foreach}
 </span>

@@ -20,7 +20,7 @@
 	   {if $objtype == 'commit'}
 		   <a href="{geturl project=$project action=commit hash=$object}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {elseif $objtype == 'tag'}
-		   <a href="{geturl project=$project action=tag hash=$tag}" class="list"><strong>{$tag->GetName()}</strong></a>
+		   <a href="{geturl project=$project action=tag tag=$tag}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {elseif $objtype == 'blob'}
 		   <a href="{geturl project=$project action=blob hash=$object}" class="list"><strong>{$tag->GetName()}</strong></a>
 	   {/if}
@@ -28,12 +28,12 @@
            <td>
 	     {assign var=comment value=$tag->GetComment()}
              {if count($comment) > 0}
-               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{geturl project=$project action=tag hash=$tag}">{$comment[0]}</a>
+               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{geturl project=$project action=tag tag=$tag}">{$comment[0]}</a>
              {/if}
            </td>
            <td class="link">
              {if !$tag->LightTag()}
-   	       <a href="{geturl project=$project action=tag hash=$tag}">{t}tag{/t}</a> | 
+   	       <a href="{geturl project=$project action=tag tag=$tag}">{t}tag{/t}</a> | 
              {/if}
 	     {if $objtype == 'blob'}
 		<a href="{geturl project=$project action=blob hash=$object}">{t}blob{/t}</a>

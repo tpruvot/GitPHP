@@ -146,13 +146,13 @@ class GitPHP_Router
 
 		// project-specific tag
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:hash',
+			'path' => ':action/:tag',
 			'constraints' => array(
 				'action' => '/^tags$/',
-				'hash' => '/^[^\/\?]+$/'
+				'tag' => '/^[^\/\?]+$/'
 			),
 			'transforms' => array(
-				'hash' => array('GitPHP_Router', 'GetTag'),
+				'tag' => array('GitPHP_Router', 'GetTag'),
 				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
@@ -255,7 +255,8 @@ class GitPHP_Router
 			'hash' => 'h',
 			'graphtype' => 'g',
 			'output' => 'o',
-			'format' => 'fmt'
+			'format' => 'fmt',
+			'tag' => 't'
 		);
 		if (!empty($queryparams[$param]))
 			return $queryparams[$param];
@@ -529,14 +530,14 @@ class GitPHP_Router
 
 
 			case 'tags':
-				if (empty($query['h'])) {
+				if (empty($query['t'])) {
 					$controller = new GitPHP_Controller_Tags();
 					break;
 				}
 			case 'tag':
 				$controller = new GitPHP_Controller_Tag();
-				if (!empty($query['h']))
-					$controller->SetParam('hash', $query['h']);
+				if (!empty($query['t']))
+					$controller->SetParam('tag', $query['t']);
 				if (!empty($query['o']))
 					$controller->SetParam('output', $query['o']);
 				break;
@@ -840,8 +841,8 @@ class GitPHP_Router
 
 
 			case 'tag':
-				if (!empty($params['hash'])) {
-					$query['h'] = GitPHP_Router::GetTag($params['hash']);
+				if (!empty($params['tag'])) {
+					$query['t'] = GitPHP_Router::GetTag($params['tag']);
 				}
 				if (!empty($params['output']))
 					$query['o'] = $params['output'];
