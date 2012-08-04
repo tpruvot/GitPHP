@@ -230,7 +230,7 @@ class GitPHP_Router
 	 * @param array $urlparams url parameters
 	 * @param boolean $abbreviate true to abbreviate hashes
 	 */
-	public function BuildRoute($urlparams, $abbreviate = false)
+	private function BuildRoute($urlparams, $abbreviate = false)
 	{
 		foreach ($this->routes as $route) {
 			$routepieces = explode("/", $route['path']);
@@ -291,7 +291,7 @@ class GitPHP_Router
 	 * @param string $query query
 	 * @return array query parameters
 	 */
-	public function FindRoute($query)
+	private function FindRoute($query)
 	{
 		if (empty($query))
 			return array();
