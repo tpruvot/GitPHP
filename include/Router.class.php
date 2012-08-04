@@ -599,6 +599,8 @@ class GitPHP_Router
 			$controller->SetParam($paramname, $queryval);
 		}
 
+		$controller->SetRouter($this);
+
 		return $controller;
 	}
 
@@ -632,6 +634,8 @@ class GitPHP_Router
 
 			$controller->SetParam($paramname, $queryval);
 		}
+
+		$controller->SetRouter($this);
 
 		return $controller;
 	}

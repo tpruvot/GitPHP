@@ -88,6 +88,13 @@ abstract class GitPHP_ControllerBase
 	protected $exe;
 
 	/**
+	 * Url router instance
+	 *
+	 * @var GitPHP_Router
+	 */
+	protected $router;
+
+	/**
 	 * Initialize controller
 	 */
 	public function Initialize()
@@ -273,6 +280,16 @@ abstract class GitPHP_ControllerBase
 
 		}
 
+	}
+
+	/**
+	 * Set router instance
+	 *
+	 * @param GitPHP_Router $router router
+	 */
+	public function SetRouter($router)
+	{
+		$this->router = $router;
 	}
 
 	/**
@@ -533,6 +550,10 @@ abstract class GitPHP_ControllerBase
 
 		if ($this->config->GetValue('cleanurl')) {
 			$this->tpl->assign('cleanurl', true);
+		}
+		if ($this->router) {
+			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
+			$this->tpl->assign('router', $this->router);
 		}
 
 		$getvars = explode('&', $_SERVER['QUERY_STRING']);

@@ -37,10 +37,11 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 	unset($params['escape']);
 
 	$abbreviate = $template->getTemplateVars('abbreviateurl');
-
-	$clean = $template->getTemplateVars('cleanurl');
-
-	$router = new GitPHP_Router($clean);
+	$router = $template->getTemplateVars('router');
+	if (!$router) {
+		$clean = $template->getTemplateVars('cleanurl');
+		$router = new GitPHP_Router($clean);
+	}
 	$fullurl = $router->GetUrl($url, $params, $abbreviate);
 	if ($escape)
 		$fullurl = htmlspecialchars($fullurl);
