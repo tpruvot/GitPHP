@@ -34,7 +34,7 @@
       <td class="link">
         <a href="{geturl project=$project action=tree hash=$treeitem hashbase=$commit file=$treeitem->GetPath()}">{t}tree{/t}</a>
 	 | 
-	<a href="{geturl project=$project action=snapshot hash=$treeitem path=$treeitem->GetPath()}" class="snapshotTip">{t}snapshot{/t}</a>
+	<a href="{geturl project=$project action=snapshot hash=$treeitem file=$treeitem->GetPath()}" class="snapshotTip">{t}snapshot{/t}</a>
       </td>
     {/if}
   </tr>

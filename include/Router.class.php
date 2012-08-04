@@ -425,7 +425,7 @@ class GitPHP_Router
 				if (!empty($query['h']))
 					$controller->SetParam('hash', $query['h']);
 				if (!empty($query['f']))
-					$controller->SetParam('path', $query['f']);
+					$controller->SetParam('file', $query['f']);
 				if (!empty($query['prefix']))
 					$controller->SetParam('prefix', $query['prefix']);
 				if (!empty($query['fmt']))
@@ -744,8 +744,8 @@ class GitPHP_Router
 			case 'snapshot':
 				if (!(empty($params['hash']) || in_array('hash', $exclude)))
 					$query['h'] = GitPHP_Router::GetHash($params['hash'], $abbreviate);
-				if (!empty($params['path']))
-					$query['f'] = rawurlencode($params['path']);
+				if (!empty($params['file']))
+					$query['f'] = rawurlencode($params['file']);
 				if (!empty($params['prefix']))
 					$query['prefix'] = $params['prefix'];
 				if (!(empty($params['format']) || in_array('format', $exclude)))

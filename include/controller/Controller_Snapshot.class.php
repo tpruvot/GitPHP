@@ -95,7 +95,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '') . '|' . $this->params['format'];
+		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? $this->params['file'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '') . '|' . $this->params['format'];
 	}
 
 	/**
@@ -225,7 +225,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		}
 		$strategy->SetExe($this->exe);
 
-		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['file']) ? $this->params['file'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 		$commit = null;
 
 		if (!isset($this->params['hash']))
@@ -243,7 +243,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	private function CachedSnapshotFile()
 	{
-		$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
+		$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['file']) ? $this->params['file'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
 		$cachefile = sha1($key) . '-' . $this->archive->GetFilename();
 		return $cachefile;
 	}
