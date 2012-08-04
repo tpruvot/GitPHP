@@ -14,7 +14,14 @@ class GitPHP_Router
 	 *
 	 * @var array
 	 */
-	protected $routes;
+	protected $routes = array();
+
+	/**
+	 * Query parameter map
+	 *
+	 * @var array
+	 */
+	protected $queryParameters = array();
 
 	/**
 	 * Clean url flag
@@ -32,6 +39,7 @@ class GitPHP_Router
 	{
 		$this->cleanurl = $cleanurl;
 		$this->InitializeRoutes();
+		$this->InitializeQueryParameters();
 	}
 
 	/**
@@ -194,6 +202,22 @@ class GitPHP_Router
 	}
 
 	/**
+	 * Initialize query parameter map
+	 */
+	private function InitializeQueryParameters()
+	{
+		$this->queryParameters = array(
+			'project' => 'p',
+			'action' => 'a',
+			'hash' => 'h',
+			'graphtype' => 'g',
+			'output' => 'o',
+			'format' => 'fmt',
+			'tag' => 't'
+		);
+	}
+
+	/**
 	 * Embed a route beneath another route
 	 *
 	 * @param array $parent parent route
@@ -229,23 +253,33 @@ class GitPHP_Router
 	 * @param string $param parameter
 	 * @return string query parameter
 	 */
-	private static function ParameterToQueryVar($param)
+	private function ParameterToQueryVar($param)
 	{
 		if (empty($param))
 			return null;
 
-		$queryparams = array(
-			'project' => 'p',
-			'action' => 'a',
-			'hash' => 'h',
-			'graphtype' => 'g',
-			'output' => 'o',
-			'format' => 'fmt',
-			'tag' => 't'
-		);
-		if (!empty($queryparams[$param]))
-			return $queryparams[$param];
+		if (!empty($this->queryParameters[$param]))
+			return $this->queryParameters[$param];
 	
+		return null;
+	}
+
+	/**
+	 * Convert a query parameter to a parameter
+	 *
+	 * @param string $queryvar query variable
+	 * @return string parameter
+	 */
+	private function QueryVarToParameter($queryvar)
+	{
+		if (empty($queryvar))
+			return null;
+
+		$parameter = array_search($queryvar, $this->queryParameters);
+
+		if ($parameter !== false)
+			return $parameter;
+
 		return null;
 	}
 
@@ -338,7 +372,7 @@ class GitPHP_Router
 						break;
 					}
 
-					$queryparam = GitPHP_Router::ParameterToQueryVar($routepiece);
+					$queryparam = $this->ParameterToQueryVar($routepiece);
 					if (!empty($queryparam)) {
 						$params[$queryparam] = rawurldecode($querypiece);
 					}
@@ -355,7 +389,7 @@ class GitPHP_Router
 
 			if (!empty($route['params'])) {
 				foreach ($route['params'] as $paramname => $paramval) {
-					$queryparam = GitPHP_Router::ParameterToQueryVar($paramname);
+					$queryparam = $this->ParameterToQueryVar($paramname);
 					if (!empty($queryparam))
 						$params[$queryparam] = $paramval;
 				}
@@ -904,7 +938,7 @@ class GitPHP_Router
 		$querystr = null;
 
 		foreach ($exclude as $excludeparam) {
-			$excludequeryvar = GitPHP_Router::ParameterToQueryVar($excludeparam);
+			$excludequeryvar = $this->ParameterToQueryVar($excludeparam);
 			if (!empty($excludequeryvar))
 				unset($query[$excludequeryvar]);
 		}
