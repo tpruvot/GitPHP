@@ -10,13 +10,6 @@
  */
 
 /**
- * Use utf-8 encoding
- */
-if (function_exists('mb_internal_encoding')) {
-	mb_internal_encoding("UTF-8");
-}
-
-/**
  * Define start time / memory for benchmarking
  */
 define('GITPHP_START_TIME', microtime(true));
@@ -39,14 +32,25 @@ define('GITPHP_COMPRESS_BZ2', 'tbz2');
 define('GITPHP_COMPRESS_GZ', 'tgz');
 define('GITPHP_COMPRESS_ZIP', 'zip');
 
+/**
+ * Low level setup
+ */
+if (function_exists('mb_internal_encoding')) {
+	mb_internal_encoding("UTF-8");
+}
+date_default_timezone_set('UTC');
 
+/**
+ * Version header
+ */
 include(GITPHP_INCLUDEDIR . 'version.php');
 
+/**
+ * Autoload setup
+ */
 require(GITPHP_INCLUDEDIR . 'AutoLoader.class.php');
-
 spl_autoload_register(array('GitPHP_AutoLoader', 'AutoLoad'));
 
-date_default_timezone_set('UTC');
 
 $router = new GitPHP_Router();
 
