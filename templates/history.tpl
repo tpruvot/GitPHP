@@ -29,7 +29,7 @@
        <td><a href="{geturl project=$project action=commit hash=$historycommit}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()|escape}"{/if}><strong>{$historycommit->GetTitle(50)|escape:'html'}</strong></a>
        {include file='refbadges.tpl' commit=$historycommit}
        </td>
-       <td class="link"><a href="{geturl project=$project action=commit hash=$historycommit}">{t}commit{/t}</a> | <a href="{geturl project=$project action=commitdiff hash=$historycommit}">{t}commitdiff{/t}</a> | <a href="{geturl project=$project action=blob hashbase=$historycommit file=$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$historyitem->GetToHash() file=$blob->GetPath() hashbase=$historycommit}">{t}diff to current{/t}</a>{/if}
+       <td class="link"><a href="{geturl project=$project action=commit hash=$historycommit}">{t}commit{/t}</a> | <a href="{geturl project=$project action=commitdiff hash=$historycommit}">{t}commitdiff{/t}</a> | <a href="{geturl project=$project action=blob hashbase=$historycommit file=$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$historyitem->GetToBlob() file=$blob->GetPath() hashbase=$historycommit}">{t}diff to current{/t}</a>{/if}
        </td>
      </tr>
    {/foreach}
