@@ -280,7 +280,7 @@ $gitphp_conf['abbreviateurl'] = false;
  * on Nginx, etc).  URLs must be rewritten to point
  * to index.php?q={query}.
  * For more instructions on how to set this up, see
- * [wiki page].
+ * http://www.gitphp.org/projects/gitphp/wiki/Clean_URLs
  */
 $gitphp_conf['cleanurl'] = false;
 
