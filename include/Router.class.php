@@ -118,7 +118,7 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
-				'action' => '/^commits|trees|blobs|search|snapshot$/',
+				'action' => '/^commits|trees|blobs|search|snapshot|commitdiff|blobdiff$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
 			)
 		));
@@ -181,7 +181,7 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|history$/'
+				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|history|commitdiff|blobdiff$/'
 			)
 		));
 
