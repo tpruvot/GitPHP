@@ -104,7 +104,7 @@ class GitPHP_Router
 			)
 		);
 
-		// project-specific plural action with hash and output method
+		// project-specific action with hash and output method
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash/:output',
 			'constraints' => array(
@@ -114,38 +114,21 @@ class GitPHP_Router
 			)
 		));
 
-		// project-specific plural action with hash
+		// project-specific action with hash
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
-				'action' => '/^commits|trees|blobs$/',
+				'action' => '/^commits|trees|blobs|search|snapshot$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
 			)
 		));
 
-		// project-specific singular action with hash or ref
+		// project-specific action with hash or ref
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
 				'action' => '/^shortlog|log$/',
 				'hash' => '/^[^\/\?]+$/'
-			)
-		));
-
-		// project-specific singular action with hash only
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:hash',
-			'constraints' => array(
-				'action' => '/^search|snapshot$/',
-				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
-			)
-		));
-
-		// project-specific plural action only
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action',
-			'constraints' => array(
-				'action' => '/^commits|graphs|trees$/'
 			)
 		));
 
@@ -194,11 +177,11 @@ class GitPHP_Router
 			));
 		}
 
-		// project-specific singular action only
+		// project-specific action only
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot$/'
+				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees$/'
 			)
 		));
 
