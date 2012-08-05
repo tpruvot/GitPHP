@@ -111,9 +111,6 @@ class GitPHP_Router
 				'action' => '/^blobs$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/',
 				'output' => '/^plain$/'
-			),
-			'transforms' => array(
-				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
 
@@ -123,9 +120,6 @@ class GitPHP_Router
 			'constraints' => array(
 				'action' => '/^commits|trees|blobs$/',
 				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
-			),
-			'transforms' => array(
-				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
 
@@ -152,9 +146,6 @@ class GitPHP_Router
 			'path' => ':action',
 			'constraints' => array(
 				'action' => '/^commits|graphs|trees$/'
-			),
-			'transforms' => array(
-				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
 
@@ -164,9 +155,6 @@ class GitPHP_Router
 			'constraints' => array(
 				'action' => '/^graphs$/',
 				'graphtype' => '/^[a-z]+$/'
-			),
-			'transforms' => array(
-				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
 
@@ -176,9 +164,6 @@ class GitPHP_Router
 			'constraints' => array(
 				'action' => '/^tags$/',
 				'tag' => '/^[^\/\?]+$/'
-			),
-			'transforms' => array(
-				'action' => array('GitPHP_Router', 'Pluralize')
 			)
 		));
 
@@ -270,12 +255,6 @@ class GitPHP_Router
 
 		$finalroute['path'] = $parent['path'] . '/' . $child['path'];
 		$finalroute['constraints'] = array_merge($parent['constraints'], $child['constraints']);
-		if ((!empty($parent['transforms']) && is_array($parent['transforms'])) && (!empty($child['transforms']) && is_array($child['transforms'])))
-			$finalroute['transforms'] = array_merge($parent['transforms'], $child['transforms']);
-		else if (!empty($parent['transforms']) && is_array($parent['transforms']))
-			$finalroute['transforms'] = $parent['transforms'];
-		else if (!empty($child['transforms']) && is_array($child['transforms']))
-			$finalroute['transforms'] = $child['transforms'];
 		if ((!empty($parent['params']) && is_array($parent['params'])) && (!empty($child['params']) && is_array($child['params'])))
 			$finalroute['params'] = array_merge($parent['params'], $child['params']);
 		else if (!empty($parent['params']) && is_array($parent['params']))
@@ -351,11 +330,6 @@ class GitPHP_Router
 				}
 
 				$paramval = $urlparams[$paramname];
-
-				if (!empty($paramval) && !empty($route['transforms'][$paramname])) {
-					$transform = $route['transforms'][$paramname];
-					$paramval = call_user_func($transform, $paramval);
-				}
 
 				$paramval = rawurlencode($paramval);
 
@@ -734,6 +708,19 @@ class GitPHP_Router
 		}
 
 		if ($this->cleanurl) {
+
+			if (!empty($params['action'])) {
+				switch ($params['action']) {
+					case 'blob':
+					case 'commit':
+					case 'tree':
+					case 'graph':
+					case 'tag':
+						$params['action'] = GitPHP_Router::Pluralize($params['action']);
+						break;
+				}
+			}
+
 			if (substr_compare($baseurl, '.php', -4) === 0) {
 				$baseurl = dirname($baseurl);
 			}
