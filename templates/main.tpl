@@ -20,6 +20,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {block name=feeds}
     {/block}
+    {block name=links}
+    {/block}
     {if file_exists('css/gitphp.min.css')}
     <link rel="stylesheet" href="{$baseurl}/css/gitphp.min.css" type="text/css" />
     {else}

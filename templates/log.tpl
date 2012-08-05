@@ -7,6 +7,15 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=links}
+{if $page > 0}
+<link rel="prev" href="{geturl project=$project action=log hash=$commit page=$page-1 mark=$mark}" />
+{/if}
+{if $hasmorerevs}
+<link rel="next" href="{geturl project=$project action=log hash=$commit page=$page+1 mark=$mark}" />
+{/if}
+{/block}
+
 {block name=main}
 
  {* Nav *}
