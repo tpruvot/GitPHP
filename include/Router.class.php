@@ -293,9 +293,25 @@ class GitPHP_Router
 	private function BuildRoute($urlparams)
 	{
 		foreach ($this->routes as $route) {
-			$routepieces = explode("/", $route['path']);
 
 			$match = true;
+			foreach ($route['constraints'] as $param => $constraint) {
+				if (empty($urlparams[$param])) {
+					$match = false;
+					break;
+				}
+				if (!preg_match($constraint, rawurlencode($urlparams[$param]))) {
+					$match = false;
+					break;
+				}
+			}
+			if (!$match)
+				continue;
+
+			$match = true;
+
+			$routepieces = explode("/", $route['path']);
+
 			$paramnames = array();
 			foreach ($routepieces as $i => $piece) {
 				if (strncmp($piece, ':', 1) !== 0) {
@@ -312,24 +328,16 @@ class GitPHP_Router
 					break;
 				}
 
-				$paramval = $urlparams[$paramname];
-
-				$paramval = rawurlencode($paramval);
-
-				if (!empty($route['constraints'][$paramname])) {
-					if (!preg_match($route['constraints'][$paramname], $paramval)) {
-						// param doesn't match constraint
-						$match = false;
-						break;
-					}
-				}
-
-				$routepieces[$i] = $paramval;
+				$routepieces[$i] = rawurlencode($urlparams[$paramname]);
 
 			}
 
 			if (!$match)
 				continue;
+
+			if (!empty($route['params'])) {
+				$paramnames = array_merge($paramnames, array_keys($route['params']));
+			}
 
 			return array(trim(implode("/", $routepieces), "/"), $paramnames);
 		}
