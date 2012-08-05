@@ -181,7 +181,7 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|history|commitdiff|blobdiff$/'
+				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff$/'
 			)
 		));
 
