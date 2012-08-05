@@ -678,13 +678,17 @@ class GitPHP_Router
 	 */
 	public function GetUrl($baseurl, $params = array())
 	{
+		if ($this->cleanurl) {
+			if (substr_compare($baseurl, '.php', -4) === 0) {
+				$baseurl = dirname($baseurl);
+			}
+			$baseurl = GitPHP_Util::AddSlash($baseurl);
+		}
+
 		if (count($params) < 1)
 			return $baseurl;
 
-		$exclude = array();
-
 		$abbreviate = $this->abbreviate;
-
 		if (!empty($params['project']) && ($params['project'] instanceof GitPHP_Project)) {
 			if ($abbreviate && $params['project']->GetCompat())
 				$abbreviate = false;
@@ -707,6 +711,8 @@ class GitPHP_Router
 			}
 		}
 
+		$exclude = array();
+
 		if ($this->cleanurl) {
 
 			if (!empty($params['action'])) {
@@ -720,14 +726,6 @@ class GitPHP_Router
 						break;
 				}
 			}
-
-			if (substr_compare($baseurl, '.php', -4) === 0) {
-				$baseurl = dirname($baseurl);
-			}
-			$baseurl = GitPHP_Util::AddSlash($baseurl);
-
-			if (count($params) < 1)
-				return $baseurl;
 
 			list($queryurl, $exclude) = $this->BuildRoute($params);
 			$baseurl .= $queryurl;
