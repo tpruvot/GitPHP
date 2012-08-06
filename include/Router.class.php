@@ -100,7 +100,7 @@ class GitPHP_Router
 		$projectroute = array(
 			'path' => 'projects/:project',
 			'constraints' => array(
-				'project' => '/^[^\/\?]+$/'
+				'project' => '[^/\?]+'
 			)
 		);
 
@@ -108,9 +108,9 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash/:output',
 			'constraints' => array(
-				'action' => '/^blobs$/',
-				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/',
-				'output' => '/^plain$/'
+				'action' => 'blobs',
+				'hash' => '[0-9A-Fa-f]{4,40}|HEAD',
+				'output' => 'plain'
 			)
 		));
 
@@ -118,8 +118,8 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
-				'action' => '/^commits|trees|blobs|search|snapshot|commitdiff|blobdiff|blame$/',
-				'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
+				'action' => 'commits|trees|blobs|search|snapshot|commitdiff|blobdiff|blame',
+				'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
 			)
 		));
 
@@ -127,8 +127,8 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:hash',
 			'constraints' => array(
-				'action' => '/^shortlog|log$/',
-				'hash' => '/^[^\/\?]+$/'
+				'action' => 'shortlog|log',
+				'hash' => '[^/\?]+'
 			)
 		));
 
@@ -136,8 +136,8 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:graphtype',
 			'constraints' => array(
-				'action' => '/^graphs$/',
-				'graphtype' => '/^[a-z]+$/'
+				'action' => 'graphs',
+				'graphtype' => '[a-z]+'
 			)
 		));
 
@@ -145,20 +145,20 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action/:tag',
 			'constraints' => array(
-				'action' => '/^tags$/',
-				'tag' => '/^[^\/\?]+$/'
+				'action' => 'tags',
+				'tag' => '[^/\?]+'
 			)
 		));
 
 		$formats = GitPHP_Archive::SupportedFormats();
 		if (count($formats) > 0) {
-			$formatconstraint = '/^' . implode("|", array_keys($formats)) . '$/';
+			$formatconstraint = implode("|", array_keys($formats));
 			// project specific snapshot format with hash
 			$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 				'path' => ':format/:hash',
 				'constraints' => array(
 					'format' => $formatconstraint,
-					'hash' => '/^([0-9A-Fa-f]{4,40}|HEAD)$/'
+					'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
 				),
 				'params' => array(
 					'action' => 'snapshot'
@@ -181,7 +181,7 @@ class GitPHP_Router
 		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff$/'
+				'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
 			)
 		));
 
@@ -191,7 +191,7 @@ class GitPHP_Router
 		$this->routes[] = array(
 			'path' => ':action',
 			'constraints' => array(
-				'action' => '/^opml|projectindex$/'
+				'action' => 'opml|projectindex'
 			)
 		);
 
@@ -300,7 +300,7 @@ class GitPHP_Router
 					$match = false;
 					break;
 				}
-				if (!preg_match($constraint, rawurlencode($urlparams[$param]))) {
+				if (!preg_match('@^' . $constraint . '$@', rawurlencode($urlparams[$param]))) {
 					$match = false;
 					break;
 				}
@@ -372,7 +372,7 @@ class GitPHP_Router
 				if (strncmp($routepiece, ':', 1) === 0) {
 					// parameter
 					$routepiece = substr($routepiece, 1);
-					if (!preg_match($route['constraints'][$routepiece], $querypiece)) {
+					if (!preg_match('@^' . $route['constraints'][$routepiece] . '$@', $querypiece)) {
 						$match = false;
 						break;
 					}
