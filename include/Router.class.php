@@ -361,46 +361,36 @@ class GitPHP_Router
 		foreach ($this->routes as $route) {
 			$routepieces = explode("/", $route['path']);
 
-			if (count($querypieces) != count($routepieces))
-				continue;
-
-			$match = true;
-			$params = array();
-			for ($i = 0; $i < count($querypieces); ++$i) {
-				$routepiece = $routepieces[$i];
-				$querypiece = $querypieces[$i];
+			foreach ($routepieces as $i => $routepiece) {
 				if (strncmp($routepiece, ':', 1) === 0) {
-					// parameter
 					$routepiece = substr($routepiece, 1);
-					if (!preg_match('@^' . $route['constraints'][$routepiece] . '$@', $querypiece)) {
-						$match = false;
-						break;
-					}
-
-					$queryparam = $this->ParameterToQueryVar($routepiece);
-					if (!empty($queryparam)) {
-						$params[$queryparam] = rawurldecode($querypiece);
-					}
-				} else {
-					// literal string
-					if ($querypieces[$i] != $routepiece) {
-						$match = false;
-						break;
+					if (!empty($route['constraints'][$routepiece])) {
+						$pattern = '(?P<' . $routepiece . '>' . $route['constraints'][$routepiece] . ')';
+						$routepieces[$i] = $pattern;
 					}
 				}
 			}
-			if (!$match)
-				continue;
 
-			if (!empty($route['params'])) {
-				foreach ($route['params'] as $paramname => $paramval) {
-					$queryparam = $this->ParameterToQueryVar($paramname);
+			$routepattern = implode("/", $routepieces);
+
+			if (preg_match('@^' . $routepattern . '$@', $query, $regs)) {
+				$params = array();
+				foreach ($regs as $key => $register) {
+					if (!is_string($key))
+						continue;
+					$queryparam = $this->ParameterToQueryVar($key);
 					if (!empty($queryparam))
-						$params[$queryparam] = $paramval;
+						$params[$queryparam] = rawurldecode($register);
 				}
+				if (!empty($route['params'])) {
+					foreach ($route['params'] as $paramname => $paramval) {
+						$queryparam = $this->ParameterToQueryVar($paramname);
+						if (!empty($queryparam))
+							$params[$queryparam] = $paramval;
+					}
+				}
+				return $params;
 			}
-
-			return $params;
 		}
 	}
 
