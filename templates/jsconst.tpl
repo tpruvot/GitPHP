@@ -25,5 +25,8 @@ GitPHP.Snapshot = {ldelim}
 
 GitPHP.FullScriptUrl = '{$fullscripturl}';
 GitPHP.BaseUrl = '{$baseurl}/';
+{if $project}
+GitPHP.Project = '{$project->GetProject()}';
+{/if}
 		
 </script>

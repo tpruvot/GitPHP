@@ -100,7 +100,7 @@ class GitPHP_Router
 		$projectroute = array(
 			'path' => 'projects/:project',
 			'constraints' => array(
-				'project' => '[^/\?]+'
+				'project' => '[^\?]+'
 			)
 		);
 
@@ -328,7 +328,7 @@ class GitPHP_Router
 					break;
 				}
 
-				$routepieces[$i] = rawurlencode($urlparams[$paramname]);
+				$routepieces[$i] = $urlparams[$paramname];
 
 			}
 

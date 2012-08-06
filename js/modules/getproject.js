@@ -12,11 +12,7 @@
 define(
 	function() {
 		return function() {
-			var project = window.location.href.match(/p=([^&]+)/);
-			if (!project) {
-				project = window.location.href.match(/projects\/([^\/\?]+)/);
-			}
-			return project ? decodeURIComponent(project[1]) : null;
+			return GitPHP.Project || null;
 		}
 	}
 );
