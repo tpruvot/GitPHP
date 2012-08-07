@@ -535,7 +535,7 @@ abstract class GitPHP_ControllerBase
 		if (substr_compare($baseurl, '.php', -4) === 0) {
 			$baseurl = dirname($baseurl);
 		}
-		$baseurl = rtrim($baseurl, "\\");
+		$baseurl = rtrim($baseurl, "/");
 		$this->tpl->assign('baseurl', $baseurl);
 
 		$requesturl = $_SERVER['REQUEST_URI'];
