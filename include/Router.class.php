@@ -128,7 +128,7 @@ class GitPHP_Router
 			'path' => ':action/:hash',
 			'constraints' => array(
 				'action' => 'shortlog|log',
-				'hash' => '[^/\?]+'
+				'hash' => '[^\?]+'
 			)
 		));
 
@@ -146,7 +146,7 @@ class GitPHP_Router
 			'path' => ':action/:tag',
 			'constraints' => array(
 				'action' => 'tags',
-				'tag' => '[^/\?]+'
+				'tag' => '[^\?]+'
 			)
 		));
 
