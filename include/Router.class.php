@@ -194,39 +194,60 @@ class GitPHP_Router
 	}
 
 	/**
-	 * Convert a parameter to a query parameter
+	 * Convert a parameter array to a query variable array
 	 *
-	 * @param string $param parameter
-	 * @return string query parameter
+	 * @param array $params parameter array
+	 * @return array query variable array
 	 */
-	private function ParameterToQueryVar($param)
+	private function ParameterArrayToQueryVarArray($params)
 	{
-		if (empty($param))
-			return null;
+		$queryvars = array();
 
-		if (!empty($this->queryParameters[$param]))
-			return $this->queryParameters[$param];
-	
-		return null;
+		if (count($params) < 1)
+			return $queryvars;
+
+		foreach ($params as $param => $val) {
+
+			if (empty($val))
+				continue;
+
+			if (empty($this->queryParameters[$param]))
+				continue;
+
+			$queryvar = $this->queryParameters[$param];
+
+			if (!empty($queryvar))
+				$queryvars[$queryvar] = $val;
+		}
+
+		return $queryvars;
 	}
 
 	/**
-	 * Convert a query parameter to a parameter
+	 * Convert a query variable array to a parameter array
 	 *
-	 * @param string $queryvar query variable
-	 * @return string parameter
+	 * @param array $queryvars query variable array
+	 * @return array parameter array
 	 */
-	private function QueryVarToParameter($queryvar)
+	private function QueryVarArrayToParameterArray($queryvars)
 	{
-		if (empty($queryvar))
-			return null;
+		$params = array();
 
-		$parameter = array_search($queryvar, $this->queryParameters);
+		if (count($queryvars) < 1)
+			return $params;
 
-		if ($parameter !== false)
-			return $parameter;
+		foreach ($queryvars as $var => $val) {
 
-		return null;
+			if (empty($val))
+				continue;
+
+			$param = array_search($var, $this->queryParameters);
+
+			if (!empty($param))
+				$params[$param] = $val;
+		}
+
+		return $params;
 	}
 
 	/**
@@ -424,18 +445,10 @@ class GitPHP_Router
 				}
 		}
 
-		foreach ($query as $queryparam => $queryval) {
-			if (empty($queryval))
-				continue;
-
-			if (($queryparam == 'a') || ($queryparam == 'q'))
-				continue;
-
-			$paramname = $this->QueryVarToParameter($queryparam);
-			if (empty($paramname))
-				continue;
-
-			$controller->SetParam($paramname, $queryval);
+		$params = $this->QueryVarArrayToParameterArray($query);
+		foreach ($params as $paramname => $paramval) {
+			if ($paramname !== 'action')
+				$controller->SetParam($paramname, $paramval);
 		}
 
 		$controller->SetRouter($this);
@@ -460,18 +473,10 @@ class GitPHP_Router
 
 		$controller = new GitPHP_Controller_Message();
 
-		foreach ($query as $queryparam => $queryval) {
-			if (empty($queryval))
-				continue;
-
-			if (($queryparam == 'a') || ($queryparam == 'q'))
-				continue;
-
-			$paramname = $this->QueryVarToParameter($queryparam);
-			if (empty($paramname))
-				continue;
-
-			$controller->SetParam($paramname, $queryval);
+		$params = $this->QueryVarArrayToParameterArray($query);
+		foreach ($params as $paramname => $paramval) {
+			if ($paramname !== 'action')
+				$controller->SetParam($paramname, $paramval);
 		}
 
 		$controller->SetRouter($this);
@@ -500,15 +505,7 @@ class GitPHP_Router
 
 		$params = $this->FindRoute($url);
 
-		$queryparams = array();
-		foreach ($params as $param => $value) {
-			$queryparam = $this->ParameterToQueryVar($param);
-			if (!empty($queryparam)) {
-				$queryparams[$queryparam] = $value;
-			}
-		}
-
-		return $queryparams;
+		return $this->ParameterArrayToQueryVarArray($params);
 	}
 
 	/**
@@ -594,18 +591,7 @@ class GitPHP_Router
 		if (count($params) < 1)
 			return null;
 
-		$query = array();
-
-		foreach ($params as $paramname => $paramval) {
-			if (empty($paramval))
-				continue;
-
-			$queryvar = $this->ParameterToQueryVar($paramname);
-			if (empty($queryvar))
-				continue;
-
-			$query[$queryvar] = $paramval;
-		}
+		$query = $this->ParameterArrayToQueryVarArray($params);
 
 		if (count($query) < 1)
 			return null;
