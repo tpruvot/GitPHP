@@ -82,6 +82,7 @@ class GitPHP_AutoLoader
 				'DebugLog',
 				'Resource',
 				'Router',
+				'Route',
 				'Util'
 			))) {
 			$path = '';
