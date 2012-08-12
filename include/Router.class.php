@@ -97,105 +97,73 @@ class GitPHP_Router
 	private function InitializeRoutes()
 	{
 		// project view
-		$projectroute = array(
-			'path' => 'projects/:project',
-			'constraints' => array(
-				'project' => '[^\?]+'
-			)
-		);
+		$projectroute = new GitPHP_Route('projects/:project', array(
+			'project' => '[^\?]+'
+		));
 
 		// project-specific action with hash and output method
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:hash/:output',
-			'constraints' => array(
-				'action' => 'blobs',
-				'hash' => '[0-9A-Fa-f]{4,40}|HEAD',
-				'output' => 'plain'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action/:hash/:output', array(
+			'action' => 'blobs',
+			'hash' => '[0-9A-Fa-f]{4,40}|HEAD',
+			'output' => 'plain'
+		), array(), $projectroute);
 
 		// project-specific action with hash
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:hash',
-			'constraints' => array(
-				'action' => 'commits|trees|blobs|search|snapshot|commitdiff|blobdiff|blame',
-				'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action/:hash', array(
+			'action' => 'commits|trees|blobs|search|snapshot|commitdiff|blobdiff|blame',
+			'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
+		), array(), $projectroute);
 
 		// project-specific action with hash or ref
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:hash',
-			'constraints' => array(
-				'action' => 'shortlog|log',
-				'hash' => '[^\?]+'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action/:hash', array(
+			'action' => 'shortlog|log',
+			'hash' => '[^\?]+'
+		), array(), $projectroute);
 
 		// project-specific graphs
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:graphtype',
-			'constraints' => array(
-				'action' => 'graphs',
-				'graphtype' => '[a-z]+'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action/:graphtype', array(
+			'action' => 'graphs',
+			'graphtype' => '[a-z]+'
+		), array(), $projectroute);
 
 		// project-specific tag
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action/:tag',
-			'constraints' => array(
-				'action' => 'tags',
-				'tag' => '[^\?]+'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action/:tag', array(
+			'action' => 'tags',
+			'tag' => '[^\?]+'
+		), array(), $projectroute);
 
 		$formats = GitPHP_Archive::SupportedFormats();
 		if (count($formats) > 0) {
 			$formatconstraint = implode("|", array_keys($formats));
 			// project specific snapshot format with hash
-			$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-				'path' => ':format/:hash',
-				'constraints' => array(
-					'format' => $formatconstraint,
-					'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
-				),
-				'params' => array(
-					'action' => 'snapshot'
-				)
-			));
+			$this->routes[] = new GitPHP_Route(':format/:hash', array(
+				'format' => $formatconstraint,
+				'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
+			), array(
+				'action' => 'snapshot'
+			), $projectroute);
 
 			// project specific snapshot format
-			$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-				'path' => ':format',
-				'constraints' => array(
-					'format' => $formatconstraint
-				),
-				'params' => array(
-					'action' => 'snapshot'
-				)
-			));
+			$this->routes[] = new GitPHP_Route(':format', array(
+				'format' => $formatconstraint
+			), array(
+				'action' => 'snapshot'
+			), $projectroute);
 		}
 
 		// project-specific action only
-		$this->routes[] = GitPHP_Router::EmbedRoute($projectroute, array(
-			'path' => ':action',
-			'constraints' => array(
-				'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
-			)
-		));
+		$this->routes[] = new GitPHP_Route(':action', array(
+			'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
+		), array(), $projectroute);
 
 		$this->routes[] = $projectroute;
 
 		// non-project action
-		$this->routes[] = array(
-			'path' => ':action',
-			'constraints' => array(
-				'action' => 'opml|projectindex'
-			)
-		);
+		$this->routes[] = new GitPHP_Route(':action', array(
+			'action' => 'opml|projectindex'
+		));
 
-		usort($this->routes, array('GitPHP_Router', 'CompareRoutes'));
+		usort($this->routes, array('GitPHP_Route', 'CompareRoute'));
 	}
 
 	/**
@@ -223,30 +191,6 @@ class GitPHP_Router
 			'sort' => 'sort',
 			'lang' => 'l'
 		);
-	}
-
-	/**
-	 * Embed a route beneath another route
-	 *
-	 * @param array $parent parent route
-	 * @param array $child child route
-	 * @return array embedded route
-	 */
-	private static function EmbedRoute($parent, $child)
-	{
-		$finalroute = array();
-
-		$finalroute['path'] = $parent['path'] . '/' . $child['path'];
-		$finalroute['constraints'] = array_merge($parent['constraints'], $child['constraints']);
-		if ((!empty($parent['params']) && is_array($parent['params'])) && (!empty($child['params']) && is_array($child['params'])))
-			$finalroute['params'] = array_merge($parent['params'], $child['params']);
-		else if (!empty($parent['params']) && is_array($parent['params']))
-			$finalroute['params'] = $parent['params'];
-		else if (!empty($child['params']) && is_array($child['params']))
-			$finalroute['params'] = $child['params'];
-
-
-		return $finalroute;
 	}
 
 	/**
@@ -294,52 +238,13 @@ class GitPHP_Router
 	{
 		foreach ($this->routes as $route) {
 
-			$match = true;
-			foreach ($route['constraints'] as $param => $constraint) {
-				if (empty($urlparams[$param])) {
-					$match = false;
-					break;
-				}
-				if (!preg_match('@^' . $constraint . '$@', rawurlencode($urlparams[$param]))) {
-					$match = false;
-					break;
-				}
-			}
-			if (!$match)
+			if (!$route->Valid($urlparams))
 				continue;
 
-			$match = true;
+			$path = $route->Build($urlparams);
+			$usedparams = $route->GetUsedParameters();
 
-			$routepieces = explode("/", $route['path']);
-
-			$paramnames = array();
-			foreach ($routepieces as $i => $piece) {
-				if (strncmp($piece, ':', 1) !== 0) {
-					// not a param
-					continue;
-				}
-
-				$paramname = substr($piece, 1);
-				$paramnames[] = $paramname;
-
-				if (empty($urlparams[$paramname])) {
-					// missing a required param
-					$match = false;
-					break;
-				}
-
-				$routepieces[$i] = $urlparams[$paramname];
-
-			}
-
-			if (!$match)
-				continue;
-
-			if (!empty($route['params'])) {
-				$paramnames = array_merge($paramnames, array_keys($route['params']));
-			}
-
-			return array(trim(implode("/", $routepieces), "/"), $paramnames);
+			return array($path, $usedparams);
 		}
 
 		return array(null, array());
@@ -356,66 +261,22 @@ class GitPHP_Router
 		if (empty($query))
 			return array();
 
-		$querypieces = explode("/", $query);
-
 		foreach ($this->routes as $route) {
-			$routepieces = explode("/", $route['path']);
 
-			foreach ($routepieces as $i => $routepiece) {
-				if (strncmp($routepiece, ':', 1) === 0) {
-					$routepiece = substr($routepiece, 1);
-					if (!empty($route['constraints'][$routepiece])) {
-						$pattern = '(?P<' . $routepiece . '>' . $route['constraints'][$routepiece] . ')';
-						$routepieces[$i] = $pattern;
-					}
+			$params = $route->Match($query);
+			if ($params === false)
+				continue;
+
+			$queryparams = array();
+			foreach ($params as $param => $value) {
+				$queryparam = $this->ParameterToQueryVar($param);
+				if (!empty($queryparam)) {
+					$queryparams[$queryparam] = $value;
 				}
 			}
 
-			$routepattern = implode("/", $routepieces);
-
-			if (preg_match('@^' . $routepattern . '$@', $query, $regs)) {
-				$params = array();
-				foreach ($regs as $key => $register) {
-					if (!is_string($key))
-						continue;
-					$queryparam = $this->ParameterToQueryVar($key);
-					if (!empty($queryparam))
-						$params[$queryparam] = rawurldecode($register);
-				}
-				if (!empty($route['params'])) {
-					foreach ($route['params'] as $paramname => $paramval) {
-						$queryparam = $this->ParameterToQueryVar($paramname);
-						if (!empty($queryparam))
-							$params[$queryparam] = $paramval;
-					}
-				}
-				return $params;
-			}
+			return $queryparams;
 		}
-	}
-
-	/**
-	 * Route comparison function
-	 *
-	 * @param array $a route a
-	 * @param array $b route b
-	 * @return int comparison result
-	 */
-	private static function CompareRoutes($a, $b)
-	{
-		$acount = substr_count($a['path'], ':');
-		$bcount = substr_count($b['path'], ':');
-
-		if ($acount == $bcount) {
-			$acount2 = substr_count($a['path'], '/');
-			$bcount2 = substr_count($b['path'], '/');
-			if ($acount2 == $bcount2)
-				return 0;
-
-			return $acount2 < $bcount2 ? 1 : -1;
-		}
-
-		return $acount < $bcount ? 1 : -1;
 	}
 
 	/**

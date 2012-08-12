@@ -23,19 +23,19 @@ class GitPHP_RouteTest extends PHPUnit_Framework_TestCase
 			'param1' => 'testvalue'
 		);
 
-		$this->assertFalse($route->Match($params));
+		$this->assertFalse($route->Valid($params));
 
 		$params['param2'] = 'badvalue';
 
-		$this->assertFalse($route->Match($params));
+		$this->assertFalse($route->Valid($params));
 
 		$params['param2'] = 'testvalue2';
 
-		$this->assertTrue($route->Match($params));
+		$this->assertTrue($route->Valid($params));
 
 		$params['param2'] = 'testvalue3';
 
-		$this->assertTrue($route->Match($params));
+		$this->assertTrue($route->Valid($params));
 	}
 
 	public function testUsedParams()
@@ -50,14 +50,23 @@ class GitPHP_RouteTest extends PHPUnit_Framework_TestCase
 		$this->assertContains('otherparam2', $params);
 	}
 
-	public function testExtraParams()
+	public function testMatch()
 	{
-		$route = new GitPHP_Route('test/:param1/route/:param2', array(), array('otherparam' => 'othervalue', 'otherparam2' => 'othervalue2'));
-		$params = $route->GetExtraParameters();
-		$this->assertCount(2, $params);
+		$route = new GitPHP_Route('test/:param1/route/:param2', array('param1' => 'validvalue'), array('extraparam' => 'extravalue'));
 
-		$this->assertEquals('othervalue', $params['otherparam']);
-		$this->assertEquals('othervalue2', $params['otherparam2']);
+		$path = 'test/invalid';
+		$this->assertFalse($route->Match($path));
+
+		$path = 'test/invalidvalue/route/otherparam';
+		$this->assertFalse($route->Match($path));
+
+		$path = 'test/validvalue/route/otherparam';
+		$params = $route->Match($path);
+
+		$this->assertCount(3, $params);
+		$this->assertEquals('validvalue', $params['param1']);
+		$this->assertEquals('otherparam', $params['param2']);
+		$this->assertEquals('extravalue', $params['extraparam']);
 	}
 
 	public function testBuild()
@@ -85,11 +94,11 @@ class GitPHP_RouteTest extends PHPUnit_Framework_TestCase
 			'child' => 'childvalue'
 		);
 
-		$this->assertFalse($childroute->Match($params));
+		$this->assertFalse($childroute->Valid($params));
 
 		$params['parent'] = 'parentvalue';
 
-		$this->assertTrue($childroute->Match($params));
+		$this->assertTrue($childroute->Valid($params));
 
 		$usedparams = $childroute->GetUsedParameters();
 		$this->assertCount(4, $usedparams);
@@ -98,8 +107,10 @@ class GitPHP_RouteTest extends PHPUnit_Framework_TestCase
 		$this->assertContains('parentparam', $usedparams);
 		$this->assertContains('childparam', $usedparams);
 
-		$routeparams = $childroute->GetExtraParameters();
-		$this->assertCount(2, $routeparams);
+		$routeparams = $childroute->Match('parent/parentvalue/child/childvalue');
+		$this->assertCount(4, $routeparams);
+		$this->assertEquals('parentvalue', $routeparams['parent']);
+		$this->assertEquals('childvalue', $routeparams['child']);
 		$this->assertEquals('parentvalue', $routeparams['parentparam']);
 		$this->assertEquals('childvalue', $routeparams['childparam']);
 

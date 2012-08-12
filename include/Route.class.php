@@ -43,7 +43,7 @@ class GitPHP_Route
 	 * @param string[] $constraints route constraints
 	 * @param string[] $extraParameters additional route parameters
 	 */
-	public function __construct($path, $constraints = array(), $extraParameters = array())
+	public function __construct($path, $constraints = array(), $extraParameters = array(), $parent = null)
 	{
 		if (empty($path))
 			throw new Exception('Path is required');
@@ -51,6 +51,7 @@ class GitPHP_Route
 		$this->path = $path;
 		$this->constraints = $constraints;
 		$this->extraParameters = $extraParameters;
+		$this->parent = $parent;
 	}
 
 	/**
@@ -67,12 +68,57 @@ class GitPHP_Route
 	}
 
 	/**
-	 * Test if route matches given parameters
+	 * Test if this route matches the given path
+	 *
+	 * @param string $path path
+	 * @return array|boolean array of parameters or false if not matched
+	 */
+	public function Match($path)
+	{
+		if (empty($path))
+			return false;
+
+		$routepieces = explode('/', $this->GetPath());
+		foreach ($routepieces as $i => $routepiece) {
+			if (strncmp($routepiece, ':', 1) === 0) {
+				$routepiece = substr($routepiece, 1);
+				if (!empty($this->constraints[$routepiece])) {
+					$pattern = '(?P<' . $routepiece . '>' . $this->constraints[$routepiece] . ')';
+				} else {
+					$pattern = '(?P<' . $routepiece . '>.+)';
+				}
+				$routepieces[$i] = $pattern;
+			}
+		}
+
+		$routepattern = implode('/', $routepieces);
+
+		if (!preg_match('@^' . $routepattern . '$@', $path, $regs))
+			return false;
+
+		$params = array();
+		foreach ($regs as $key => $register) {
+			if (!is_string($key))
+				continue;
+			$params[$key] = $register;
+		}
+		$extraparams = $this->GetExtraParameters();
+		if (count($extraparams) > 0) {
+			foreach ($extraparams as $key => $value) {
+				$params[$key] = $value;
+			}
+		}
+
+		return $params;
+	}
+
+	/**
+	 * Test if route is valid for the given parameters
 	 *
 	 * @param string[] $params parameters
 	 * @return boolean true if matech
 	 */
-	public function Match($params)
+	public function Valid($params)
 	{
 		$constraints = $this->GetConstraints();
 
@@ -161,7 +207,7 @@ class GitPHP_Route
 	 *
 	 * @return string[] additional parameters
 	 */
-	public function GetExtraParameters()
+	private function GetExtraParameters()
 	{
 		if ($this->parent)
 			return array_merge($this->parent->GetExtraParameters(), $this->extraParameters);
@@ -177,6 +223,32 @@ class GitPHP_Route
 	public function SetParent($parent)
 	{
 		$this->parent = $parent;
+	}
+
+	/**
+	 * Compare routes for precedence
+	 *
+	 * @param GitPHP_Route $a route a
+	 * @param GitPHP_Route $b route b
+	 */
+	public static function CompareRoute($a, $b)
+	{
+		$apath = $a->GetPath();
+		$bpath = $b->GetPath();
+
+		$acount = substr_count($apath, ':');
+		$bcount = substr_count($bpath, ':');
+
+		if ($acount == $bcount) {
+			$acount2 = substr_count($apath, '/');
+			$bcount2 = substr_count($bpath, '/');
+			if ($acount2 == $bcount2)
+				return 0;
+
+			return $acount2 < $bcount2 ? 1 : -1;
+		}
+
+		return $acount < $bcount ? 1 : -1;
 	}
 
 }
