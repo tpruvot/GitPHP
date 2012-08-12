@@ -267,16 +267,10 @@ class GitPHP_Router
 			if ($params === false)
 				continue;
 
-			$queryparams = array();
-			foreach ($params as $param => $value) {
-				$queryparam = $this->ParameterToQueryVar($param);
-				if (!empty($queryparam)) {
-					$queryparams[$queryparam] = $value;
-				}
-			}
-
-			return $queryparams;
+			return $params;
 		}
+
+		return array();
 	}
 
 	/**
@@ -506,7 +500,15 @@ class GitPHP_Router
 
 		$params = $this->FindRoute($url);
 
-		return $params;
+		$queryparams = array();
+		foreach ($params as $param => $value) {
+			$queryparam = $this->ParameterToQueryVar($param);
+			if (!empty($queryparam)) {
+				$queryparams[$queryparam] = $value;
+			}
+		}
+
+		return $queryparams;
 	}
 
 	/**
