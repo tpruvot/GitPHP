@@ -670,8 +670,8 @@ class GitPHP_Router
 			return $baseurl;
 
 		$abbreviate = $this->abbreviate;
-		if (!empty($params['project']) && ($params['project'] instanceof GitPHP_Project)) {
-			if ($abbreviate && $params['project']->GetCompat())
+		if ($abbreviate && !empty($params['project']) && ($params['project'] instanceof GitPHP_Project)) {
+			if ($params['project']->GetCompat())
 				$abbreviate = false;
 		}
 
@@ -703,7 +703,8 @@ class GitPHP_Router
 					case 'tree':
 					case 'graph':
 					case 'tag':
-						$params['action'] = GitPHP_Router::Pluralize($params['action']);
+						// these actions are plural in clean urls
+						$params['action'] = $params['action'] . 's';
 						break;
 				}
 			}
@@ -811,19 +812,6 @@ class GitPHP_Router
 		} else if (is_string($project)) {
 			return $value;
 		}
-	}
-
-	/**
-	 * Pluralize an action
-	 *
-	 * @param string $action singular action
-	 * @return string plural action
-	 */
-	private static function Pluralize($action)
-	{
-		if (substr_compare($action, 's', -1) === 0)
-			return $action;
-		return $action . 's';
 	}
 
 }

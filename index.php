@@ -68,9 +68,11 @@ try {
 	$messageController = $router->GetMessageController();
 	$messageController->Initialize();
 
-	$config = $messageController->GetConfig();
-	if ($config && $config->GetValue('debug') && !($e instanceof GitPHP_MessageException)) {
-		throw $e;
+	if (!($e instanceof GitPHP_MessageException)) {
+		$config = $messageController->GetConfig();
+		if ($config && $config->GetValue('debug')) {
+			throw $e;
+		}
 	}
 
 	$messageController->SetParam('exception', $e);
@@ -80,6 +82,8 @@ try {
 	unset($messageController);
 
 }
+
+unset($router);
 
 if (isset($controller)) {
 	$log = $controller->GetLog();
