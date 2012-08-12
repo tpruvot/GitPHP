@@ -638,10 +638,7 @@ class GitPHP_Router
 
 		$url = rtrim($url, "/");
 
-		$baseurl = $_SERVER['SCRIPT_NAME'];
-		if (substr_compare($baseurl, '.php', -4) === 0)
-			$baseurl = dirname($baseurl);
-		$baseurl = GitPHP_Util::AddSlash($baseurl);
+		$baseurl = GitPHP_Util::AddSlash(GitPHP_Util::BaseUrl());
 
 		if (strncmp($baseurl, $url, strlen($baseurl)) === 0)
 			$url = substr($url, strlen($baseurl));

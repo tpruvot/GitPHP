@@ -62,9 +62,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		$mode = GitPHP_Controller_DiffBase::UnifiedDiff;	// default
 
-		$baseurl = $_SERVER['SCRIPT_NAME'];
-		if (substr_compare($baseurl, '.php', -4) === 0)
-			$baseurl = dirname($baseurl);
+		$baseurl = GitPHP_Util::BaseUrl();
 
 		/*
 		 * Check cookie

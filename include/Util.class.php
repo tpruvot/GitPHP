@@ -144,4 +144,17 @@ class GitPHP_Util
 		return $files;
 	}
 
+	/**
+	 * Get the base install url (without index)
+	 *
+	 * @return string base url
+	 */
+	public static function BaseUrl()
+	{
+		$baseurl = $_SERVER['SCRIPT_NAME'];
+		if (substr_compare($baseurl, '.php', -4) === 0)
+			$baseurl = dirname($baseurl);
+		return rtrim($baseurl, "/");
+	}
+
 }
