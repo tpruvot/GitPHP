@@ -43,6 +43,7 @@ class GitPHP_Route
 	 * @param string $path route path
 	 * @param string[] $constraints route constraints
 	 * @param string[] $extraParameters additional route parameters
+	 * @param GitPHP_Route $parent parent route
 	 */
 	public function __construct($path, $constraints = array(), $extraParameters = array(), $parent = null)
 	{
