@@ -77,12 +77,12 @@ class GitPHP_AutoLoader
 			$path = 'exception/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
+		} else if (strncmp($classname, 'Route', 5) === 0) {
+			$path = 'router/';
 		} else if (in_array($classname, array(
 				'Config',
 				'DebugLog',
 				'Resource',
-				'Router',
-				'Route',
 				'Util'
 			))) {
 			$path = '';
