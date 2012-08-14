@@ -84,9 +84,7 @@ class GitPHP_RouteTest extends PHPUnit_Framework_TestCase
 	{
 		$parentroute = new GitPHP_Route('parent/:parent', array('parent' => 'parentvalue'), array('parentparam' => 'parentvalue'));
 
-		$childroute = new GitPHP_Route('child/:child', array('child' => 'childvalue'), array('childparam' => 'childvalue'));
-
-		$childroute->SetParent($parentroute);
+		$childroute = new GitPHP_Route('child/:child', array('child' => 'childvalue'), array('childparam' => 'childvalue'), $parentroute);
 
 		$this->assertEquals('parent/:parent/child/:child', $childroute->GetPath());
 

@@ -250,23 +250,6 @@ class GitPHP_Route
 	}
 
 	/**
-	 * Set parent route
-	 *
-	 * @param GitPHP_Route $parent parent route
-	 */
-	public function SetParent($parent)
-	{
-		if ($parent == $this->parent)
-			return;
-
-		$this->parent = $parent;
-
-		$this->cachedConstraints = null;
-		$this->cachedUsedParameters = null;
-		$this->cachedExtraParameters = null;
-	}
-
-	/**
 	 * Compare routes for precedence
 	 *
 	 * @param GitPHP_Route $a route a
