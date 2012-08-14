@@ -302,19 +302,19 @@ class GitPHP_Router
 	 */
 	public function GetController()
 	{
-		$query = $_GET;
+		$params = $this->QueryVarArrayToParameterArray($_GET);
 
-		if (!empty($query['q'])) {
-			$restquery = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
-			if (count($restquery) > 0)
-				$query = array_merge($query, $restquery);
+		if (!empty($_GET['q'])) {
+			$restparams = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
+			if (count($restparams) > 0)
+				$params = array_merge($params, $restparams);
 		}
 
-		$action = null;
-		if (isset($query['a']))
-			$action = $query['a'];
-
 		$controller = null;
+
+		$action = null;
+		if (!empty($params['action']))
+			$action = $params['action'];
 
 		switch ($action) {
 
@@ -365,7 +365,7 @@ class GitPHP_Router
 
 
 			case 'tags':
-				if (empty($query['t'])) {
+				if (empty($params['tag'])) {
 					$controller = new GitPHP_Controller_Tags();
 					break;
 				}
@@ -439,14 +439,13 @@ class GitPHP_Router
 
 
 			default:
-				if (!empty($query['p'])) {
+				if (!empty($params['project'])) {
 					$controller = new GitPHP_Controller_Project();
 				} else {
 					$controller = new GitPHP_Controller_ProjectList();
 				}
 		}
 
-		$params = $this->QueryVarArrayToParameterArray($query);
 		foreach ($params as $paramname => $paramval) {
 			if ($paramname !== 'action')
 				$controller->SetParam($paramname, $paramval);
@@ -464,17 +463,16 @@ class GitPHP_Router
 	 */
 	public function GetMessageController()
 	{
-		$query = $_GET;
+		$params = $this->QueryVarArrayToParameterArray($_GET);
 
-		if (!empty($query['q'])) {
-			$restquery = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
-			if (count($restquery) > 0)
-				$query = array_merge($query, $restquery);
+		if (!empty($_GET['q'])) {
+			$restparams = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
+			if (count($restparams) > 0)
+				$params = array_merge($params, $restparams);
 		}
 
 		$controller = new GitPHP_Controller_Message();
 
-		$params = $this->QueryVarArrayToParameterArray($query);
 		foreach ($params as $paramname => $paramval) {
 			if ($paramname !== 'action')
 				$controller->SetParam($paramname, $paramval);
@@ -504,9 +502,7 @@ class GitPHP_Router
 		if (strncmp($baseurl, $url, strlen($baseurl)) === 0)
 			$url = substr($url, strlen($baseurl));
 
-		$params = $this->FindRoute($url);
-
-		return $this->ParameterArrayToQueryVarArray($params);
+		return $this->FindRoute($url);
 	}
 
 	/**
