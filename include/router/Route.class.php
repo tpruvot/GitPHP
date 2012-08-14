@@ -59,6 +59,13 @@ class GitPHP_Route
 	protected $cachedExtraParameters = null;
 
 	/**
+	 * Cached url parameters
+	 *
+	 * @var array
+	 */
+	protected $cachedUrlParameters = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $path route path
@@ -153,13 +160,20 @@ class GitPHP_Route
 				return false;
 		}
 
-		$path = explode('/', $this->GetPath());
-		foreach ($path as $pathpiece) {
-			if (strncmp($pathpiece, ':', 1) === 0) {
-				$param = substr($pathpiece, 1);
-				if (empty($params[$param]))
-					return false;
+		if ($this->cachedUrlParameters === null) {
+			$this->cachedUrlParameters = array();
+			$path = explode('/', $this->GetPath());
+			foreach ($path as $pathpiece) {
+				if (strncmp($pathpiece, ':', 1) === 0) {
+					$param = substr($pathpiece, 1);
+					$this->cachedUrlParameters[] = $param;
+				}
 			}
+		}
+
+		foreach ($this->cachedUrlParameters as $param) {
+			if (empty($params[$param]))
+				return false;
 		}
 
 		return true;
