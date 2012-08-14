@@ -81,11 +81,12 @@ class GitPHP_Route
 			return false;
 
 		$routepieces = explode('/', $this->GetPath());
+		$constraints = $this->GetConstraints();
 		foreach ($routepieces as $i => $routepiece) {
 			if (strncmp($routepiece, ':', 1) === 0) {
 				$routepiece = substr($routepiece, 1);
-				if (!empty($this->constraints[$routepiece])) {
-					$pattern = '(?P<' . $routepiece . '>' . $this->constraints[$routepiece] . ')';
+				if (!empty($constraints[$routepiece])) {
+					$pattern = '(?P<' . $routepiece . '>' . $constraints[$routepiece] . ')';
 				} else {
 					$pattern = '(?P<' . $routepiece . '>.+)';
 				}
