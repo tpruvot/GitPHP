@@ -38,6 +38,27 @@ class GitPHP_Route
 	protected $parent;
 
 	/**
+	 * Cached constraints
+	 *
+	 * @var array
+	 */
+	protected $cachedConstraints = null;
+
+	/**
+	 * Cached used parameters
+	 *
+	 * @var array
+	 */
+	protected $cachedUsedParameters = null;
+
+	/**
+	 * Cached extra parameters
+	 *
+	 * @var array
+	 */
+	protected $cachedExtraParameters = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $path route path
@@ -174,10 +195,14 @@ class GitPHP_Route
 	 */
 	private function GetConstraints()
 	{
-		if ($this->parent)
-			return array_merge($this->parent->GetConstraints(), $this->constraints);
+		if ($this->cachedConstraints === null) {
+			if ($this->parent)
+				$this->cachedConstraints = array_merge($this->parent->GetConstraints(), $this->constraints);
+			else
+				$this->cachedConstraints = $this->constraints;
+		}
 
-		return $this->constraints;
+		return $this->cachedConstraints;
 	}
 
 	/**
@@ -187,22 +212,24 @@ class GitPHP_Route
 	 */
 	public function GetUsedParameters()
 	{
-		$params = array();
-		if ($this->parent)
-			$params = $this->parent->GetUsedParameters();
+		if ($this->cachedUsedParameters === null) {
+			$this->cachedUsedParameters = array();
+			if ($this->parent)
+				$this->cachedUsedParameters = $this->parent->GetUsedParameters();
 
-		$path = explode('/', $this->path);
-		foreach ($path as $pathpiece) {
-			if (strncmp($pathpiece, ':', 1) === 0) {
-				$params[] = substr($pathpiece, 1);
+			$path = explode('/', $this->path);
+			foreach ($path as $pathpiece) {
+				if (strncmp($pathpiece, ':', 1) === 0) {
+					$this->cachedUsedParameters[] = substr($pathpiece, 1);
+				}
+			}
+
+			if (count($this->extraParameters) > 0) {
+				$this->cachedUsedParameters = array_merge($this->cachedUsedParameters, array_keys($this->extraParameters));
 			}
 		}
 
-		if (count($this->extraParameters) > 0) {
-			$params = array_merge($params, array_keys($this->extraParameters));
-		}
-
-		return $params;
+		return $this->cachedUsedParameters;
 	}
 
 	/**
@@ -212,10 +239,14 @@ class GitPHP_Route
 	 */
 	private function GetExtraParameters()
 	{
-		if ($this->parent)
-			return array_merge($this->parent->GetExtraParameters(), $this->extraParameters);
+		if ($this->cachedExtraParameters === null) {
+			if ($this->parent)
+				$this->cachedExtraParameters = array_merge($this->parent->GetExtraParameters(), $this->extraParameters);
+			else
+				$this->cachedExtraParameters = $this->extraParameters;
+		}
 
-		return $this->extraParameters;
+		return $this->cachedExtraParameters;
 	}
 
 	/**
@@ -225,7 +256,14 @@ class GitPHP_Route
 	 */
 	public function SetParent($parent)
 	{
+		if ($parent == $this->parent)
+			return;
+
 		$this->parent = $parent;
+
+		$this->cachedConstraints = null;
+		$this->cachedUsedParameters = null;
+		$this->cachedExtraParameters = null;
 	}
 
 	/**
