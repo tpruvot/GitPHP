@@ -537,13 +537,6 @@ abstract class GitPHP_ControllerBase
 			$requesturl = substr($requesturl, 0, $querypos);
 		$this->tpl->assign('requesturl', $requesturl);
 		
-		if ($this->config->GetValue('abbreviateurl')) {
-			$this->tpl->assign('abbreviateurl', true);
-		}
-
-		if ($this->config->GetValue('cleanurl')) {
-			$this->tpl->assign('cleanurl', true);
-		}
 		if ($this->router) {
 			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
 			$this->router->SetAbbreviate($this->config->GetValue('abbreviateurl') ? true : false);

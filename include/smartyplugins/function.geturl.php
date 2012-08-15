@@ -38,9 +38,8 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 
 	$router = $template->getTemplateVars('router');
 	if (!$router) {
-		$clean = $template->getTemplateVars('cleanurl');
-		$abbreviate = $template->getTemplateVars('abbreviateurl');
-		$router = new GitPHP_Router($clean, $abbreviate);
+		trigger_error("geturl: missing router");
+		return;
 	}
 	$fullurl = $router->GetUrl($url, $params);
 	if ($escape)
