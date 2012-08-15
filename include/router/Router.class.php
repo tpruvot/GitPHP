@@ -64,6 +64,8 @@ class GitPHP_Router
 		$this->abbreviate = $abbreviate;
 
 		$this->baseurl = GitPHP_Util::BaseUrl();
+		if (empty($this->baseurl))
+			$this->baseurl = '/';
 		$this->fullurl = GitPHP_Util::BaseUrl(true);
 
 		$this->InitializeRoutes();
@@ -541,6 +543,8 @@ class GitPHP_Router
 		$url = rtrim($url, "/");
 
 		$baseurl = GitPHP_Util::AddSlash(GitPHP_Util::BaseUrl());
+		if (empty($baseurl))
+			$baseurl = '/';
 
 		if (strncmp($baseurl, $url, strlen($baseurl)) === 0)
 			$url = substr($url, strlen($baseurl));
