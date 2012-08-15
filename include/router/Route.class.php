@@ -137,9 +137,7 @@ class GitPHP_Route
 			$params[$key] = $register;
 		}
 		if (count($this->extraParameters) > 0) {
-			foreach ($this->extraParameters as $key => $value) {
-				$params[$key] = $value;
-			}
+			$params = array_merge($params, $this->extraParameters);
 		}
 
 		return $params;
