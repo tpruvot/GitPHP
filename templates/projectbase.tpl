@@ -28,7 +28,7 @@
   {if $enablesearch}
     <form method="get" action="{geturl project=$project action=search hash=$commit}" enctype="application/x-www-form-urlencoded">
       <div class="search">
-        {if !$cleanurl}
+        {if !$router->GetCleanUrl()}
 	<input type="hidden" name="p" value="{$project->GetProject()}" />
         <input type="hidden" name="a" value="search" />
         <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{else}HEAD{/if}" />
