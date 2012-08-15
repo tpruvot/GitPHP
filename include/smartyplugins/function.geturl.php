@@ -13,25 +13,13 @@
  */
 function smarty_function_geturl($params, Smarty_Internal_Template $template)
 {
-	$url = null;
-	$escape = false;
-	if (empty($params['url'])) {
-		if (!empty($params['fullurl']) && ($params['fullurl'] == true))
-			$url = $template->getTemplateVars('fullscripturl');
-		else
-			$url = $template->getTemplateVars('scripturl');
-
-		if (empty($url)) {
-			trigger_error("geturl: missing url");
-			return;
-		}
-	} else {
-		$url = $params['url'];
-		unset($params['url']);
+	$full = false;
+	if (!empty($params['fullurl']) && ($params['fullurl'] == true)) {
+		$full = true;
 	}
-
 	unset($params['fullurl']);
 
+	$escape = false;
 	if (!empty($params['escape']) && ($params['escape'] == true))
 		$escape = true;
 	unset($params['escape']);
@@ -41,9 +29,9 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 		trigger_error("geturl: missing router");
 		return;
 	}
-	$fullurl = $router->GetUrl($url, $params);
+	$finalurl = $router->GetUrl($params, $full);
 	if ($escape)
-		$fullurl = htmlspecialchars($fullurl);
+		$finalurl = htmlspecialchars($finalurl);
 
-	return $fullurl;
+	return $finalurl;
 }

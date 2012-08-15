@@ -509,26 +509,6 @@ abstract class GitPHP_ControllerBase
 		if ($this->config->GetValue('graphs'))
 			$this->tpl->assign('enablegraphs', true);
 
-		$scripturl = $_SERVER['SCRIPT_NAME'];
-		$fullscripturl = '';
-		if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
-			$fullscripturl = 'https://';
-		else
-			$fullscripturl = 'http://';
-		$fullscripturl .= $_SERVER['HTTP_HOST'] . $scripturl;
-
-		if ($this->config->HasKey('self')) {
-			$selfurl = $this->config->GetValue('self');
-			if (!empty($selfurl)) {
-				if (substr($selfurl, -4) != '.php') {
-					$selfurl = GitPHP_Util::AddSlash($selfurl);
-				}
-				$fullscripturl = $selfurl;
-			}
-		}
-		$this->tpl->assign('scripturl', $scripturl);
-		$this->tpl->assign('fullscripturl', $fullscripturl);
-
 		$this->tpl->assign('baseurl', GitPHP_Util::BaseUrl());
 
 		$requesturl = $_SERVER['REQUEST_URI'];
@@ -540,6 +520,9 @@ abstract class GitPHP_ControllerBase
 		if ($this->router) {
 			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
 			$this->router->SetAbbreviate($this->config->GetValue('abbreviateurl') ? true : false);
+			if ($this->config->HasKey('self')) {
+				$this->router->SetBaseUrl($this->config->GetValue('self'));
+			}
 			$this->tpl->assign('router', $this->router);
 		}
 

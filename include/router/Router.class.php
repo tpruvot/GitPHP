@@ -39,6 +39,20 @@ class GitPHP_Router
 	protected $abbreviate = false;
 
 	/**
+	 * Base url
+	 *
+	 * @var string
+	 */
+	protected $baseurl;
+
+	/**
+	 * Full url
+	 *
+	 * @var string
+	 */
+	protected $fullurl;
+
+	/**
 	 * Constructor
 	 *
 	 * @param boolean $cleanurl true to generate clean urls
@@ -48,6 +62,10 @@ class GitPHP_Router
 	{
 		$this->cleanurl = $cleanurl;
 		$this->abbreviate = $abbreviate;
+
+		$this->baseurl = GitPHP_Util::BaseUrl();
+		$this->fullurl = GitPHP_Util::BaseUrl(true);
+
 		$this->InitializeRoutes();
 		$this->InitializeQueryParameters();
 	}
@@ -90,6 +108,31 @@ class GitPHP_Router
 	public function SetAbbreviate($abbreviate)
 	{
 		$this->abbreviate = $abbreviate;
+	}
+
+	/**
+	 * Get base url
+	 *
+	 * @param boolean $full true to return full base url (include protocol and hostname)
+	 * @return string base url
+	 */
+	public function GetBaseUrl($full = false)
+	{
+		if ($full)
+			return $this->fullurl;
+
+		return $this->baseurl;
+	}
+
+	/**
+	 * Set base url
+	 *
+	 * @param string $baseurl base url
+	 */
+	public function SetBaseUrl($baseurl)
+	{
+		$this->baseurl = $baseurl;
+		$this->fullurl = $baseurl;
 	}
 
 	/**
@@ -508,16 +551,25 @@ class GitPHP_Router
 	/**
 	 * Generate a url
 	 *
-	 * @param string $baseurl base request url
 	 * @param array $params request parameters
+	 * @param boolean $full true to get full url (include protocol and hostname)
 	 */
-	public function GetUrl($baseurl, $params = array())
+	public function GetUrl($params = array(), $full = false)
 	{
+		if ($full)
+			$baseurl = $this->fullurl;
+		else
+			$baseurl = $this->baseurl;
+
 		if ($this->cleanurl) {
-			if (substr_compare($baseurl, '.php', -4) === 0) {
+			if (substr_compare($baseurl, 'index.php', -9) === 0) {
 				$baseurl = dirname($baseurl);
 			}
 			$baseurl = GitPHP_Util::AddSlash($baseurl);
+		} else {
+			if (substr_compare($baseurl, 'index.php', -9) !== 0) {
+				$baseurl = GitPHP_Util::AddSlash($baseurl);
+			}
 		}
 
 		if (count($params) < 1)
