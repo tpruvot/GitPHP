@@ -23,7 +23,6 @@ GitPHP.Snapshot = {ldelim}
 	Formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
 {rdelim}
 
-GitPHP.FullScriptUrl = '{$fullscripturl}';
 GitPHP.BaseUrl = '{$baseurl}/';
 {if $project}
 GitPHP.Project = '{$project->GetProject()}';

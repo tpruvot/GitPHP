@@ -59,7 +59,7 @@
     {/block}
 
     require({ldelim}
-    	baseUrl: '{$baseurl}/js',
+    	baseUrl: GitPHP.BaseUrl + 'js',
 	paths: GitPHPJSPaths,
 	priority: ['jquery']
     {rdelim}, GitPHPJSModules);
