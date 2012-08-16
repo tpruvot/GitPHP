@@ -160,7 +160,7 @@ class GitPHP_Util
 			if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
 				$baseurl = 'https://' . $baseurl;
 			else
-				$baserul = 'http://' . $baseurl;
+				$baseurl = 'http://' . $baseurl;
 		}
 		return rtrim($baseurl, "/");
 	}
