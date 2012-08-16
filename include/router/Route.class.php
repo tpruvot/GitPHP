@@ -45,6 +45,13 @@ class GitPHP_Route
 	protected $usedParameters = array();
 
 	/**
+	 * Cached constraints
+	 *
+	 * @var array[]
+	 */
+	protected $cachedConstraints;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $path route path
@@ -154,7 +161,11 @@ class GitPHP_Route
 		foreach ($this->constraints as $param => $constraint) {
 			if (empty($params[$param]))
 				return false;
-			if (!preg_match('@^' . $constraint . '$@', $params[$param]))
+			$paramval = $params[$param];
+			if (!isset($this->cachedConstraints[$param][$paramval])) {
+				$this->cachedConstraints[$param][$paramval] = preg_match('@^' . $constraint . '$@', $params[$param]);
+			}
+			if (!$this->cachedConstraints[$param][$paramval])
 				return false;
 		}
 
