@@ -84,10 +84,6 @@ class GitPHP_Pack
 
 		$this->hash = $hash;
 
-		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
-			throw new Exception('Pack index does not exist');
-		}
-
 		$this->packIndex = new GitPHP_PackIndex($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx');
 
 		$this->packData = new GitPHP_PackData($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack', $objectLoader);
