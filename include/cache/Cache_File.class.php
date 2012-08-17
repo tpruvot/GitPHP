@@ -93,7 +93,22 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 		if (empty($key))
 			return false;
 
-		return $this->Load($key);
+		$return = $this->Load($key);
+
+		if ($return === false)
+			return false;
+
+		list($cachetype, $data) = $return;
+
+		if ($cachetype == GitPHP_Cache_File::CacheTypeIgbinary) {
+			$data = igbinary_unserialize($data);
+		} else if ($cachetype == GitPHP_Cache_File::CacheTypeGzip) {
+			$data = unserialize(gzuncompress($data));
+		} else {
+			$data = unserialize($data);
+		}
+
+		return $data;
 	}
 
 	/**
@@ -193,20 +208,12 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 			return false;
 		}
 
-		if ($cachetype == GitPHP_Cache_File::CacheTypeIgbinary) {
-			if ($this->igbinary) {
-				$data = igbinary_unserialize($data);
-			} else {
-				unlink($file);
-				return false;
-			}
-		} else if ($cachetype == GitPHP_Cache_File::CacheTypeGzip) {
-			$data = unserialize(gzuncompress($data));
-		} else {
-			$data = unserialize($data);
+		if (($cachetype == GitPHP_Cache_File::CacheTypeIgbinary) && (!$this->igbinary)) {
+			unlink($file);
+			return false;
 		}
 
-		return $data;
+		return array($cachetype, $data);
 	}
 
 	/**
