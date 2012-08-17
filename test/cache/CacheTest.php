@@ -11,7 +11,7 @@ class GitPHP_CacheTest extends PHPUnit_Framework_TestCase
 {
 	public function testFile()
 	{
-		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects'));
+		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', 0, false));
 		$cache->Clear();
 
 		$this->assertFalse($cache->Exists('testkey1|testkey2'));
@@ -33,7 +33,7 @@ class GitPHP_CacheTest extends PHPUnit_Framework_TestCase
 
 	public function testFileLifetime()
 	{
-		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects'));
+		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', 0, false));
 		$cache->Clear();
 
 		$cache->Set('testkey1|testkey2', 'testvalue1', 1);
@@ -48,7 +48,35 @@ class GitPHP_CacheTest extends PHPUnit_Framework_TestCase
 
 	public function testFileCompressed()
 	{
-		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects'), 20);
+		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', 19, false));
+		$cache->Clear();
+
+		$this->assertFalse($cache->Exists('testkey1|testkey2'));
+		$cache->Set('testkey1|testkey2', '12345678');
+		$this->assertTrue($cache->Exists('testkey1|testkey2'));
+		$this->assertEquals('12345678', $cache->Get('testkey1|testkey2'));
+
+		$this->assertFalse($cache->Get('testkey3|testkey4'));
+		$cache->Set('testkey3|testkey4', '12345678901234567890');
+		$this->assertTrue($cache->Exists('testkey3|testkey4'));
+		$this->assertEquals('12345678901234567890', $cache->Get('testkey3|testkey4'));
+
+		$cache->Delete('testkey1|testkey2');
+		$this->assertFalse($cache->Exists('testkey1|testkey2'));
+
+		$this->assertTrue($cache->Exists('testkey3|testkey4'));
+
+		$cache->Clear();
+		$this->assertFalse($cache->Exists('testkey3|testkey4'));
+	}
+
+	public function testFileIgbinary()
+	{
+		if (!function_exists('igbinary_serialize')) {
+			$this->markTestSkipped();
+			return;
+		}
+		$cache = new GitPHP_Cache(new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', 0, true));
 		$cache->Clear();
 
 		$this->assertFalse($cache->Exists('testkey1|testkey2'));
