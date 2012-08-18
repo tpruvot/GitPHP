@@ -255,6 +255,7 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 
 		$args = array();
 		$args[] = $this->hash;
+		$args[] = '--max-parents=1';
 
 		$canSkip = true;
 		if ($this->skip > 0)
