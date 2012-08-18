@@ -65,6 +65,32 @@ class GitPHP_HeadList extends GitPHP_RefList
 	}
 
 	/**
+	 * Gets heads that point to a commit
+	 *
+	 * @return GitPHP_Head[] array of heads
+	 */
+	public function GetCommitHeads($commit)
+	{
+		if (!$commit)
+			return array();
+
+		$commitHash = $commit->GetHash();
+
+		if (!$this->dataLoaded)
+			$this->LoadData();
+
+		$heads = array();
+
+		foreach ($this->refs as $head => $hash) {
+			if ($commitHash == $hash) {
+				$heads[] = $this->project->GetObjectManager()->GetHead($head, $hash);
+			}
+		}
+
+		return $heads;
+	}
+
+	/**
 	 * Load head data
 	 */
 	protected function LoadData()

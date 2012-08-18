@@ -519,17 +519,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetHeads()
 	{
-		$heads = array();
-
-		$projectRefs = $this->GetProject()->GetHeadList()->GetHeads();
-
-		foreach ($projectRefs as $ref) {
-			if ($ref->GetHash() == $this->hash) {
-				$heads[] = $ref;
-			}
-		}
-
-		return $heads;
+		return $this->GetProject()->GetHeadList()->GetCommitHeads($this);
 	}
 
 	/**
@@ -539,19 +529,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	 */
 	public function GetTags()
 	{
-		$tags = array();
-
-		$projectRefs = $this->GetProject()->GetTagList()->GetTags();
-
-		foreach ($projectRefs as $ref) {
-			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
-				if ($ref->GetCommitHash() === $this->hash) {
-					$tags[] = $ref;
-				}
-			}
-		}
-
-		return $tags;
+		return $this->GetProject()->GetTagList()->GetCommitTags($this);
 	}
 
 	/**

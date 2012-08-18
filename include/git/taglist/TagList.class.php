@@ -75,6 +75,44 @@ class GitPHP_TagList extends GitPHP_RefList
 	}
 
 	/**
+	 * Get tags pointing to a commit
+	 *
+	 * @param GitPHP_Commit $commit commit
+	 * @return GitPHP_Tag[] array of tags
+	 */
+	public function GetCommitTags($commit)
+	{
+		if (!$commit)
+			return array();
+
+		$commitHash = $commit->GetHash();
+
+		if (!$this->dataLoaded)
+			$this->LoadData();
+
+		$tags = array();
+		foreach ($this->refs as $tag => $hash) {
+			if (isset($this->commits[$tag])) {
+				if ($this->commits[$tag] == $commitHash) {
+					$tagObj = $this->project->GetObjectManager()->GetTag($tag, $hash);
+					$tagObj->SetCommitHash($this->commits[$tag]);
+					$tags[] = $tagObj;
+				}
+			} else {
+				$tagObj = $this->project->GetObjectManager()->GetTag($tag, $hash);
+				$tagCommitHash = $tagObj->GetCommitHash();
+				if (!empty($tagCommitHash)) {
+					$this->commits[$tag] = $tagCommitHash;
+				}
+				if ($tagCommitHash == $commitHash) {
+					$tags[] = $tagObj;
+				}
+			}
+		}
+		return $tags;
+	}
+
+	/**
 	 * Load tag data
 	 */
 	protected function LoadData()
