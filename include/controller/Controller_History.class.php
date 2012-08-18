@@ -71,7 +71,7 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 
-		$history = new GitPHP_FileHistory($this->GetProject(), $co, $this->params['file'], $this->exe);
+		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co);
 		$this->tpl->assign('history', $history);
 	}
 

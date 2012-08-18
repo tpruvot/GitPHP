@@ -7,21 +7,21 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileHistory implements Iterator
+class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
 	 * The project
 	 *
 	 * @var GitPHP_Project
 	 */
-	protected $project;
+	protected $project = null;
 
 	/**
-	 * The commit hash
+	 * History
 	 *
-	 * @var string
+	 * @var GitPHP_FileDiff[]
 	 */
-	protected $commitHash;
+	protected $history = array();
 
 	/**
 	 * The path
@@ -31,11 +31,25 @@ class GitPHP_FileHistory implements Iterator
 	protected $path;
 
 	/**
-	 * The history
+	 * The limit of objects to load
 	 *
-	 * @var GitPHP_FileDiff[]
+	 * @var int
 	 */
-	protected $history = array();
+	protected $limit = 50;
+
+	/**
+	 * The number of objects to skip
+	 *
+	 * @var int
+	 */
+	protected $skip = 0;
+
+	/**
+	 * The hash to walk back from
+	 *
+	 * @var string
+	 */
+	protected $hash = false;
 
 	/**
 	 * Whether data has been loaded
@@ -55,51 +69,35 @@ class GitPHP_FileHistory implements Iterator
 	 * Constructor
 	 *
 	 * @param GitPHP_Project $project project
-	 * @param GitPHP_Commit $commit commit to start history from
 	 * @param string $path file path to trace history of
 	 * @param GitPHP_GitExe $exe git exe
+	 * @param GitPHP_Commit $head commit to start history from
 	 */
-	public function __construct($project, $commit, $path, $exe)
+	public function __construct($project, $path, $exe, $head = null, $limit = 0, $skip = 0)
 	{
-		if (!$project)
+		if (!$project) {
 			throw new Exception('Project is required');
+		}
 
-		if (!$commit)
-			throw new Exception('Commit is required');
+		$this->project = $project;
+		$this->limit = $limit;
+		$this->skip = $skip;
 
+		if (!$head)
+			$head = $this->project->GetHeadCommit();
+
+		if ($head) {
+			$this->hash = $head->GetHash();
+		}
 		if (empty($path))
 			throw new Exception('Path is required');
 
 		if (!$exe)
 			throw new Exception('Git exe is required');
 
-		$this->project = $project;
-
-		$this->commitHash = $commit->GetHash();
-
 		$this->path = $path;
 
 		$this->exe = $exe;
-	}
-
-	/**
-	 * Gets the project for this file history
-	 *
-	 * @return GitPHP_Project project
-	 */
-	public function GetProject()
-	{
-		return $this->project;
-	}
-
-	/**
-	 * Gets the commit for this file history
-	 *
-	 * @return GitPHP_Commit commit
-	 */
-	public function GetCommit()
-	{
-		return $this->project->GetCommit($this->commitHash);
 	}
 
 	/**
@@ -113,27 +111,170 @@ class GitPHP_FileHistory implements Iterator
 	}
 
 	/**
-	 * Gets the history
+	 * Gets the project
 	 *
-	 * @return GitPHP_FileDiff[] history data
+	 * @return GitPHP_Project project
 	 */
-	public function GetHistory()
+	public function GetProject()
 	{
-		if (!$this->dataLoaded)
-			$this->LoadData();
+		return $this->project;
+	}
 
-		return $this->history;
+	/**
+	 * Gets the count
+	 *
+	 * @return int count
+	 */
+	public function GetCount()
+	{
+		if (!$this->dataLoaded) {
+			$this->LoadData();
+		}
+
+		return count($this->history);
+	}
+
+	/**
+	 * Gets the limit
+	 *
+	 * @return int limit
+	 */
+	public function GetLimit()
+	{
+		return $this->limit;
+	}
+
+	/**
+	 * Sets the limit
+	 *
+	 * @param int $limit limit
+	 */
+	public function SetLimit($limit)
+	{
+		if ($this->limit == $limit)
+			return;
+
+		if ($this->dataLoaded) {
+			if (($limit < $this->limit) && ($limit > 0)) {
+				/* want less data, just trim the array */
+				$this->history = array_slice($this->history, 0, $limit);
+			} else if (($limit > $this->limit) || ($limit < 1)) {
+				/* want more data, have to reload */
+				$this->Clear();
+			}
+		}
+
+		$this->limit = $limit;
+	}
+
+	/**
+	 * Gets the skip number
+	 *
+	 * @return int skip number
+	 */
+	public function GetSkip()
+	{
+		return $this->skip;
+	}
+
+	/**
+	 * Sets the skip number
+	 *
+	 * @param int $skip skip number
+	 */
+	public function SetSkip($skip)
+	{
+		if ($skip == $this->skip)
+			return;
+
+		if ($this->dataLoaded) {
+			$this->Clear();
+		}
+
+		$this->skip = $skip;
+	}
+
+	/**
+	 * Gets the head this log will walk from
+	 *
+	 * @return GitPHP_Commit head commit
+	 */
+	public function GetHead()
+	{
+		return $this->project->GetCommit($this->hash);
+	}
+
+	/**
+	 * Sets the head this log will walk from
+	 *
+	 * @param GitPHP_Commit $head head commit
+	 */
+	public function SetHead($head)
+	{
+		if ($head)
+			$this->SetHeadHash($head->GetHash());
+		else
+			$this->SetHeadHash(null);
+	}
+
+	/**
+	 * Gets the head hash this log will walk from
+	 *
+	 * @return string hash
+	 */
+	public function GetHeadHash()
+	{
+		return $this->hash;
+	}
+
+	/**
+	 * Sets the head hash this log will walk from
+	 *
+	 * @param string $hash head commit hash
+	 */
+	public function SetHeadHash($hash)
+	{
+		if (empty($hash)) {
+			$head = $this->project->GetHeadCommit();
+			if ($head)
+				$hash = $head->GetHash();
+		}
+
+		if ($hash != $this->hash) {
+			$this->Clear();
+			$this->hash = $hash;
+		}
 	}
 
 	/**
 	 * Loads the history data
 	 */
-	private function LoadData()
+	protected function LoadData()
 	{
 		$this->dataLoaded = true;
 
 		$args = array();
-		$args[] = $this->commitHash;
+		$args[] = $this->hash;
+
+		$canSkip = true;
+		if ($this->skip > 0)
+			$canSkip = $this->exe->CanSkip();
+
+		if ($canSkip) {
+			if ($this->limit > 0) {
+				$args[] = '--max-count=' . $this->limit;
+			}
+			if ($this->skip > 0) {
+				$args[] = '--skip=' . $skip;
+			}
+		} else {
+			if ($this->limit > 0) {
+				$args[] = '--max-count=' . ($this->limit + $this->skip);
+			}
+		}
+
+		$args[] = '--';
+		$args[] = $this->path;
 		$args[] = '|';
 		$args[] = $this->exe->GetBinary();
 		$args[] = '--git-dir=' . $this->project->GetPath();
@@ -160,12 +301,18 @@ class GitPHP_FileHistory implements Iterator
 			}
 		}
 
+		if (($this->skip > 0) && (!$canSkip)) {
+			if ($this->limit > 0) {
+				$this->history = array_slice($this->history, $this->skip, $this->limit);
+			} else {
+				$this->history = array_slice($this->history, $this->skip);
+			}
+		}
+
 	}
 
 	/**
 	 * Rewinds the iterator
-	 *
-	 * @return GitPHP_FileDiff
 	 */
 	function rewind()
 	{
@@ -179,7 +326,7 @@ class GitPHP_FileHistory implements Iterator
 	/**
 	 * Returns the current revision
 	 *
-	 * @return GitPHP_FileDiff
+	 * @return GitPHP_Commit
 	 */
 	function current()
 	{
@@ -192,8 +339,6 @@ class GitPHP_FileHistory implements Iterator
 
 	/**
 	 * Returns the current key
-	 *
-	 * @return int
 	 */
 	function key()
 	{
@@ -206,8 +351,6 @@ class GitPHP_FileHistory implements Iterator
 
 	/**
 	 * Advance the pointer
-	 *
-	 * @return GitPHP_FileDiff|boolean
 	 */
 	function next()
 	{
@@ -232,4 +375,17 @@ class GitPHP_FileHistory implements Iterator
 		return key($this->history) !== null;
 	}
 
+	/**
+	 * Clears the loaded data
+	 */
+	public function Clear()
+	{
+		if (!$this->dataLoaded)
+			return;
+
+		$this->history = array();
+		reset($this->history);
+
+		$this->dataLoaded = false;
+	}
 }
