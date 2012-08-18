@@ -293,9 +293,7 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 				$commitHash = $regs[1];
 			} else if ($commitHash) {
 				try {
-					$history = $this->GetProject()->GetObjectManager()->GetFileDiff($line);
-					$history->SetCommitHash($commitHash);
-					$this->history[] = $history;
+					$this->history[] = array('diffline' => $line, 'commithash' => $commitHash);
 				} catch (Exception $e) {
 				}
 				$commitHash = null;
@@ -335,7 +333,15 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 			$this->LoadData();
 		}
 
-		return current($this->history);
+		$data = current($this->history);
+
+		if (!(empty($data['diffline']) || empty($data['commithash']))) {
+			$history = $this->GetProject()->GetObjectManager()->GetFileDiff($data['diffline']);
+			$history->SetCommitHash($data['commithash']);
+			return $history;
+		}
+
+		return null;
 	}
 
 	/**
