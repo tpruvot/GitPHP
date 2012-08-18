@@ -11,6 +11,17 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
 	 * @return string template filename
@@ -52,8 +63,15 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$taglist = $this->GetProject()->GetTagList()->GetOrderedTags('-creatordate');
+		$this->tpl->assign('page', $this->params['page']);
+		$skip = $this->params['page'] * 100;
+
+		$taglist = $this->GetProject()->GetTagList()->GetOrderedTags('-creatordate', 101, $skip);
 		if (isset($taglist) && (count($taglist) > 0)) {
+			if (count($taglist) > 100) {
+				$taglist = array_slice($taglist, 0, 100);
+				$this->tpl->assign('hasmoretags', true);
+			}
 			$this->tpl->assign("taglist",$taglist);
 		}
 	}

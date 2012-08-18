@@ -23,6 +23,7 @@ interface GitPHP_RefListLoadStrategy_Interface
 	 * @param GitPHP_RefList $refList ref list
 	 * @param string $order list order
 	 * @param integer $count number to load
+	 * @param integer $skip number to skip
 	 */
-	public function LoadOrdered($refList, $order, $count = 0);
+	public function LoadOrdered($refList, $order, $count = 0, $skip = 0);
 }

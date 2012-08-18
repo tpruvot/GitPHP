@@ -26,8 +26,9 @@ class GitPHP_HeadListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_H
 	 * @param GitPHP_HeadList $headList head list
 	 * @param string $order list order
 	 * @param integer $count number to load
+	 * @param integer $skip number to skip
 	 */
-	public function LoadOrdered($headList, $order, $count = 0)
+	public function LoadOrdered($headList, $order, $count = 0, $skip = 0)
 	{
 		if (!$headList)
 			return;
@@ -42,8 +43,11 @@ class GitPHP_HeadListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_H
 			usort($heads, array('GitPHP_Head', 'CompareAge'));
 		}
 
-		if (($count > 0) && (count($heads) > $count)) {
-			$heads = array_slice($heads, 0, $count);
+		if ((($count > 0) && (count($heads) > $count)) || ($skip > 0)) {
+			if ($count > 0)
+				$heads = array_slice($heads, $skip, $count);
+			else
+				$heads = array_slice($heads, $skip);
 		}
 
 		return $heads;

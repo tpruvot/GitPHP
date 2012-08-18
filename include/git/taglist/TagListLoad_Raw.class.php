@@ -26,8 +26,9 @@ class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_Ta
 	 * @param GitPHP_TagList $tagList tag list
 	 * @param string $order list order
 	 * @param integer $count number to load
+	 * @param integer $skip number to skip
 	 */
-	public function LoadOrdered($tagList, $order, $count = 0)
+	public function LoadOrdered($tagList, $order, $count = 0, $skip = 0)
 	{
 		if (!$tagList)
 			return;
@@ -42,8 +43,11 @@ class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_Ta
 			usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
 		}
 
-		if (($count > 0) && (count($tags) > $count)) {
-			$tags = array_slice($tags, 0, $count);
+		if ((($count > 0) && (count($tags) > $count)) || ($skip > 0)) {
+			if ($count > 0)
+				$tags = array_slice($tags, $skip, $count);
+			else
+				$tags = array_slice($tags, $skip);
 		}
 
 		return $tags;

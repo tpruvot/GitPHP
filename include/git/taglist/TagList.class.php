@@ -172,11 +172,12 @@ class GitPHP_TagList extends GitPHP_RefList
 	 *
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return GitPHP_Tag[] array of tags
 	 */
-	public function GetOrderedTags($order, $count = 0)
+	public function GetOrderedTags($order, $count = 0, $skip = 0)
 	{
-		return $this->strategy->LoadOrdered($this, $order, $count);
+		return $this->strategy->LoadOrdered($this, $order, $count, $skip);
 	}
 
 	/**

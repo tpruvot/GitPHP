@@ -26,13 +26,14 @@ class GitPHP_TagListLoad_Git extends GitPHP_RefListLoad_Git implements GitPHP_Ta
 	 * @param GitPHP_TagList $tagList tag list
 	 * @param string $order list order
 	 * @param integer $count number to load
+	 * @param integer $skip number to skip
 	 */
-	public function LoadOrdered($tagList, $order, $count = 0)
+	public function LoadOrdered($tagList, $order, $count = 0, $skip = 0)
 	{
 		if (!$tagList)
 			return;
 
-		$ordered = $this->GetOrderedRefs($tagList, 'tags', $order, $count);
+		$ordered = $this->GetOrderedRefs($tagList, 'tags', $order, $count, $skip);
 
 		if (!$ordered)
 			return;

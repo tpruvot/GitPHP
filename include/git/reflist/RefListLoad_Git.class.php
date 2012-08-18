@@ -74,9 +74,10 @@ abstract class GitPHP_RefListLoad_Git
 	 * @param string $type type of ref
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return array array of refs
 	 */
-	protected function GetOrderedRefs($refList, $type, $order, $count = 0)
+	protected function GetOrderedRefs($refList, $type, $order, $count = 0, $skip = 0)
 	{
 		if (!$refList)
 			return;
@@ -88,7 +89,11 @@ abstract class GitPHP_RefListLoad_Git
 		$args[] = '--sort=' . $order;
 		$args[] = '--format="%(refname)"';
 		if ($count > 0) {
-			$args[] = '--count=' . $count;
+			if ($skip > 0) {
+				$args[] = '--count=' . ($count + $skip);
+			} else {
+				$args[] = '--count=' . $count;
+			}
 		}
 		$args[] = '--';
 		$args[] = 'refs/' . $type;
@@ -105,6 +110,10 @@ abstract class GitPHP_RefListLoad_Git
 			$ref = substr($ref, $prefixLen);
 			if (!empty($ref))
 				$refs[] = $ref;
+		}
+
+		if ($skip > 0) {
+			$refs = array_slice($refs, $skip);
 		}
 
 		return $refs;

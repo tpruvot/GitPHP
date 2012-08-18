@@ -46,7 +46,12 @@
      {/foreach}
      {if $hasmoretags}
        <tr>
-         <td><a href="{geturl project=$project action=tags}">&hellip;</a></td>
+         {if $source == 'summary'}
+           <td><a href="{geturl project=$project action=tags}">&hellip;</a></td>
+	 {else if $source == 'tags'}
+	   <td><a href="{geturl project=$project action=tags page=$page+1}" title="Alt-n">{t}next{/t}</a></td>
+	   <td></td><td></td><td></td>
+	 {/if}
        </tr>
      {/if}
    </table>

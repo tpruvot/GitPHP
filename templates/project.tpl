@@ -46,7 +46,7 @@
   
   {include file='title.tpl' target='tags'}
 
-  {include file='taglist.tpl'}
+  {include file='taglist.tpl' source=summary}
    
  {/if}
 
@@ -54,7 +54,7 @@
 
   {include file='title.tpl' target='heads'}
 
-  {include file='headlist.tpl'}
+  {include file='headlist.tpl' source=summary}
 
  {/if}
 
