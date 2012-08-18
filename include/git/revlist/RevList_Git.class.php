@@ -48,20 +48,33 @@ class GitPHP_RevList_Git
 		if ($skip > 0)
 			$canSkip = $this->exe->CanSkip();
 
+		$extraargs = array();
+
 		if ($canSkip) {
 			if ($count > 0) {
-				$args[] = '--max-count=' . $count;
+				$extraargs[] = '--max-count=' . $count;
 			}
 			if ($skip > 0) {
-				$args[] = '--skip=' . $skip;
+				$extraargs[] = '--skip=' . $skip;
 			}
 		} else {
 			if ($count > 0) {
-				$args[] = '--max-count=' . ($count + $skip);
+				$extraargs[] = '--max-count=' . ($count + $skip);
 			}
 		}
 
-		$args[] = $hash;
+		$extraargs[] = $hash;
+
+		if (count($args) > 0) {
+			$endarg = array_search('--', $args);
+			if ($endarg !== false) {
+				array_splice($args, $endarg, 0, $extraargs);
+			} else {
+				$args = array_merge($args, $extraargs);
+			}
+		} else {
+			$args = $extraargs;
+		}
 
 		$revlist = explode("\n", $this->exe->Execute($project->GetPath(), GIT_REV_LIST, $args));
 
