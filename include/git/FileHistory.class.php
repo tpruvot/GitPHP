@@ -265,7 +265,7 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 				$args[] = '--max-count=' . $this->limit;
 			}
 			if ($this->skip > 0) {
-				$args[] = '--skip=' . $skip;
+				$args[] = '--skip=' . $this->skip;
 			}
 		} else {
 			if ($this->limit > 0) {

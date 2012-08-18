@@ -19,6 +19,9 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 
 		if (empty($this->params['hash']))
 			$this->params['hash'] = 'HEAD';
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
 	}
 
 	/**
@@ -38,7 +41,7 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '');
+		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '') . '|' . $this->params['page'];
 	}
 
 	/**
@@ -71,7 +74,14 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 
-		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co);
+		$this->tpl->assign('page',$this->params['page']);
+		$skip = $this->params['page'] * 100;
+
+		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co, 101, $skip);
+		if ($history->GetCount() > 100) {
+			$this->tpl->assign('hasmorehistory', true);
+			$history->SetLimit(100);
+		}
 		$this->tpl->assign('history', $history);
 	}
 

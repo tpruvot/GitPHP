@@ -7,12 +7,38 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=links}
+{if $page > 0}
+<link rel="prev" href="{geturl project=$project action=history hash=$commit file=$blob->GetPath() page=$page-1}" />
+{/if}
+{if $hasmorehistory}
+<link rel="next" href="{geturl project=$project action=history hash=$commit file=$blob->GetPath() page=$page+1}" />
+{/if}
+{/block}
+
 {block name=main}
 
  {* Page header *}
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
-   <br /><br />
+   <br />
+   {if $page > 0}
+     <a href="{geturl project=$project action=history hash=$commit file=$blob->GetPath()}">{t}first{/t}</a>
+   {else}
+     {t}first{/t}
+   {/if}
+   &sdot;
+   {if $page > 0}
+     <a href="{geturl project=$project action=history hash=$commit file=$blob->GetPath() page=$page-1}">{t}prev{/t}</a>
+   {else}
+     {t}prev{/t}
+   {/if}
+   &sdot;
+   {if $hasmorehistory}
+     <a href="{geturl project=$project action=history hash=$commit file=$blob->GetPath() page=$page+1}">{t}next{/t}</a>
+   {else}
+     {t}next{/t}
+   {/if}
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -33,6 +59,12 @@
        </td>
      </tr>
    {/foreach}
+   {if $hasmorehistory}
+     <tr>
+       <td><a href="{geturl project=$project action=history hash=$commit file=$blob->GetPath() page=$page+1}">{t}next{/t}</a></td>
+       <td></td><td></td><td></td>
+     </tr>
+   {/if}
  </table>
 
 {/block}
