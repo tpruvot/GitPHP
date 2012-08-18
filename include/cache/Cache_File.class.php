@@ -230,11 +230,12 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 		if ($this->igbinary) {
 			$data = igbinary_serialize($data);
 			$flags .= '|' . GitPHP_Cache_File::CacheTypeIgbinary;
-		} else if (($this->compressThreshold > 0) && (strlen($data) > $this->compressThreshold)) {
-			$data = gzcompress(serialize($data));
-			$flags .= '|' . GitPHP_Cache_File::CacheTypeGzip;
 		} else {
 			$data = serialize($data);
+			if (($this->compressThreshold > 0) && (strlen($data) > $this->compressThreshold)) {
+				$data = gzcompress($data);
+				$flags .= '|' . GitPHP_Cache_File::CacheTypeGzip;
+			}
 		}
 
 		file_put_contents($this->cacheDir . $this->KeyToFile($key), $flags . "\n" . $data);
