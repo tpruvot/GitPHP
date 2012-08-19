@@ -38,7 +38,7 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return '';
+		return $this->params['page'];
 	}
 
 	/**

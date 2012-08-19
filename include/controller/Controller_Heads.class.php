@@ -38,7 +38,7 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return '';
+		return $this->params['page'];
 	}
 
 	/**
