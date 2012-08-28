@@ -72,6 +72,8 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 	 * @param string $path file path to trace history of
 	 * @param GitPHP_GitExe $exe git exe
 	 * @param GitPHP_Commit $head commit to start history from
+	 * @param int $limit limit of revisions to walk
+	 * @param int $skip number of revisions to skip
 	 */
 	public function __construct($project, $path, $exe, $head = null, $limit = 0, $skip = 0)
 	{
