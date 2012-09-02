@@ -32,7 +32,7 @@
     {else}
     <link rel="stylesheet" href="{$baseurl}/css/{$stylesheet}.css" type="text/css" />
     {/if}
-    <link rel="stylesheet" href="{$baseurl}/css/ext/jquery.qtip.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/ext/jquery.qtip.min.css" type="text/css" />
     {block name=css}
     {/block}
     {if $javascript}
