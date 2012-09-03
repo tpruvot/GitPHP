@@ -91,6 +91,8 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 			$this->headers[] = "Content-type: text/plain; charset=utf-8";
 			$this->headers[] = "Content-Disposition: inline; filename=\"index.aux\"";
 			$this->DisableLogging();
+		} else {
+			parent::LoadHeaders();
 		}
 	}
 

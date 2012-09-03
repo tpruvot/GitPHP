@@ -83,6 +83,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
+		parent::LoadHeaders();
+
 		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->StatusCode)) {
 			$partialHeader = $this->StatusCodeHeader($this->params['exception']->StatusCode);
 			if (!empty($partialHeader)) {

@@ -17,7 +17,6 @@
     {$pagetitle}
     {/block}
     </title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {block name=feeds}
     {/block}
     {block name=links}

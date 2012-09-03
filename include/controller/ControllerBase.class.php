@@ -449,6 +449,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
+		$this->headers[] = 'Content-Type: text/html; charset=UTF-8';
 	}
 
 	/**
@@ -551,7 +552,16 @@ abstract class GitPHP_ControllerBase
 		$this->LoadHeaders();
 
 		if (count($this->headers) > 0) {
+			$hascontenttype = false;
 			foreach ($this->headers as $hdr) {
+				if (empty($hdr))
+					continue;
+
+				if (strncmp($hdr, 'Content-Type:', 13) === 0) {
+					if ($hascontenttype)
+						throw new Exception('Duplicate Content-Type header');
+					$hascontenttype = true;
+				}
 				header($hdr);
 			}
 		}
