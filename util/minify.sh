@@ -34,7 +34,7 @@ fi
 for i in ${JSDIR}/*${JSEXT}; do
 	echo "Minifying ${i}..."
 	JSMODULE="`basename ${i%$JSEXT}`"
-	java -classpath lib/rhino/js.jar:lib/closure/compiler.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o name=${JSMODULE} out=${JSDIR}/${JSMODULE}${MINEXT} baseUrl=${JSDIR} paths.jquery="empty:" paths.qtip="ext/jquery.qtip.min" paths.d3="ext/d3.v2.min" optimize="closure"
+	java -classpath lib/rhino/js.jar:lib/closure/compiler.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o name=${JSMODULE} out=${JSDIR}/${JSMODULE}${MINEXT} baseUrl=${JSDIR} paths.jquery="empty:" paths.qtip="empty:" paths.d3="ext/d3.v2.min" optimize="closure"
 done
 
 for i in ${CSSDIR}/*${CSSEXT}; do
@@ -48,7 +48,7 @@ for i in ${JSDIR}/*${MINEXT}; do
 	touch ${i} ${i}${GZEXT}
 done
 
-for i in ${JSDIR}/ext/jquery-*${MINEXT}; do
+for i in ${JSDIR}/ext/jquery*${MINEXT}; do
 	gzip -v -c ${i} > ${i}${GZEXT}
 	touch ${i} ${i}${GZEXT}
 done
