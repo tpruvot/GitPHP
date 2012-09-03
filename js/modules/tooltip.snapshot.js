@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "qtip"],
+define(["jquery"],
 	function($) {
 		
 		function buildTipContent(href) {
@@ -57,14 +57,18 @@ define(["jquery", "qtip"],
 		}
 
 		return function(elements) {
-			elements.each(function(){
-				var jThis = $(this);
-				var href = jThis.attr('href');
-				var content = buildTipContent(href);
-				var config = buildTipConfig(content);
-				jThis.qtip(config);
-				jThis.click(function() { return false; });
-			});
+			if (elements && (elements.size() > 0)) {
+				require(['qtip'], function() {
+					elements.each(function(){
+						var jThis = $(this);
+						var href = jThis.attr('href');
+						var content = buildTipContent(href);
+						var config = buildTipConfig(content);
+						jThis.qtip(config);
+						jThis.click(function() { return false; });
+					});
+				});
+			}
 		}
 	}
 );

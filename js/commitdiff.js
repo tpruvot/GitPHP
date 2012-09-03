@@ -9,18 +9,12 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "common"], function($) {
+define(["jquery", "modules/sidebysidecommitdiff", "common"], function($, sbsDiff) {
 	$(function(){
 		var toc = $('div.commitDiffSBS div.SBSTOC');
 		var content = $('div.SBSContent');
 		if ((toc.size() > 0) && (content.size() > 0)) {
-			require(["jquery", "modules/sidebysidecommitdiff"],
-				function($, sbsDiff) {
-					$(function() {
-						sbsDiff.init(toc, content);
-					});
-				}
-			);
+			sbsDiff.init(toc, content);
 		}
 	});
 });

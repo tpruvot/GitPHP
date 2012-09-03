@@ -9,24 +9,16 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
-	function($, getProject, lang, tooltipSnapshot) {
+define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag"],
+	function($, getProject, lang, tooltipSnapshot, tooltipCommit, tooltipTag) {
 		$(function() {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
 		});
 
 		if (getProject()) {
-
-			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"],
-				function($, tooltipCommit, tooltipTag) {
-					$(function() {
-						tooltipCommit($('a.commitTip'));
-						tooltipTag($('a.tagTip'));
-					});
-				}
-			);
-
+			tooltipCommit($('a.commitTip'));
+			tooltipTag($('a.tagTip'));
 		}
 	}
 );

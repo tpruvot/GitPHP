@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl", "modules/getproject", "qtip"],
+define(["jquery", "modules/geturl", "modules/getproject"],
 	function($, getUrl, getProject) {
 
 		var url = null;
@@ -48,17 +48,23 @@ define(["jquery", "modules/geturl", "modules/getproject", "qtip"],
 		}
 
 		return function(elements) {
-			url = getUrl();
-			project = getProject();
-			elements.each(function(){
-				var jThis = $(this);
-				var hash = getCommitHash(jThis);
-				if (!hash) {
-					return;
-				}
-				var config = buildTipConfig(hash);
-				jThis.qtip(config);
-			});
+			
+			if (elements && (elements.size() > 0)) {
+				url = getUrl();
+				project = getProject();
+
+				require(['qtip'], function() {
+					elements.each(function(){
+						var jThis = $(this);
+						var hash = getCommitHash(jThis);
+						if (!hash) {
+							return;
+						}
+						var config = buildTipConfig(hash);
+						jThis.qtip(config);
+					});
+				});
+			}
 		}
 	}
 );
