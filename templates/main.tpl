@@ -56,12 +56,12 @@
     {block name=javascriptmodules}
     GitPHPJSModules = ['common'];
     {/block}
-
-    require({ldelim}
+    require.config({ldelim}
     	baseUrl: GitPHP.BaseUrl + 'js',
 	paths: GitPHPJSPaths,
-	priority: ['jquery']
-    {rdelim}, GitPHPJSModules);
+    {rdelim});
+
+    require(GitPHPJSModules);
     </script>
     {/block}
     {/if}
