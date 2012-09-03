@@ -19,10 +19,6 @@ GitPHP.Resources = {ldelim}
 	NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
 {rdelim};
 
-GitPHP.Snapshot = {ldelim}
-	Formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
-{rdelim}
-
 GitPHP.BaseUrl = '{$baseurl}/';
 {if $project}
 GitPHP.Project = '{$project->GetProject()}';

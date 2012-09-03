@@ -48,6 +48,11 @@
 		],
 		d3: 'ext/d3.v2.min',
 		qtip: 'ext/jquery.qtip.min'
+	{rdelim},
+	config: {ldelim}
+		'modules/snapshotformats': {ldelim}
+			formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
+		{rdelim}
 	{rdelim}
     {rdelim};
     {block name=javascript}
