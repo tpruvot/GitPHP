@@ -7,13 +7,11 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascriptpaths}
+{block name=javascript}
+require.deps = ['tree'];
 {if file_exists('js/tree.min.js')}
-GitPHPJSPaths.tree = "tree.min";
+require.paths.tree = "tree.min";
 {/if}
-{/block}
-{block name=javascriptmodules}
-GitPHPJSModules = ['tree'];
 {/block}
 
 {block name=main}

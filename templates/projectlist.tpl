@@ -7,13 +7,11 @@
  *}
 {extends file='main.tpl'}
 
-{block name=javascriptpaths}
+{block name=javascript}
+require.deps = ['projectlist'];
 {if file_exists('js/projectlist.min.js')}
-GitPHPJSPaths.projectlist = "projectlist.min";
+require.paths.projectlist = "projectlist.min";
 {/if}
-{/block}
-{block name=javascriptmodules}
-GitPHPJSModules = ['projectlist'];
 {/block}
 
 {block name=main}

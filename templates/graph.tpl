@@ -8,20 +8,17 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascriptpaths}
-GitPHPJSPaths.d3 = "ext/d3.v2.min"
-{if $graphtype=='languagedist' && file_exists('js/languagedist.min.js')}
-GitPHPJSPaths.languagedist = "languagedist.min";
-{elseif $graphtype=='commitactivity' && file_exists('js/commitactivity.min.js')}
-GitPHPJSPaths.commitactivity = "commitactivity.min";
-{/if}
-{/block}
-
-{block name=javascriptmodules}
-{if $graphtype}
-GitPHPJSModules = ['{$graphtype}'];
-{else}
-GitPHPJSModules = ['common'];
+{block name=javascript}
+{if $graphtype=='languagedist'}
+  require.deps = ['languagedist'];
+  {if file_exists('js/languagedist.min.js')}
+  require.paths.languagedist = "languagedist.min";
+  {/if}
+{elseif $graphtype=='commitactivity'}
+  require.deps = ['commitactivity'];
+  {if file_exists('js/commitactivity.min.js')}
+  require.paths.commitactivity = "commitactivity.min";
+  {/if}
 {/if}
 {/block}
 

@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"],
+define(["jquery", "modules/geturl", "modules/getproject", "qtip"],
 	function($, getUrl, getProject) {
 
 		var url = null;

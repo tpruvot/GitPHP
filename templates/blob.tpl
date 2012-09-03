@@ -15,13 +15,11 @@
 {/if}
 {/block}
 
-{block name=javascriptpaths}
+{block name=javascript}
+require.deps = ['blob'];
 {if file_exists('js/blob.min.js')}
-GitPHPJSPaths.blob = "blob.min";
+require.paths.blob = "blob.min";
 {/if}
-{/block}
-{block name=javascriptmodules}
-GitPHPJSModules = ['blob'];
 {/block}
 
 {block name=main}

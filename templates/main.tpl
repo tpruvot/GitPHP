@@ -35,35 +35,29 @@
     {block name=css}
     {/block}
     {if $javascript}
-    {block name=javascript}
-    <script src="{$baseurl}/js/ext/require.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
-    var GitPHPJSPaths = {ldelim}
-    {if $googlejs}
-	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min'
-    {else}
-	jquery: 'ext/jquery-1.8.1.min'
-    {/if}
-    {rdelim};
-    {block name=javascriptpaths}
-    {if file_exists('js/common.min.js')}
-    GitPHPJSPaths.common = "common.min";
-    {/if}
-    {/block}
-
-    var GitPHPJSModules = null;
-    {block name=javascriptmodules}
-    GitPHPJSModules = ['common'];
-    {/block}
-    require.config({ldelim}
+    var require = {ldelim}
     	baseUrl: GitPHP.BaseUrl + 'js',
-	paths: GitPHPJSPaths,
-    {rdelim});
-
-    require(GitPHPJSModules);
-    </script>
+	paths: {ldelim}
+		jquery: [
+			{if $googlejs}
+			'https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min',
+			{/if}
+			'ext/jquery-1.8.1.min'
+		],
+		d3: 'ext/d3.v2.min',
+		qtip: 'ext/jquery.qtip.min'
+	{rdelim}
+    {rdelim};
+    {block name=javascript}
+      {if file_exists('js/common.min.js')}
+      require.paths.common = 'common.min';
+      {/if}
+      require.deps = ['common'];
     {/block}
+    </script>
+    <script type="text/javascript" src="{$baseurl}/js/ext/require.js"></script>
     {/if}
   </head>
   <body>

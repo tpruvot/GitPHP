@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "ext/jquery.qtip.min"],
+define(["jquery", "qtip"],
 	function($) {
 		
 		function buildTipContent(href) {

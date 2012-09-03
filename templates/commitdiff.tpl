@@ -7,13 +7,11 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascriptpaths}
+{block name=javascript}
+require.deps = ['commitdiff'];
 {if file_exists('js/commitdiff.min.js')}
-GitPHPJSPaths.commitdiff = "commitdiff.min";
+require.paths.commitdiff = "commitdiff.min";
 {/if}
-{/block}
-{block name=javascriptmodules}
-GitPHPJSModules = ['commitdiff'];
 {/block}
 
 {block name=main}
