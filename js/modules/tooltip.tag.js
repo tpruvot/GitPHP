@@ -39,12 +39,10 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 					}
 				},
 				style: {
-					classes: 'ui-tooltip-light ui-tooltip-shadow'
+					classes: 'ui-tooltip-gitphp ui-tooltip-light ui-tooltip-shadow'
 				},
 				position: {
-					adjust: {
-						screen: true
-					}
+					viewport: $(window)
 				}
 			}
 		}

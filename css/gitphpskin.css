@@ -589,3 +589,12 @@ span.searchmatch {
 	color: #e00000;
 }
 
+
+/*
+ * Tooltips
+ */
+.ui-tooltip-gitphp {
+	font-size: inherit !important;
+	line-height: inherit !important;
+	border-width: 2px !important;
+}
