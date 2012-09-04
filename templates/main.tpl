@@ -38,7 +38,7 @@
     {include file='jsconst.tpl'}
     <script type="text/javascript">
     var require = {ldelim}
-    	baseUrl: GitPHP.BaseUrl + 'js',
+    	baseUrl: '{$baseurl}/js',
 	paths: {ldelim}
 		jquery: [
 			{if $googlejs}
@@ -52,6 +52,9 @@
 	config: {ldelim}
 		'modules/snapshotformats': {ldelim}
 			formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
+		{rdelim},
+		'modules/geturl': {ldelim}
+			baseurl: '{$baseurl}/'
 		{rdelim}
 	{rdelim}
     {rdelim};

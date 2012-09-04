@@ -9,10 +9,10 @@
  * @subpackage Javascript
  */
 
-define(
-	function() {
+define(['module'],
+	function(module) {
 		return function() {
-			return GitPHP.BaseUrl;
+			return module.config().baseurl;
 		}
 	}
 );

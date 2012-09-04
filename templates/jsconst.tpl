@@ -19,7 +19,6 @@ GitPHP.Resources = {ldelim}
 	NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
 {rdelim};
 
-GitPHP.BaseUrl = '{$baseurl}/';
 {if $project}
 GitPHP.Project = '{$project->GetProject()}';
 {/if}
