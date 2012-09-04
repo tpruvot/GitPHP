@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl", "modules/getproject"],
-	function($, getUrl, getProject) {
+define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
+	function($, getUrl, getProject, resources) {
 
 		var url = null;
 		var project = null;
@@ -26,7 +26,7 @@ define(["jquery", "modules/geturl", "modules/getproject"],
 		function buildTipConfig(hash) {
 			return {
 				content: {
-					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GitPHP.Resources.Loading + '" />',
+					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + resources.Loading + '" />',
 					ajax: {
 						url: url,
 						data: {

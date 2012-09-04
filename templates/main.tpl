@@ -35,7 +35,6 @@
     {block name=css}
     {/block}
     {if $javascript}
-    {include file='jsconst.tpl'}
     <script type="text/javascript">
     var require = {ldelim}
     	baseUrl: '{$baseurl}/js',
@@ -60,6 +59,14 @@
 		{/if}
 		'modules/geturl': {ldelim}
 			baseurl: '{$baseurl}/'
+		{rdelim},
+		'modules/resources': {ldelim}
+			resources: {ldelim}
+				Loading: "{t escape='js'}Loading…{/t}",
+				LoadingBlameData: "{t escape='js'}Loading blame data…{/t}",
+				Snapshot: "{t escape='js'}snapshot{/t}",
+				NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
+			{rdelim}
 		{rdelim}
 	{rdelim}
     {rdelim};

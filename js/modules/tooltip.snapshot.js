@@ -9,11 +9,11 @@
  * @subpackage Javascript
  */
 
-define(["jquery", 'modules/snapshotformats'],
-	function($, formats) {
+define(["jquery", 'modules/snapshotformats', 'modules/resources'],
+	function($, formats, resources) {
 		
 		function buildTipContent(href) {
-			var content = '<div>' + GitPHP.Resources.Snapshot + ': ';
+			var content = '<div>' + resources.Snapshot + ': ';
 			var first = true;
 			var cleanurl = href.indexOf('/snapshot') != -1;
 			for (var type in formats) {

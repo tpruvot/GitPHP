@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl"],
-	function($, getUrl) {
+define(["jquery", "modules/geturl", 'modules/resources'],
+	function($, getUrl, resources) {
 
 		var collapsed = '[+]';
 		var expanded = '[–]';
@@ -65,7 +65,7 @@ define(["jquery", "modules/geturl"],
 
 			var img = $(document.createElement('img'));
 			img.attr('src', url + "images/tree-loader.gif");
-			img.attr('alt', GitPHP.Resources.Loading);
+			img.attr('alt', resources.Loading);
 			img.addClass('treeSpinner');
 			parentRow.find('a.treeLink').after(img);
 
