@@ -10,15 +10,13 @@
  */
 
 define(["jquery", "modules/geturl", 'modules/resources'],
-	function($, getUrl, resources) {
+	function($, url, resources) {
 
 		var collapsed = '[+]';
 		var expanded = '[–]';
 		var indent = '—';
 
 		var treeTable = null;
-
-		var url = null;
 
 		function expanderLink(href, text) {
 			var a = $(document.createElement('a'));
@@ -136,7 +134,6 @@ define(["jquery", "modules/geturl", 'modules/resources'],
 
 		var init = function(treeTableElem) {
 			treeTable = treeTableElem;
-			url = getUrl();
 			createExpanders();
 			treeTable.find('a.jsTree').live('click', expanderClick);
 		};

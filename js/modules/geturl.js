@@ -11,8 +11,6 @@
 
 define(['module'],
 	function(module) {
-		return function() {
-			return module.config().baseurl;
-		}
+		return module.config().baseurl;
 	}
 );

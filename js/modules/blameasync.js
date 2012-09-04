@@ -10,7 +10,7 @@
  */
 
 define(["jquery", "modules/geturl", "modules/tooltip.commit", 'modules/resources'],
-	function($, getUrl, tooltipCommit, resources) {
+	function($, url, tooltipCommit, resources) {
 
 		var blobTable = null;
 		var blameLink = null;
@@ -29,7 +29,7 @@ define(["jquery", "modules/geturl", "modules/tooltip.commit", 'modules/resources
 			div.css('text-align', 'center');
 
 			var img = $(document.createElement('img'));
-			img.attr('src', getUrl() + 'images/blame-loader.gif');
+			img.attr('src', url + 'images/blame-loader.gif');
 			img.attr('alt', resources.Loading);
 			img.appendTo(div);
 

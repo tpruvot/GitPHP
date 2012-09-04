@@ -11,8 +11,6 @@
 
 define(['module'],
 	function(module) {
-		return function() {
-			return module.config().project || null;
-		}
+		return module.config().project || null;
 	}
 );

@@ -10,10 +10,7 @@
  */
 
 define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
-	function($, getUrl, getProject, resources) {
-
-		var url = null;
-		var project = null;
+	function($, url, project, resources) {
 
 		function getTagName(element) {
 			var tag = element.attr('href').match(/t=([^&]+)/);
@@ -50,10 +47,6 @@ define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
 		return function(elements) {
 
 			if (elements && (elements.size() > 0)) {
-
-				url = getUrl();
-				project = getProject();
-
 				require(['qtip'], function() {
 					elements.each(function(){
 						var jThis = $(this);

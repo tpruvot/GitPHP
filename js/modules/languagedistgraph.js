@@ -10,10 +10,7 @@
  */
 
 define(["modules/geturl", "modules/getproject", "d3"],
-	function(getUrl, getProject) {
-
-		var url = null;
-		var project = null;
+	function(url, project) {
 
 		var width = 600;
 		var height = 600;
@@ -90,9 +87,6 @@ define(["modules/geturl", "modules/getproject", "d3"],
 
 			arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(radius);
 			grownArc = d3.svg.arc().innerRadius(innerRadius).outerRadius(radius + growRadius);
-
-			url = getUrl();
-			project = getProject();
 
 			d3.json(url + "?p=" + project + "&a=graphdata&g=languagedist", function(data) {
 				var dataEntries = d3.entries(data);

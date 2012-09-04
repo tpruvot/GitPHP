@@ -10,10 +10,7 @@
  */
 
 define(["modules/geturl", "modules/getproject", "d3"],
-	function(getUrl, getProject) {
-
-		var url = null;
-		var project = null;
+	function(url, project) {
 
 		var labelrect = null;
 		var label = null;
@@ -108,9 +105,6 @@ define(["modules/geturl", "modules/getproject", "d3"],
 		};
 
 		var init = function(graphContainer) {
-
-			url = getUrl();
-			project = getProject();
 
 			x = d3.time.scale()
 				.range([10, width-10]);
