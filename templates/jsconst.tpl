@@ -19,8 +19,4 @@ GitPHP.Resources = {ldelim}
 	NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
 {rdelim};
 
-{if $project}
-GitPHP.Project = '{$project->GetProject()}';
-{/if}
-		
 </script>

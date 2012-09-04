@@ -9,10 +9,10 @@
  * @subpackage Javascript
  */
 
-define(
-	function() {
+define(['module'],
+	function(module) {
 		return function() {
-			return GitPHP.Project || null;
+			return module.config().project || null;
 		}
 	}
 );

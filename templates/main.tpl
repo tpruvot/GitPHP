@@ -53,6 +53,11 @@
 		'modules/snapshotformats': {ldelim}
 			formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
 		{rdelim},
+		{if $project}
+		'modules/getproject': {ldelim}
+			project: '{$project->GetProject()}'
+		{rdelim},
+		{/if}
 		'modules/geturl': {ldelim}
 			baseurl: '{$baseurl}/'
 		{rdelim}
