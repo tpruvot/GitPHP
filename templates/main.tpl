@@ -36,9 +36,9 @@
     {/block}
     {if $javascript}
     <script type="text/javascript">
-    var require = {ldelim}
+    var require = {
     	baseUrl: '{$baseurl}/js',
-	paths: {ldelim}
+	paths: {
 		jquery: [
 			{if $googlejs}
 			'https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min',
@@ -47,29 +47,33 @@
 		],
 		d3: 'ext/d3.v2.min',
 		qtip: 'ext/jquery.qtip.min'
-	{rdelim},
-	config: {ldelim}
-		'modules/snapshotformats': {ldelim}
-			formats: {ldelim}{foreach from=$snapshotformats key=format item=extension name=formats}"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}{/foreach}{rdelim}
-		{rdelim},
+	},
+	config: {
+		'modules/snapshotformats': {
+			formats: {
+				{foreach from=$snapshotformats key=format item=extension name=formats}
+				"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
+				{/foreach}
+			}
+		},
 		{if $project}
-		'modules/getproject': {ldelim}
+		'modules/getproject': {
 			project: '{$project->GetProject()}'
-		{rdelim},
+		},
 		{/if}
-		'modules/geturl': {ldelim}
+		'modules/geturl': {
 			baseurl: '{$baseurl}/'
-		{rdelim},
-		'modules/resources': {ldelim}
-			resources: {ldelim}
+		},
+		'modules/resources': {
+			resources: {
 				Loading: "{t escape='js'}Loading…{/t}",
 				LoadingBlameData: "{t escape='js'}Loading blame data…{/t}",
 				Snapshot: "{t escape='js'}snapshot{/t}",
 				NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
-			{rdelim}
-		{rdelim}
-	{rdelim}
-    {rdelim};
+			}
+		}
+	}
+    };
     {block name=javascript}
       {if file_exists('js/common.min.js')}
       require.paths.common = 'common.min';
