@@ -23,6 +23,7 @@
        <tr>
        {if $source == 'summary'}
          <td><a href="{geturl project=$project action=heads}">&hellip;</a></td>
+	 <td></td><td></td>
        {else if $source == 'heads'}
          <td><a href="{geturl project=$project action=heads page=$page+1}" title="Alt-n">{t}next{/t}</a></td>
 	 <td></td><td></td>
