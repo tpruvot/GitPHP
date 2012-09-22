@@ -19,9 +19,9 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 	}
 	unset($params['fullurl']);
 
-	$escape = false;
-	if (!empty($params['escape']) && ($params['escape'] == true))
-		$escape = true;
+	$escape = true;
+	if (isset($params['escape']) && ($params['escape'] == false))
+		$escape = false;
 	unset($params['escape']);
 
 	$router = $template->getTemplateVars('router');
@@ -31,7 +31,7 @@ function smarty_function_geturl($params, Smarty_Internal_Template $template)
 	}
 	$finalurl = $router->GetUrl($params, $full);
 	if ($escape)
-		$finalurl = htmlspecialchars($finalurl);
+		$finalurl = htmlspecialchars($finalurl, ENT_COMPAT, 'UTF-8', false);
 
 	return $finalurl;
 }
