@@ -542,7 +542,7 @@ class GitPHP_Router
 
 		$url = rtrim($url, "/");
 
-		$baseurl = GitPHP_Util::AddSlash(GitPHP_Util::BaseUrl());
+		$baseurl = GitPHP_Util::AddSlash(GitPHP_Util::BaseUrl(), false);
 		if (empty($baseurl))
 			$baseurl = '/';
 
@@ -569,10 +569,10 @@ class GitPHP_Router
 			if (substr_compare($baseurl, 'index.php', -9) === 0) {
 				$baseurl = dirname($baseurl);
 			}
-			$baseurl = GitPHP_Util::AddSlash($baseurl);
+			$baseurl = GitPHP_Util::AddSlash($baseurl, false);
 		} else {
 			if (substr_compare($baseurl, 'index.php', -9) !== 0) {
-				$baseurl = GitPHP_Util::AddSlash($baseurl);
+				$baseurl = GitPHP_Util::AddSlash($baseurl, false);
 			}
 		}
 
