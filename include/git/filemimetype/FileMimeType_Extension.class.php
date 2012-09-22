@@ -52,7 +52,7 @@ class GitPHP_FileMimeType_Extension implements GitPHP_FileMimeTypeStrategy_Inter
 	 */
 	public function Valid()
 	{
-		return !GitPHP_Util::IsWindows();
+		return true;
 	}
 
 }
