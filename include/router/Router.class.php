@@ -166,6 +166,14 @@ class GitPHP_Router
 			'hash' => '[^\?]+'
 		), array(), $projectroute);
 
+		// map heads to shortlog
+		$this->routes[] = new GitPHP_Route(':action/:hash', array(
+			'action' => 'heads',
+			'hash' => '[^\?]+'
+		), array(
+			'action' => 'shortlog'
+		), $projectroute);
+
 		// project-specific graphs
 		$this->routes[] = new GitPHP_Route(':action/:graphtype', array(
 			'action' => 'graphs',
@@ -671,9 +679,7 @@ class GitPHP_Router
 	 */
 	private static function GetHash($value, $abbreviate = false)
 	{
-		if ($value instanceof GitPHP_Ref)
-			return $value->GetRefPath();
-		else if ($value instanceof GitPHP_GitObject)
+		if ($value instanceof GitPHP_GitObject)
 			return $value->GetHash($abbreviate);
 		else if (is_string($value))
 			return $value;
