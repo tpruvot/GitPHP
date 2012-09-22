@@ -79,7 +79,7 @@ git source code archive
       <td class="projectName">
         <a href="{geturl project=$proj}" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td class="projectDescription"><a href="{geturl project=$proj}" class="list">{$proj->GetDescription()}</a></td>
+      <td class="projectDescription"><a href="{geturl project=$proj}" class="list">{$proj->GetDescription()|escape}</a></td>
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">

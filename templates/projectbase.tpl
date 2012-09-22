@@ -55,9 +55,9 @@
 {block name=footer}
   <div class="page_footer_text">
   {if $project->GetWebsite()}
-  <a href="{$project->GetWebsite()}">{$project->GetDescription()}</a>
+  <a href="{$project->GetWebsite()}">{$project->GetDescription()|escape}</a>
   {else}
-  {$project->GetDescription()}
+  {$project->GetDescription()|escape}
   {/if}
   </div>
   <a href="{geturl project=$project action=rss}" class="rss_logo">{t}RSS{/t}</a>
