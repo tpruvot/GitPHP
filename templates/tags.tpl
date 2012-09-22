@@ -7,7 +7,7 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=links}
+{block name=links append}
 {if $page > 0}
 <link rel="prev" href="{geturl project=$project action=tags page=$page-1}" />
 {/if}

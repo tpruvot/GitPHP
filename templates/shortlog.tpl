@@ -7,7 +7,7 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=links}
+{block name=links append}
 {if $page > 0}
 <link rel="prev" href="{geturl project=$project action=shortlog hash=$commit page=$page-1 mark=$mark}" />
 {/if}
