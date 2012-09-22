@@ -14,7 +14,7 @@
     <outline text="git Atom feeds">
 
       {foreach from=$projectlist item=proj}
-      <outline type="rss" text="{$proj->GetProject()}" title="{$proj->GetProject()|escape}" xmlUrl="{geturl escape=true fullurl=true project=$proj action=atom}" htmlUrl="{geturl fullurl=true escape=true project=$proj}" />
+      <outline type="rss" text="{$proj->GetProject()}" title="{$proj->GetProject()|escape}" xmlUrl="{geturl fullurl=true project=$proj action=atom}" htmlUrl="{geturl fullurl=true project=$proj}" />
 
       {/foreach}
     </outline>
