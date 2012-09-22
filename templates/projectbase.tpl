@@ -19,6 +19,12 @@
   <link rel="alternate" title="{$project->GetProject()|escape} log (RSS)" href="{geturl project=$project action=rss}" type="application/rss+xml" />
 {/block}
 
+{block name=links}
+  {if $project->GetCloneUrl()}
+  <link rel="vcs-git" href="{$project->GetCloneUrl()}" title="{$project->GetDescription()|escape}" />
+  {/if}
+{/block}
+
 {block name=header}
   <a href="{geturl}">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
   <a href="{geturl project=$project}">{$project->GetProject()}</a>
