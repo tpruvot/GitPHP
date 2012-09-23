@@ -13,7 +13,7 @@
    {foreach from=$revlist item=rev}
      <tr class="{cycle values="light,dark"}">
        <td class="monospace">{$rev->GetHash(true)}</td>
-       <td title="{if $rev->GetAge() > 60*60*24*7*2}{agestring age=$rev->GetAge()}{else}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $rev->GetAge() > 60*60*24*7*2}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$rev->GetAge()}{/if}</em></td>
+       <td title="{if $rev->GetAge() > 60*60*24*7*2}{agestring age=$rev->GetAge()}{else}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em><time datetime="{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{if $rev->GetAge() > 60*60*24*7*2}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$rev->GetAge()}{/if}</time></em></td>
        <td><em>{$rev->GetAuthorName()}</em></td>
        <td>
          <a href="{geturl project=$project action=commit hash=$rev}" class="list commitTip" {if strlen($rev->GetTitle()) > 50}title="{$rev->GetTitle()|escape}"{/if}>

@@ -52,7 +52,7 @@
 	  <tr class="{$rowclass}">
 	    <td class="date">
 	      {if $blamecommit}
-	        <a href="{geturl project=$project action=commit hash=$blamecommit}" title="{$blamecommit->GetTitle()|escape}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
+	        <a href="{geturl project=$project action=commit hash=$blamecommit}" title="{$blamecommit->GetTitle()|escape}" class="commitTip"><time datetime="{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</time></a>
 	      {/if}
 	    </td>
 	    <td class="author">

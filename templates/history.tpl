@@ -50,7 +50,7 @@
    {foreach from=$history item=historyitem}
      {assign var=historycommit value=$historyitem->GetCommit()}
      <tr class="{cycle values="light,dark"}">
-       <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{agestring age=$historycommit->GetAge()}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$historycommit->GetAge()}{/if}</em></td>
+       <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{agestring age=$historycommit->GetAge()}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em><time datetime="{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$historycommit->GetAge()}{/if}</time></em></td>
        <td><em>{$historycommit->GetAuthorName()}</em></td>
        <td><a href="{geturl project=$project action=commit hash=$historycommit}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()|escape}"{/if}><strong>{$historycommit->GetTitle(50)|escape:'html'}</strong></a>
        {include file='refbadges.tpl' commit=$historycommit}

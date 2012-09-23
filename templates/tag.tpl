@@ -46,12 +46,12 @@
        </tr>
        <tr>
          <td></td>
-	 <td> {$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+	 <td> <time datetime="{$tag->GetTaggerEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>
 	 {assign var=hourlocal value=$tag->GetTaggerLocalEpoch()|date_format:"%H"}
 	 {if $hourlocal < 6}
-	 (<span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()})
+	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone()}"><span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()}</time>)
 	 {else}
-	 ({$tag->GetTaggerLocalEpoch()|date_format:"%R"} {$tag->GetTaggerTimezone()})
+	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone()}">{$tag->GetTaggerLocalEpoch()|date_format:"%R"} {$tag->GetTaggerTimezone()}</time>)
 	 {/if}
          </td>
        </tr>
