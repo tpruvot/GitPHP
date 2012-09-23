@@ -46,7 +46,7 @@
           {if $filesearch}
             <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{t}file{/t}</option>
           {/if}
-        </select> {t}search{/t}: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+        </select> {t}search{/t}: <input type="search" name="s" {if $search}value="{$search}"{/if} />
       </div>
     </form>
   {/if}
