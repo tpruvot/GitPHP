@@ -46,7 +46,8 @@
 			'ext/jquery-1.8.1.min'
 		],
 		d3: 'ext/d3.v2.min',
-		qtip: 'ext/jquery.qtip.min'
+		qtip: 'ext/jquery.qtip.min',
+		modernizr: 'ext/modernizr.min'
 	},
 	config: {
 		'modules/snapshotformats': {
