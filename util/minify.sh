@@ -34,7 +34,7 @@ fi
 for i in ${JSDIR}/*${JSEXT}; do
 	echo "Minifying ${i}..."
 	JSMODULE="`basename ${i%$JSEXT}`"
-	java -classpath lib/rhino/js.jar:lib/closure/compiler.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o name=${JSMODULE} out=${JSDIR}/${JSMODULE}${MINEXT}.tmp baseUrl=${JSDIR} paths.jquery="empty:" paths.qtip="empty:" paths.d3="ext/d3.v2.min" paths.modernizr="ext/modernizr.min" optimize="closure" preserveLicenseComments="false"
+	java -classpath lib/rhino/js.jar:lib/closure/compiler.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o name=${JSMODULE} out=${JSDIR}/${JSMODULE}${MINEXT}.tmp baseUrl=${JSDIR} paths.jquery="empty:" paths.qtip="empty:" paths.d3="ext/d3.v2.min" paths.modernizr="ext/modernizr.custom" optimize="closure" preserveLicenseComments="false"
 	cat util/jsheader.js ${JSDIR}/${JSMODULE}${MINEXT}.tmp > ${JSDIR}/${JSMODULE}${MINEXT}
 	rm -f ${JSDIR}/${JSMODULE}${MINEXT}.tmp
 done

@@ -47,7 +47,7 @@
 		],
 		d3: 'ext/d3.v2.min',
 		qtip: 'ext/jquery.qtip.min',
-		modernizr: 'ext/modernizr.min'
+		modernizr: 'ext/modernizr.custom'
 	},
 	config: {
 		'modules/snapshotformats': {
