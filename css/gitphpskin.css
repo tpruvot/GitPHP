@@ -597,4 +597,5 @@ span.searchmatch {
 	font-size: inherit !important;
 	line-height: inherit !important;
 	border-width: 2px !important;
+	max-width: 500px !important;
 }
