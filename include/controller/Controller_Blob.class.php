@@ -81,6 +81,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
+						if (empty($this->params['hash']))
+							throw new GitPHP_FileNotFoundException($this->params['file']);
 					}
 
 					$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
@@ -122,6 +124,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 			$this->params['hash'] = $tree->PathToHash($this->params['file']);
+			if (empty($this->params['hash']))
+				throw new GitPHP_FileNotFoundException($this->params['file']);
 		}
 
 		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
