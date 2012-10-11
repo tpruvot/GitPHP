@@ -76,7 +76,7 @@
        {/if}
        <br />
      </div>
-     <em>{$rev->GetAuthorName()} [<time datetime="{$rev->GetAuthorEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>]</em><br />
+     <em>{$rev->GetAuthorName()} [<time datetime="{$rev->GetAuthorEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>]</em><br />
    </div>
    <div class="log_body">
      {assign var=bugpattern value=$project->GetBugPattern()}
@@ -100,7 +100,7 @@
    <div class="page_body">
      {if $commit}
        {capture name=commitage assign=commitage}
-         <time datetime="{$commit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{agestring age=$commit->GetAge()}</time>
+         <time datetime="{$commit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{agestring age=$commit->GetAge()}</time>
        {/capture}
        {t 1=$commitage}Last change %1{/t}
      {else}

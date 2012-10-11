@@ -49,7 +49,7 @@
   {* Print each match *}
   {foreach from=$results item=result}
     <tr class="{cycle values="light,dark"}">
-      <td title="{if $result->GetAge() > 60*60*24*7*2}{agestring age=$result->GetAge()}{else}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em><time datetime="{$result->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{if $result->GetAge() > 60*60*24*7*2}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$result->GetAge()}{/if}</time></em></td>
+      <td title="{if $result->GetAge() > 60*60*24*7*2}{agestring age=$result->GetAge()}{else}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em><time datetime="{$result->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{if $result->GetAge() > 60*60*24*7*2}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$result->GetAge()}{/if}</time></em></td>
       <td>
         <em>
 	  {if $searchtype == 'author'}

@@ -272,12 +272,17 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Gets the tagger timezone
 	 *
+	 * @param boolean $separator true to return with separator
 	 * @return string tagger timezone
 	 */
-	public function GetTaggerTimezone()
+	public function GetTaggerTimezone($separator = false)
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
+
+		if ($separator && preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $this->taggerTimezone, $regs)) {
+			return $regs[1] . ':' . $regs[2];
+		}
 
 		return $this->taggerTimezone;
 	}

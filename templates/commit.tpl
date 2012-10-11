@@ -31,12 +31,12 @@
      <tr>
        <td></td>
        <td>
-       <time datetime="{$commit->GetAuthorEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>
+       <time datetime="{$commit->GetAuthorEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>
        {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
        {if $hourlocal < 6}
-       (<time datetime="{$commit->GetAuthorLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetAuthorTimezone()}"><span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()}</time>)
+       (<time datetime="{$commit->GetAuthorLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetAuthorTimezone(true)}"><span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()}</time>)
        {else}
-       (<time datetime="{$commit->GetAuthorLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetAuthorTimezone()}">{$commit->GetAuthorLocalEpoch()|date_format:"%R"} {$commit->GetAuthorTimezone()}</time>)
+       (<time datetime="{$commit->GetAuthorLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetAuthorTimezone(true)}">{$commit->GetAuthorLocalEpoch()|date_format:"%R"} {$commit->GetAuthorTimezone()}</time>)
        {/if}
        </td>
        <td></td>
@@ -48,7 +48,7 @@
      </tr>
      <tr>
        <td></td>
-       <td> <time datetime="{$commit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time> (<time datetime="{$commit->GetCommitterLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetCommitterTimezone()}">{$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()}</time>)</td>
+       <td> <time datetime="{$commit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time> (<time datetime="{$commit->GetCommitterLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$commit->GetCommitterTimezone(true)}">{$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()}</time>)</td>
        <td></td>
      </tr>
      <tr>

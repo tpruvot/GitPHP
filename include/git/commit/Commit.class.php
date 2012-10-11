@@ -322,12 +322,17 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	/**
 	 * Gets the author's timezone
 	 *
+	 * @param boolean $separator true to return with separator
 	 * @return string author timezone
 	 */
-	public function GetAuthorTimezone()
+	public function GetAuthorTimezone($separator = false)
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
+
+		if ($separator && preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $this->authorTimezone, $regs)) {
+			return $regs[1] . ':' . $regs[2];
+		}
 
 		return $this->authorTimezone;
 	}
@@ -390,12 +395,17 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	/**
 	 * Gets the author's timezone
 	 *
+	 * @param boolean $separator true to return with separator
 	 * @return string author timezone
 	 */
-	public function GetCommitterTimezone()
+	public function GetCommitterTimezone($separator = false)
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
+
+		if ($separator && preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $this->committerTimezone, $regs)) {
+			return $regs[1] . ':' . $regs[2];
+		}
 
 		return $this->committerTimezone;
 	}

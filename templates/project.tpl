@@ -21,7 +21,7 @@
    <tr><td>{t}description{/t}</td><td>{$project->GetDescription()|escape}</td></tr>
    <tr><td>{t}owner{/t}</td><td>{$project->GetOwner()|escape:'html'}</td></tr>
    {if $head}
-   <tr><td>{t}last change{/t}</td><td><time datetime="{$head->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time></td></tr>
+   <tr><td>{t}last change{/t}</td><td><time datetime="{$head->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time></td></tr>
    {/if}
    {if $project->GetCloneUrl()}
      <tr><td>{t}clone url{/t}</td><td><a href="{$project->GetCloneUrl()}" rel="nofollow">{$project->GetCloneUrl()}</a></td></tr>

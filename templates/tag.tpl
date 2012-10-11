@@ -46,12 +46,12 @@
        </tr>
        <tr>
          <td></td>
-	 <td> <time datetime="{$tag->GetTaggerEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+0000"}">{$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>
+	 <td> <time datetime="{$tag->GetTaggerEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</time>
 	 {assign var=hourlocal value=$tag->GetTaggerLocalEpoch()|date_format:"%H"}
 	 {if $hourlocal < 6}
-	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone()}"><span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()}</time>)
+	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone(true)}"><span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()}</time>)
 	 {else}
-	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone()}">{$tag->GetTaggerLocalEpoch()|date_format:"%R"} {$tag->GetTaggerTimezone()}</time>)
+	 (<time datetime="{$tag->GetTaggerLocalEpoch()|date_format:"%Y-%m-%dT%H:%M:%S"}{$tag->GetTaggerTimezone(true)}">{$tag->GetTaggerLocalEpoch()|date_format:"%R"} {$tag->GetTaggerTimezone()}</time>)
 	 {/if}
          </td>
        </tr>
