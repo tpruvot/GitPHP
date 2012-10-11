@@ -482,15 +482,11 @@ class GitPHP_Router
 
 			case 'graph':
 			case 'graphs':
-				$controller = new GitPHP_Controller_Graph();
-				break;
-
-
+				//$controller = new GitPHP_Controller_Graph();
+				//break;
 			case 'graphdata':
-				$controller = new GitPHP_Controller_GraphData();
-				break;
-
-
+				//$controller = new GitPHP_Controller_GraphData();
+				//break;
 			default:
 				if (!empty($params['project'])) {
 					$controller = new GitPHP_Controller_Project();

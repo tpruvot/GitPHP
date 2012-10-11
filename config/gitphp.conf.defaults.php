@@ -249,14 +249,6 @@ $gitphp_conf['filesearch'] = true;
 $gitphp_conf['filemimetype'] = true;
 
 /*
- * graphs
- * Enable access to graphing and analytics features.
- * Loading graph data can be resource intensive, especially
- * on large projects.
- */
-$gitphp_conf['graphs'] = false;
-
-/*
  * abbreviateurl
  * Generates urls using abbreviated hashes instead of
  * full hashes.

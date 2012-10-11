@@ -44,11 +44,3 @@
    {else}
      <a href="{geturl project=$project action=tree hashbase=$treecommit hash=$tree}">{t}tree{/t}</a>
    {/if}
-   {if $enablegraphs}
-   |
-   {if $current=='graph' || !$commit}
-     {t}graph{/t}
-   {else}
-     <a href="{geturl project=$project action=graph}">{t}graph{/t}</a>
-   {/if}
-   {/if}
