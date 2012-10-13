@@ -22,7 +22,7 @@
   <form method="post" action="{geturl action=login}">
     <div class="field">
       <label for="username">{t}username:{/t}</label>
-      <input type="text" name="username" {if $username}value="{$username}"{/if} />
+      <input type="text" name="username" {if $username}value="{$username}"{/if} autofocus />
     </div>
     <div class="field">
       <label for="password">{t}password:{/t}</label>

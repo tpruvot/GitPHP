@@ -1,5 +1,5 @@
 /* Modernizr 2.6.2 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-addtest-teststyles
+ * Build: http://modernizr.com/download/#-input-addtest-teststyles
  */
 ;
 
@@ -18,7 +18,7 @@ window.Modernizr = (function( window, document, undefined ) {
     modElem = document.createElement(mod),
     mStyle = modElem.style,
 
-    inputElem  ,
+    inputElem  = document.createElement('input')  ,
 
 
     toString = {}.toString,    tests = {},
@@ -159,6 +159,17 @@ window.Modernizr = (function( window, document, undefined ) {
         }
         return false;
     }
+    function webforms() {
+                                            Modernizr['input'] = (function( props ) {
+            for ( var i = 0, len = props.length; i < len; i++ ) {
+                attrs[ props[i] ] = !!(props[i] in inputElem);
+            }
+            if (attrs.list){
+                                  attrs.list = !!(document.createElement('datalist') && window.HTMLDataListElement);
+            }
+            return attrs;
+        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
+        }
     for ( var feature in tests ) {
         if ( hasOwnProp(tests, feature) ) {
                                     featureName  = feature.toLowerCase();
@@ -168,6 +179,7 @@ window.Modernizr = (function( window, document, undefined ) {
         }
     }
 
+    Modernizr.input || webforms();
 
 
      Modernizr.addTest = function ( feature, test ) {

@@ -9,16 +9,18 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag"],
+define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modernizr'],
 	function($, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag) {
 		$(function() {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
+      if (project) {
+        tooltipCommit($('a.commitTip'));
+        tooltipTag($('a.tagTip'));
+      }
+      if (!Modernizr.input.autofocus) {
+        $('input[autofocus]').filter(':first').focus();
+      }
 		});
-
-		if (project) {
-			tooltipCommit($('a.commitTip'));
-			tooltipTag($('a.tagTip'));
-		}
 	}
 );
