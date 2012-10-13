@@ -38,6 +38,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->InitializeConfig();
 
+		$this->InitializeUserList();
+
 		$this->InitializeGitExe();
 
 		$this->InitializeProjectList();

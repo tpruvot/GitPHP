@@ -1,0 +1,33 @@
+<?php
+/**
+ * GitPHP User config file
+ *
+ * Copy this example file to config/users.conf.php
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2012 Christopher Han
+ * @package GitPHP
+ * @subpackage Config
+ */
+
+/*
+ * gitphp_users
+ *
+ * An array of users
+ * Each entry in the array is an array of key value pairs:
+ * username: the user's login username
+ * password: the user's password
+ */
+
+/*
+$gitphp_users = array(
+	array(
+		'username' => 'user1',
+		'password' => 'password1'
+	),
+	array(
+		'username' => 'user2',
+		'password' => 'password2'
+	)
+);
+*/

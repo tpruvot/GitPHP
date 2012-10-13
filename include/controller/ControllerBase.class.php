@@ -18,6 +18,13 @@ abstract class GitPHP_ControllerBase
 	protected $config;
 
 	/**
+	 * User list instance
+	 *
+	 * @var GitPHP_UserList
+	 */
+	protected $userList;
+
+	/**
 	 * Resource handler instance
 	 *
 	 * @var GitPHP_Resource
@@ -103,6 +110,8 @@ abstract class GitPHP_ControllerBase
 
 		$this->InitializeResource();
 
+		$this->InitializeUserList();
+
 		$this->EnableLogging();
 
 		$this->InitializeGitExe();
@@ -183,6 +192,15 @@ abstract class GitPHP_ControllerBase
 			} catch (Exception $e) {
 			}
 		}
+	}
+
+	/**
+	 * Initialize user list
+	 */
+	public function InitializeUserList()
+	{
+		$this->userList = new GitPHP_UserList();
+		$this->userList->LoadUsers(GITPHP_CONFIGDIR . 'users.conf.php');
 	}
 
 	/**

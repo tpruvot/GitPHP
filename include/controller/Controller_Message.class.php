@@ -21,6 +21,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 
 		$this->InitializeResource();
 
+		$this->InitializeUserList();
+
 		$this->InitializeGitExe(false);
 
 		try {
