@@ -54,7 +54,11 @@ class GitPHP_Controller_Logout extends GitPHP_ControllerBase
 		if (!empty($_SESSION['gitphpuser'])) {
 			unset($_SESSION['gitphpuser']);
 		}
-		$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+		if (!empty($_SERVER['HTTP_REFERER'])) {
+			$this->headers[] = 'Location: ' . $_SERVER['HTTP_REFERER'];
+		} else {
+			$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+		}
 	}
 
 	/**

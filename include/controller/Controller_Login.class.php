@@ -77,7 +77,10 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 		if (!empty($_SESSION['gitphpuser'])) {
 			$user = $this->userList->GetUser($_SESSION['gitphpuser']);
 			if ($user) {
-				$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				if (!empty($this->params['redirect']))
+					$this->headers[] = 'Location: ' . $this->params['redirect'];
+				else
+					$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
 				$this->loginSuccess = true;
 			} else {
 				unset($_SESSION['gitphpuser']);
@@ -88,7 +91,10 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 			$user = $this->userList->GetUser($this->params['username']);
 			if ($user && ($this->params['password'] === $user->GetPassword())) {
 				$_SESSION['gitphpuser'] = $user->GetUsername();
-				$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				if (!empty($this->params['redirect']))
+					$this->headers[] = 'Location: ' . $this->params['redirect'];
+				else
+					$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
 				$this->loginSuccess = true;
 			} else {
 				$this->loginSuccess = false;
@@ -103,6 +109,11 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 	{
 		if ($this->loginSuccess === false) {
 			$this->tpl->assign('loginerror', 'Invalid username or password');
+		}
+		if (!empty($this->params['redirect'])) {
+			$this->tpl->assign('redirect', $this->params['redirect']);
+		} else if (!empty($_SERVER['HTTP_REFERER'])) {
+			$this->tpl->assign('redirect', $_SERVER['HTTP_REFERER']);
 		}
 	}
 

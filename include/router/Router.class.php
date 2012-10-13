@@ -486,6 +486,8 @@ class GitPHP_Router
 					$controller->SetParam('username', $_POST['username']);
 				if (!empty($_POST['password']))
 					$controller->SetParam('password', $_POST['password']);
+				if (!empty($_POST['redirect']))
+					$controller->SetParam('redirect', $_POST['redirect']);
 				break;
 
 			case 'logout':

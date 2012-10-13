@@ -33,5 +33,8 @@
     <td><input type="submit" value="Login" /></td>
   </tr>
 </table>
+{if $redirect}
+<input type="hidden" name="redirect" value="{$redirect|escape}" />
+{/if}
 </form>
 {/block}
