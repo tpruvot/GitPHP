@@ -79,6 +79,8 @@ class GitPHP_AutoLoader
 			$path = 'cache/';
 		} else if (strncmp($classname, 'Route', 5) === 0) {
 			$path = 'router/';
+		} else if (strncmp($classname, 'User', 4) === 0) {
+			$path = 'auth/';
 		} else if (in_array($classname, array(
 				'Config',
 				'DebugLog',
