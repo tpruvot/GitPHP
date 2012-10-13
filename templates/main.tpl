@@ -86,16 +86,16 @@
     {/if}
   </head>
   <body>
-    {if $loginenabled}
-    <div class="login">
-    {if $loggedinuser}
-      <a href="{geturl action=logout}" />logout</a>
-    {else}
-      <a href="{geturl action=login}" />login</a>
-    {/if}
-    </div>
-    {/if}
     <div class="page_header">
+      {if $loginenabled}
+      <div class="login">
+      {if $loggedinuser}
+        <a href="{geturl action=logout}" />logout</a>
+      {else}
+        <a href="{geturl action=login}" />login</a>
+      {/if}
+      </div>
+      {/if}
       {if $supportedlocales}
       <div class="lang_select">
         <form action="{$requesturl}" method="get" id="frmLangSelect">
