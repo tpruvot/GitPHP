@@ -214,7 +214,7 @@ class GitPHP_Router
 
 		// non-project action
 		$this->routes[] = new GitPHP_Route(':action', array(
-			'action' => 'opml|projectindex'
+			'action' => 'opml|projectindex|login|logout'
 		));
 
 		usort($this->routes, array('GitPHP_Route', 'CompareRoute'));
@@ -477,6 +477,19 @@ class GitPHP_Router
 			case 'opml':
 				$controller = new GitPHP_Controller_ProjectList();
 				$controller->SetParam('opml', true);
+				break;
+
+			
+			case 'login':
+				$controller = new GitPHP_Controller_Login();
+				if (!empty($_POST['username']))
+					$controller->SetParam('username', $_POST['username']);
+				if (!empty($_POST['password']))
+					$controller->SetParam('password', $_POST['password']);
+				break;
+
+			case 'logout':
+				$controller = new GitPHP_Controller_Logout();
 				break;
 
 

@@ -153,6 +153,13 @@ div.commitDiffSBS div.SBSTOC .showAll
 	display: none;
 }
 
+/*
+ * login link
+ */
+div.login {
+	float: right;
+}
+
 
 /*
  * Geshi styles

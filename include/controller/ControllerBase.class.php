@@ -201,6 +201,10 @@ abstract class GitPHP_ControllerBase
 	{
 		$this->userList = new GitPHP_UserList();
 		$this->userList->LoadUsers(GITPHP_CONFIGDIR . 'users.conf.php');
+		if ($this->userList->GetCount() > 0) {
+			if (!isset($_SESSION))
+				session_start();
+		}
 	}
 
 	/**
@@ -562,6 +566,16 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('requestvars', $getvarsmapped);
 
 		$this->tpl->assign('snapshotformats', GitPHP_Archive::SupportedFormats());
+
+		if ($this->userList && ($this->userList->GetCount() > 0)) {
+			$this->tpl->assign('loginenabled', true);
+			if (!empty($_SESSION['gitphpuser'])) {
+				$user = $this->userList->GetUser($_SESSION['gitphpuser']);
+				if ($user) {
+					$this->tpl->assign('loggedinuser', $user->GetUsername());
+				}
+			}
+		}
 	}
 
 	/**
@@ -617,7 +631,7 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->clearAllAssign();
 
-		if ($this->log)
+		if ($this->log && $this->projectList)
 			$this->log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
 	}
 
