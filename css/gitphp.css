@@ -160,6 +160,25 @@ div.login {
 	float: right;
 }
 
+/*
+ * login form
+ */
+div.loginError {
+	padding: 10px 5px 5px 96px;
+}
+div.loginForm {
+	padding: 5px 5px;
+}
+div.loginForm label {
+	float: left;
+	display: block;
+	width: 90px;
+	line-height: 23px;
+}
+div.loginForm input[type='submit'] {
+	margin-left: 92px;
+}
+
 
 /*
  * Geshi styles

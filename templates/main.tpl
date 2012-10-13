@@ -90,9 +90,9 @@
       {if $loginenabled}
       <div class="login">
       {if $loggedinuser}
-        <a href="{geturl action=logout}" />logout {$loggedinuser|escape}</a>
+        <a href="{geturl action=logout}" />{t 1=$loggedinuser}logout %1{/t}</a>
       {else}
-        <a href="{geturl action=login}" />login</a>
+        <a href="{geturl action=login}" />{t}login{/t}</a>
       {/if}
       </div>
       {/if}

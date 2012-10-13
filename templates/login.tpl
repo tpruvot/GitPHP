@@ -14,27 +14,24 @@
 
 {block name=main}
 {if $loginerror}
-<div class="loginerror">
+<div class="loginError error">
 {$loginerror}
 </div>
 {/if}
-<form method="post" action="{geturl action=login}">
-<table>
-  <tr>
-    <td><label for="username">Username:</label></td>
-    <td><input type="text" name="username" {if $username}value="{$username}"{/if} /></td>
-  </tr>
-  <tr>
-    <td><label for="password">Password:</label></td>
-    <td><input type="password" name="password" /></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td><input type="submit" value="Login" /></td>
-  </tr>
-</table>
-{if $redirect}
-<input type="hidden" name="redirect" value="{$redirect|escape}" />
-{/if}
-</form>
+<div class="loginForm">
+  <form method="post" action="{geturl action=login}">
+    <div class="field">
+      <label for="username">{t}username:{/t}</label>
+      <input type="text" name="username" {if $username}value="{$username}"{/if} />
+    </div>
+    <div class="field">
+      <label for="password">{t}password:{/t}</label>
+      <input type="password" name="password" />
+    </div>
+    {if $redirect}
+    <input type="hidden" name="redirect" value="{$redirect|escape}" />
+    {/if}
+    <input type="submit" value="{t}login{/t}" />
+  </form>
+</div>
 {/block}
