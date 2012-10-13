@@ -91,6 +91,8 @@
       <div class="login">
       {if $loggedinuser}
         <a href="{geturl action=logout}" />{t 1=$loggedinuser}logout %1{/t}</a>
+      {else if $action == 'login'}
+        {t}login{/t}
       {else}
         <a href="{geturl action=login}" />{t}login{/t}</a>
       {/if}
