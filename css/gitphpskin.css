@@ -56,6 +56,13 @@ div.page_header a:hover {
 	color: #880000; 
 }
 
+div.login {
+	padding-top: 2px;
+	font-size: 15px;
+	font-weight: normal;
+}
+
+
 
 /*
  * Navigation header links
