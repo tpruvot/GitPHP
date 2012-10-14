@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.8\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2012-10-13 16:53-0500\n"
+"POT-Creation-Date: 2012-10-13 23:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,7 +309,7 @@ msgstr ""
 #: templates/login.tpl
 #: templates/main.tpl
 #: templates/projectbase.tpl
-#: include/controller/ControllerBase.class.php:509
+#: include/controller/ControllerBase.class.php:511
 #: include/controller/Controller_ProjectList.class.php:76
 msgid "projects"
 msgstr ""
@@ -825,11 +825,13 @@ msgstr ""
 
 # Label for the username field on the login form
 #: templates/login.tpl
+#: templates/main.tpl
 msgid "username:"
 msgstr ""
 
 # Label for the password field on the login form
 #: templates/login.tpl
+#: templates/main.tpl
 msgid "password:"
 msgstr ""
 
@@ -844,4 +846,32 @@ msgstr ""
 # %1: the account username
 #: templates/main.tpl
 msgid "logout %1"
+msgstr ""
+
+# Error message that appears when there is a technical error
+# during login
+#: templates/main.tpl
+msgid "An error occurred while logging in"
+msgstr ""
+
+# Title of the login modal message box
+#: templates/main.tpl
+msgid "Login"
+msgstr ""
+
+# Error message when the username or the password is
+# invalid (login failure)
+#: include/controller/Controller_Login.class.php:122
+#: include/controller/Controller_Login.class.php:148
+msgid "Invalid username or password"
+msgstr ""
+
+# Error message when a username is not entered during login
+#: templates/main.tpl
+msgid "Username is required"
+msgstr ""
+
+# Error message when a password is not entered during login
+#: templates/main.tpl
+msgid "Password is required"
 msgstr ""

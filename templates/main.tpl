@@ -70,7 +70,14 @@
 				Loading: "{t escape='js'}Loading…{/t}",
 				LoadingBlameData: "{t escape='js'}Loading blame data…{/t}",
 				Snapshot: "{t escape='js'}snapshot{/t}",
-				NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
+				NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}',
+        UsernameLabel: "{t escape='js'}username:{/t}",
+        PasswordLabel: "{t escape='js'}password:{/t}",
+        Login: "{t escape='js'}login{/t}",
+        AnErrorOccurredWhileLoggingIn: "{t escape='js'}An error occurred while logging in{/t}",
+        LoginTitle: "{t escape='js'}Login{/t}",
+        UsernameIsRequired: "{t escape='js'}Username is required{/t}",
+        PasswordIsRequired: "{t escape='js'}Password is required{/t}"
 			}
 		}
 	}

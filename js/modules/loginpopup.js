@@ -7,7 +7,7 @@
  * @subpackage Javascript
  */
 
-define(['jquery', 'modules/geturl', 'qtip'], function($, url) {
+define(['jquery', 'modules/geturl', 'modules/resources', 'qtip'], function($, url, resources) {
   return function(element) {
     $(element).qtip({
       content: {
@@ -22,20 +22,20 @@ define(['jquery', 'modules/geturl', 'qtip'], function($, url) {
           loginForm.append(loginError);
 
           var usernameDiv = $(document.createElement('div')).addClass('field');
-          var usernameLabel = $(document.createElement('label')).attr('for', 'username').text('username:');
+          var usernameLabel = $(document.createElement('label')).attr('for', 'username').text(resources.UsernameLabel);
           var usernameField = $(document.createElement('input')).attr('type', 'text').attr('name', 'username');
           usernameDiv.append(usernameLabel);
           usernameDiv.append(usernameField);
           loginForm.append(usernameDiv);
 
           var passwordDiv = $(document.createElement('div')).addClass('field');
-          var passwordLabel = $(document.createElement('label')).attr('for', 'password').text('password:');
+          var passwordLabel = $(document.createElement('label')).attr('for', 'password').text(resources.PasswordLabel);
           var passwordField = $(document.createElement('input')).attr('type', 'password').attr('name', 'password');
           passwordDiv.append(passwordLabel);
           passwordDiv.append(passwordField);
           loginForm.append(passwordDiv);
 
-          var loginButton = $(document.createElement('input')).attr('type', 'submit').attr('value', 'login');
+          var loginButton = $(document.createElement('input')).attr('type', 'submit').attr('value', resources.Login);
           loginForm.append(loginButton);
 
           loginForm.bind('submit', function(event) {
@@ -43,11 +43,11 @@ define(['jquery', 'modules/geturl', 'qtip'], function($, url) {
             var password = $('input[name=password]', this).val();
             var errorContainer = $('.loginError', this);
             if (!username) {
-              errorContainer.text('Username is required');
+              errorContainer.text(resources.UsernameIsRequired);
               return false;
             }
             if (!password) {
-              errorContainer.text('Password is required');
+              errorContainer.text(resources.PasswordIsRequired);
               return false;
             }
             var inputs = $('input', this);
@@ -68,14 +68,14 @@ define(['jquery', 'modules/geturl', 'qtip'], function($, url) {
                   } else if (data.message) {
                     errorContainer.text(data.message);
                   } else {
-                    errorContainer.text('Error while logging in');
+                    errorContainer.text(resources.AnErrorOccurredWhileLoggingIn);
                   }
                 } else {
-                  errorContainer.text('Error while logging in');
+                  errorContainer.text(resources.AnErrorOccurredWhileLoggingIn);
                 }
               },
               error: function(jqXHR, message) {
-                  errorContainer.text('Error while logging in');
+                  errorContainer.text(resources.AnErrorOccurredWhileLoggingIn);
               },
               beforeSend: function() {
                 inputs.attr('disabled', 'disabled');
@@ -91,7 +91,7 @@ define(['jquery', 'modules/geturl', 'qtip'], function($, url) {
           return container;
         },
         title: {
-          text: 'Login',
+          text: resources.LoginTitle,
           button: true
         }
       },

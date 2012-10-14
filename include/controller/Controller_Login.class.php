@@ -118,7 +118,11 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 	{
 		if (!(isset($this->params['output']) && ($this->params['output'] == 'js'))) {
 			if ($this->loginSuccess === false) {
-				$this->tpl->assign('loginerror', 'Invalid username or password');
+				if ($this->resource) {
+					$this->tpl->assign('loginerror', $this->resource->translate('Invalid username or password'));
+				} else {
+					$this->tpl->assign('loginerror', 'Invalid username or password');
+				}
 			}
 			if (!empty($this->params['redirect'])) {
 				$this->tpl->assign('redirect', $this->params['redirect']);
@@ -139,8 +143,13 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 				$result['success'] = true;
 			else {
 				$result['success'] = false;
-				if ($this->loginSuccess === false)
-					$result['message'] = 'Invalid username or password';
+				if ($this->loginSuccess === false) {
+					if ($this->resource) {
+						$result['message'] = $this->resource->translate('Invalid username or password');
+					} else {
+						$result['message'] = 'Invalid username or password';
+					}
+				}
 			}
 			echo json_encode($result);
 			return;
