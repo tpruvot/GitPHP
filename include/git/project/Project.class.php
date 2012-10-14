@@ -10,8 +10,6 @@
 class GitPHP_Project
 {
 
-/* internal variables {{{1*/
-
 	/**
 	 * The project root
 	 *
@@ -25,8 +23,6 @@ class GitPHP_Project
 	 * @var string
 	 */
 	protected $project;
-
-/* owner internal variables {{{2*/
 
 	/**
 	 * The owner
@@ -42,10 +38,6 @@ class GitPHP_Project
 	 */
 	protected $ownerRead = false;
 
-/*}}}2*/
-
-/* description internal variables {{{2*/
-
 	/**
 	 * The description
 	 *
@@ -60,16 +52,12 @@ class GitPHP_Project
 	 */
 	protected $readDescription = false;
 
-/*}}}2*/
-
 	/**
 	 * The category
 	 *
 	 * @var string
 	 */
 	protected $category = '';
-
-/* epoch internal variables {{{2*/
 
 	/**
 	 * The project epoch
@@ -85,10 +73,6 @@ class GitPHP_Project
 	 */
 	protected $epochRead = false;
 
-/*}}}2*/
-
-/* HEAD internal variables {{{2*/
-
 	/**
 	 * The HEAD hash
 	 *
@@ -102,10 +86,6 @@ class GitPHP_Project
 	 * @var boolean
 	 */
 	protected $readHeadRef = false;
-
-/*}}}*/
-
-/* ref internal variables {{{2*/
 
 	/**
 	 * The head list for the project
@@ -121,10 +101,6 @@ class GitPHP_Project
 	 */
 	protected $tagList;
 
-/*}}}2*/
-
-/* url internal variables {{{2*/
-
 	/**
 	 * The clone url
 	 *
@@ -138,10 +114,6 @@ class GitPHP_Project
 	 * @var string
 	 */
 	protected $pushUrl = null;
-
-/*}}}2*/
-
-/* bugtracker internal variables {{{2*/
 
 	/**
 	 * The bug url
@@ -157,8 +129,6 @@ class GitPHP_Project
 	 */
 	protected $bugPattern = null;
 
-/*}}}2*/
-
 	/**
 	 * The website url
 	 *
@@ -172,8 +142,6 @@ class GitPHP_Project
 	 * @var boolean
 	 */
 	protected $compat = false;
-
-/* hash abbreviation variables {{{2*/
 
 	/**
 	 * The hash abbreviation length
@@ -189,8 +157,6 @@ class GitPHP_Project
 	 */
 	protected $uniqueAbbreviation = false;
 
-/*}}}2*/
-
 	/**
 	 * The git object manager
 	 *
@@ -204,10 +170,6 @@ class GitPHP_Project
 	 * @var GitPHP_ProjectLoadStrategy_Interface
 	 */
 	protected $strategy;
-
-/*}}}1*/
-
-/* class methods {{{1*/
 
 	/**
 	 * Class constructor
@@ -224,12 +186,6 @@ class GitPHP_Project
 		if ($strategy)
 			$this->SetStrategy($strategy);
 	}
-
-/*}}}1*/
-
-/* accessors {{{1*/
-
-/* project accessors {{{2*/
 
 	/**
 	 * Gets the project
@@ -275,8 +231,6 @@ class GitPHP_Project
 
 	}
 
-/*}}}2*/
-
 	/**
 	 * Gets the project as a filename/url friendly slug
 	 *
@@ -301,8 +255,6 @@ class GitPHP_Project
 	{
 		return $this->projectRoot . $this->project;
 	}
-
-/* owner accessors {{{2 */
 
 	/**
 	 * Gets the project's owner
@@ -348,10 +300,6 @@ class GitPHP_Project
 		$this->owner = $owner;
 	}
 
-/*}}}2*/
-
-/* projectroot accessors {{{2*/
-
 	/**
 	 * Gets the project root
 	 *
@@ -361,10 +309,6 @@ class GitPHP_Project
 	{
 		return $this->projectRoot;
 	}
-
-/*}}}2*/
-
-/* description accessors {{{2*/
 
 	/**
 	 * Gets the project description
@@ -399,8 +343,6 @@ class GitPHP_Project
 		$this->readDescription = true;
 	}
 
-/*}}}2*/
-
 	/**
 	 * Returns whether gitdaemon is allowed for this project
 	 *
@@ -410,8 +352,6 @@ class GitPHP_Project
 	{
 		return file_exists($this->GetPath() . '/git-daemon-export-ok');
 	}
-
-/* category accessors {{{2*/
 
 	/**
 	 * Gets the project's category
@@ -437,10 +377,6 @@ class GitPHP_Project
 		$this->category = $category;
 	}
 
-/*}}}2*/
-
-/* clone url accessors {{{2*/
-
 	/**
 	 * Gets the clone URL for this repository, if specified
 	 *
@@ -461,10 +397,6 @@ class GitPHP_Project
 		$this->cloneUrl = $cUrl;
 	}
 
-/*}}}2*/
-
-/* push url accessors {{{2*/
-
 	/**
 	 * Gets the push URL for this repository, if specified
 	 *
@@ -484,10 +416,6 @@ class GitPHP_Project
 	{
 		$this->pushUrl = $pUrl;
 	}
-
-/*}}}2*/
-
-/* bugtracker accessors {{{2*/
 
 	/**
 	 * Gets the bug URL for this repository, if specified
@@ -529,10 +457,6 @@ class GitPHP_Project
 		$this->bugPattern = $bPat;
 	}
 
-/*}}}2*/
-
-/* website accessors {{{2*/
-
 	/**
 	 * Gets the website for this repository, if specified
 	 *
@@ -556,10 +480,6 @@ class GitPHP_Project
 	{
 		$this->website = $site;
 	}
-
-/*}}}2*/
-
-/* HEAD accessors {{{2*/
 
 	/**
 	 * Gets the head commit for this project
@@ -601,10 +521,6 @@ class GitPHP_Project
 		$this->head = $this->strategy->LoadHead($this);
 	}
 
-/*}}}2*/
-
-/* epoch accessors {{{2*/
-
 	/**
 	 * Gets this project's epoch (time of last change)
 	 *
@@ -641,10 +557,6 @@ class GitPHP_Project
 		$this->epoch = $this->strategy->LoadEpoch($this);
 	}
 
-/*}}}2*/
-
-/* compatibility accessors {{{2*/
-
 	/**
 	 * Gets whether this project is running in compatibility mode
 	 *
@@ -665,8 +577,6 @@ class GitPHP_Project
 		$this->compat = $compat;
 	}
 
-/*}}}2*/
-
 	/**
 	 * Set data load strategy
 	 *
@@ -679,12 +589,6 @@ class GitPHP_Project
 
 		$this->strategy = $strategy;
 	}
-
-/*}}}1*/
-
-/* data loading methods {{{1*/
-
-/* commit loading methods {{{2*/
 
 	/**
 	 * Get a commit for this project
@@ -732,10 +636,6 @@ class GitPHP_Project
 		return null;
 	}
 
-/*}}}2*/
-
-/* tag loading methods {{{2*/
-
 	/**
 	 * Gets the tag list
 	 *
@@ -758,10 +658,6 @@ class GitPHP_Project
 
 		$this->tagList = $tagList;
 	}
-
-/*}}}2*/
-
-/* head loading methods {{{2*/
 
 	/**
 	 * Gets the head list
@@ -786,10 +682,6 @@ class GitPHP_Project
 		$this->headList = $headList;
 	}
 
-/*}}}2*/
-
-/* object loader/manager methods {{{2*/
-
 	/**
 	 * Get the git object manager for this project
 	 *
@@ -812,10 +704,6 @@ class GitPHP_Project
 
 		$this->objectManager = $objectManager;
 	}
-
-/*}}}2*/
-
-/* hash management methods {{{2*/
 
 	/**
 	 * Gets the hash abbreviation length
@@ -878,12 +766,6 @@ class GitPHP_Project
 	{
 		return $this->strategy->ExpandHash($this, $abbrevHash);
 	}
-
-/*}}}2*/
-
-/*}}}1*/
-
-/* static utilities {{{1*/
 
 	/**
 	 * Compares two projects by project name
@@ -950,7 +832,5 @@ class GitPHP_Project
 			return 0;
 		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
-
-/*}}}1*/
 
 }
