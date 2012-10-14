@@ -31,7 +31,9 @@
     {if $redirect}
     <input type="hidden" name="redirect" value="{$redirect|escape}" />
     {/if}
+    <div class="submit">
     <input type="submit" value="{t}login{/t}" />
+    </div>
   </form>
 </div>
 {/block}

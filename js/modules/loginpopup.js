@@ -35,8 +35,10 @@ define(['jquery', 'modules/geturl', 'modules/resources', 'qtip'], function($, ur
           passwordDiv.append(passwordField);
           loginForm.append(passwordDiv);
 
+          var loginDiv = $(document.createElement('div')).addClass('submit');
           var loginButton = $(document.createElement('input')).attr('type', 'submit').attr('value', resources.Login);
-          loginForm.append(loginButton);
+          loginDiv.append(loginButton);
+          loginForm.append(loginDiv);
 
           loginForm.bind('submit', function(event) {
             var username = $('input[name=username]', this).val();

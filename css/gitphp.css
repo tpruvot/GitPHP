@@ -169,13 +169,19 @@ div.loginError {
 div.loginForm {
 	padding: 5px 5px;
 }
-div.loginForm label {
+div.loginForm div.field {
+	padding: 2px 0px;
+}
+div.loginForm div.submit {
+	padding: 2px 0px;
+}
+div.loginForm div.field label {
 	float: left;
 	display: block;
 	width: 90px;
-	line-height: 23px;
+	line-height: 22px;
 }
-div.loginForm input[type='submit'] {
+div.loginForm div.submit input[type='submit'] {
 	margin-left: 92px;
 }
 
