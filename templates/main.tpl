@@ -94,7 +94,7 @@
       {else if $action == 'login'}
         {t}login{/t}
       {else}
-        <a href="{geturl action=login}" />{t}login{/t}</a>
+        <a href="{geturl action=login}" class="loginLink" />{t}login{/t}</a>
       {/if}
       </div>
       {/if}

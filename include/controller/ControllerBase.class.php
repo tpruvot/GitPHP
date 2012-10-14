@@ -360,8 +360,10 @@ abstract class GitPHP_ControllerBase
 		if (!$this->log)
 			return;
 
-		$this->projectList->RemoveObserver($this->log);
-		$this->exe->RemoveObserver($this->log);
+		if ($this->projectList)
+			$this->projectList->RemoveObserver($this->log);
+		if ($this->exe)
+			$this->exe->RemoveObserver($this->log);
 
 		$this->log->SetEnabled(false);
 

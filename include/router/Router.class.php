@@ -243,7 +243,8 @@ class GitPHP_Router
 			'mark' => 'm',
 			'prefix' => 'prefix',
 			'sort' => 'sort',
-			'lang' => 'l'
+			'lang' => 'l',
+			'redirect' => 'redirect'
 		);
 	}
 
@@ -356,6 +357,9 @@ class GitPHP_Router
 	public function GetController()
 	{
 		$params = $this->QueryVarArrayToParameterArray($_GET);
+		if (!empty($_POST)) {
+			$params = array_merge($params, $this->QueryVarArrayToParameterArray($_POST));
+		}
 
 		if (!empty($_GET['q'])) {
 			$restparams = GitPHP_Router::ReadCleanUrl($_SERVER['REQUEST_URI']);
@@ -486,8 +490,6 @@ class GitPHP_Router
 					$controller->SetParam('username', $_POST['username']);
 				if (!empty($_POST['password']))
 					$controller->SetParam('password', $_POST['password']);
-				if (!empty($_POST['redirect']))
-					$controller->SetParam('redirect', $_POST['redirect']);
 				break;
 
 			case 'logout':

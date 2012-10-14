@@ -74,13 +74,20 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
+			$this->headers[] = 'Content-Type: application/json';
+			$this->DisableLogging();
+		}
+
 		if (!empty($_SESSION['gitphpuser'])) {
 			$user = $this->userList->GetUser($_SESSION['gitphpuser']);
 			if ($user) {
-				if (!empty($this->params['redirect']))
-					$this->headers[] = 'Location: ' . $this->params['redirect'];
-				else
-					$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				if (!(isset($this->params['output']) && ($this->params['output'] == 'js'))) {
+					if (!empty($this->params['redirect']))
+						$this->headers[] = 'Location: ' . $this->params['redirect'];
+					else
+						$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				}
 				$this->loginSuccess = true;
 			} else {
 				unset($_SESSION['gitphpuser']);
@@ -91,10 +98,12 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 			$user = $this->userList->GetUser($this->params['username']);
 			if ($user && ($this->params['password'] === $user->GetPassword())) {
 				$_SESSION['gitphpuser'] = $user->GetUsername();
-				if (!empty($this->params['redirect']))
-					$this->headers[] = 'Location: ' . $this->params['redirect'];
-				else
-					$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				if (!(isset($this->params['output']) && ($this->params['output'] == 'js'))) {
+					if (!empty($this->params['redirect']))
+						$this->headers[] = 'Location: ' . $this->params['redirect'];
+					else
+						$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+				}
 				$this->loginSuccess = true;
 			} else {
 				$this->loginSuccess = false;
@@ -107,13 +116,15 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		if ($this->loginSuccess === false) {
-			$this->tpl->assign('loginerror', 'Invalid username or password');
-		}
-		if (!empty($this->params['redirect'])) {
-			$this->tpl->assign('redirect', $this->params['redirect']);
-		} else if (!empty($_SERVER['HTTP_REFERER'])) {
-			$this->tpl->assign('redirect', $_SERVER['HTTP_REFERER']);
+		if (!(isset($this->params['output']) && ($this->params['output'] == 'js'))) {
+			if ($this->loginSuccess === false) {
+				$this->tpl->assign('loginerror', 'Invalid username or password');
+			}
+			if (!empty($this->params['redirect'])) {
+				$this->tpl->assign('redirect', $this->params['redirect']);
+			} else if (!empty($_SERVER['HTTP_REFERER'])) {
+				$this->tpl->assign('redirect', $_SERVER['HTTP_REFERER']);
+			}
 		}
 	}
 
@@ -122,6 +133,19 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
+			$result = array();
+			if ($this->loginSuccess === true)
+				$result['success'] = true;
+			else {
+				$result['success'] = false;
+				if ($this->loginSuccess === false)
+					$result['message'] = 'Invalid username or password';
+			}
+			echo json_encode($result);
+			return;
+		}
+
 		if ($this->loginSuccess === true)
 			return;				// logged in and redirected, don't render
 

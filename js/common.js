@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modernizr'],
-	function($, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag) {
+define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modules/loginpopup', 'modernizr'],
+	function($, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag, loginpopup) {
 		$(function() {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
@@ -21,6 +21,7 @@ define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapsho
       if (!Modernizr.input.autofocus) {
         $('input[autofocus]').filter(':first').focus();
       }
+      loginpopup('a.loginLink');
 		});
 	}
 );
