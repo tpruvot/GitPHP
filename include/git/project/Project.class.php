@@ -158,6 +158,13 @@ class GitPHP_Project
 	protected $uniqueAbbreviation = false;
 
 	/**
+	 * Users allowed access to this project
+	 *
+	 * @var string[]|null
+	 */
+	protected $allowedUsers = null;
+
+	/**
 	 * The git object manager
 	 *
 	 * @var GitPHP_GitObjectManager
@@ -479,6 +486,43 @@ class GitPHP_Project
 	public function SetWebsite($site)
 	{
 		$this->website = $site;
+	}
+
+	/**
+	 * Gets the allowed users for this project
+	 *
+	 * @return string[]|null
+	 */
+	public function GetAllowedUsers()
+	{
+		return $this->allowedUsers;
+	}
+
+	/**
+	 * Sets the allowed users for this project
+	 *
+	 * @param string[]|null $allowedUsers allowed users
+	 */
+	public function SetAllowedUsers($allowedUsers)
+	{
+		$this->allowedUsers = $allowedUsers;
+	}
+
+	/**
+	 * Checks if a user has access to this project
+	 *
+	 * @param string $username username
+	 * @return boolean whether user is allowed
+	 */
+	public function UserCanAccess($username)
+	{
+		if (empty($this->allowedUsers))
+			return true;
+
+		if (empty($username))
+			return false;
+
+		return in_array($username, $this->allowedUsers);
 	}
 
 	/**

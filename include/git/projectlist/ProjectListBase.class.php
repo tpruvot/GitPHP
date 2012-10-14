@@ -396,6 +396,10 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			$project->SetAbbreviateLength($config->GetValue('core.abbrev'));
 		}
 
+		if ($config->HasValue('gitphp.allowedusers')) {
+			$project->SetAllowedUsers($config->GetValue('gitphp.allowedusers', true));
+		}
+
 	}
 
 	/**
@@ -604,6 +608,9 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		}
 		if (isset($projData['website']) && is_string($projData['website'])) {
 			$project->SetWebsite($projData['website']);
+		}
+		if (!empty($projData['allowedusers'])) {
+			$project->SetAllowedUsers($projData['allowedusers']);
 		}
 	}
 

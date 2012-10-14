@@ -113,7 +113,7 @@ class GitPHP_GitConfig
 			$values = $this->config[$key];
 		}
 
-		if ((count($values) == 1) || (!$multiValue)) {
+		if (!$multiValue) {
 			// single value
 			return $values[0];
 		} else {
