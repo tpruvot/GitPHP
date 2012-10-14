@@ -50,6 +50,7 @@ define(['jquery', 'modules/geturl', 'modules/resources', 'qtip'], function($, ur
               errorContainer.text(resources.PasswordIsRequired);
               return false;
             }
+            errorContainer.text('');
             var inputs = $('input', this);
             $.ajax({
               url: url + '?a=login&o=js',
