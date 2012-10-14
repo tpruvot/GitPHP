@@ -262,7 +262,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('File %1$s not found', $exception->File);
 		}
 
-		if ($exception instanceof GitPHP_ProtectedProjectException) {
+		if ($exception instanceof GitPHP_UnauthorizedProjectException) {
 			if ($this->resource)
 				return sprintf($this->resource->translate('You are not authorized to access project %1$s'), $exception->Project);
 

@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Exception
  */
-class GitPHP_ProtectedProjectException extends GitPHP_MessageException
+class GitPHP_UnauthorizedProjectException extends GitPHP_MessageException
 {
 	/**
 	 * Specified project
