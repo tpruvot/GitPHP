@@ -459,6 +459,19 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	}
 
 	/**
+	 * Filter projects by user access
+	 *
+	 * @param string $username username
+	 */
+	public function FilterByUser($username)
+	{
+		foreach ($this->projects as $path => $project) {
+			if (!$project->UserCanAccess($username))
+				unset($this->projects[$path]);
+		}
+	}
+
+	/**
 	 * Populates the internal list of projects
 	 */
 	abstract protected function PopulateProjects();
