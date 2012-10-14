@@ -45,12 +45,14 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
+		$cachekey = (!empty($_SESSION['gitphpuser']) ? $_SESSION['gitphpuser'] : '');
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
-			return '';
+			return $cachekey;
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
-			return '';
+			return $cachekey;
 		}
-		return $this->params['sort'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
+		$cachekey .= '|' . $this->params['sort'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
+		return $cachekey;
 	}
 
 	/**
