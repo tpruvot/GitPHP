@@ -38,7 +38,13 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 		if (!empty($this->params['project']) && $this->projectList) {
 			$project = $this->projectList->GetProject($this->params['project']);
 			if ($project) {
-				$this->project = $project->GetProject();
+				if ($this->userList && ($this->userList->GetCount() > 0)) {
+					if ($project->UserCanAccess((!empty($_SESSION['gitphpuser']) ? $_SESSION['gitphpuser'] : null))) {
+						$this->project = $project->GetProject();
+					}
+				} else {
+					$this->project = $project->GetProject();
+				}
 			}
 		}
 
@@ -254,6 +260,13 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 				return sprintf($this->resource->translate('File %1$s not found'), $exception->File);
 
 			return sprintf('File %1$s not found', $exception->File);
+		}
+
+		if ($exception instanceof GitPHP_ProtectedProjectException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('You are not authorized to access project %1$s'), $exception->Project);
+
+			return sprintf('You are not authorized to access project %1$s', $exception->Project);
 		}
 
 		return $exception->getMessage();

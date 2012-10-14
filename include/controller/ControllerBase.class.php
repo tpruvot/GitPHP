@@ -129,6 +129,11 @@ abstract class GitPHP_ControllerBase
 			if (!$project) {
 				throw new GitPHP_InvalidProjectParameterException($this->params['project']);
 			}
+			if ($this->userList && ($this->userList->GetCount() > 0)) {
+				if (!$project->UserCanAccess((!empty($_SESSION['gitphpuser']) ? $_SESSION['gitphpuser'] : null))) {
+					throw new GitPHP_ProtectedProjectException($this->params['project']);
+				}
+			}
 			$this->project = $project->GetProject();
 		}
 
