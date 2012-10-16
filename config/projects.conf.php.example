@@ -99,6 +99,12 @@
  *	     trouble loading data for this project.
  *
  * 'website': the website url for the project.
+ *
+ * 'allowedusers': an array of usernames allowed to access this project.
+ *		   Anonymous users and logged in users not in this list
+ *		   will not be able to see or access this project.
+ *		   By default, all users will have access to a project if
+ *		   this option is not set.
  */
 //$git_projects_settings['php/gitphp.git'] = array(
 //	'category' => 'PHP',
@@ -109,7 +115,11 @@
 //	'bugpattern' => '/#([0-9]+)/',
 //	'bugurl' => 'http://www.gitphp.org/projects/gitphp/issues/${1}',
 //	'compat' => false,
-//	'website' => 'http://www.gitphp.org/'
+//	'website' => 'http://www.gitphp.org/',
+//	'allowedusers' => array(
+//		'user1',
+//		'user2'
+//	)
 //);
 //$git_projects_settings['gentoo.git'] = array(
 //	'description' => 'Gentoo portage overlay',
@@ -139,4 +149,6 @@
  *	bugurl = http://www.gitphp.org/projects/gitphp/issues/${1}
  *	compat = false
  *	website = http://www.gitphp.org/
+ *	allowedusers = user1
+ *	allowedusers = user2
  */
