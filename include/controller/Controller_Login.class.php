@@ -87,6 +87,7 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 						$this->headers[] = 'Location: ' . $this->params['redirect'];
 					else
 						$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+					$this->DisableLogging();
 				}
 				$this->loginSuccess = true;
 			} else {
@@ -103,6 +104,7 @@ class GitPHP_Controller_Login extends GitPHP_ControllerBase
 						$this->headers[] = 'Location: ' . $this->params['redirect'];
 					else
 						$this->headers[] = 'Location: ' . $this->router->GetUrl(array(), true);
+					$this->DisableLogging();
 				}
 				$this->loginSuccess = true;
 			} else {
