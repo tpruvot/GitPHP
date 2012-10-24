@@ -95,7 +95,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 		}
 
 		if ($this->params['format'] == GitPHP_Controller_Feed::RssFormat) {
-			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
+			$this->headers[] = "Content-type: application/rss+xml; charset=UTF-8";
 		} else if ($this->params['format'] == GitPHP_Controller_Feed::AtomFormat) {
 			$this->headers[] = "Content-type: application/atom+xml; charset=UTF-8";
 		}
