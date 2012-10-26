@@ -164,4 +164,36 @@ class GitPHP_GitLog extends GitPHP_RevList
 		}
 
 	}
+
+	/**
+	 * Filters out commits matching a certain pattern
+	 *
+	 * @param string $pattern pattern
+	 */
+	public function FilterCommits($pattern)
+	{
+		if (empty($pattern))
+			return;
+
+		if (!$this->dataLoaded) {
+			$this->LoadData();
+		}
+
+		$filtered = false;
+		foreach ($this->hashList as $i => $hash) {
+			$commit = $this->project->GetCommit($hash);
+			$comment = $commit->GetComment();
+			foreach ($comment as $commentline) {
+				if (preg_match($pattern, $commentline)) {
+					unset($this->hashList[$i]);
+					$filtered = true;
+					break;
+				}
+			}
+		}
+
+		if ($filtered) {
+			$this->hashList = array_values($this->hashList);
+		}
+	}
 }

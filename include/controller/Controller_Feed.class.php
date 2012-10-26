@@ -100,11 +100,9 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$log = new GitPHP_GitLog($this->GetProject(), $this->GetProject()->GetHeadCommit(), self::MAX_FEED_ITEMS);
-
-		//todo: backport..
-		//if ($this->config->HasKey('feedfilter')) {
-		//	$log->FilterCommits($this->config->GetValue('feedfilter'));
-
+		if ($this->config->HasKey('feedfilter')) {
+			$log->FilterCommits($this->config->GetValue('feedfilter'));
+		}
 		// Don't show commits older than 48 hours, but show a minimum of 20 entries
 		$log->FilterOldCommits(48*60*60, 20);
 

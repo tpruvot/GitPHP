@@ -199,6 +199,17 @@ $gitphp_conf['abbreviateurl'] = false;
  */
 $gitphp_conf['cleanurl'] = false;
 
+/*
+ * feedfilter
+ * Sets a regular expression to use to filter commits out
+ * of the project atom/rss feed.  Commits that have a
+ * commit message matching this pattern will be excluded.
+ * For example, '/GIT_SILENT/' will exclude any commit
+ * with the string GIT_SILENT in the commit message.
+ */
+//$gitphp_conf['feedfilter'] = '/GIT_SILENT/';
+
+
 /*********************************************************
  * Executable/filesystem options
  * Important to check if you're running windows
