@@ -114,6 +114,9 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 		//	$strategy = new GitPHP_LogLoad_Raw();
 		//}
 		$log = new GitPHP_Log($this->GetProject(), $this->GetProject()->GetHeadCommit(), $strategy, GitPHP_Controller_Feed::FeedItemCount);
+		if ($this->config->HasKey('feedfilter')) {
+			$log->FilterCommits($this->config->GetValue('feedfilter'));
+		}
 		$log->FilterOldCommits(48*60*60, 20);
 
 		$this->tpl->assign('log', $log);
