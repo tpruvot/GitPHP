@@ -415,19 +415,19 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if (!$this->config)
 			return;
 
-		if ($this->config->HasKey('cloneurl')) {
+		if ($this->config->GetValue('cloneurl')) {
 			$project->SetCloneUrl(GitPHP_Util::AddSlash($this->config->GetValue('cloneurl'), false) . $project->GetProject());
 		}
 
-		if ($this->config->HasKey('pushurl')) {
+		if ($this->config->GetValue('pushurl')) {
 			$project->SetPushUrl(GitPHP_Util::AddSlash($this->config->GetValue('pushurl'), false) . $project->GetProject());
 		}
 
-		if ($this->config->HasKey('bugpattern')) {
+		if ($this->config->GetValue('bugpattern')) {
 			$project->SetBugPattern($this->config->GetValue('bugpattern'));
 		}
 
-		if ($this->config->HasKey('bugurl')) {
+		if ($this->config->GetValue('bugurl')) {
 			$project->SetBugUrl($this->config->GetValue('bugurl'));
 		}
 
