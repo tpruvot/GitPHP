@@ -165,4 +165,26 @@ class GitPHP_Util
 		return rtrim($baseurl, "/");
 	}
 
+	/**
+	 * Tests whether a function is allowed to be called
+	 *
+	 * @param string $function functio name
+	 * @return true if allowed
+	 */
+	public static function FunctionAllowed($function)
+	{
+		if (empty($function))
+			return false;
+
+		$disabled = @ini_get('disable_functions');
+		if (!$disabled) {
+			// no disabled functions
+			// or ini_get is disabled so we can't reliably figure this out
+			return true;
+		}
+
+		$disabledlist = explode(', ', $disabled);
+		return !in_array($function, $disabledlist);
+	}
+
 }

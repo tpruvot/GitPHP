@@ -95,6 +95,27 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	protected $observers = array();
 
 	/**
+	 * Whether the exec function is allowed by the install
+	 *
+	 * @var null|boolean
+	 */
+	protected $execAllowed = null;
+
+	/**
+	 * Whether the shell_exec function is allowed by the install
+	 *
+	 * @var null|boolean
+	 */
+	protected $shellExecAllowed = null;
+
+	/**
+	 * Whether the popen function is allowed by the install
+	 *
+	 * @var null|boolean
+	 */
+	protected $popenAllowed = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $binary path to git binary
@@ -117,6 +138,13 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 */
 	public function Execute($projectPath, $command, $args)
 	{
+		if ($this->shellExecAllowed === null) {
+			$this->shellExecAllowed = GitPHP_Util::FunctionAllowed('shell_exec');
+			if (!$this->shellExecAllowed) {
+				throw new GitPHP_DisabledFunctionException('shell_exec');
+			}
+		}
+
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
 		$this->Log('Begin executing "' . $fullCommand . '"');
@@ -140,6 +168,13 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 */
 	public function Open($projectPath, $command, $args, $mode = 'r')
 	{
+		if ($this->popenAllowed === null) {
+			$this->popenAllowed = GitPHP_Util::FunctionAllowed('popen');
+			if (!$this->popenAllowed) {
+				throw new GitPHP_DisabledFunctionException('popen');
+			}
+		}
+
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
 		return popen($fullCommand, $mode);
@@ -191,6 +226,13 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 */
 	protected function ReadVersion()
 	{
+		if ($this->shellExecAllowed === null) {
+			$this->shellExecAllowed = GitPHP_Util::FunctionAllowed('shell_exec');
+			if (!$this->shellExecAllowed) {
+				throw new GitPHP_DisabledFunctionException('shell_exec');
+			}
+		}
+
 		$this->versionRead = true;
 
 		$this->version = '';
@@ -275,6 +317,13 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 */
 	public function Valid()
 	{
+		if ($this->execAllowed === null) {
+			$this->execAllowed = GitPHP_Util::FunctionAllowed('exec');
+			if (!$this->execAllowed) {
+				throw new GitPHP_DisabledFunctionException('exec');
+			}
+		}
+
 		if (empty($this->binary))
 			return false;
 

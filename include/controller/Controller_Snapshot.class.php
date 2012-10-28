@@ -44,6 +44,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$this->InitializeProjectList();
 
+		// HACK: this needs to be done early because the snapshot controller modifies the headers before opening the archive
+		if (!GitPHP_Util::FunctionAllowed('popen'))
+			throw new GitPHP_DisabledFunctionException('popen');
+
 		if (isset($this->params['project'])) {
 			$project = $this->projectList->GetProject($this->params['project']);
 			if (!$project) {

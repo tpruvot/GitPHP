@@ -269,6 +269,13 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('You are not authorized to access project %1$s', $exception->Project);
 		}
 
+		if ($exception instanceof GitPHP_DisabledFunctionException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Required function %1$s has been disabled'), $exception->Function);
+
+			return sprintf('Required function %1$s has been disabled', $exception->Function);
+		}
+
 		return $exception->getMessage();
 	}
 
