@@ -27,7 +27,7 @@ class GitPHP_AmbiguousHashException extends GitPHP_MessageException
 	{
 		$this->Hash = $hash;
 		if (empty($message))
-			$message = 'Ambiguous abbreviated hash %1$s';
+			$message = sprintf('Ambiguous abbreviated hash %1$s', $hash);
 		parent::__construct($message, true, 200, $code);
 	}
 }
