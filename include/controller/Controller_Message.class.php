@@ -288,6 +288,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	private function StatusCodeHeader($code)
 	{
 		switch ($code) {
+			case 403:
+				return '403 Forbidden';
 			case 404:
 				return '404 Not Found';
 			case 500:

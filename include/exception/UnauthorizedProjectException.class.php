@@ -28,6 +28,6 @@ class GitPHP_UnauthorizedProjectException extends GitPHP_MessageException
 		$this->Project = $project;
 		if (empty($message))
 			$message = sprintf('You are not authorized to access project %1$s', $project);
-		parent::__construct($message, true, 401, $code); 
+		parent::__construct($message, true, 403, $code); 
 	}
 }
