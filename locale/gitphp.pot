@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.8\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2012-10-14 17:02-0500\n"
+"POT-Creation-Date: 2012-10-28 20:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgstr ""
 #: templates/treelist.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Snapshot.class.php:117
+#: include/controller/Controller_Snapshot.class.php:121
 msgid "snapshot"
 msgstr ""
 
@@ -309,8 +309,8 @@ msgstr ""
 #: templates/login.tpl
 #: templates/main.tpl
 #: templates/projectbase.tpl
-#: include/controller/ControllerBase.class.php:516
-#: include/controller/Controller_ProjectList.class.php:76
+#: include/controller/ControllerBase.class.php:519
+#: include/controller/Controller_ProjectList.class.php:78
 msgid "projects"
 msgstr ""
 
@@ -463,12 +463,12 @@ msgstr ""
 
 # Used as the title for the opml controller
 # OPML is a standard XML outline format
-#: include/controller/Controller_ProjectList.class.php:66
+#: include/controller/Controller_ProjectList.class.php:68
 msgid "opml"
 msgstr ""
 
 # Used as the title of the project index controller
-#: include/controller/Controller_ProjectList.class.php:71
+#: include/controller/Controller_ProjectList.class.php:73
 msgid "project index"
 msgstr ""
 
@@ -861,8 +861,8 @@ msgstr ""
 
 # Error message when the username or the password is
 # invalid (login failure)
-#: include/controller/Controller_Login.class.php:122
-#: include/controller/Controller_Login.class.php:148
+#: include/controller/Controller_Login.class.php:124
+#: include/controller/Controller_Login.class.php:150
 msgid "Invalid username or password"
 msgstr ""
 
@@ -882,4 +882,12 @@ msgstr ""
 #: include/controller/Controller_Message.class.php:267
 #, php-format
 msgid "You are not authorized to access project %1$s"
+msgstr ""
+
+# Error message when a function required by gitphp
+# has been disabled in the php config
+# %1$s: The name of the function
+#: include/controller/Controller_Message.class.php:274
+#, php-format
+msgid "Required function %1$s has been disabled"
 msgstr ""
