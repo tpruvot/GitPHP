@@ -555,6 +555,10 @@ div.projectSearch {
 	margin-left: 8px;
 }
 
+.projectRow.disabled {
+	color: #888;
+}
+
 
 /*
  * Tree view

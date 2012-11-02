@@ -60,12 +60,12 @@ define(["jquery", 'modules/resources', 'modules/hassearchreset'],
 		}
 
 		function searchRow(row, searchString) {
-			var projectName = row.find('td.projectName a').text();
+			var projectName = row.find('td.projectName span').text();
 			if ((projectName.length > 0) && (projectName.toLowerCase().indexOf(searchString) != -1)) {
 				return true;
 			}
 
-			var projectDesc = row.find('td.projectDescription a').text();
+			var projectDesc = row.find('td.projectDescription span').text();
 			if ((projectDesc.length > 0) && (projectDesc.toLowerCase().indexOf(searchString) != -1)) {
 				return true;
 			}

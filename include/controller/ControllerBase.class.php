@@ -122,9 +122,6 @@ abstract class GitPHP_ControllerBase
 
 		if ($this->multiProject) {
 			$this->projectList->LoadProjects();
-			if ($this->userList && ($this->userList->GetCount() > 0)) {
-				$this->projectList->FilterByUser((!empty($_SESSION['gitphpuser']) ? $_SESSION['gitphpuser'] : null));
-			}
 		}
 
 		if (!empty($this->params['project'])) {

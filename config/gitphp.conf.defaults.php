@@ -287,6 +287,16 @@ $gitphp_conf['cleanurl'] = false;
 //$gitphp_conf['feedfilter'] = '/GIT_SILENT/';
 
 /*
+ * showrestrictedprojects
+ * By default, when user-based restrictions are enabled,
+ * projects that are not available to the logged in user
+ * will be hidden in the project list.  Setting this option
+ * will instead display these projects as disabled in the
+ * project list.
+ */
+$gitphp_conf['showrestrictedprojects'] = false;
+
+/*
 
 
 /*********************************************************

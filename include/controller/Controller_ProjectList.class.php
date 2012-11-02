@@ -19,6 +19,12 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 
 		parent::Initialize();
 
+		if ($this->userList && ($this->userList->GetCount() > 0)) {
+			if (!$this->config->GetValue('showrestrictedprojects') || (isset($this->params['opml']) && ($this->params['opml'] === true)) || (isset($this->params['txt']) && ($this->params['txt'] === true))) {
+				$this->projectList->FilterByUser((!empty($_SESSION['gitphpuser']) ? $_SESSION['gitphpuser'] : null));
+			}
+		}
+
 		if (empty($this->params['sort']))
 			$this->params['sort'] = 'project';
 	}

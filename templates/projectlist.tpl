@@ -75,11 +75,21 @@ git source code archive
       {/if}
     {/if}
 
-    <tr class="{cycle values="light,dark"} projectRow">
+    <tr class="{cycle values="light,dark"} projectRow {if $loginenabled && !$proj->UserCanAccess($loggedinuser)}disabled{/if}">
       <td class="projectName">
-        <a href="{geturl project=$proj}" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        {if !$loginenabled || $proj->UserCanAccess($loggedinuser)}
+        <a href="{geturl project=$proj}" class="list {if $currentcategory != ''}indent{/if}"><span>{$proj->GetProject()}</span></a>
+        {else}
+        <span {if $currentcategory != ''}class="indent"{/if}>{$proj->GetProject()}</span>
+        {/if}
       </td>
-      <td class="projectDescription"><a href="{geturl project=$proj}" class="list">{$proj->GetDescription()|escape}</a></td>
+      <td class="projectDescription">
+        {if !$loginenabled || $proj->UserCanAccess($loggedinuser)}
+        <a href="{geturl project=$proj}" class="list"><span>{$proj->GetDescription()|escape}</span></a>
+        {else}
+        <span>{$proj->GetDescription()|escape}</span>
+        {/if}
+      </td>
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
@@ -96,6 +106,7 @@ git source code archive
 	{/if}
       </td>
       <td class="link">
+        {if !$loginenabled || $proj->UserCanAccess($loggedinuser)}
         <a href="{geturl project=$proj}">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
@@ -104,6 +115,7 @@ git source code archive
 	<a href="{geturl project=$proj action=tree}">{t}tree{/t}</a> | 
 	<a href="{geturl project=$proj action=snapshot hash=HEAD}" class="snapshotTip">{t}snapshot{/t}</a>
 	{/if}
+        {/if}
       </td>
     </tr>
   {foreachelse}
