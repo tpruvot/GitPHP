@@ -22,11 +22,11 @@
   <form method="post" action="{geturl action=login}">
     <div class="field">
       <label for="username">{t}username:{/t}</label>
-      <input type="text" name="username" {if $username}value="{$username}"{/if} autofocus />
+      <input type="text" name="username" id="username" {if $username}value="{$username}"{/if} autofocus />
     </div>
     <div class="field">
       <label for="password">{t}password:{/t}</label>
-      <input type="password" name="password" />
+      <input type="password" name="password" id="password" />
     </div>
     {if $redirect}
     <input type="hidden" name="redirect" value="{$redirect|escape}" />

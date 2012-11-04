@@ -23,14 +23,14 @@ define(['jquery', 'modules/geturl', 'modules/resources', 'qtip'], function($, ur
 
           var usernameDiv = $(document.createElement('div')).addClass('field');
           var usernameLabel = $(document.createElement('label')).attr('for', 'username').text(resources.UsernameLabel);
-          var usernameField = $(document.createElement('input')).attr('type', 'text').attr('name', 'username');
+          var usernameField = $(document.createElement('input')).attr('type', 'text').attr('name', 'username').attr('id', 'username');
           usernameDiv.append(usernameLabel);
           usernameDiv.append(usernameField);
           loginForm.append(usernameDiv);
 
           var passwordDiv = $(document.createElement('div')).addClass('field');
           var passwordLabel = $(document.createElement('label')).attr('for', 'password').text(resources.PasswordLabel);
-          var passwordField = $(document.createElement('input')).attr('type', 'password').attr('name', 'password');
+          var passwordField = $(document.createElement('input')).attr('type', 'password').attr('name', 'password').attr('id', 'password');
           passwordDiv.append(passwordLabel);
           passwordDiv.append(passwordField);
           loginForm.append(passwordDiv);
