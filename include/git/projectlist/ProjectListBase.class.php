@@ -362,6 +362,8 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		if ($config->HasValue('gitphp.description')) {
 			$project->SetDescription($config->GetValue('gitphp.description'));
+		} else if ($config->HasValue('gitweb.description')) {
+			$project->SetDescription($config->GetValue('gitweb.description'));
 		}
 
 		if ($config->HasValue('gitphp.category')) {
