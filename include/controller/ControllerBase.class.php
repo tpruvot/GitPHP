@@ -317,7 +317,11 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
 		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
 
-		$getvars = explode('&', $_SERVER['QUERY_STRING']);
+		$getvars = array();
+		if (isset($_SERVER['QUERY_STRING'])) {
+			$getvars = explode('&', $_SERVER['QUERY_STRING']);
+		}
+
 		$getvarsmapped = array();
 		foreach ($getvars as $varstr) {
 			$eqpos = strpos($varstr, '=');
