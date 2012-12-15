@@ -162,6 +162,8 @@ class GitPHP_Util
 			else
 				$baseurl = 'http://' . $baseurl;
 		}
+		if (GitPHP_Util::IsWindows())
+			$baseurl = rtrim($baseurl, "\\");
 		return rtrim($baseurl, "/");
 	}
 
