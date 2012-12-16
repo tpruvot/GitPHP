@@ -192,7 +192,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	{
 		$gitDir = '';
 		if (!empty($projectPath)) {
-			$gitDir = '--git-dir=' . $projectPath;
+			$gitDir = '--git-dir=' . escapeshellarg($projectPath);
 		}
 		
 		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);

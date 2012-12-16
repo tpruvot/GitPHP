@@ -280,7 +280,7 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 		$args[] = $this->path;
 		$args[] = '|';
 		$args[] = $this->exe->GetBinary();
-		$args[] = '--git-dir=' . $this->project->GetPath();
+		$args[] = '--git-dir=' . escapeshellarg($this->project->GetPath());
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
 		$args[] = '--stdin';
