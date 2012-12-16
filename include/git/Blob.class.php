@@ -422,7 +422,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			$args[] = 'HEAD';
 		$args[] = '|';
 		$args[] = GitPHP_GitExe::GetInstance()->GetBinary();
-		$args[] = '--git-dir=' . $this->GetProject()->GetPath();
+		$args[] = '--git-dir=' . escapeshellarg($this->GetProject()->GetPath());
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
 		$args[] = '--stdin';

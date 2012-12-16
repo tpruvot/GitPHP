@@ -186,7 +186,7 @@ class GitPHP_GitExe
 	{
 		$gitDir = '';
 		if (!empty($projectPath)) {
-			$gitDir = '--git-dir=' . $projectPath;
+			$gitDir = '--git-dir=' . escapeshellarg($projectPath);
 		}
 
 		$command = $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
