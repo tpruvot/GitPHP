@@ -25,7 +25,7 @@ class GitPHP_BlobTest extends PHPUnit_Framework_TestCase
 	public function testSize()
 	{
 		$strategymock = $this->getMock('GitPHP_BlobLoadStrategy_Interface');
-		$strategymock->expects($this->once())->method('Load')->with($this->isInstanceOf('GitPHP_Blob'))->will($this->returnValue("data line 1\ndata line 2"));
+		$strategymock->expects($this->once())->method('Size')->with($this->isInstanceOf('GitPHP_Blob'))->will($this->returnValue(23));
 
 		$projectmock = $this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock();
 		

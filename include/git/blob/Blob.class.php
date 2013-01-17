@@ -129,7 +129,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 			return $this->size;
 		}
 
-		return strlen($this->GetData());
+		$this->size = $this->strategy->Size($this);
+		
+		return $this->size;
 	}
 
 	/**

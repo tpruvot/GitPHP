@@ -46,4 +46,22 @@ class GitPHP_BlobLoad_Git implements GitPHP_BlobLoadStrategy_Interface
 
 		return $this->exe->Execute($blob->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 	}
+
+	/**
+	 * Gets the size of a blob
+	 *
+	 * @param GitPHP_Blob $blob blob
+	 * @return int blob size
+	 */
+	public function Size($blob)
+	{
+		if (!$blob)
+			return;
+
+		$args = array();
+		$args[] = '-s';
+		$args[] = $blob->GetHash();
+
+		return $this->exe->Execute($blob->GetProject()->GetPath(), GIT_CAT_FILE, $args);
+	}
 }

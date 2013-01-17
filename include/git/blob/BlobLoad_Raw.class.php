@@ -42,4 +42,18 @@ class GitPHP_BlobLoad_Raw implements GitPHP_BlobLoadStrategy_Interface
 
 		return $this->objectLoader->GetObject($blob->GetHash());
 	}
+
+	/**
+	 * Gets the size of a blob
+	 *
+	 * @param GitPHP_Blob $blob blob
+	 * @return int blob size
+	 */
+	public function Size($blob)
+	{
+		if (!$blob)
+			return;
+
+		return strlen($blob->GetData());
+	}
 }

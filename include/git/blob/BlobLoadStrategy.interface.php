@@ -16,4 +16,12 @@ interface GitPHP_BlobLoadStrategy_Interface
 	 * @return string blob data
 	 */
 	public function Load($blob);
+
+	/**
+	 * Gets the size of a blob
+	 *
+	 * @param GitPHP_Blob $blob blob
+	 * @return int blob size
+	 */
+	public function Size($blob);
 }
