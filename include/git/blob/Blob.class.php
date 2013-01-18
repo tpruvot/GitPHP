@@ -137,14 +137,29 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 		$this->dataEncoded = false;
 
-		if ($this->size === null)
+		$datachanged = false;
+
+		if ($this->size === null) {
 			$this->size = strlen($this->data);
+			$datachanged = true;
+		}
 
-		if ($this->binary === null)
+		if ($this->binary === null) {
 			$this->binary = GitPHP_Blob::DataIsBinary($this->data);
+			$datachanged = true;
+		}
 
-		foreach ($this->observers as $observer) {
-			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+		if ($this->size > GitPHP_Blob::LargeBlobSize) {
+			$this->data = null;
+			$this->dataRead = false;
+		} else {
+			$datachanged = true;
+		}
+
+		if ($datachanged) {
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
 		}
 	}
 
