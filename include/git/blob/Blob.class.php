@@ -11,6 +11,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 {
 
 	/**
+	 * Large blob threshold
+	 *
+	 * @var int
+	 */
+	const LargeBlobSize = 5242880;	// 5 megs
+
+	/**
 	 * The blob data
 	 *
 	 * @var string
@@ -234,10 +241,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function __sleep()
 	{
-		if (!$this->dataEncoded)
-			$this->EncodeData();
-
 		$properties = array('data', 'dataRead', 'dataEncoded', 'binary', 'size');
+
+		if ($this->dataRead && strlen($this->data) > GitPHP_Blob::LargeBlobSize) {
+			$this->data = null;
+			$this->dataRead = false;
+		}
+		
+		if ($this->dataRead && !$this->dataEncoded)
+			$this->EncodeData();
 
 		return array_merge($properties, parent::__sleep());
 	}
