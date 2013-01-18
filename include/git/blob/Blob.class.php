@@ -237,7 +237,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		if (!$this->dataEncoded)
 			$this->EncodeData();
 
-		$properties = array('data', 'dataRead', 'dataEncoded', 'binary');
+		$properties = array('data', 'dataRead', 'dataEncoded', 'binary', 'size');
 
 		return array_merge($properties, parent::__sleep());
 	}
