@@ -32,6 +32,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $size = null;
 
 	/**
+	 * Whether the data is binary
+	 *
+	 * @var boolean|null
+	 */
+	protected $binary = null;
+
+	/**
 	 * Whether data has been encoded for serialization
 	 *
 	 * @var boolean
@@ -125,11 +132,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function GetSize()
 	{
-		if ($this->size !== null) {
-			return $this->size;
+		if ($this->size === null) {
+			$this->size = $this->strategy->Size($this);
 		}
-
-		$this->size = $this->strategy->Size($this);
 		
 		return $this->size;
 	}
@@ -151,14 +156,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function IsBinary()
 	{
-		if (!$this->dataRead)
-			$this->ReadData();
+		if ($this->binary === null) {
+			$data = $this->GetData();
+			if (strlen($data) > 8000)
+				$data = substr($data, 0, 8000);
 
-		$data = $this->GetData();
-		if (strlen($data) > 8000)
-			$data = substr($data, 0, 8000);
+			$this->binary = (strpos($data, chr(0)) !== false);
+		}
 
-		return strpos($data, chr(0)) !== false;
+		return $this->binary;
 	}
 
 	/**
@@ -231,7 +237,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		if (!$this->dataEncoded)
 			$this->EncodeData();
 
-		$properties = array('data', 'dataRead', 'dataEncoded');
+		$properties = array('data', 'dataRead', 'dataEncoded', 'binary');
 
 		return array_merge($properties, parent::__sleep());
 	}
