@@ -104,6 +104,16 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
+	 * Gets whether data has been loaded
+	 *
+	 * @return boolean true if data is loaded
+	 */
+	public function DataLoaded()
+	{
+		return $this->dataRead;
+	}
+
+	/**
 	 * Set the load strategy
 	 *
 	 * @param GitPHP_BlobLoadStrategy_Interface $strategy load strategy
@@ -141,6 +151,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	{
 		if ($this->size === null) {
 			$this->size = $this->strategy->Size($this);
+
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
 		}
 		
 		return $this->size;
@@ -169,6 +183,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 				$data = substr($data, 0, 8000);
 
 			$this->binary = (strpos($data, chr(0)) !== false);
+
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
 		}
 
 		return $this->binary;

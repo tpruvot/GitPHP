@@ -57,6 +57,9 @@ class GitPHP_BlobLoad_Raw extends GitPHP_BlobLoad_Base
 		if (!$blob)
 			return;
 
-		return strlen($blob->GetData());
+		if ($blob->DataLoaded())
+			return strlen($blob->GetData());
+
+		return $this->LoadSize($blob);
 	}
 }
