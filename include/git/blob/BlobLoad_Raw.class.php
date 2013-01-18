@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git\Blob
  */
-class GitPHP_BlobLoad_Raw implements GitPHP_BlobLoadStrategy_Interface
+class GitPHP_BlobLoad_Raw extends GitPHP_BlobLoad_Base
 {
 	/**
 	 * Object loader
@@ -20,13 +20,16 @@ class GitPHP_BlobLoad_Raw implements GitPHP_BlobLoadStrategy_Interface
 	 * Constructor
 	 *
 	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 * @param GitPHP_GitExe $exe git exe
 	 */
-	public function __construct($objectLoader)
+	public function __construct($objectLoader, $exe)
 	{
 		if (!$objectLoader)
 			throw new Exception('Git object loader is required');
 
 		$this->objectLoader = $objectLoader;
+
+		parent::__construct($exe);
 	}
 
 	/**
