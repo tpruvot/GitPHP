@@ -137,6 +137,12 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 		$this->dataEncoded = false;
 
+		if ($this->size === null)
+			$this->size = strlen($this->data);
+
+		if ($this->binary === null)
+			$this->binary = GitPHP_Blob::DataIsBinary($this->data);
+
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
 		}
@@ -178,11 +184,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	public function IsBinary()
 	{
 		if ($this->binary === null) {
-			$data = $this->GetData();
-			if (strlen($data) > 8000)
-				$data = substr($data, 0, 8000);
-
-			$this->binary = (strpos($data, chr(0)) !== false);
+			$this->binary = GitPHP_Blob::DataIsBinary($this->GetData());
 
 			foreach ($this->observers as $observer) {
 				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
@@ -292,6 +294,23 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	public static function CacheKey($proj, $hash)
 	{
 		return 'project|' . $proj . '|blob|' . $hash;
+	}
+
+	/**
+	 * Determines whether a data buffer is binary
+	 *
+	 * @param string $data data buffer
+	 * @return boolean true if binary
+	 */
+	public static function DataIsBinary($data)
+	{
+		if (empty($data))
+			return false;
+
+		if (strlen($data) > 8000)
+			$data = substr($data, 0, 8000);
+
+		return strpos($data, chr(0)) !== false;
 	}
 
 }
