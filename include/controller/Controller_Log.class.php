@@ -77,7 +77,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 
-		$compat = $this->GetProject()->GetCompat();
+		//$compat = $this->GetProject()->GetCompat();
 		$skip = $this->params['page'] * 100;
 		$strategy = null;
 		//if ($compat || ($skip > $this->config->GetValue('largeskip'))) {

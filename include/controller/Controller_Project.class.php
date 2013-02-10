@@ -54,7 +54,7 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 		if (!$head)
 			$this->tpl->assign('enablesearch', false);
 
-		$compat = $this->GetProject()->GetCompat();
+		//$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
 		//if ($compat) {
 			$strategy = new GitPHP_LogLoad_Git($this->exe);

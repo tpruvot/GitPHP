@@ -212,8 +212,8 @@ class GitPHP_PackData
 		 * algorithm from patch-delta.c
 		 */
 		$pos = 0;
-		$baseSize = GitPHP_PackData::ParseVarInt($delta, $pos);
-		$resultSize = GitPHP_PackData::ParseVarInt($delta, $pos);
+		GitPHP_PackData::ParseVarInt($delta, $pos);	// base size
+		GitPHP_PackData::ParseVarInt($delta, $pos);	// result size
 
 		$data = '';
 		$deltalen = strlen($delta);

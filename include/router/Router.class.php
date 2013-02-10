@@ -725,7 +725,7 @@ class GitPHP_Router
 	{
 		if ($value instanceof GitPHP_Project) {
 			return $value->GetProject();
-		} else if (is_string($project)) {
+		} else if (is_string($value)) {
 			return $value;
 		}
 	}

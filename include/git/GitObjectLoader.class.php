@@ -70,20 +70,21 @@ class GitPHP_GitObjectLoader
 		$path = $this->project->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
 		if (file_exists($path)) {
 			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
-			sscanf($header, "%s %d", $typestr, $size);
-			switch ($typestr) {
-				case 'commit':
-					$type = GitPHP_Pack::OBJ_COMMIT;
-					break;
-				case 'tree':
-					$type = GitPHP_Pack::OBJ_TREE;
-					break;
-				case 'blob':
-					$type = GitPHP_Pack::OBJ_BLOB;
-					break;
-				case 'tag':
-					$type = GitPHP_Pack::OBJ_TAG;
-					break;
+			if (preg_match('/^([A-Za-z]+) /', $header, $typestr)) {
+				switch ($typestr[1]) {
+					case 'commit':
+						$type = GitPHP_Pack::OBJ_COMMIT;
+						break;
+					case 'tree':
+						$type = GitPHP_Pack::OBJ_TREE;
+						break;
+					case 'blob':
+						$type = GitPHP_Pack::OBJ_BLOB;
+						break;
+					case 'tag':
+						$type = GitPHP_Pack::OBJ_TAG;
+						break;
+				}
 			}
 			return $data;
 		}
@@ -165,7 +166,7 @@ class GitPHP_GitObjectLoader
 		for ($len = strlen($prefix)+1; $len < 40; $len++) {
 			$prefix = substr($hash, 0, $len);
 
-			foreach ($hashMap as $matchingHash => $val) {
+			foreach (array_keys($hashMap) as $matchingHash) {
 				if (substr_compare($matchingHash, $prefix, 0, $len) !== 0) {
 					unset($hashMap[$matchingHash]);
 				}

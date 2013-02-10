@@ -106,7 +106,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$compat = $this->GetProject()->GetCompat();
+		//$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
 		//if ($compat) {
 			$strategy = new GitPHP_LogLoad_Git($this->exe);

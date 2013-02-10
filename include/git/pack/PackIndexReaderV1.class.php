@@ -80,7 +80,7 @@ class GitPHP_PackIndexReaderV1 implements GitPHP_PackIndexStrategy_Interface
 
 		fseek($index, 4*256 + 24*$low);
 		for ($i = 0; $i < $range; $i++) {
-			$off = GitPHP_Pack::fuint32($index);
+			GitPHP_Pack::fuint32($index);	// offset
 			$binName = fread($index, 20);
 			$name = bin2hex($binName);
 

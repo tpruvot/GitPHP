@@ -25,13 +25,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	private $cacheDir = null;
 
 	/**
-	 * Snapshot cached file path
-	 *
-	 * @var string
-	 */
-	private $cachedFile;
-
-	/**
 	 * Initialize controller
 	 */
 	public function Initialize()
