@@ -513,8 +513,12 @@ class GitPHP_Project
 	{
 		if (!$this->readDescription) {
 
-			if ($this->GetConfig()->HasValue('gitphp.description')) {
-				$this->description = $this->GetConfig()->GetValue('gitphp.description');
+			$config = $this->GetConfig();
+
+			if ($config->HasValue('gitphp.description')) {
+				$this->description = $config->GetValue('gitphp.description');
+			} else if ($config->HasValue('gitweb.description')) {
+				$this->description = $config->GetValue('gitweb.description');
 			} else if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
 
@@ -535,8 +539,8 @@ class GitPHP_Project
 					$remote = $rm->GetRemoteName();
 				}
 
-				if ($this->GetConfig()->HasValue('remote.'.$remote.'.url')) {
-					$this->description = $this->GetConfig()->GetValue('remote.'.$remote.'.url');
+				if ($config->HasValue('remote.'.$remote.'.url')) {
+					$this->description = $config->GetValue('remote.'.$remote.'.url');
 				}
 
 				if (empty($this->description)) {
@@ -547,7 +551,7 @@ class GitPHP_Project
 					$this->description = '-';
 				} else {
 					// save project description if Unnamed
-					$this->GetConfig()->SetValue('gitphp.description',$this->description);
+					$config->SetValue('gitphp.description',$this->description);
 				}
 			}
 			$this->readDescription = true;
