@@ -19,6 +19,17 @@
  */
 abstract class GitPHP_ControllerBase
 {
+	/**
+	 * Config handler instance
+	 *
+	 * @var GitPHP_Config
+	 */
+	protected $config;
+
+	/**
+	 * @var GitPHP_Resource
+	 */
+	protected $resource;
 
 	/**
 	 * tpl
@@ -76,29 +87,94 @@ abstract class GitPHP_ControllerBase
 	protected $preserveWhitespace = false;
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		$this->InitializeConfig();
+
+		$this->InitializeResource();
+	}
+
+	/**
+	 * Initialize config
+	 */
+	protected function InitializeConfig()
+	{
+		$this->config = GitPHP_Config::GetInstance();
+		$this->config->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+	}
+
+	/**
+	 * Initialize resource manager
+	 */
+	protected function InitializeResource()
+	{
+		$locale = null;
+
+		$baseurl = GitPHP_Util::BaseUrl();
+
+		if (!empty($this->params['lang'])) {
+			/*
+			 * User picked something
+			 */
+			setcookie(GitPHP_Resource::LocaleCookie, $this->params['lang'], time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
+			$locale = $this->params['lang'];
+		} else if (!empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
+			/**
+			 * Returning user with a preference
+			 */
+			$locale = $_COOKIE[GITPHP_Resource::LocaleCookie];
+		} else {
+			/*
+			 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
+			 */
+			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+				$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				$locale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				if (!empty($locale)) {
+					setcookie(GitPHP_Resource::LocaleCookie, $locale, time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
+				}
+			}
+		}
+
+		if (empty($locale) && $this->config) {
+			/*
+			 * No preference, fall back on setting
+			 */
+			$locale = $this->config->GetValue('locale');
+		}
+
+		if (!empty($locale) && ($locale != 'en_US')) {
+			try {
+				$this->resource = new GitPHP_Resource($locale);
+			} catch (Exception $e) {
+			}
+		}
+	}
+
+	/**
 	 * @access public
 	 * @return mixed controller object
 	 * @throws Exception on invalid project
 	 */
 	public function __construct()
 	{
+		$this->Initialize();
+
 		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
 		$this->tpl->merge_compiled_includes = true;
 		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
-		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
+		if ($this->config->GetValue('cache', false)) {
 			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
-			if (GitPHP_Config::GetInstance()->HasKey('cachelifetime')) {
-				$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
+			if ($this->config->HasKey('cachelifetime')) {
+				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
 			}
 
-			$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
+			$servers = $this->config->GetValue('memcache', null);
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
 				$this->tpl->caching_type = 'memcache';
 			}
@@ -127,6 +203,16 @@ abstract class GitPHP_ControllerBase
 			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
+	}
+
+	/**
+	 * Get config instance
+	 *
+	 * @return GitPHP_Config
+	 */
+	public function GetConfig()
+	{
+		return $this->config;
 	}
 
 	/**
@@ -291,31 +377,57 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->assign('version', $gitphp_version);
 
-		$stylesheet = GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
+		$stylesheet = $this->config->GetValue('stylesheet', 'gitphpskin.css');
 		if ($stylesheet == 'gitphp.css') {
 			// backwards compatibility
 			$stylesheet = 'gitphpskin.css';
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
-		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
-		$this->tpl->assign('googlejs', GitPHP_Config::GetInstance()->GetValue('googlejs', false));
-		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', __('projects')));
+		$this->tpl->assign('javascript', $this->config->GetValue('javascript', true));
+		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs', false));
+		$this->tpl->assign('pagetitle', $this->config->GetValue('title', $gitphp_appstring));
+		$this->tpl->assign('homelink', $this->config->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->GetProject());
-		if (GitPHP_Config::GetInstance()->GetValue('search', true))
+		if ($this->config->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
-		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
+		if ($this->config->GetValue('filesearch', true))
 			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
-		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
-		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
+
+		if ($this->resource) {
+			$this->tpl->assign('currentlocale', $this->resource->GetLocale());
+			$this->tpl->assign('resource', $this->resource);
+		} else {
+			$this->tpl->assign('currentlocale', 'en_US');
+		}
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales(true));
+
+		$scripturl = $_SERVER['SCRIPT_NAME'];
+
+		if ($this->config->HasKey('self')) {
+			$selfurl = $this->config->GetValue('self');
+			if (!empty($selfurl)) {
+				if (substr($selfurl, -4) != '.php') {
+					$selfurl = GitPHP_Util::AddSlash($selfurl);
+				}
+			}
+		}
+		$this->tpl->assign('scripturl', $scripturl);
+
+		$this->tpl->assign('baseurl', GitPHP_Util::BaseUrl());
+
+		$requesturl = $_SERVER['REQUEST_URI'];
+		$querypos = strpos($requesturl, '?');
+		if ($querypos !== false)
+			$requesturl = substr($requesturl, 0, $querypos);
+		$this->tpl->assign('requesturl', $requesturl);
 
 		$getvars = array();
 		if (isset($_SERVER['QUERY_STRING'])) {
@@ -365,7 +477,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
-		if ((GitPHP_Config::GetInstance()->GetValue('cache', false) == true) && (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === true))
+		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {

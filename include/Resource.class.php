@@ -1,35 +1,37 @@
 <?php
-/**
- * GitPHP Resource
- *
- * Resource factory
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- */
 
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
 /**
- * Constant of the locale cookie in the user's browser
+ * Constant of the locale cookie in the user's browser (deprecated, use class const)
  */
-define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
+defined('GITPHP_LOCALE_COOKIE') || define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
 
 /**
  * Locale cookie lifetime
  */
-define('GITPHP_LOCALE_COOKIE_LIFETIME', 60*60*24*365);		// 1 year
+defined('GITPHP_LOCALE_COOKIE_LIFETIME') || define('GITPHP_LOCALE_COOKIE_LIFETIME', 60*60*24*365); // 1 year
 
 /**
  * Resource factory class
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
 class GitPHP_Resource
 {
-	
+	/**
+	 * Constant of the locale cookie in the user's browser
+	 */
+	const LocaleCookie = 'GitPHPLocale';
+
+	/**
+	 * Locale cookie lifetime
+	 */
+	const LocaleCookieLifetime = GITPHP_LOCALE_COOKIE_LIFETIME; // 1 year
+
 	/**
 	 * instance
 	 *

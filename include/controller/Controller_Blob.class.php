@@ -193,8 +193,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			return;
 		}
 
-		$this->tpl->assign('extrascripts', 'blob');
-
 		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
 			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
 			if (class_exists('GeSHi')) {
