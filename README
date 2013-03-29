@@ -1,12 +1,20 @@
 About this fork :
 =================
 
-This fork was based on GitPHP v0.2.3 from http://gitphp.org/
-It implements all the features of xiphux 0.2.7
+This fork was first based on GitPHP v0.2.3 from http://gitphp.org/
+It implements all the features of xiphux 0.2.7 and some more fixes from the master branch.
+
+This Variant is made to be compatible with Google 'repo' architecture which is a SCM
+layer, based on xml manifest(s), used to manage and sync a lot of git projects.
+
+Due to a massive code rewrite in 0.2.8, i stopped trying to merge xiphux work, which is now very hard to do.
+The only way to include all my features in current xiphux variant is to rewrite them from start...
+
+So for the moment, i will only do backports based on the 0.2.7 architecture, named 0.2.7.y
 
 The original skin can be seen here : http://source.gitphp.org/
 
-A new one (blueskin) can be seen here : http://epsy.ath.cx/ics/
+Another one (blueskin) can be seen here : http://pruvot.tk/gitphp/
 
 
 Changes made by Tanguy Pruvot (2011/2012) :
@@ -20,7 +28,7 @@ New abilities :
 Enhancements :
 + use origin git clone url as description
 + use git user.name as default owner
-+ repo remote branches support (and badges)
++ remote branches support (and badges)
 + fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
   made with a new config variable "fixupjs" where we can add a jQuery script
 + Show file line changes +/- in Commit view
@@ -41,6 +49,8 @@ TODO :
   .repo folder contains all the subprojects .git folders, i only use the .repo folder in versions <= v0.2.7
 
 - Enhance the log history to identify "merged commits" from merged branches
+
+- Implement Graphs and Calendar views
 
 - Another kind of skin for tablets
 
