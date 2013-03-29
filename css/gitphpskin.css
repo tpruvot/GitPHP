@@ -675,6 +675,17 @@ span.searchmatch {
 	color: #e00000;
 }
 
+
+/*
+ * Tooltips
+ */
+.ui-tooltip-gitphp {
+	font-size: inherit !important;
+	line-height: inherit !important;
+	border-width: 2px !important;
+	max-width: 500px !important;
+}
+
 /* for transparent images */
 div.diff_pict {
 	background-color: #DDD;
