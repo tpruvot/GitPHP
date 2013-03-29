@@ -36,7 +36,7 @@ define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
 					}
 				},
 				style: {
-					classes: 'ui-tooltip-gitphp ui-tooltip-light ui-tooltip-shadow'
+					classes: 'ui-tooltip-gitphp qtip-light qtip-shadow'
 				},
 				position: {
 					adjust: {

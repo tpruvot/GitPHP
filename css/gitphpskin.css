@@ -680,8 +680,9 @@ span.searchmatch {
  * Tooltips
  */
 .ui-tooltip-gitphp {
-	font-size: inherit !important;
+/*	font-size: inherit !important;
 	line-height: inherit !important;
+*/
 	border-width: 2px !important;
 	max-width: 500px !important;
 }
