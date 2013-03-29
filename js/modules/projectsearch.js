@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery"],
-	function($) {
+define(["jquery", 'modules/resources'],
+	function($, resources) {
 
 		var table = null;
 		var searchPanel = null;
@@ -84,7 +84,7 @@ define(["jquery"],
 					msgContainer.appendTo(table);
 				}
 
-				var msg = GitPHP.Resources.NoMatchesFound.replace(new RegExp('%1'), searchString);
+				var msg = resources.NoMatchesFound.replace(new RegExp('%1'), searchString);
 				msgContainer.text(msg);
 
 				msgContainer.show();

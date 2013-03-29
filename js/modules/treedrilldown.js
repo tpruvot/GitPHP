@@ -9,16 +9,14 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl"],
-	function($, getUrl) {
+define(["jquery", "modules/geturl", 'modules/resources'],
+	function($, url, resources) {
 
 		var collapsed = '[+]';
 		var expanded = '[–]';
 		var indent = '—';
 
 		var treeTable = null;
-
-		var url = null;
 
 		function expanderLink(href, text) {
 			var a = $(document.createElement('a'));
@@ -65,13 +63,13 @@ define(["jquery", "modules/geturl"],
 
 			var img = $(document.createElement('img'));
 			img.attr('src', url + "images/tree-loader.gif");
-			img.attr('alt', GitPHP.Resources.Loading);
+			img.attr('alt', resources.Loading);
 			img.addClass('treeSpinner');
 			parentRow.find('a.treeLink').after(img);
 
 			$.get(href, { o: 'js' },
 			function(data) {
-				var subRows = $(data);
+				var subRows = $($.parseHTML(data));
 
 				subRows.addClass(treeHash);
 
@@ -111,7 +109,10 @@ define(["jquery", "modules/geturl"],
 		var expanderClick = function() {
 			var jThis = $(this);
 
-			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
+			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{4,40}|HEAD)/);
+			if (!treeHash) {
+				treeHash = jThis.attr('href').match(/\/trees\/([0-9a-fA-F]{4,40})/);
+			}
 			if (!treeHash) {
 				return false;
 			}
@@ -133,9 +134,8 @@ define(["jquery", "modules/geturl"],
 
 		var init = function(treeTableElem) {
 			treeTable = treeTableElem;
-			url = getUrl();
 			createExpanders();
-			treeTable.find('a.jsTree').live('click', expanderClick);
+			treeTable.on("click", "a.jsTree", expanderClick);
 		};
 
 		return {

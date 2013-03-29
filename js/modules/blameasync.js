@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl", "modules/tooltip.commit"],
-	function($, getUrl, tooltipCommit) {
+define(["jquery", "modules/geturl", "modules/tooltip.commit", 'modules/resources'],
+	function($, url, tooltipCommit, resources) {
 
 		var blobTable = null;
 		var blameLink = null;
@@ -22,15 +22,15 @@ define(["jquery", "modules/geturl", "modules/tooltip.commit"],
 			col.css('display', 'none');
 
 			var p = $(document.createElement('p'));
-			p.text(GitPHP.Resources.LoadingBlameData);
+			p.text(resources.LoadingBlameData);
 			p.appendTo(col);
 
 			var div = $(document.createElement('div'));
 			div.css('text-align', 'center');
 
 			var img = $(document.createElement('img'));
-			img.attr('src', getUrl() + 'images/blame-loader.gif');
-			img.attr('alt', GitPHP.Resources.Loading);
+			img.attr('src', url + 'images/blame-loader.gif');
+			img.attr('alt', resources.Loading);
 			img.appendTo(div);
 
 			div.appendTo(col);

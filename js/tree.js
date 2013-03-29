@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/treedrilldown", "common"], function($, treeDrill) {
+define(["jquery", "modules/treedrilldown"], function($, treeDrill) {
 	jQuery(function($) {
 		treeDrill.init($('table.treeTable'));
 	});

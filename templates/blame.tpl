@@ -17,7 +17,7 @@
 
 {block name=javascriptpaths}
 {if file_exists('js/blob.min.js')}
-GitPHPJSPaths.projectlist = "blob.min";
+GitPHPJSPaths.blob = "blob.min";
 {/if}
 {/block}
 {block name=javascriptmodules}

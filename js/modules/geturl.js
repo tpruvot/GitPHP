@@ -9,11 +9,8 @@
  * @subpackage Javascript
  */
 
-define(
-	function() {
-		return function() {
-			var url = window.location.href.match(/^([^\?]+\/)/);
-			return url ? url[1] : null;
-		}
+define(['module'],
+	function(module) {
+		return module.config().baseurl;
 	}
 );

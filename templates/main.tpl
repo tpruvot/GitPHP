@@ -10,7 +10,7 @@
  *}
 <!DOCTYPE html>
 <html>
-  <!-- gitphp web interface {$version}, (C) 2006-2012 Christopher Han <xiphux@gmail.com> -->
+  <!-- gitphp web interface {$version}, (C) 2006-2013 Christopher Han <xiphux@gmail.com>, Tanguy Pruvot <tpruvot@gihub> -->
   <head>
     <title>
     {block name=title}
@@ -39,39 +39,64 @@
     </style>
     {/if}
     {if $javascript}
-    <script src="js/ext/require.min.js"></script>
-    {include file='jsconst.tpl'}
     <script type="text/javascript">
-	var GitPHPJSPaths = {ldelim}
-	{if $googlejs}
-	jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min'
-	{else}
-	jquery: 'ext/jquery.min'
-	{/if}
-{rdelim};
+	var GitPHPJSPaths = {
+		jquery: [
+		{if $googlejs}
+		'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
+		{/if}
+		'ext/jquery.min'
+		],
+		qtip: 'ext/jquery.qtip'
+	};
+
 	{block name=javascriptpaths}
-	{if file_exists('js/common.min.js')}
-	GitPHPJSPaths.common = "common.min";
-	{/if}
-	{if $extrascripts}
-	 {if file_exists("js/$extrascripts.min.js")}
-		{$extrascripts}: "{$extrascripts}.min",
-	 {/if}
-	{/if}
 	{/block}
+
+	var reqcfg = {
+		baseUrl: '{$baseurl}/js',
+		paths: GitPHPJSPaths,
+		config: {
+			'modules/snapshotformats': {
+				formats: {
+					{foreach from=$snapshotformats key=format item=extension name=formats}
+					"{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
+					{/foreach}
+				}
+			},
+			{if $project}
+			'modules/getproject': {
+				project: '{$project->GetProject()}'
+			},
+			{/if}
+			'modules/geturl': {
+				baseurl: '{$baseurl}/'
+			},
+			'modules/resources': {
+				resources: {
+					Loading: "{t escape='js'}Loading…{/t}",
+					LoadingBlameData: "{t escape='js'}Loading blame data…{/t}",
+					Snapshot: "{t escape='js'}snapshot{/t}",
+					NoMatchesFound: '{t escape=no}No matches found for "%1"{/t}'
+				}
+			}
+		}
+	};
+
+	{if file_exists('js/common.min.js')}
+	reqcfg.paths.common = "common.min";
+	{/if}
+	reqcfg.deps = ['common'];
+
 	var GitPHPJSModules = null;
 	{block name=javascriptmodules}
-	GitPHPJSModules = ['common'];
-	{if $extrascripts}
-	'{$extrascripts}'
-	{/if}
 	{/block}
-	require({ldelim}
-	  baseUrl: 'js',
-	  paths: GitPHPJSPaths,
-	  priority: ['jquery']
-	  {rdelim}, GitPHPJSModules
-	);
+
+    </script>
+    <script type="text/javascript" src="{$baseurl}/js/ext/require.js"></script>
+    <script type="text/javascript">
+	reqcfg.deps = reqcfg.deps.concat(GitPHPJSModules);
+	require.config(reqcfg);
     </script>
     {block name=javascript}
     {/block}
@@ -84,7 +109,7 @@
       </a>
       {if $supportedlocales}
       <div class="lang_select">
-        <form action="{$SCRIPT_NAME}" method="get" id="frmLangSelect">
+        <form action="{$requesturl}" method="get" id="frmLangSelect">
          <div>
 	{foreach from=$requestvars key=var item=val}
 	{if $var != "l"}

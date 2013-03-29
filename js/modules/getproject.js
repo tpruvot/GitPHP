@@ -9,11 +9,8 @@
  * @subpackage Javascript
  */
 
-define(
-	function() {
-		return function() {
-			var project = window.location.href.match(/p=([^&]+)/);
-			return project ? decodeURIComponent(project[1]) : null;
-		}
+define(['module'],
+	function(module) {
+		return module.config().project || null;
 	}
 );

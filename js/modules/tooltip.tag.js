@@ -9,23 +9,23 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"],
-	function($, getUrl, getProject) {
-
-		var url = null;
-		var project = null;
+define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
+	function($, url, project, resources) {
 
 		function getTagName(element) {
 			var tag = element.attr('href').match(/h=([^&]+)/);
+			if (!tag) {
+				tag = element.attr('href').match(/\/tags\/([^\/\?]+)/);
+			}
 			return tag ? tag[1] : null;
 		}
 
 		function buildTipConfig(tag) {
 			return {
 				content: {
-					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GitPHP.Resources.Loading + '" />',
+					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + resources.Loading + '" />',
 					ajax: {
-						url: 'index.php',
+						url: url,
 						data: {
 							p: project,
 							a: 'tag',
@@ -36,27 +36,28 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 					}
 				},
 				style: {
-					classes: 'ui-tooltip-light ui-tooltip-shadow'
+					classes: 'ui-tooltip-gitphp ui-tooltip-light ui-tooltip-shadow'
 				},
 				position: {
 					adjust: {
 						screen: true
-					}
+					},
+					viewport: $(window)
 				}
 			}
 		}
 
 		return function(elements) {
-			url = getUrl();
-			project = getProject();
-			elements.each(function(){
-				var jThis = $(this);
-				var tag = getTagName(jThis);
-				if (!tag) {
-					return;
-				}
-				var config = buildTipConfig(tag);
-				jThis.qtip(config);
+			require(['qtip'], function() {
+				elements.each(function(){
+					var jThis = $(this);
+					var tag = getTagName(jThis);
+					if (!tag) {
+						return;
+					}
+					var config = buildTipConfig(tag);
+					jThis.qtip(config);
+				});
 			});
 		}
 	}

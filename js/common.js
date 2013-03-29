@@ -10,13 +10,12 @@
  */
 
 define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
-	function($, getProject, lang, tooltipSnapshot) {
-		$(function() {
-			lang($('div.lang_select'));
-			tooltipSnapshot($('a.snapshotTip'));
-		});
+	function($, project, lang, tooltipSnapshot) {
 
-		if (getProject()) {
+		lang($('div.lang_select'));
+		tooltipSnapshot($('a.snapshotTip'));
+
+		if (project) {
 
 			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag", "modules/hilight.parents"],
 				function($, tooltipCommit, tooltipTag, highlightParents) {

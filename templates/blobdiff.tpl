@@ -10,7 +10,7 @@
 {if $sidebyside}
 {block name=javascriptpaths}
 {if file_exists('js/blobdiff.min.js')}
-	GitPHPJSPaths.commitdiff = "blobdiff.min";
+	GitPHPJSPaths.blobdiff = "blobdiff.min";
 {/if}
 {/block}
 {block name=javascriptmodules}

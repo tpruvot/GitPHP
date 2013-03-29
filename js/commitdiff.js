@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/sidebyside.tools", "common"],
+define(["jquery", "modules/sidebyside.tools"],
 function($, sbsTools) {
 	jQuery(function(){
 		var toc = $('div.commitDiffSBS div.SBSTOC');
