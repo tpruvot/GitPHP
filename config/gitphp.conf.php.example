@@ -69,7 +69,7 @@
  */
 $gitphp_conf['fixupjs'] = <<<EOT
 
-    if (!(jQuery.browser.mozilla))
+    if (!(jQuery.browser.mozilla)) /* deprecated in jQuery 1.9 */
     jQuery('pre.de1 span').each( function() {
         var el = jQuery(this);
         if (el.css('font-weight') != 'normal') {
