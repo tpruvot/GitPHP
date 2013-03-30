@@ -1,58 +1,26 @@
 <?php
 /**
- * GitPHP Config
- *
  * Configfile reader class
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
-
-/**
- * Config class
- *
- * @package GitPHP
- */
 class GitPHP_Config
 {
 	
 	/**
-	 * instance
-	 *
 	 * Stores the singleton instance
-	 *
-	 * @access protected
-	 * @static
 	 */
 	protected static $instance;
 
 	/**
-	 * values
-	 *
 	 * Stores the config values
-	 *
-	 * @access protected
 	 */
 	protected $values = array();
 
 	/**
-	 * configs
-	 *
-	 * Stores the config files
-	 *
-	 * @access protected
-	 */
-	protected $configs = array();
-
-	/**
-	 * GetInstance
-	 *
 	 * Returns the singleton instance
-	 *
-	 * @access public
-	 * @static
-	 * @return mixed instance of config class
 	 */
 	public static function GetInstance()
 	{
@@ -63,12 +31,7 @@ class GitPHP_Config
 	}
 
 	/**
-	 * DestroyInstance
-	 *
 	 * Releases the singleton instance
-	 *
-	 * @access public
-	 * @static
 	 */
 	public static function DestroyInstance()
 	{
@@ -76,24 +39,15 @@ class GitPHP_Config
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Class constructor
-	 *
-	 * @access private
 	 */
 	private function __construct()
 	{
+		$this->InitializeDefaults();
 	}
 
 	/**
-	 * LoadConfig
-	 *
 	 * Loads a config file
-	 *
-	 * @access public
-	 * @param string $configFile config file to load
-	 * @throws Exception on failure
 	 */
 	public function LoadConfig($configFile)
 	{
@@ -101,7 +55,7 @@ class GitPHP_Config
 		// making use of these variables in their title
 		global $gitphp_version, $gitphp_appstring;
 
-		if (!is_file($configFile)) {
+		if (!is_readable($configFile)) {
 			throw new GitPHP_MessageException('Could not load config file ' . $configFile, true, 500);
 		}
 
@@ -111,8 +65,6 @@ class GitPHP_Config
 
 		if (isset($gitphp_conf) && is_array($gitphp_conf))
 			$this->values = array_merge($this->values, $gitphp_conf);
-
-		$this->configs[] = $configFile;
 	}
 
 	/**
@@ -125,7 +77,7 @@ class GitPHP_Config
 	public function ClearConfig()
 	{
 		$this->values = array();
-		$this->configs = array();
+		$this->InitializeDefaults();
 	}
 
 	/**
@@ -182,6 +134,41 @@ class GitPHP_Config
 			return false;
 		}
 		return isset($this->values[$key]);
+	}
+
+	/**
+	 * Initializes default config values
+	 */
+	private function InitializeDefaults()
+	{
+		$this->values['objectmemory'] = 0;
+		$this->values['objectcache'] = false;
+		$this->values['objectcachelifetime'] = 86400;
+		$this->values['cache'] = false;
+		$this->values['debug'] = false;
+		$this->values['benchmark'] = false;
+		$this->values['stylesheet'] = 'gitphpskin.css';
+		$this->values['javascript'] = true;
+		$this->values['googlejs'] = false;
+		$this->values['search'] = true;
+		$this->values['filesearch'] = true;
+		$this->values['cacheexpire'] = true;
+		$this->values['largeskip'] = 200;
+		$this->values['filemimetype'] = true;
+		$this->values['geshi'] = true;
+		$this->values['exportedonly'] = false;
+		$this->values['compressformat'] = GITPHP_COMPRESS_ZIP;
+		$this->values['locale'] = 'en_US';
+		$this->values['graphs'] = false;
+		$this->values['objectcachecompress'] = 500;
+
+		// gitphp-repo additions
+		$this->values['bareonly'] = true;
+		$this->values['reposupport'] = false;
+		$this->values['subfolder_levels'] = 1;
+		$this->values['showremotes'] = false;
+		$this->values['projectlist_show_owner'] = true;
+		$this->values['projectlist_order'] = 'project';
 	}
 
 }
