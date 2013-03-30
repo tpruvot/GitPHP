@@ -451,6 +451,15 @@ abstract class GitPHP_ControllerBase
 			$requesturl = substr($requesturl, 0, $querypos);
 		$this->tpl->assign('requesturl', $requesturl);
 
+		if ($this->router) {
+			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
+			$this->router->SetAbbreviate($this->config->GetValue('abbreviateurl') ? true : false);
+			if ($this->config->GetValue('self')) {
+				$this->router->SetBaseUrl($this->config->GetValue('self'));
+			}
+			$this->tpl->assign('router', $this->router);
+		}
+
 		$getvars = array();
 		if (isset($_SERVER['QUERY_STRING'])) {
 			$getvars = explode('&', $_SERVER['QUERY_STRING']);

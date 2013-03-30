@@ -171,13 +171,23 @@ class GitPHP_Util
 	/**
 	 * Get the base install url (without index)
 	 *
+	 * @param boolean $full true to return full url (include protocol and hostname)
 	 * @return string base url
 	 */
-	public static function BaseUrl()
+	public static function BaseUrl($full = false)
 	{
 		$baseurl = $_SERVER['SCRIPT_NAME'];
-		if (substr_compare($baseurl, '.php', -4) === 0)
+		if (substr_compare($baseurl, 'index.php', -9) === 0)
 			$baseurl = dirname($baseurl);
+		if ($full) {
+			$baseurl = $_SERVER['HTTP_HOST'] . $baseurl;
+			if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
+				$baseurl = 'https://' . $baseurl;
+			else
+				$baseurl = 'http://' . $baseurl;
+		}
+		if (GitPHP_Util::IsWindows())
+			$baseurl = rtrim($baseurl, "\\");
 		return rtrim($baseurl, "/");
 	}
 }
