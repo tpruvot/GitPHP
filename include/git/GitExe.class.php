@@ -112,17 +112,15 @@ class GitPHP_GitExe
 	}
 
 	/**
-	 * __construct
-	 *
 	 * Constructor
 	 *
-	 * @access protected
 	 * @param string $binary path to git binary
-	 * @return mixed git executable class
 	 */
-	protected function __construct()
+	public function __construct($binary = '')
 	{
-		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
+		if (empty($binary))
+			$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
+
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();
 		}

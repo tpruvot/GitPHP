@@ -77,6 +77,13 @@ abstract class GitPHP_ControllerBase
 	protected $preserveWhitespace = false;
 
 	/**
+	 * Git executable instance
+	 *
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Url router instance
 	 *
 	 * @var GitPHP_Router
@@ -91,6 +98,8 @@ abstract class GitPHP_ControllerBase
 		$this->InitializeConfig();
 
 		$this->InitializeResource();
+
+		$this->InitializeGitExe();
 
 		$this->InitializeProjectList();
 
@@ -169,6 +178,20 @@ abstract class GitPHP_ControllerBase
 			}
 		}
 	}
+
+	/**
+	 * Initialize executable
+	 *
+	 * @param boolean $validate whether the exe should be validated
+	 */
+	protected function InitializeGitExe($validate = true)
+	{
+		$this->exe = new GitPHP_GitExe($this->config->GetValue('gitbin'));
+		if ($validate && !$this->exe->Valid()) {
+			throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $this->exe->GetBinary(), 'gitbin'), true, 500);
+		}
+	}
+
 
 	/**
 	 * Initialize project list
