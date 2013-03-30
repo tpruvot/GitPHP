@@ -1,18 +1,8 @@
 <?php
 /**
- * GitPHP Controller Remote Heads
- *
  * Controller for displaying heads
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * Heads controller class
- *
+ * @author Tanguy Pruvot <tpruvot@github>
  * @package GitPHP
  * @subpackage Controller
  */
@@ -56,8 +46,8 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('remotes');
+		if ($local && $this->resource) {
+			return $this->resource->translate('remotes');
 		}
 		return 'remotes';
 	}

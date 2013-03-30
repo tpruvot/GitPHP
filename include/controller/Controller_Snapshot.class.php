@@ -29,16 +29,14 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	private $archive = null;
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
-		if (isset($_GET['p'])) {
+		$this->InitializeConfig();
+		$this->InitializeProjectList();
+
+		if (isset($this->params['project'])) {
 			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$project) {
 				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
@@ -91,8 +89,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('snapshot');
+		if ($local && $this->resource) {
+			return $this->resource->translate('snapshot');
 		}
 		return 'snapshot';
 	}

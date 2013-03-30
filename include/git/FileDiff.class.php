@@ -477,8 +477,6 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetFromFileType
-	 *
 	 * Gets the from file type
 	 *
 	 * @return int from file type
@@ -492,8 +490,6 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * GetToFileType
-	 *
 	 * Gets the to file type
 	 *
 	 * @return int to file type

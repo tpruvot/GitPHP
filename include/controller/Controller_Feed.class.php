@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Feed
- *
  * Controller for displaying a project's feed
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -10,37 +8,25 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Constant for the number of items to load into the feed
- */
-define('GITPHP_FEED_ITEMS', 150);
-
-/**
- * Constants for the different feed formats
- */
-define('GITPHP_FEED_FORMAT_RSS', 'rss');
-define('GITPHP_FEED_FORMAT_ATOM', 'atom');
-
-/**
- * Feed controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 {
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
+	 * Constant for the number of items to load into the feed
 	 */
-	public function __construct()
+	const FEED_ITEMS = 150;
+
+	/**
+	 * Constants for the different feed formats
+	 */
+	const FEED_FORMAT_RSS = 'rss';
+	const FEED_FORMAT_ATOM = 'atom';
+
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
 	{
-		parent::__construct();
+		parent::Initialize();
 		$this->preserveWhitespace = true;
 	}
 
@@ -54,9 +40,9 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS)
+		if ($this->params['format'] == self::FEED_FORMAT_RSS)
 			return 'rss.tpl';
-		else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM)
+		else if ($this->params['format'] == self::FEED_FORMAT_ATOM)
 			return 'atom.tpl';
 	}
 
@@ -84,14 +70,14 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
-			if ($local)
-				return __('rss');
+		if ($this->params['format'] == self::FEED_FORMAT_RSS) {
+			if ($local && $this->resource)
+				return $this->resource->translate('rss');
 			else
 				return 'rss';
-		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
-			if ($local)
-				return __('atom');
+		} else if ($this->params['format'] == self::FEED_FORMAT_ATOM) {
+			if ($local && $this->resource)
+				return $this->resource->translate('atom');
 			else
 				return 'atom';
 		}
@@ -122,9 +108,9 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 			throw new Exception('A feed format is required');
 		}
 
-		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
+		if ($this->params['format'] == self::FEED_FORMAT_RSS) {
 			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
-		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
+		} else if ($this->params['format'] == self::FEED_FORMAT_ATOM) {
 			$this->headers[] = "Content-type: application/atom+xml; charset=UTF-8";
 		}
 	}
@@ -138,7 +124,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->GetProject()->GetLog('HEAD', GITPHP_FEED_ITEMS);
+		$log = $this->GetProject()->GetLog('HEAD', self::FEED_ITEMS);
 
 		$entries = count($log);
 

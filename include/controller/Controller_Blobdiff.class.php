@@ -22,7 +22,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return 'blobdiffplain.tpl';
 		}
 		return 'blobdiff.tpl';
@@ -52,8 +52,8 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('blobdiff');
+		if ($local && $this->resource) {
+			return $this->resource->translate('blobdiff');
 		}
 		return 'blobdiff';
 	}

@@ -20,17 +20,14 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 {
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		$this->multiProject = true;
-		parent::__construct();
+		parent::Initialize();
+		if (empty($this->params['sort']))
+			$this->params['sort'] = 'project';
 	}
 
 	/**
@@ -81,18 +78,18 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	public function GetName($local = false)
 	{
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
-			if ($local) {
-				return __('opml');
+			if ($local && $this->resource) {
+				return $this->resource->translate('opml');
 			}
 			return 'opml';
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
-			if ($local) {
-				return __('project index');
+			if ($local && $this->resource) {
+				return $this->resource->translate('project index');
 			}
 			return 'project index';
 		}
-		if ($local) {
-			return __('projects');
+		if ($local && $this->resource) {
+			return $this->resource->translate('projects');
 		}
 		return 'projects';
 	}

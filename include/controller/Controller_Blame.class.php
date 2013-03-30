@@ -59,8 +59,8 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('blame');
+		if ($local && $this->resource) {
+			return $this->resource->translate('blame');
 		}
 		return 'blame';
 	}

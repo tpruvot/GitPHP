@@ -92,12 +92,18 @@ function smarty_block_t($params, $text, &$smarty, &$repeat)
 				unset($params['count']);
 			}
 		}
+
+		$resource = $smarty->getTemplateVars('resource');
 		
 		// use plural if required parameters are set
 		if (isset($count) && isset($plural)) {
-			$text = __n($text, $plural, $count);
+			if ($resource)
+				$text = $resource->ngettext($text, $plural, $count);
+			else
+				$text = $count == 1 ? $text : $plural;
 		} else { // use normal
-			$text = __($text);
+			if ($resource)
+				$text = $resource->translate($text);
 		}
 
 		// run strarg if there are parameters

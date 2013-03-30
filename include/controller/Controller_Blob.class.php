@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Blob
- *
  * Controller for displaying a blob
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,27 +7,28 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Blob controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 {
 
 	/**
-	 * GetTemplate
-	 *
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hashbase']))
+			$this->params['hashbase'] = 'HEAD';
+	}
+
+	/**
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && $this->params['plain'])
+		if ($this->Plain())
 			return 'blobplain.tpl';
 		return 'blob.tpl';
 	}
@@ -58,8 +57,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('blob');
+		if ($local && $this->resource) {
+			return $this->resource->translate('blob');
 		}
 		return 'blob';
 	}
@@ -222,4 +221,16 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('bloblines', $blob->GetData(true));
 	}
 
+	/**
+	 * Tests whether we are outputting a plaintext blob
+	 *
+	 * @return boolean true if plaintext blob
+	 */
+	public function Plain()
+	{
+		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
+			return true;
+
+		return false;
+	}
 }

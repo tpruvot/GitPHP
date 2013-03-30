@@ -20,6 +20,20 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
+
+	/**
 	 * GetTemplate
 	 *
 	 * Gets the template for this controller
@@ -60,13 +74,13 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	public function GetName($local = false)
 	{
 		if (isset($this->params['short']) && ($this->params['short'] === true)) {
-			if ($local) {
-				return __('shortlog');
+			if ($local && $this->resource) {
+				return $this->resource->translate('shortlog');
 			}
 			return 'shortlog';
 		}
-		if ($local) {
-			return __('log');
+		if ($local && $this->resource) {
+			return $this->resource->translate('log');
 		}
 		return 'log';
 	}

@@ -63,8 +63,8 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('commitdiff');
+		if ($local && $this->resource) {
+			return $this->resource->translate('commitdiff');
 		}
 		return 'commitdiff';
 	}

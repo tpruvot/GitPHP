@@ -19,19 +19,17 @@
 class GitPHP_Controller_Message extends GitPHP_ControllerBase
 {
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 *
-	 * @access public
-	 * @return controller
+	 * Initialize controller
 	 */
-	public function __construct()
+	public function Initialize()
 	{
 		try {
-			parent::__construct();
+			parent::Initialize();
 		} catch (Exception $e) {
 		}
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
 	}
 
 	/**

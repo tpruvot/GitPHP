@@ -1,27 +1,12 @@
 <?php
-/**
- * GitPHP Controller DiffBase
- *
- * Base controller for diff-type views
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2011 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-
-/**
- * Constants for diff modes
- */
-defined('GITPHP_DIFF_UNIFIED') ||    define('GITPHP_DIFF_UNIFIED', 1);
-defined('GITPHP_DIFF_SIDEBYSIDE') || define('GITPHP_DIFF_SIDEBYSIDE', 2);
 
 defined('GITPHP_DIFF_MODE_COOKIE_LIFETIME') || define('GITPHP_DIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);
 
 /**
- * DiffBase controller class
+ * Base controller for diff-type views
  *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
  * @subpackage Controller
  */
@@ -40,6 +25,12 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	const DiffModeCookieLifetime = GITPHP_DIFF_MODE_COOKIE_LIFETIME; // 1 year
 
 	/**
+	 * Constants for diff modes
+	 */
+	const DIFF_UNIFIED = 1;
+	const DIFF_SIDEBYSIDE = 2;
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters
@@ -50,7 +41,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
 
-			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == GITPHP_DIFF_SIDEBYSIDE) {
+			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
 				$this->params['sidebyside'] = true;
 			}
 
@@ -67,7 +58,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	 */
 	protected function DiffMode($overrideMode = '')
 	{
-		$mode = GITPHP_DIFF_UNIFIED;	// default
+		$mode = self::DIFF_UNIFIED;	// default
 
 		$baseurl = GitPHP_Util::BaseUrl();
 
@@ -88,11 +79,11 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 			 * User is choosing a new mode
 			 */
 			if ($overrideMode == 'sidebyside') {
-				$mode = GITPHP_DIFF_SIDEBYSIDE;
-				setcookie(self::DiffModeCookie, GITPHP_DIFF_SIDEBYSIDE, time()+self::DiffModeCookieLifetime, $baseurl);
+				$mode = self::DIFF_SIDEBYSIDE;
+				setcookie(self::DiffModeCookie, self::DIFF_SIDEBYSIDE, time()+self::DiffModeCookieLifetime, $baseurl);
 			} else if ($overrideMode == 'unified') {
-				$mode = GITPHP_DIFF_UNIFIED;
-				setcookie(self::DiffModeCookie, GITPHP_DIFF_UNIFIED, time()+self::DiffModeCookieLifetime, $baseurl);
+				$mode = self::DIFF_UNIFIED;
+				setcookie(self::DiffModeCookie, self::DIFF_UNIFIED, time()+self::DiffModeCookieLifetime, $baseurl);
 			}
 		}
 
@@ -100,18 +91,29 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			GitPHP_Log::GetInstance()->SetEnabled(false);
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
+		} else {
+			parent::LoadHeaders();
 		}
+	}
+
+	/**
+	 * Tests if this is a plaintext diff
+	 *
+	 * @return boolean true if plaintext
+	 */
+	protected function Plain()
+	{
+		if (isset($this->params['output']) && ($this->params['output'] == 'plain'))
+			return true;
+
+		return false;
 	}
 
 }

@@ -1,21 +1,11 @@
 <?php
 /**
- * GitPHP ControllerBase
- *
  * Base class that all controllers extend
  *
  * @author Christopher Han <xiphux@gmail.com
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Controller
- */
-
-/**
- * ControllerBase class
- *
- * @package GitPHP
- * @subpackage Controller
- * @abstract
  */
 abstract class GitPHP_ControllerBase
 {
@@ -87,6 +77,13 @@ abstract class GitPHP_ControllerBase
 	protected $preserveWhitespace = false;
 
 	/**
+	 * Url router instance
+	 *
+	 * @var GitPHP_Router
+	 */
+	protected $router;
+
+	/**
 	 * Initialize controller
 	 */
 	public function Initialize()
@@ -94,6 +91,33 @@ abstract class GitPHP_ControllerBase
 		$this->InitializeConfig();
 
 		$this->InitializeResource();
+
+		$this->InitializeProjectList();
+
+		$this->InitializeSmarty();
+
+		if (!empty($this->params['project'])) {
+			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			if (!$project) {
+				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+			}
+			$this->project = $project->GetProject();
+		}
+
+		if (!($this->project || $this->multiProject)) {
+			throw new GitPHP_MessageException(__('Project is required'), true);
+		}
+
+		if ($this->multiProject) {
+			GitPHP_ProjectList::GetInstance()->LoadProjects();
+		}
+
+		if (isset($_GET['s']))
+			$this->params['search'] = $_GET['s'];
+		if (isset($_GET['st']))
+			$this->params['searchtype'] = $_GET['st'];
+
+		$this->ReadQuery();
 	}
 
 	/**
@@ -154,14 +178,22 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * @access public
-	 * @return mixed controller object
-	 * @throws Exception on invalid project
+	 * Initialize project list
 	 */
-	public function __construct()
+	protected function InitializeProjectList()
 	{
-		$this->Initialize();
+		if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
+			GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
+		} else {
+			GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
+		}
+	}
 
+	/**
+	 * Initialize smarty
+	 */
+	public function InitializeSmarty()
+	{
 		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
@@ -181,29 +213,16 @@ abstract class GitPHP_ControllerBase
 			}
 
 		}
+	}
 
-		if (isset($_GET['p'])) {
-			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-			if (!$project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
-			}
-			$this->project = $project->GetProject();
-		}
-
-		if (!($this->project || $this->multiProject)) {
-			throw new GitPHP_MessageException(__('Project is required'), true);
-		}
-
-		if ($this->multiProject) {
-			GitPHP_ProjectList::GetInstance()->LoadProjects();
-		}
-
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
-		if (isset($_GET['st']))
-			$this->params['searchtype'] = $_GET['st'];
-
-		$this->ReadQuery();
+	/**
+	 * Set router instance
+	 *
+	 * @param GitPHP_Router $router router
+	 */
+	public function SetRouter($router)
+	{
+		$this->router = $router;
 	}
 
 	/**
@@ -264,7 +283,10 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix($projectKeys = true)
 	{
-		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
+		if ($this->resource)
+			$cacheKeyPrefix = $this->resource->GetLocale();
+		else
+			$cacheKeyPrefix = 'en_US';
 
 		$projList = GitPHP_ProjectList::GetInstance();
 		if ($projList) {
@@ -345,14 +367,11 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
+		$this->headers[] = 'Content-Type: text/html; charset=UTF-8';
 	}
 
 	/**
@@ -388,7 +407,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('javascript', $this->config->GetValue('javascript', true));
 		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs', false));
 		$this->tpl->assign('pagetitle', $this->config->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', $this->config->GetValue('homelink', __('projects')));
+		$this->tpl->assign('homelink', $this->config->GetValue('homelink'));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
@@ -480,6 +499,10 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
+		if (!is_object($this->config)) {
+			throw new Exception("Burps",1);
+		}
+
 		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
