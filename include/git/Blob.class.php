@@ -143,47 +143,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * FileType
-	 *
-	 * Gets a file type from its octal mode
-	 *
-	 * @access public
-	 * @static
-	 * @param string $octMode octal mode
-	 * @param boolean $local true if caller wants localized type
-	 * @return string file type
-	 */
-	public static function FileType($octMode, $local = false)
-	{
-		$mode = octdec($octMode);
-		if (($mode & 0x4000) == 0x4000) {
-			if ($local) {
-				return __('directory');
-			} else {
-				return 'directory';
-			}
-		} else if (($mode & 0xA000) == 0xA000) {
-			if ($local) {
-				return __('symlink');
-			} else {
-				return 'symlink';
-			}
-		} else if (($mode & 0x8000) == 0x8000) {
-			if ($local) {
-				return __('file');
-			} else {
-				return 'file';
-			}
-		}
-
-		if ($local) {
-			return __('unknown');
-		} else {
-			return 'unknown';
-		}
-	}
-
-	/**
 	 * GetSize
 	 *
 	 * Gets the blob size

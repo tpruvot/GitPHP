@@ -118,7 +118,7 @@
 	 </td>
 	 <td>
 	   <span class="newfile">
-	     {assign var=localtotype value=$diffline->GetToFileType(1)}
+	     {localfiletype type=$diffline->GetToFileType() assign=localtotype}
 	     [
 	     {if $diffline->ToFileIsRegular()}
 	       {assign var=tomode value=$diffline->GetToModeShort()}
@@ -143,7 +143,7 @@
 	 </td>
 	 <td>
 	   <span class="deletedfile">
-	     {assign var=localfromtype value=$diffline->GetFromFileType(1)}
+	     {localfiletype type=$diffline->GetFromFileType() assign=localfromtype}
 	     [ {t 1=$localfromtype}deleted %1{/t} ]
 	   </span>
 	 </td>
@@ -171,9 +171,9 @@
 	     <span class="changedfile">
 	       [
 	       {if $diffline->FileTypeChanged()}
-		 {assign var=localfromtype value=$diffline->GetFromFileType(1)}
-		 {assign var=localtotype value=$diffline->GetToFileType(1)}
-		 {if $diffline->FileModeChanged()}
+	         {localfiletype type=$diffline->GetFromFileType() assign=localfromtype}
+	         {localfiletype type=$diffline->GetToFileType() assign=localtotype}
+	         {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
 		     {assign var=frommode value=$diffline->GetFromModeShort()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
