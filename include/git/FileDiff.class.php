@@ -188,7 +188,7 @@ class GitPHP_FileDiff
 	public $totDel=0;
 
 	/* count of diff blocs for <a names> */
-	public $diffCount=0;
+	protected $diffCount=0;
 
 	/* used for pictures in treediff */
 	public $isPicture=false;
@@ -762,6 +762,14 @@ class GitPHP_FileDiff
 	}
 
 	/**
+	 * @return int total of diff blocs
+	 */
+	public function GetDiffCount() {
+		$this->GetDiffSplit();
+		return $this->diffCount;
+	}
+
+	/**
 	 * GetStats (tpruvot)
 	 *
 	 * Ensure totAdd & totDel are assigned
@@ -774,7 +782,7 @@ class GitPHP_FileDiff
 		//or could be already set by TreeDiff parent
 
 		$tot = $this->totAdd + $this->totDel;
-		if ($this->diffDataSplitRead or $tot > 0) {
+		if ($this->diffDataSplitRead || $tot > 0) {
 			return $tot;
 		} else {
 			//todo cmdline ?
