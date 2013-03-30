@@ -39,6 +39,8 @@ include_once(GITPHP_INCLUDEDIR . 'version.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Util.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Authentication.class.php');
+
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Resource.class.php');
@@ -141,11 +143,18 @@ try {
 	}
 	if (!function_exists('xdiff_string_diff')) {
 		$exe = new GitPHP_DiffExe();
+		/*
 		if (!$exe->Valid()) {
 			throw new GitPHP_MessageException(sprintf(__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'), $exe->GetBinary(), 'diffbin'), true, 500);
-		}
+		}*/
 	}
 	unset($exe);
+
+	/*
+	 * Authentification
+	 */
+	$auth = new GitPHP_Authentication();
+	$auth->authenticate();
 
 	/*
 	 * Project list
