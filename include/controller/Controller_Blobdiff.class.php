@@ -96,7 +96,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 			return;
 		}
 
-		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'sidebyside')) {
 			$this->tpl->assign('sidebyside', true);
 		}
 

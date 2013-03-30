@@ -37,7 +37,7 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 
-		if ($this->Plain()) {
+		if (!$this->Plain()) {
 
 			if ($this->DiffMode(isset($this->params['diffmode']) ? $this->params['diffmode'] : '') == self::DIFF_SIDEBYSIDE) {
 				$this->params['sidebyside'] = true;

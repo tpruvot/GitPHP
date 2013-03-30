@@ -32,7 +32,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	{
 		$key = (isset($this->params['hash']) ? $this->params['hash'] : '')
 		. '|' . (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
-		. '|' . (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true) ? '1' : '');
+		. '|' . (isset($this->params['output']) && ($this->params['output'] == 'sidebyside') ? '1' : '');
 
 		return $key;
 	}
@@ -76,7 +76,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign("hashparent", $this->params['hashparent']);
 		}
 
-		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'sidebyside')) {
 			$this->tpl->assign('sidebyside', true);
 		}
 
