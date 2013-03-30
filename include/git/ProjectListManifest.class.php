@@ -1,21 +1,10 @@
 <?php
 /**
- * GitPHP ProjectListManifest
+ * GitPHP_ProjectListManifest class
  *
  * Lists all projects in an .repo manifest.xml file
  *
  * @author Tanguy Pruvot
- * @package GitPHP
- * @subpackage Git
- */
-
-require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-
-/**
- * GitPHP_ProjectListManifest class
- *
  * @package GitPHP
  * @subpackage Git
  */

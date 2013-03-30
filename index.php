@@ -35,32 +35,10 @@ define('GITPHP_LIBDIR', GITPHP_BASEDIR . 'lib/');
 define('GITPHP_SMARTYDIR', GITPHP_LIBDIR . 'smarty/libs/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
-define('GITPHP_CACHE', GITPHP_BASEDIR . 'cache/');
-
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
-require_once(GITPHP_INCLUDEDIR . 'Util.class.php');
-
-require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
-
-require_once(GITPHP_INCLUDEDIR . 'Resource.class.php');
-
-require_once(GITPHP_INCLUDEDIR . 'Log.class.php');
-
-require_once(GITPHP_GITOBJECTDIR . 'ProjectList.class.php');
-
-require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
-
-require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
-
-require_once(GITPHP_CACHEDIR . 'Cache.class.php');
-require_once(GITPHP_CACHEDIR . 'MemoryCache.class.php');
-
-// Need this include for the compression constants used in the config file
-require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
-
-// Test these executables early
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
+require(GITPHP_INCLUDEDIR . 'AutoLoader.class.php');
+spl_autoload_register('GitPHP_AutoLoader::AutoLoad');
 
 date_default_timezone_set('UTC');
 
@@ -68,7 +46,7 @@ date_default_timezone_set('UTC');
 /*
  * Set the locale based on the user's preference
  */
-if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
+if ((!isset($_COOKIE[GitPHP_Resource::LocaleCookie])) || empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
 
 	$baseurl = GitPHP_Util::BaseUrl();
 
@@ -79,7 +57,7 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 		$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		$preferredLocale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		if (!empty($preferredLocale)) {
-			setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale, time()+GITPHP_LOCALE_COOKIE_LIFETIME, $baseurl);
+			setcookie(GitPHP_Resource::LocaleCookie, $preferredLocale, time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
 			GitPHP_Resource::Instantiate($preferredLocale);
 		}
 	}
@@ -88,7 +66,7 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 		/*
 		 * Create a dummy cookie to prevent browser delay
 		 */
-		setcookie(GITPHP_LOCALE_COOKIE, 0, time()+GITPHP_LOCALE_COOKIE_LIFETIME, $baseurl);
+		setcookie(GitPHP_Resource::LocaleCookie, 0, time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
 	}
 
 } else if (isset($_GET['l']) && !empty($_GET['l'])) {
@@ -96,15 +74,15 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 	/*
 	 * User picked something
 	 */
-	setcookie(GITPHP_LOCALE_COOKIE, $_GET['l'], time()+GITPHP_LOCALE_COOKIE_LIFETIME, $baseurl);
+	setcookie(GitPHP_Resource::LocaleCookie, $_GET['l'], time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
 	GitPHP_Resource::Instantiate($_GET['l']);
 
-} else if (isset($_COOKIE[GITPHP_LOCALE_COOKIE]) && !empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
+} else if (isset($_COOKIE[GitPHP_Resource::LocaleCookie]) && !empty($_COOKIE[GitPHP_Resource::LocaleCookie])) {
 
 	/*
 	 * Returning visitor with a preference
 	 */
-	GitPHP_Resource::Instantiate($_COOKIE[GITPHP_LOCALE_COOKIE]);
+	GitPHP_Resource::Instantiate($_COOKIE[GitPHP_Resource::LocaleCookie]);
 
 }
 
@@ -169,7 +147,6 @@ try {
 		GitPHP_Resource::Instantiate('en_US');
 	}
 
-	require_once(GITPHP_CONTROLLERDIR . 'Controller_Message.class.php');
 	$controller = new GitPHP_Controller_Message();
 	$controller->SetParam('message', $e->getMessage());
 	if ($e instanceof GitPHP_MessageException) {

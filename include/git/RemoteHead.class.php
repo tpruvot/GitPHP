@@ -4,18 +4,7 @@
  *
  * Represents a single remote head
  *
- * @author Tanguy Pruvot <tanguy.pruvot@gmail.com>
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
-
-require_once(GITPHP_GITOBJECTDIR . 'Ref.class.php');
-
-/**
- * RemoteHead class
- *
+ * @author Tanguy Pruvot <tpruvot@github>
  * @package GitPHP
  * @subpackage Git
  */

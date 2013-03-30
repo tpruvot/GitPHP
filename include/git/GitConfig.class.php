@@ -10,8 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-
 /**
  * GitConfig class
  *

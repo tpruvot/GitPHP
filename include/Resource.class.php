@@ -4,11 +4,6 @@ require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
 /**
- * Constant of the locale cookie in the user's browser (deprecated, use class const)
- */
-defined('GITPHP_LOCALE_COOKIE') || define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
-
-/**
  * Locale cookie lifetime
  */
 defined('GITPHP_LOCALE_COOKIE_LIFETIME') || define('GITPHP_LOCALE_COOKIE_LIFETIME', 60*60*24*365); // 1 year

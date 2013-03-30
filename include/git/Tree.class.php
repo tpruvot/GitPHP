@@ -10,9 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-
 /**
  * Tree class
  *

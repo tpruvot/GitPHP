@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Cache
- *
  * Class to store arbitrary data objects in smarty cache
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Cache
- */
-
-/**
- * Cache class
- *
  * @package GitPHP
  * @subpackage Cache
  */

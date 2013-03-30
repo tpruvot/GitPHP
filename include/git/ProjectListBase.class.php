@@ -10,13 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-
-define('GITPHP_SORT_PROJECT', 'project');
-define('GITPHP_SORT_DESCRIPTION', 'descr');
-define('GITPHP_SORT_OWNER', 'owner');
-define('GITPHP_SORT_AGE', 'age');
-
 /**
  * ProjectListBase class
  *
@@ -26,6 +19,15 @@ define('GITPHP_SORT_AGE', 'age');
  */
 abstract class GitPHP_ProjectListBase implements Iterator
 {
+
+	/**
+	 * Sort constants
+	 */
+	const SORT_PROJECT = 'project';
+	const SORT_DESCRIPTION = 'descr';
+	const SORT_OWNER = 'owner';
+	const SORT_AGE = 'age';
+
 	/**
 	 * projects
 	 *
@@ -276,20 +278,20 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	 * @access public
 	 * @param string $sortBy sort method
 	 */
-	public function Sort($sortBy = GITPHP_SORT_PROJECT)
+	public function Sort($sortBy = self::SORT_PROJECT)
 	{
 		switch ($sortBy) {
-			case GITPHP_SORT_DESCRIPTION:
+			case self::SORT_DESCRIPTION:
 				uasort($this->projects, array('GitPHP_Project', 'CompareDescription'));
 				break;
-			case GITPHP_SORT_OWNER:
+			case self::SORT_OWNER:
 				uasort($this->projects, array('GitPHP_Project', 'CompareOwner'));
 				break;
-			case GITPHP_SORT_AGE:
+			case self::SORT_AGE:
 				$this->GetCategoryAges();
 				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
 				break;
-			case GITPHP_SORT_PROJECT:
+			case self::SORT_PROJECT:
 			default:
 				uasort($this->projects, array('GitPHP_Project', 'CompareProject'));
 				break;

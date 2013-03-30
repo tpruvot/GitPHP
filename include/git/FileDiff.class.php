@@ -10,12 +10,8 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
-
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
 require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
-
-require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php'); //basic mime by ext
 
 /**
  * Commit class

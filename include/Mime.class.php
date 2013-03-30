@@ -1,14 +1,17 @@
 <?php
-/**
- * FileMime_Extension
- *
- * Get the file mimetype using the file extension
- *
- * @access private
- * @return string mimetype
- */
-function FileMime_Extension($file)
+class GitPHP_Mime
 {
+
+	/**
+	 * FileMime_Extension
+	 *
+	 * Get the file mimetype using the file extension
+	 *
+	 * @access private
+	 * @return string mimetype
+	 */
+	public static function FileMime_Extension($file)
+	{
 		if (empty($file))
 				return '';
 
@@ -30,27 +33,28 @@ function FileMime_Extension($file)
 		}
 
 		return '';
-}
+	}
 
-/**
- * FileMime
- *
- * Get the file mimetype
- *
- * @access public
- * @param boolean $short true to only the type group
- * @return string mime
- */
-function FileMime($file, $short = false)
-{
+	/**
+	 * FileMime
+	 *
+	 * Get the file mimetype
+	 *
+	 * @access public
+	 * @param boolean $short true to only the type group
+	 * @return string mime
+	 */
+	public static function FileMime($file, $short = false)
+	{
 		if (empty($mime))
-				$mime = FileMime_Extension($file);
+				$mime = self::FileMime_Extension($file);
 
 		if ((!empty($mime)) && $short) {
 				$mime = strtok($mime, '/');
 		}
 
 		return $mime;
-}
+	}
 
+}
 ?>

@@ -9,26 +9,9 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
-
-require_once(GITPHP_GITOBJECTDIR . 'RemoteHead.class.php');
-
-define('GITPHP_ABBREV_HASH_MIN', 7);
-
-/**
- * Project class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Project
 {
+	const ABBREV_HASH_MIN = 7;
 
 /* internal variables {{{1*/
 
@@ -399,7 +382,7 @@ class GitPHP_Project
 
 		if (substr($project, -4) == '.git')
 			$project = substr($project, 0, -4);
-		
+
 		return GitPHP_Util::MakeSlug($project);
 	}
 
@@ -431,7 +414,7 @@ class GitPHP_Project
 		if (empty($this->owner) && !$this->ownerRead) {
 			$this->ReadOwner();
 		}
-	
+
 		return $this->owner;
 	}
 
@@ -2162,7 +2145,7 @@ class GitPHP_Project
 	 */
 	private function AbbreviateHashRaw($hash)
 	{
-		$abbrevLen = GITPHP_ABBREV_HASH_MIN;
+		$abbrevLen = self::ABBREV_HASH_MIN;
 
 		if ($this->GetConfig()->HasValue('core.abbrev')) {
 			$abbrevLen = max(4, min($this->GetConfig()->GetValue('core.abbrev'), 40));

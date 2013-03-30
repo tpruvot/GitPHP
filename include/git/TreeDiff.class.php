@@ -10,10 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'FileDiff.class.php');
-
-require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
-
 /**
  * TreeDiff class
  *
@@ -181,7 +177,7 @@ class GitPHP_TreeDiff implements Iterator
 				try {
 					$fileDiff = new GitPHP_FileDiff($this->GetProject(), $trimmed);
 					$file = $fileDiff->GetFromFile();
-					$mimetype = FileMime($file, true);
+					$mimetype = GitPHP_Mime::FileMime($file, true);
 					$fileDiff->isPicture = ($mimetype == 'image');
 					if (!$fileDiff->isPicture) {
 						if (isset($this->fileStat[$file])) {

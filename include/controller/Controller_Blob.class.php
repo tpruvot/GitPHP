@@ -184,8 +184,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		// Alternate system to display pictures (not embedded in HTML as base64)
-		require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
-		$mimetype = FileMime($this->params['file'], true);
+		$mimetype = GitPHP_Mime::FileMime($this->params['file'], true);
 		$isPicture = ($mimetype == 'image');
 		if ($isPicture) {
 			$this->tpl->assign('file', $this->params['file']);

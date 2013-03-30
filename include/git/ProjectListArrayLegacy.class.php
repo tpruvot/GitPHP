@@ -11,10 +11,7 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
-
-define('GITPHP_NO_CATEGORY', 'none');
+defined('GITPHP_NO_CATEGORY') || define('GITPHP_NO_CATEGORY', 'none');
 
 /**
  * ProjectListArrayLegacy class

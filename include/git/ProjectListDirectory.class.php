@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP ProjectListDirectory
- *
  * Lists all projects in a given directory
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -10,20 +8,14 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
+defined('GITPHP_CACHE_PROJECTLIST') || define('GITPHP_CACHE_PROJECTLIST', GITPHP_CACHEDIR.'projectlist.tmp');
 
-define('CACHE_PROJECTLIST',GITPHP_CACHE.'projectlist.tmp');
-
-/**
- * ProjectListDirectory class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
+	/**
+	 * Constants
+	 */
+	const CACHE_PROJECTLIST = GITPHP_CACHE_PROJECTLIST;
 
 	/**
 	 * bareOnly
@@ -87,14 +79,14 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 			// cache project list even if object cache is disabled (too much files)
 			$simpleCache = true;
-			$stat = (is_file(CACHE_PROJECTLIST)) ? stat(CACHE_PROJECTLIST) : FALSE;
+			$stat = (is_file(self::CACHE_PROJECTLIST)) ? stat(self::CACHE_PROJECTLIST) : FALSE;
 			if ($stat !== FALSE) {
 				$cache_life = '180';  //caching time, in seconds
 				$filemtime = max($stat['mtime'], $stat['ctime']);
 				if  (time() - $filemtime >= $cache_life) {
 					GitPHP_Log::GetInstance()->Log('ProjectListDirCache: expired, reloading...');
 				} else {
-					$data = file_get_contents(CACHE_PROJECTLIST);
+					$data = file_get_contents(self::CACHE_PROJECTLIST);
 					$projects = unserialize($data);
 					if (count($projects) > 0) {
 						GitPHP_Log::GetInstance()->Log('loaded '.count($projects).' projects from cache');
@@ -221,8 +213,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	public function CacheSaveProjectList()
 	{
 		$data = serialize($this->projects);
-		if (!is_file(CACHE_PROJECTLIST) || $data != file_get_contents(CACHE_PROJECTLIST)) {
-			return (file_put_contents(CACHE_PROJECTLIST,$data) > 0);
+		if (!is_file(self::CACHE_PROJECTLIST) || $data != file_get_contents(self::CACHE_PROJECTLIST)) {
+			return (file_put_contents(self::CACHE_PROJECTLIST,$data) > 0);
 		}
 		return true;
 	}

@@ -124,8 +124,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$this->tpl->assign('tree', $commit->GetTree());
 
 		// Pictures (one blame possible)
-		require_once(GITPHP_INCLUDEDIR . 'Mime.inc.php');
-		$mimetype = FileMime($this->params['file'], true);
+		$mimetype = GitPHP_Mime::FileMime($this->params['file'], true);
 		$isPicture = ($mimetype == 'image');
 		if ($isPicture) {
 			$this->tpl->assign('file', $this->params['file']);
