@@ -9,8 +9,8 @@
  * @subpackage Template
  *}
 <!DOCTYPE html>
-<html>
-  <!-- gitphp web interface {$version}, (C) 2006-2013 Christopher Han <xiphux@gmail.com>, Tanguy Pruvot <tpruvot@gihub> -->
+<html lang="{$currentprimarylocale}">
+  <!-- gitphp web interface {$version}, (C) 2006-2013 Christopher Han <xiphux@gmail.com>, Tanguy Pruvot <tpruvot@github> -->
   <head>
     <title>
     {block name=title}

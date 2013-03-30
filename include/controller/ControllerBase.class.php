@@ -403,9 +403,11 @@ abstract class GitPHP_ControllerBase
 
 		if ($this->resource) {
 			$this->tpl->assign('currentlocale', $this->resource->GetLocale());
+			$this->tpl->assign('currentprimarylocale', $this->resource->GetPrimaryLocale());
 			$this->tpl->assign('resource', $this->resource);
 		} else {
 			$this->tpl->assign('currentlocale', 'en_US');
+			$this->tpl->assign('currentprimarylocale', 'en');
 		}
 		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales(true));
 

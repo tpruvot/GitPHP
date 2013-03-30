@@ -103,8 +103,21 @@ class GitPHP_Resource
 	}
 
 	/**
-	 * GetLocaleName
+	 * Gets the currently instantiated primary locale
 	 *
+	 * @return string primary locale identifier
+	 */
+	public function GetPrimaryLocale()
+	{
+		$locale = $this->locale;
+		$underscore = strpos($locale, '_');
+		if ($underscore !== false) {
+			$locale = substr($locale, 0, $underscore);
+		}
+		return $locale;
+	}
+
+	/**
 	 * Gets the current instantiated locale's name
 	 *
 	 * @access public
