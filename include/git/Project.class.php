@@ -1078,16 +1078,19 @@ class GitPHP_Project
 /* commit loading methods {{{2*/
 
 	/**
-	 * GetCommit
-	 *
 	 * Get a commit for this project
 	 *
-	 * @access public
+	 * @param string $hash commit hash
+	 * @return GitPHP_Commit|null commit object
 	 */
 	public function GetCommit($hash)
 	{
 		if (empty($hash))
 			return null;
+
+		if (is_object($hash)) {
+			return null;
+		}
 
 		if ($hash === 'HEAD')
 			return $this->GetHeadCommit();
