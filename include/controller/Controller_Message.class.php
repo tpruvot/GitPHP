@@ -24,8 +24,29 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	public function Initialize()
 	{
 		try {
-			parent::Initialize();
+			$this->InitializeConfig();
 		} catch (Exception $e) {
+		}
+
+		$this->InitializeResource();
+
+		$this->InitializeGitExe(false);
+
+		try {
+			$this->InitializeProjectList();
+		} catch (Exception $e) {
+		}
+
+		try {
+			$this->InitializeSmarty();
+		} catch (Exception $e) {
+		}
+
+		if (isset($this->params['project']) && $this->projectList) {
+			$project = $this->projectList->GetProject($this->params['project']);
+			if ($project) {
+				 $this->project = $project->GetProject();
+			}
 		}
 
 		if (empty($this->params['hash']))

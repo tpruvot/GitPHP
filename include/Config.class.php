@@ -8,19 +8,22 @@
  */
 class GitPHP_Config
 {
-	
-	/**
-	 * Stores the singleton instance
-	 */
-	protected static $instance;
-
 	/**
 	 * Stores the config values
+	 *
+	 * @var array
 	 */
 	protected $values = array();
 
 	/**
+	 * Stores the singleton instance
+	 * @deprecated
+	 */
+	protected static $instance;
+
+	/**
 	 * Returns the singleton instance
+	 * @deprecated
 	 */
 	public static function GetInstance()
 	{
@@ -32,6 +35,7 @@ class GitPHP_Config
 
 	/**
 	 * Releases the singleton instance
+	 * deprecated
 	 */
 	public static function DestroyInstance()
 	{
@@ -41,13 +45,18 @@ class GitPHP_Config
 	/**
 	 * Class constructor
 	 */
-	private function __construct()
+	public function __construct()
 	{
 		$this->InitializeDefaults();
+		if (!self::$instance)
+			self::$instance = $this;
 	}
 
 	/**
 	 * Loads a config file
+	 *
+	 * @param string $configFile config file to load
+	 * @throws Exception on failure
 	 */
 	public function LoadConfig($configFile)
 	{
@@ -68,11 +77,7 @@ class GitPHP_Config
 	}
 
 	/**
-	 * ClearConfig
-	 *
 	 * Clears all config values
-	 *
-	 * @access public
 	 */
 	public function ClearConfig()
 	{
@@ -81,13 +86,10 @@ class GitPHP_Config
 	}
 
 	/**
-	 * GetValue
-	 *
 	 * Gets a config value
 	 *
-	 * @access public
-	 * @param $key config key to fetch
-	 * @param $default default config value to return
+	 * @param string $key config key to fetch
+	 * @param mixed $default default config value to return
 	 * @return mixed config value
 	 */
 	public function GetValue($key, $default = null)
@@ -99,11 +101,8 @@ class GitPHP_Config
 	}
 
 	/**
-	 * SetValue
-	 *
 	 * Sets a config value
 	 *
-	 * @access public
 	 * @param string $key config key to set
 	 * @param mixed $value value to set
 	 */
@@ -120,11 +119,8 @@ class GitPHP_Config
 	}
 
 	/**
-	 * HasKey
-	 *
 	 * Tests if the config has specified this key
 	 *
-	 * @access public
 	 * @param string $key config key to find
 	 * @return boolean true if key exists
 	 */

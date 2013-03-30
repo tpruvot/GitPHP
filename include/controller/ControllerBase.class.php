@@ -105,10 +105,10 @@ abstract class GitPHP_ControllerBase
 
 		$this->InitializeSmarty();
 
-		if (!empty($this->params['project'])) {
-			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+		if (isset($this->params['project']) && !empty($this->params['project'])) {
+			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $this->params['project']));
 			if (!$project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $this->params['project']), true);
 			}
 			$this->project = $project->GetProject();
 		}
@@ -127,7 +127,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	protected function InitializeConfig()
 	{
-		$this->config = GitPHP_Config::GetInstance();
+		$this->config = new GitPHP_Config();
 		$this->config->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 	}
 
@@ -506,18 +506,10 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * Render
-	 *
 	 * Renders the output
-	 *
-	 * @access public
 	 */
 	public function Render()
 	{
-		if (!is_object($this->config)) {
-			throw new Exception("Burps",1);
-		}
-
 		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
