@@ -22,7 +22,7 @@
  * (main header with commit message)
  */
 div.title a.title {
-	display: block; 
+	display: inline;
 }
 
 /*
@@ -76,7 +76,7 @@ div.search {
 	margin: 4px 8px; 
 	position: absolute; 
 	top: 56px;
-	right: 12px
+	right: 25px;
 }
 
 
