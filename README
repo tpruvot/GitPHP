@@ -12,13 +12,17 @@ The only way to include all my features in current xiphux variant is to rewrite 
 
 So for the moment, i will only do backports based on the 0.2.7 architecture, named 0.2.7.y
 
+When/If the job will be completed and my diffs reduced enough against xiphux 0.2.8, i will be able to rebase
+the changes to restore normal git merges/rebase...
+
+
 The original skin can be seen here : http://source.gitphp.org/
 
 Another one (blueskin) can be seen here : http://pruvot.tk/gitphp/
 
 
-Changes made by Tanguy Pruvot (2011/2012) :
-==========================================
+Changes made by Tanguy Pruvot (2011/2013) :
+===========================================
 
 New abilities :
 + Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
@@ -50,7 +54,12 @@ TODO :
 
 - Enhance the log history to identify "merged commits" from merged branches
 
-- Implement Graphs and Calendar views
+- Backport Graph features and implement a Calendar view
 
 - Another kind of skin for tablets
+
+
+Missing features from 0.2.8 :
+=============================
+- Graphs (untested yet)
 
