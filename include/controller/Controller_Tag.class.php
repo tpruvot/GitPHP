@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Tag
- *
  * Controller for displaying a tag
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,19 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Tag controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 {
+
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+	}
 
 	/**
 	 * GetTemplate
@@ -63,25 +65,6 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 			return $this->resource->translate('tag');
 		}
 		return 'tag';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
-			$this->params['jstip'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
-		}
 	}
 
 	/**

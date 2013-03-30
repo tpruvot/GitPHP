@@ -10,6 +10,17 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 {
 
 	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
+
+	/**
 	 * GetTemplate
 	 *
 	 * Gets the template for this controller
@@ -32,7 +43,7 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return '';
+		return $this->params['page'];
 	}
 
 	/**
@@ -50,17 +61,6 @@ class GitPHP_Controller_Remotes extends GitPHP_ControllerBase
 			return $this->resource->translate('remotes');
 		}
 		return 'remotes';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
 	}
 
 	/**

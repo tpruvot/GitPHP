@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Controller Log
- *
  * Controller for displaying a log
  *
  * @author Christopher Han
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * Log controller class
- *
  * @package GitPHP
  * @subpackage Controller
  */
@@ -83,27 +74,6 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 			return $this->resource->translate('log');
 		}
 		return 'log';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
-		if (isset($_GET['pg']))
-			$this->params['page'] = $_GET['pg'];
-		else
-			$this->params['page'] = 0;
-		if (isset($_GET['m']))
-			$this->params['mark'] = $_GET['m'];
 	}
 
 	/**

@@ -41,26 +41,26 @@ git source code archive
     {if $smarty.foreach.projects.first}
       {* Header *}
       <tr class="projectHeader">
-        {if $order == "project"}
+        {if $sort == "project"}
           <th>{t}Project{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=project">{t}Project{/t}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?sort=project">{t}Project{/t}</a></th>
         {/if}
-        {if $order == "descr"}
+        {if $sort == "descr"}
           <th>{t}Description{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=descr">{t}Description{/t}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?sort=descr">{t}Description{/t}</a></th>
         {/if}
-        {if $order == "age"}
+        {if $sort == "age"}
           <th>{t}Last Change{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=age">{t}Last Change{/t}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?sort=age">{t}Last Change{/t}</a></th>
         {/if}
         {if $show_owner }
-         {if $order == "owner"}
+         {if $sort == "owner"}
           <th>{t}Owner{/t}</th>
          {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{t}Owner{/t}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?sort=owner">{t}Owner{/t}</a></th>
          {/if}
         {/if}
         <th class="actions">{t}Actions{/t}</th>
@@ -70,7 +70,7 @@ git source code archive
 
     {if $currentcategory != $proj->GetCategory('&nbsp;')}
       {assign var=currentcategory value=$proj->GetCategory('&nbsp;')}
-      {if $currentcategory != "&nbsp;" || $order == "age"}
+      {if $currentcategory != "&nbsp;" || $sort == "age"}
         <tr class="light categoryRow">
           <th class="categoryName">{$currentcategory}</th>
           <th></th>

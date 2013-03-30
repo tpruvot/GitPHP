@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Tree
- *
  * Controller for displaying a tree
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,23 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Tree controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 {
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
+			$this->params['hashbase'] = 'HEAD';
+		}
+
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+		}
+	}
 
 	/**
 	 * GetTemplate
@@ -63,32 +69,6 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			return $this->resource->translate('tree');
 		}
 		return 'tree';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-
-		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
-			$this->params['hashbase'] = 'HEAD';
-		}
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
-			$this->params['js'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
-		}
 	}
 
 	/**

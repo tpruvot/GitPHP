@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Controller ProjectList
- *
  * Controller for listing projects
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * ProjectList controller class
- *
  * @package GitPHP
  * @subpackage Controller
  */
@@ -27,7 +18,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		$this->multiProject = true;
 		parent::Initialize();
 		if (empty($this->params['sort']))
-			$this->params['sort'] = 'project';
+			$this->params['sort'] = $this->config->GetValue('projectlist_order', 'project');
 	}
 
 	/**
@@ -63,7 +54,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			return '';
 		}
-		return $this->params['order'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
+		return $this->params['sort'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
 	}
 
 	/**
@@ -95,23 +86,6 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['o']))
-			$this->params['order'] = $_GET['o'];
-		else
-			$this->params['order'] = GitPHP_Config::GetInstance()->GetValue('projectlist_order');
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
-	}
-
-	/**
 	 * LoadHeaders
 	 *
 	 * Loads headers for this template
@@ -140,10 +114,10 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('order', $this->params['order']);
+		$this->tpl->assign('sort', $this->params['sort']);
 		
 		$projectList = GitPHP_ProjectList::GetInstance();
-		$projectList->Sort($this->params['order']);
+		$projectList->Sort($this->params['sort']);
 
 		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
 		    (empty($this->params['txt']) || ($this->params['txt'] !== true)) &&

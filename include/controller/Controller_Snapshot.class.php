@@ -37,9 +37,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		$this->InitializeProjectList();
 
 		if (isset($this->params['project'])) {
-			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $this->params['project']));
 			if (!$project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $this->params['project']), true);
 			}
 			$this->project = $project->GetProject();
 		}
@@ -50,7 +50,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$this->preserveWhitespace = true;
 
-		$this->ReadQuery();
+		if (empty($this->params['format']))
+			$this->params['format'] = $this->config->GetValue('compressformat');
+
+		$this->InitializeArchive();
 	}
 
 	/**
@@ -96,26 +99,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
-		if (isset($_GET['f'])) $this->params['path'] = $_GET['f'];
-		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
-		if (isset($_GET['fmt']))
-			$this->params['format'] = $_GET['fmt'];
-		else
-			$this->params['format'] = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
-			
-		GitPHP_Log::GetInstance()->SetEnabled(false);
-	}
-
-	/**
 	 * LoadHeaders
 	 *
 	 * Loads headers for this template
@@ -124,17 +107,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->archive = new GitPHP_Archive($this->GetProject(), null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
-
-		$commit = null;
-
-		if (!isset($this->params['hash']))
-			$commit = $this->GetProject()->GetHeadCommit();
-		else
-			$commit = $this->GetProject()->GetCommit($this->params['hash']);
-
-		$this->archive->SetObject($commit);
-
 		switch ($this->archive->GetFormat()) {
 			case GITPHP_COMPRESS_TAR:
 				$this->headers[] = 'Content-Type: application/x-tar';
@@ -235,4 +207,25 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		}
 	}
 
+	/**
+	 * Initialize archive for reading
+	 */
+	private function InitializeArchive()
+	{
+
+		$this->archive = new GitPHP_Archive($this->GetProject(), null,
+			$this->params['format'],
+			(isset($this->params['path']) ? $this->params['path'] : ''),
+			(isset($this->params['prefix']) ? $this->params['prefix'] : '')
+		);
+
+		$commit = null;
+
+		if (!isset($this->params['hash']))
+			$commit = $this->GetProject()->GetHeadCommit();
+		else
+			$commit = $this->GetProject()->GetCommit($this->params['hash']);
+
+		$this->archive->SetObject($commit);
+	}
 }

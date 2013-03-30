@@ -111,13 +111,6 @@ abstract class GitPHP_ControllerBase
 		if ($this->multiProject) {
 			GitPHP_ProjectList::GetInstance()->LoadProjects();
 		}
-
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
-		if (isset($_GET['st']))
-			$this->params['searchtype'] = $_GET['st'];
-
-		$this->ReadQuery();
 	}
 
 	/**
@@ -335,16 +328,6 @@ abstract class GitPHP_ControllerBase
 	 * @return string action name
 	 */
 	public abstract function GetName($local = false);
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @abstract
-	 * @access protected
-	 */
-	protected abstract function ReadQuery();
 
 	/**
 	 * SetParam

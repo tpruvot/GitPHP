@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Heads
- *
  * Controller for displaying heads
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,18 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Heads controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 {
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
 
 	/**
 	 * GetTemplate
@@ -42,7 +43,7 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return '';
+		return $this->params['page'];
 	}
 
 	/**
@@ -60,17 +61,6 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 			return $this->resource->translate('heads');
 		}
 		return 'heads';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
 	}
 
 	/**

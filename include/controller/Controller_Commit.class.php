@@ -19,6 +19,17 @@
 class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 {
 
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+
+		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+	}
+
 	/**
 	 * GetTemplate
 	 *
@@ -63,26 +74,6 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 			return $this->resource->translate('commit');
 		}
 		return 'commit';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		else
-			$this->params['hash'] = 'HEAD';
-
-		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
-			$this->params['jstip'] = true;
-			GitPHP_Log::GetInstance()->SetEnabled(false);
-		}
 	}
 
 	/**

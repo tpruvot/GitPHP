@@ -59,27 +59,6 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		parent::ReadQuery();
-
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		if (isset($_GET['hp']))
-			$this->params['hashparent'] = $_GET['hp'];
-	}
-
-	/**
 	 * LoadHeaders
 	 *
 	 * Loads headers for this template
@@ -90,7 +69,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	{
 		parent::LoadHeaders();
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			$this->preserveWhitespace = true;
 		}
 	}
@@ -113,7 +92,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 
 		$this->tpl->assign('filediff', $filediff);
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return;
 		}
 

@@ -64,26 +64,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['hb']))
-			$this->params['hashbase'] = $_GET['hb'];
-		else
-			$this->params['hashbase'] = 'HEAD';
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		}
-	}
-
-	/**
 	 * LoadHeaders
 	 *
 	 * Loads headers for this template
@@ -92,7 +72,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && $this->params['plain']) {
+		if ($this->Plain()) {
 
 			GitPHP_Log::GetInstance()->SetEnabled(false);
 			$this->preserveWhitespace = true;
@@ -159,7 +139,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		if (isset($this->params['plain']) && $this->params['plain']) {
+		if ($this->Plain()) {
 			return;
 		}
 

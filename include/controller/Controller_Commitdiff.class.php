@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Commitdiff
- *
  * Controller for displaying a commitdiff
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,38 +7,25 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Commitdiff controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 {
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			return 'commitdiffplain.tpl';
 		}
 		return 'commitdiff.tpl';
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -53,11 +38,8 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -70,45 +52,20 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		parent::ReadQuery();
-
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
-		if (isset($_GET['hp']))
-			$this->params['hashparent'] = $_GET['hp'];
-	}
-
-	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
 		parent::LoadHeaders();
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+		if ($this->Plain()) {
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
 			$this->preserveWhitespace = true;
 		}
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -123,7 +80,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('sidebyside', true);
 		}
 
-		$treediff = new GitPHP_TreeDiff($this->GetProject(), $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
+		$treediff = new GitPHP_TreeDiff($this->GetProject(), $this->exe, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
 		$this->tpl->assign('treediff', $treediff);
 	}
 

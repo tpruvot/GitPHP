@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Tags
- *
  * Controller for displaying tags
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,19 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Tags controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 {
+
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
 
 	/**
 	 * GetTemplate
@@ -60,17 +62,6 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 			return $this->resource->translate('tags');
 		}
 		return 'tags';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
 	}
 
 	/**

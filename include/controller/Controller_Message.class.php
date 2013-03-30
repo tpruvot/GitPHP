@@ -74,17 +74,6 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-	}
-
-	/**
 	 * LoadHeaders
 	 *
 	 * Loads headers for this template

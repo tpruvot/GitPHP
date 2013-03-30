@@ -94,13 +94,6 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * Read query into parameters (deprecated)
-	 */
-	protected function ReadQuery()
-	{
-	}
-
-	/**
 	 * LoadData
 	 *
 	 * Loads data for this template

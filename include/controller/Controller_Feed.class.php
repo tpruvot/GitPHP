@@ -28,6 +28,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 		$this->preserveWhitespace = true;
+		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**
@@ -81,18 +82,6 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 			else
 				return 'atom';
 		}
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**

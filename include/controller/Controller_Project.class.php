@@ -63,17 +63,6 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-	}
-
-	/**
 	 * LoadData
 	 *
 	 * Loads data for this template

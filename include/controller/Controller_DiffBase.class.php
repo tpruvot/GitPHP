@@ -31,17 +31,15 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	const DIFF_SIDEBYSIDE = 2;
 
 	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
+	 * Initialize controller
 	 */
-	protected function ReadQuery()
+	public function Initialize()
 	{
-		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+		parent::Initialize();
 
-			if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
+		if ($this->Plain()) {
+
+			if ($this->DiffMode(isset($this->params['diffmode']) ? $this->params['diffmode'] : '') == self::DIFF_SIDEBYSIDE) {
 				$this->params['sidebyside'] = true;
 			}
 

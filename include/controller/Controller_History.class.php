@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller History
- *
  * Controller for displaying file history
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,15 +7,21 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * History controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_History extends GitPHP_ControllerBase
 {
+	/**
+	 * Initialize controller
+	 */
+	public function Initialize()
+	{
+		parent::Initialize();
+
+		if (empty($this->params['hash']))
+			$this->params['hash'] = 'HEAD';
+
+		if (empty($this->params['page']))
+			$this->params['page'] = 0;
+	}
 
 	/**
 	 * GetTemplate
@@ -60,24 +64,6 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 			return $this->resource->translate('history');
 		}
 		return 'history';
-	}
-
-	/**
-	 * ReadQuery
-	 *
-	 * Read query into parameters
-	 *
-	 * @access protected
-	 */
-	protected function ReadQuery()
-	{
-		if (isset($_GET['f']))
-			$this->params['file'] = $_GET['f'];
-		if (isset($_GET['h'])) {
-			$this->params['hash'] = $_GET['h'];
-		} else {
-			$this->params['hash'] = 'HEAD';
-		}
 	}
 
 	/**
