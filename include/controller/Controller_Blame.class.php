@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Controller Blame
- *
  * Controller for displaying blame
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * Blame controller class
- *
  * @package GitPHP
  * @subpackage Controller
  */
@@ -34,27 +25,21 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return 'blamedata.tpl';
 		}
 		return 'blame.tpl';
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -63,11 +48,8 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -80,11 +62,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -107,7 +85,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$blame = $blob->GetBlame();
 		$this->tpl->assign('blame', $blame);
 
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return;
 		}
 

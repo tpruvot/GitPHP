@@ -9,11 +9,12 @@
  */
 class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 {
+
 	/**
 	 * Initialize controller
 	 */
 	public function Initialize()
-	{
+	{	
 		parent::Initialize();
 
 		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
@@ -26,27 +27,21 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['js']) && $this->params['js']) {
+		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return 'treelist.tpl';
 		}
 		return 'tree.tpl';
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -55,11 +50,8 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -72,11 +64,7 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
