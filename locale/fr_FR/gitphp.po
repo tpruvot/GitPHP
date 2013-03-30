@@ -91,7 +91,12 @@ msgstr "unifié"
 # Used as a link to the first page in a list of results
 #: templates/search.tpl templates/searchfiles.tpl
 msgid "first"
-msgstr "début"
+msgstr "premier"
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "last"
+msgstr "dernier"
 
 # Used as a link to the previous page in a list of results
 #: templates/search.tpl templates/searchfiles.tpl templates/log.tpl
@@ -704,3 +709,24 @@ msgstr "site web"
 #: include/Resource.class.php:121
 msgid "English"
 msgstr "Français"
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "toggle tabs"
+msgstr "afficher tabs"
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "numbers"
+msgstr "numéros"
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "left only"
+msgstr "volet gauche"
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "right only"
+msgstr "volet droit"
+

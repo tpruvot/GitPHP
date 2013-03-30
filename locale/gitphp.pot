@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.6\n"
+"Project-Id-Version: GitPHP 0.2.7.2\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2012-03-21 20:43-0500\n"
+"POT-Creation-Date: 2013-03-30 08:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,49 +19,50 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 # Used as link to and title for page displaying a blob, which is what git calls a single file
-#: templates/tag.tpl
+#: templates/treelist.tpl
+#: templates/searchfiles.tpl
 #: templates/blobdiff.tpl
 #: templates/commit.tpl
 #: templates/taglist.tpl
-#: templates/treelist.tpl
-#: templates/searchfiles.tpl
 #: templates/history.tpl
-#: include/controller/Controller_Blob.class.php:78
+#: templates/tag.tpl
+#: include/controller/Controller_Blob.class.php:61
 msgid "blob"
 msgstr ""
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
-#: templates/commit.tpl
 #: templates/treelist.tpl
 #: templates/searchfiles.tpl
 #: templates/blob.tpl
-#: include/controller/Controller_History.class.php:76
+#: templates/commit.tpl
+#: include/controller/Controller_History.class.php:60
 msgid "history"
 msgstr ""
 
 # Used as title for and link to a list of files in a directory, which git calls a 'tree'
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/headlist.tpl
-#: templates/nav.tpl
 #: templates/treelist.tpl
 #: templates/searchfiles.tpl
-#: templates/log.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Tree.class.php:79
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/log.tpl
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/remotelist.tpl
+#: include/controller/Controller_Tree.class.php:63
 msgid "tree"
 msgstr ""
 
 # Used as link to download a copy of the files in a given commit
-#: templates/jsconst.tpl
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/taglist.tpl
 #: templates/treelist.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Snapshot.class.php:94
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/taglist.tpl
+#: templates/main.tpl
+#: include/controller/Controller_Snapshot.class.php:93
 msgid "snapshot"
 msgstr ""
 
@@ -71,97 +72,106 @@ msgid "object"
 msgstr ""
 
 # Used as link to and title for page displaying info about a single commit in the project
-#: templates/tag.tpl
+#: templates/projectbase.tpl
+#: templates/shortloglist.tpl
 #: templates/search.tpl
 #: templates/commit.tpl
-#: templates/nav.tpl
 #: templates/taglist.tpl
 #: templates/log.tpl
 #: templates/history.tpl
-#: templates/shortloglist.tpl
-#: templates/projectbase.tpl
-#: include/controller/Controller_Commit.class.php:79
+#: templates/tag.tpl
+#: templates/nav.tpl
+#: include/controller/Controller_Commit.class.php:63
 msgid "commit"
 msgstr ""
 
 # Used as link to and title for page displaying detailed info about a tag
-#: templates/tag.tpl
 #: templates/tagtip.tpl
 #: templates/taglist.tpl
-#: include/controller/Controller_Tag.class.php:79
+#: templates/tag.tpl
+#: include/controller/Controller_Tag.class.php:63
 msgid "tag"
 msgstr ""
 
 # Used to label the author of the commit, and as a field to search
 # The author is the person who wrote the changes in the commit
-#: templates/tag.tpl
-#: templates/commit.tpl
 #: templates/committip.tpl
 #: templates/projectbase.tpl
+#: templates/commit.tpl
+#: templates/tag.tpl
 msgid "author"
 msgstr ""
 
 # Used as a link to a plaintext version of a page
-#: templates/blobdiff.tpl
-#: templates/commit.tpl
-#: templates/blame.tpl
 #: templates/treelist.tpl
-#: templates/commitdiff.tpl
 #: templates/blob.tpl
+#: templates/blobdiff.tpl
+#: templates/blame.tpl
+#: templates/commit.tpl
+#: templates/commitdiff.tpl
 msgid "plain"
 msgstr ""
 
 # Used as a link to a side-by-side version of a diff
 #: templates/blobdiff.tpl
+#: templates/commit.tpl
 #: templates/commitdiff.tpl
 msgid "side by side"
 msgstr ""
 
 # Used as a link to a unified version of a diff
 #: templates/blobdiff.tpl
+#: templates/commit.tpl
 #: templates/commitdiff.tpl
 msgid "unified"
 msgstr ""
 
 # Used as a link to the first page in a list of results
-#: templates/search.tpl
 #: templates/searchfiles.tpl
+#: templates/blobdiff.tpl
+#: templates/search.tpl
+#: templates/commitdiff.tpl
 msgid "first"
 msgstr ""
 
 # Used as a link to the previous page in a list of results
-#: templates/search.tpl
 #: templates/searchfiles.tpl
+#: templates/search.tpl
 #: templates/log.tpl
 #: templates/shortlog.tpl
 msgid "prev"
 msgstr ""
 
 # Used as a link to the next page in a list of results
-#: templates/search.tpl
 #: templates/searchfiles.tpl
+#: templates/shortloglist.tpl
+#: templates/search.tpl
 #: templates/log.tpl
 #: templates/shortlog.tpl
-#: templates/shortloglist.tpl
 msgid "next"
 msgstr ""
 
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "last"
+msgstr ""
+
 # Used as link to and title for the full diff of all the changes in a commit
+#: templates/shortloglist.tpl
 #: templates/search.tpl
 #: templates/commit.tpl
-#: templates/nav.tpl
 #: templates/log.tpl
 #: templates/history.tpl
-#: templates/shortloglist.tpl
-#: include/controller/Controller_Commitdiff.class.php:85
+#: templates/nav.tpl
+#: include/controller/Controller_Commitdiff.class.php:67
 msgid "commitdiff"
 msgstr ""
 
 # Used to label the committer of the commit, and as a field to search
 # The committer is the person who put the commit into this project
-#: templates/commit.tpl
 #: templates/committip.tpl
 #: templates/projectbase.tpl
+#: templates/commit.tpl
 msgid "committer"
 msgstr ""
 
@@ -246,7 +256,9 @@ msgid "changed"
 msgstr ""
 
 # Used as link to diff this file version with the previous version
+#: templates/blobdiff.tpl
 #: templates/commit.tpl
+#: templates/commitdiff.tpl
 msgid "diff"
 msgstr ""
 
@@ -268,57 +280,58 @@ msgid "moved from %1 with %2%% similarity"
 msgstr ""
 
 # Used as title for and link to the compact log view with one line abbreviated commits
-#: templates/headlist.tpl
-#: templates/nav.tpl
-#: templates/taglist.tpl
 #: templates/title.tpl
 #: templates/projectlist.tpl
-#: include/controller/Controller_Log.class.php:80
+#: templates/taglist.tpl
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/remotelist.tpl
+#: include/controller/Controller_Log.class.php:78
 msgid "shortlog"
 msgstr ""
 
 # Used as title for and link to log view with full commit messages
+#: templates/projectlist.tpl
+#: templates/taglist.tpl
 #: templates/headlist.tpl
 #: templates/nav.tpl
-#: templates/taglist.tpl
-#: templates/projectlist.tpl
-#: include/controller/Controller_Log.class.php:85
+#: templates/remotelist.tpl
+#: include/controller/Controller_Log.class.php:83
 msgid "log"
 msgstr ""
 
 # Used as title for and link to project summary page
-#: templates/nav.tpl
 #: templates/projectlist.tpl
-#: include/controller/Controller_Project.class.php:75
+#: templates/nav.tpl
+#: include/controller/Controller_Project.class.php:60
 msgid "summary"
 msgstr ""
 
 # Link back to the list of projects
-#: templates/main.tpl
 #: templates/projectbase.tpl
-#: include/controller/ControllerBase.class.php:270
-#: include/controller/Controller_ProjectList.class.php:94
+#: templates/main.tpl
+#: include/controller/Controller_ProjectList.class.php:92
 msgid "projects"
 msgstr ""
 
 # Used as a search type, to search the contents of files in the project
 #: templates/projectbase.tpl
-#: include/git/Blob.class.php:178
+#: include/smartyplugins/function.localfiletype.php:29
 msgid "file"
 msgstr ""
 
 # Used as title for search page, and also is the label for the search box
 #: templates/projectbase.tpl
-#: include/controller/Controller_Search.class.php:93
+#: include/controller/Controller_Search.class.php:91
 msgid "search"
 msgstr ""
 
 # Used as a link to the HEAD of a project for a log or file
 # (note: HEAD is standard git terminology)
+#: templates/blob.tpl
 #: templates/blame.tpl
 #: templates/log.tpl
 #: templates/shortlog.tpl
-#: templates/blob.tpl
 msgid "HEAD"
 msgstr ""
 
@@ -329,9 +342,9 @@ msgid "Last change %1"
 msgstr ""
 
 # Message displayed when there are no commits in the project to display
-#: templates/log.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
+#: templates/log.tpl
 msgid "No commits"
 msgstr ""
 
@@ -342,13 +355,13 @@ msgstr ""
 
 # Used as link to and title for page showing all tags in a project
 #: templates/title.tpl
-#: include/controller/Controller_Tags.class.php:76
+#: include/controller/Controller_Tags.class.php:60
 msgid "tags"
 msgstr ""
 
 # Used as link to and title for page showing all heads in a project
 #: templates/title.tpl
-#: include/controller/Controller_Heads.class.php:76
+#: include/controller/Controller_Heads.class.php:60
 msgid "heads"
 msgstr ""
 
@@ -358,6 +371,7 @@ msgid "(deleted)"
 msgstr ""
 
 # Used when diffing a file, to indicate that it's a new file
+#: templates/blobdiff.tpl
 #: templates/commitdiff.tpl
 msgid "(new)"
 msgstr ""
@@ -421,72 +435,60 @@ msgstr ""
 
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 #: templates/blob.tpl
-#: include/controller/Controller_Blame.class.php:79
+#: templates/blame.tpl
+#: include/controller/Controller_Blame.class.php:63
 msgid "blame"
 msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
-#: include/controller/Controller_Feed.class.php:45
-#: include/controller/Controller_Tree.class.php:34
-#: include/controller/Controller_Commit.class.php:34
-#: include/controller/Controller_Log.class.php:34
-#: include/controller/Controller_Blame.class.php:34
-#: include/controller/Controller_Snapshot.class.php:49
-#: include/controller/Controller_Blob.class.php:34
-#: include/controller/Controller_Tag.class.php:34
-#: include/controller/Controller_Tags.class.php:34
-#: include/controller/Controller_Project.class.php:33
-#: include/controller/Controller_Commitdiff.class.php:36
-#: include/controller/Controller_Blobdiff.class.php:36
-#: include/controller/Controller_History.class.php:34
-#: include/controller/Controller_Heads.class.php:34
-#: include/controller/Controller_Search.class.php:47
+#: include/controller/Controller_Snapshot.class.php:48
+#: include/controller/ControllerBase.class.php:108
 msgid "Project is required"
 msgstr ""
 
 # Used as the title of the rss controller
 # rss is a standard web feed format
-#: include/controller/Controller_Feed.class.php:92
+#: include/controller/Controller_Feed.class.php:75
 msgid "rss"
 msgstr ""
 
 # Used as link to and title for a diff of a single file
-#: include/controller/Controller_Blobdiff.class.php:81
+#: include/controller/Controller_Blobdiff.class.php:56
 msgid "blobdiff"
 msgstr ""
 
 # Error message when user tries to access a project that doesn't exist
 # %1$s: the project the user tried to access
-#: include/controller/Controller_Snapshot.class.php:44
-#: include/controller/ControllerBase.class.php:101
+#: include/controller/Controller_Snapshot.class.php:42
+#: include/controller/ControllerBase.class.php:102
 #, php-format
 msgid "Invalid project %1$s"
 msgstr ""
 
 # Used as the title for the opml controller
 # OPML is a standard XML outline format
-#: include/controller/Controller_ProjectList.class.php:84
+#: include/controller/Controller_ProjectList.class.php:82
 msgid "opml"
 msgstr ""
 
 # Used as the title of the project index controller
-#: include/controller/Controller_ProjectList.class.php:89
+#: include/controller/Controller_ProjectList.class.php:87
 msgid "project index"
 msgstr ""
 
 # Error message when a user tries to search but searching has been disabled in the config
-#: include/controller/Controller_Search.class.php:41
+#: include/controller/Controller_Search.class.php:27
 msgid "Search has been disabled"
 msgstr ""
 
 # Error message when a user tries to do a file search but searching files has been disabled in the config
-#: include/controller/Controller_Search.class.php:112
+#: include/controller/Controller_Search.class.php:41
 msgid "File search has been disabled"
 msgstr ""
 
 # Error message when a user's search query is too short
 # %1$d: the minimum number of characters
-#: include/controller/Controller_Search.class.php:118
+#: include/controller/Controller_Search.class.php:46
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"
@@ -494,86 +496,86 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Error message when the user enters an unsupported search type
-#: include/controller/Controller_Search.class.php:162
+#: include/controller/Controller_Search.class.php:140
 msgid "Invalid search type"
 msgstr ""
 
 # Error message when a user's search didn't produce any results
 # %1$s: the user's search string
-#: include/controller/Controller_Search.class.php:168
+#: include/controller/Controller_Search.class.php:146
 #, php-format
 msgid "No matches for \"%1$s\""
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:166
+#: include/smartyplugins/function.localfiletype.php:41
 msgid "directory"
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:172
+#: include/smartyplugins/function.localfiletype.php:35
 msgid "symlink"
 msgstr ""
 
 # Used when an object is stored in a project but git doesn't know what type it is
-#: include/git/Blob.class.php:185
+#: include/smartyplugins/function.localfiletype.php:47
 msgid "unknown"
 msgstr ""
 
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
-#: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:338
+#: include/git/Project.class.php:341 include/git/ProjectListBase.class.php:91
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:342
+#: include/git/Project.class.php:345
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:346
+#: include/git/Project.class.php:351
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:352
+#: include/git/Project.class.php:362
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
 
 # Error message when user tries to specify a file with a list of the projects, but it isn't a file
 # %1$s: the path the user specified
-#: include/git/ProjectListScmManager.class.php:37
-#: include/git/ProjectListFile.class.php:38
+#: include/git/ProjectListManifest.class.php:58
+#: include/git/ProjectListScmManager.class.php:51
+#: include/git/ProjectListFile.class.php:52
 #, php-format
 msgid "%1$s is not a file"
 msgstr ""
 
 # Error message when user tries to specify a file with a list of the projects, but the system can't read the file
 # %1$s: the file the user specified
-#: include/git/ProjectListFile.class.php:57
+#: include/git/ProjectListFile.class.php:144
 #, php-format
 msgid "Failed to open project list file %1$s"
 msgstr ""
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
-#: include/git/Pack.class.php:71 include/git/GitObject.class.php:137
+#: include/git/GitObject.class.php:125 include/git/Pack.class.php:71
 #, php-format
 msgid "Invalid hash %1$s"
 msgstr ""
 
 # Used to represent an age in years
 # %1$d: the number of years
-#: include/smartyplugins/modifier.agestring.php:25
+#: include/smartyplugins/function.agestring.php:31
 #, php-format
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
@@ -582,7 +584,7 @@ msgstr[1] ""
 
 # Used to represent an age in months
 # %1$d: the number of months
-#: include/smartyplugins/modifier.agestring.php:30
+#: include/smartyplugins/function.agestring.php:39
 #, php-format
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
@@ -591,7 +593,7 @@ msgstr[1] ""
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
-#: include/smartyplugins/modifier.agestring.php:35
+#: include/smartyplugins/function.agestring.php:47
 #, php-format
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
@@ -600,7 +602,7 @@ msgstr[1] ""
 
 # Used to represent an age in days
 # %1$d: the number of days
-#: include/smartyplugins/modifier.agestring.php:40
+#: include/smartyplugins/function.agestring.php:55
 #, php-format
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
@@ -609,7 +611,7 @@ msgstr[1] ""
 
 # Used to represent an age in hours
 # %1$d: the number of hours
-#: include/smartyplugins/modifier.agestring.php:45
+#: include/smartyplugins/function.agestring.php:63
 #, php-format
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
@@ -618,7 +620,7 @@ msgstr[1] ""
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
-#: include/smartyplugins/modifier.agestring.php:50
+#: include/smartyplugins/function.agestring.php:71
 #, php-format
 msgid "%1$d min ago"
 msgid_plural "%1$d min ago"
@@ -627,7 +629,7 @@ msgstr[1] ""
 
 # Used to represent an age in seconds
 # %1$d: the number of seconds
-#: include/smartyplugins/modifier.agestring.php:55
+#: include/smartyplugins/function.agestring.php:79
 #, php-format
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
@@ -635,13 +637,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Used to represent a modification time of right now
-#: include/smartyplugins/modifier.agestring.php:59
+#: include/smartyplugins/function.agestring.php:86
 msgid "right now"
 msgstr ""
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:132
+#: include/git/ProjectListBase.class.php:88
 msgid "A projectroot must be set in the config"
 msgstr ""
 
@@ -669,31 +671,32 @@ msgid "selected"
 msgstr ""
 
 # Link to deselect the currently selected diff
+#: templates/shortloglist.tpl
 #: templates/log.tpl
 #: templates/shortlog.tpl
-#: templates/shortloglist.tpl
 msgid "deselect"
 msgstr ""
 
 # Link beside commits - diffs this commit against the currently selected commit
-#: templates/log.tpl
 #: templates/shortloglist.tpl
+#: templates/log.tpl
 msgid "diff with selected"
 msgstr ""
 
 # Link beside commits - selects this commit to be used in a diff
-#: templates/log.tpl
 #: templates/shortloglist.tpl
+#: templates/log.tpl
 msgid "select for diff"
 msgstr ""
 
 # Used as an alternate text on javascript "loading" images
-#: templates/jsconst.tpl
+#: templates/projectlist.tpl
+#: templates/main.tpl
 msgid "Loading…"
 msgstr ""
 
 # Used as a loading message while blame data is being pulled from the server
-#: templates/jsconst.tpl
+#: templates/main.tpl
 msgid "Loading blame data…"
 msgstr ""
 
@@ -716,21 +719,21 @@ msgstr ""
 
 # Used as the title of the Atom controller
 # Atom is a standard web feed format
-#: include/controller/Controller_Feed.class.php:97
+#: include/controller/Controller_Feed.class.php:80
 msgid "atom"
 msgstr ""
 
 # Used as an error message when memcache is turned
 # on without the appropriate PHP extension installed
-#: include/smartyplugins/cacheresource.memcache.php:85
+#: include/cache/CacheResource_Memcache.class.php:82
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
 msgstr ""
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
-#: templates/jsconst.tpl
 #: templates/projectlist.tpl
+#: templates/main.tpl
 msgid "No matches found for \"%1\""
 msgstr ""
 
@@ -742,7 +745,7 @@ msgstr ""
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:140
+#: index.php:71
 #, php-format
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
@@ -759,7 +762,7 @@ msgstr ""
 # Message displayed when diffing two binary files.
 # %1$s: the filename of the first file
 # %2$s: the filename of the second file
-#: include/git/FileDiff.class.php:810
+#: include/git/FileDiff.class.php:842
 #, php-format
 msgid "Binary files %1$s and %2$s differ"
 msgstr ""
@@ -775,6 +778,38 @@ msgstr ""
 # You want this in your native language so speakers of your language
 # will recognize it.  For example, a french translation would translate
 # this as "Français".
-#: include/Resource.class.php:121
+#: include/Resource.class.php:140
 msgid "English"
+msgstr ""
+
+#: templates/title.tpl
+msgid "repo branch"
+msgstr ""
+
+#: templates/blobdiff.tpl
+msgid "numstat"
+msgstr ""
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "toggle tabs"
+msgstr ""
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "numbers"
+msgstr ""
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "left only"
+msgstr ""
+
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
+msgid "right only"
+msgstr ""
+
+#: include/controller/Controller_Remotes.class.php:50
+msgid "remotes"
 msgstr ""
