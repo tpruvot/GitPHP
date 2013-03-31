@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for displaying file history
+ * Controller to display file history
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
@@ -64,15 +64,32 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 	{
 		$co = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $co);
-		$this->tpl->assign('tree', $co->GetTree());
 
-		$blobhash = $co->PathToHash($this->params['file']);
+		$tree = $co->GetTree();
+		$this->tpl->assign('tree', $tree);
+
+		$blobhash = $tree->PathToHash($this->params['file']);
+		if (empty($blobhash))
+			throw new GitPHP_FileNotFoundException($this->params['file']);
+
 		$blob = $this->GetProject()->GetBlob($blobhash);
-		if (is_object($blob)) {
-			$blob->SetCommit($co);
-			$blob->SetPath($this->params['file']);
-		}
+
+		$blob->SetCommit($co);
+		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
+
+		/**
+		todo
+		$this->tpl->assign('page',$this->params['page']);
+		$skip = $this->params['page'] * 100;
+
+		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co, 101, $skip);
+		if ($history->GetCount() > 100) {
+			$this->tpl->assign('hasmorehistory', true);
+			$history->SetLimit(100);
+		}
+		$this->tpl->assign('history', $history);
+		**/
 	}
 
 }

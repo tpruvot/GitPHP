@@ -90,7 +90,9 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		if (!isset($this->params['hash'])) {
 			if (isset($this->params['file'])) {
-				$this->params['hash'] = $commit->PathToHash($this->params['file']);
+				$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
+				if (empty($this->params['hash']))
+					throw new GitPHP_DirectoryNotFoundException($this->params['file']);
 			} else {
 				$tree =	$commit->GetTree();
 				if (empty($tree))

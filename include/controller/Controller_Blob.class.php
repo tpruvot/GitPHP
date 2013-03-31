@@ -82,7 +82,9 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
-						$this->params['hash'] = $commit->PathToHash($this->params['file']);
+						$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
+						if (empty($this->params['hash']))
+							throw new GitPHP_FileNotFoundException($this->params['file']);
 					}
 
 					$blob = $this->GetProject()->GetBlob($this->params['hash']);
@@ -115,8 +117,13 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
 
+		$tree = $commit->GetTree();
+		$this->tpl->assign('tree', $commit->GetTree());
+
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = $commit->PathToHash($this->params['file']);
+			$this->params['hash'] = $tree->PathToHash($this->params['file']);
+			if (empty($this->params['hash']))
+				throw new GitPHP_FileNotFoundException($this->params['file']);
 		}
 
 		$blob = $this->GetProject()->GetBlob($this->params['hash']);
@@ -131,8 +138,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
-
-		$this->tpl->assign('tree', $commit->GetTree());
 
 		$isPicture = false;
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
