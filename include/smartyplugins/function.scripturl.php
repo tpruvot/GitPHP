@@ -1,21 +1,11 @@
 <?php
 /**
- * scripturl
- *
  * Smarty function to get the full url of the current script
  *
- * @author Christopher Han <xiphux@gmail.com>
+ * @author Tanguy Pruvot <tpruvot@github>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Smarty
- */
-
-/**
- * scripturl smarty function
- *
- * @param array $params function parameters
- * @param mixed $smarty smarty object
- * @return string script url
  */
 function smarty_function_scripturl($params, &$smarty)
 {
@@ -34,7 +24,8 @@ function smarty_function_scripturl($params, &$smarty)
 	else
 		$scriptstr = 'http://';
 
-	$scriptstr .= $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+	// HTTP_HOST is taken directly from the Host: request header (with port, if not 80)
+	$scriptstr .= $_SERVER['HTTP_HOST'] . str_replace('/index.php','/',$_SERVER['PHP_SELF']);
 
 	return $scriptstr;
 }
