@@ -87,12 +87,14 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 
 			$data = array();
 
-			include_once(GITPHP_GESHIDIR . "geshi.php");
+			require_once(GITPHP_GESHIDIR . "geshi.php");
 			$geshi = new GeSHi("",'php');
 
 			$files = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), 'ls-tree', array('-r', '--name-only', $head->GetTree()->GetHash())));
+
 			foreach ($files as $file) {
 				$filename = GitPHP_Util::BaseName($file);
+
 				$lang = GitPHP_Util::GeshiFilenameToLanguage($filename);
 				if (empty($lang)) {
 					$lang = $geshi->get_language_name_from_extension(substr(strrchr($filename, '.'), 1));
@@ -102,9 +104,12 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 				}
 
 				if (!empty($lang) && ($lang !== 'Other')) {
+
+					/** buggy ? and uncatchable (error 500, no logs)
 					$fulllang = $geshi->get_language_fullname($lang);
 					if (!empty($fulllang))
 						$lang = $fulllang;
+					**/
 				}
 
 				if (isset($data[$lang])) {
@@ -112,8 +117,8 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 				} else {
 					$data[$lang] = 1;
 				}
-			}
 
+			}
 		}
 
 		$this->tpl->assign('data', json_encode($data));
