@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for displaying a project's feed
+ * Controller to display a project's feed
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @author Christian Weiske <cweiske@cweiske.de>
@@ -18,6 +18,9 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	/**
 	 * Constants for the different feed formats
 	 */
+	const RssFormat = 'rss';
+	const AtomFormat = 'atom';
+
 	const FEED_FORMAT_RSS = 'rss';
 	const FEED_FORMAT_ATOM = 'atom';
 
@@ -85,7 +88,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 		}
 
 		if ($this->params['format'] == self::FEED_FORMAT_RSS) {
-			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
+			$this->headers[] = "Content-type: application/rss+xml; charset=UTF-8";
 		} else if ($this->params['format'] == self::FEED_FORMAT_ATOM) {
 			$this->headers[] = "Content-type: application/atom+xml; charset=UTF-8";
 		}

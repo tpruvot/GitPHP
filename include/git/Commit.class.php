@@ -255,6 +255,21 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	}
 
 	/**
+	 * Gets the author's email only
+	 *
+	 * @return string author email
+	 */
+	public function GetAuthorEmail()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (preg_match('/ <(.*)>$/', $this->author, $regs)) {
+			return $regs[1];
+		}
+	}
+
+	/**
 	 * Gets the author's epoch
 	 *
 	 * @return string author epoch
@@ -320,6 +335,21 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 			$this->ReadData();
 
 		return preg_replace('/ <.*/', '', $this->committer);
+	}
+
+	/**
+	 * Gets the committer's email only
+	 *
+	 * @return string committer email
+	 */
+	public function GetCommitterEmail()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (preg_match('/ <(.*)>$/', $this->committer, $regs)) {
+			return $regs[1];
+		}
 	}
 
 	/**

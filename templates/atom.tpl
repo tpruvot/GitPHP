@@ -1,11 +1,11 @@
 {*
  *  atom.tpl
- *  gitphp: A PHP git repository browser
+ *  GitPHP: A PHP git repository browser
  *  Component: Atom feed template
  *
  *  Copyright (C) 2010 Christian Weiske <cweiske@cweiske.de>
  *}
-{'<?xml version="1.0" encoding="utf-8"?>'}
+<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>{$project->GetProject()}</title>
   <subtitle type="text">{$project->GetProject()} log</subtitle>
@@ -31,11 +31,11 @@
       <div xmlns="http://www.w3.org/1999/xhtml">
         <p>
         {foreach from=$logitem->GetComment() item=line}
-          {$line|htmlspecialchars}<br />
+          {$line|htmlspecialchars}<br/>
         {/foreach}
         </p>
         <ul>
-        {foreach from=$logitem->DiffToParent() item=diffline}
+        {foreach from=$logitem->DiffToParent($gitexe) item=diffline}
           <li>{$diffline->GetToFile()|htmlspecialchars}</li>
         {/foreach}
         </ul>
