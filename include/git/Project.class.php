@@ -192,7 +192,7 @@ class GitPHP_Project
 		$fullPath = realpath($path);
 
 		if (!is_dir($fullPath . '/.')) {
-			throw new Exception(sprintf(__('%1$s is not a directory'), $project));
+			throw new GitPHP_InvalidDirectoryException($fullPath);
 		}
 
 		if (!is_file($fullPath . '/HEAD')) {

@@ -195,7 +195,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return 'The Memcached or Memcache PHP extension is required for Memcache support';
 		}
 
-		if ($exception instanceof GitPHP_InvalidDirectoryConfigurationException) {
+		if (($exception instanceof GitPHP_InvalidDirectoryException) || ($exception instanceof GitPHP_InvalidDirectoryConfigurationException)) {
 			if ($this->resource)
 				return sprintf($this->resource->translate('%1$s is not a directory'), $exception->Directory);
 			return sprintf('%1$s is not a directory', $exception->Directory);
