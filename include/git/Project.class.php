@@ -1200,7 +1200,7 @@ class GitPHP_Project
 		foreach ($this->tags as $tag => $hash) {
 			$tags[] = $this->GetTag($tag);
 		}
-		usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
+		@ usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
 
 		if (($count > 0) && (count($tags) > $count)) {
 			$tags = array_slice($tags, 0, $count);
