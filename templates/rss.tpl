@@ -16,17 +16,14 @@
 
 {**}{foreach from=$log item=logitem}
       <item>
-        <title>{$logitem->GetCommitterEpoch()|date_format:"%d %b %R"} - {$logitem->GetTitle()|escape:'html'}</title>
+        <title>{$logitem->GetCommitterEpoch()|date_format:"%d %b %Y, %R"} - {$logitem->GetTitle()|escape:'html'}</title>
         <author>{$logitem->GetAuthorEmail()|escape:'html'} ({$logitem->GetAuthorName()|escape:'html'})</author>
         <pubDate>{$logitem->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
         <guid isPermaLink="true">{geturl fullurl=true project=$project action=commit hash=$logitem}</guid>
         <link>{scripturl}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$logitem->GetHash()}</link>
-        <description>{$logitem->GetTitle()|escape:'html'}</description>
+        <description>{foreach from=$logitem->GetComment() item=line}{$line|escape:'html'}&lt;br/&gt;{/foreach}</description>
         <content:encoded>
           <![CDATA[
-          {foreach from=$logitem->GetComment() item=line}
-            {$line}<br/>
-          {/foreach}
           {foreach from=$logitem->DiffToParent($gitexe) item=diffline}
             {$diffline->GetToFile()}<br/>
           {/foreach}
