@@ -61,6 +61,7 @@ class GitPHP_AutoLoader
 			$path = 'router/';
 		} else if (in_array($classname, array(
 				'Config',
+				'DebugLog',
 				'Log',
 				'MessageException',
 				'Mime',
