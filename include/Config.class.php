@@ -65,11 +65,11 @@ class GitPHP_Config
 		global $gitphp_version, $gitphp_appstring;
 
 		if (!is_readable($configFile)) {
-			throw new GitPHP_MessageException('Could not load config file ' . $configFile, true, 500);
+			throw new GitPHP_InvalidConfigFileException($configFile);
 		}
 
 		if (!include($configFile)) {
-			throw new GitPHP_MessageException('Could not read config file ' . $configFile, true, 500);
+			throw new GitPHP_InvalidConfigFileException($configFile);
 		}
 
 		if (isset($gitphp_conf) && is_array($gitphp_conf))

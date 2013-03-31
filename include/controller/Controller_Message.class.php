@@ -231,6 +231,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('%1$s is outside of the projectroot', $exception->Path);
 		}
 
+		if ($exception instanceof GitPHP_InvalidConfigFileException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Could not load config file %1$s'), $exception->File);
+			return sprintf('Could not load config file %1$s', $exception->File);
+		}
+
 		return $exception->getMessage();
 	}
 
