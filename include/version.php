@@ -2,7 +2,7 @@
 /**
  * Version header
  *
- * @author Christopher Han <xiphux@gmail.com>
+ * @author Tanguy Pruvot <tpruvot@github>
  * @copyright Copyright (c) 2008-2010 Christopher Han
  * @package GitPHP
  */
@@ -10,7 +10,7 @@
 /**
  * Defines the version
  */
-$gitphp_version = "0.2.7.2";
+$gitphp_version = "0.2.7.3";
 
 /**
  * Defines the app string (app name in pages title)

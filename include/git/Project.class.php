@@ -889,6 +889,20 @@ class GitPHP_Project
 	}
 
 	/**
+	 * Gets the head reference for this project
+	 * Only returns the raw pointer of the HEAD branch
+	 *
+	 * @return string head reference
+	 */
+	public function GetHeadReference()
+	{
+		if (!$this->readHeadRef)
+			$this->ReadHeadCommit();
+
+		return $this->head;
+	}
+
+	/**
 	 * ReadHeadCommitRepo
 	 *
 	 * Read head commit for repo (no HEAD)
