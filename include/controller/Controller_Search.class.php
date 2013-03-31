@@ -24,7 +24,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	{
 		parent::Initialize();
 		if (!$this->config->GetValue('search')) {
-			throw new GitPHP_MessageException(__('Search has been disabled'), true);
+			throw new GitPHP_SearchDisabledException();
 		}
 
 		if (empty($this->params['hash']))
@@ -37,13 +37,18 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		if ($this->params['searchtype'] == self::SEARCH_FILE) {
 			if (!$this->config->GetValue('filesearch')) {
-				// throw new GitPHP_SearchDisabledException(true);
-				throw new GitPHP_MessageException(__('File search has been disabled'), true);
+				throw new GitPHP_SearchDisabledException(true);
 			}
 		}
 
+		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch)
+		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch)
+		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch)
+		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch))
+			throw new GitPHP_InvalidSearchTypeException();
+
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-			throw new GitPHP_MessageException(sprintf(__n('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
+			throw new GitPHP_SearchLengthException(2);
 		}
 	}
 
