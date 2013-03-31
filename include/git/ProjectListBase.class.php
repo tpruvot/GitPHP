@@ -211,6 +211,8 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$this->ApplyGlobalConfig($project);
 
+		$this->ApplyGitConfig($project);
+
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 		}
@@ -261,6 +263,69 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	public function GetProjectSettings()
 	{
 		return $this->projectSettings;
+	}
+
+	/**
+	 * Reads the project's git config settings and applies them to the project
+	 *
+	 * @param GitPHP_Project $project project
+	 */
+	protected function ApplyGitConfig($project)
+	{
+		if (!$project)
+			return;
+
+		$config = null;
+		try {
+			$config = new GitPHP_GitConfig($project->GetPath() . '/config');
+		} catch (Exception $e) {
+			return;
+		}
+
+		if ($config->HasValue('gitphp.owner')) {
+			$project->SetOwner($config->GetValue('gitphp.owner'));
+		} else if ($config->HasValue('gitweb.owner')) {
+			$project->SetOwner($config->GetValue('gitweb.owner'));
+		}
+
+		if ($config->HasValue('gitphp.description')) {
+			$project->SetDescription($config->GetValue('gitphp.description'));
+		} else if ($config->HasValue('gitweb.description')) {
+			$project->SetDescription($config->GetValue('gitweb.description'));
+		}
+
+		if ($config->HasValue('gitphp.category')) {
+			$project->SetCategory($config->GetValue('gitphp.category'));
+		}
+
+		if ($config->HasValue('gitphp.cloneurl')) {
+			$project->SetCloneUrl($config->GetValue('gitphp.cloneurl'));
+		}
+
+		if ($config->HasValue('gitphp.pushurl')) {
+			$project->SetPushUrl($config->GetValue('gitphp.pushurl'));
+		}
+
+		if ($config->HasValue('gitphp.bugurl')) {
+			$project->SetBugUrl($config->GetValue('gitphp.bugurl'));
+		}
+
+		if ($config->HasValue('gitphp.bugpattern')) {
+			$project->SetBugPattern($config->GetValue('gitphp.bugpattern'));
+		}
+
+		if ($config->HasValue('gitphp.website')) {
+			$project->SetWebsite($config->GetValue('gitphp.website'));
+		}
+
+		if ($config->HasValue('gitphp.compat')) {
+			$project->SetCompat($config->GetValue('gitphp.compat'));
+		}
+
+		if ($config->HasValue('core.abbrev')) {
+			$project->SetAbbreviateLength($config->GetValue('core.abbrev'));
+		}
+
 	}
 
 	/**
