@@ -201,6 +201,12 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('%1$s is not a directory', $exception->Directory);
 		}
 
+		if ($exception instanceof GitPHP_InvalidFileException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is not a file'), $exception->File);
+			return sprintf('%1$s is not a file', $exception->File);
+		}
+
 		return $exception->getMessage();
 	}
 
