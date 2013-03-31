@@ -47,6 +47,8 @@ class GitPHP_AutoLoader
 		$path = '';
 		if (strncmp($classname, 'Controller', 10) === 0) {
 			$path = 'controller/';
+		} else if ((strlen($classname) > 9) && (substr_compare($classname, 'Exception', -9, 9) === 0)) {
+			$path = 'exception/';
 		} else if (strpos($classname, 'Cache') !== false) {
 			$path = 'cache/';
 		} else if (strncmp($classname, 'Route', 5) === 0) {
@@ -55,7 +57,6 @@ class GitPHP_AutoLoader
 				'Config',
 				'DebugLog',
 				'Log',
-				'MessageException',
 				'Mime',
 				'Resource',
 				'Util'
