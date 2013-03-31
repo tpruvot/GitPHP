@@ -1,8 +1,6 @@
 <?php
 /**
- * GitPHP Controller Commit
- *
- * Controller for displaying a commit
+ * Controller to display a commit
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
@@ -71,7 +69,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 		$commit = $this->GetProject()->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('tree', $commit->GetTree());
-		$treediff = $commit->DiffToParent();
+		$treediff = $commit->DiffToParent($this->exe);
 		$treediff->SetRenames(true);
 		$this->tpl->assign('treediff', $treediff);
 	}
