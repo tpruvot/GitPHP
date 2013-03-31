@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP GitObject
- *
  * Base class for all hash objects in a git repository
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,58 +7,38 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Git Object class
- *
- * @abstract
- * @package GitPHP
- * @subpackage Git
- */
 abstract class GitPHP_GitObject
 {
 	/**
-	 * project
-	 *
 	 * Stores the project internally
 	 *
-	 * @access protected
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * hash
-	 *
+	 * Stores the project name for compat.
+	 */
+	protected $projectName;
+
+	/**
 	 * Stores the hash of the object internally
-	 *
-	 * @access protected
 	 */
 	protected $hash;
 
 	/**
-	 * abbreviatedHash
-	 *
 	 * Stores the abbreviated hash of the object internally
-	 *
-	 * @access protected
 	 */
 	protected $abbreviatedHash;
 
 	/**
-	 * abbreviatedHashLoaded
-	 *
 	 * Stores whether the abbreviated hash has been loaded
-	 *
-	 * @access protected
 	 */
 	protected $abbreviatedHashLoaded = false;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash object hash
 	 * @return mixed git object
@@ -68,29 +46,50 @@ abstract class GitPHP_GitObject
 	 */
 	public function __construct($project, $hash)
 	{
-		$this->project = $project->GetProject();
+		if (is_object($project)) {
+			$this->projectName = $project->GetProject();
+			$this->project = $project;
+		} elseif (is_string($project)) {
+			$this->projectName = $project;
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($this->projectName);
+		}
 		$this->SetHash($hash);
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
-	 * @access public
 	 * @return mixed project
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		if (is_string($this->project)) {
+			// hmm....
+			$this->projectName = $this->project;
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($this->projectName);
+		}
+		return $this->project;
 	}
 
 	/**
-	 * GetHash
+	 * Sets the project
 	 *
+	 * @param GitPHP_Project $project project
+	 */
+	public function SetProject($project)
+	{
+		if (is_object($project)) {
+			$this->project = $project;
+			$this->projectName = $project->GetProject();
+		} elseif (is_string($project)) {
+			$this->projectName = $project;
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($this->projectName);
+		}
+	}
+
+	/**
 	 * Gets the hash
 	 *
-	 * @access public
 	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
@@ -111,13 +110,10 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * SetHash
-	 *
 	 * Attempts to set the hash of this object
 	 *
 	 * @param string $hash the hash to set
 	 * @throws Exception on invalid hash
-	 * @access protected
 	 */
 	protected function SetHash($hash)
 	{
@@ -128,29 +124,23 @@ abstract class GitPHP_GitObject
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
-		return array('project', 'hash');
+		return array('hash');
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
 	{
-		return 'project|' . $this->project;
+		return 'project|' . $this->projectName;
 	}
 
 }

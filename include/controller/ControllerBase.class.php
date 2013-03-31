@@ -66,7 +66,7 @@ abstract class GitPHP_ControllerBase
 
 	/**
 	 * Logger instance
-	 * @var GitPHP_Log
+	 * @var GitPHP_DebugLog
 	 */
 	protected $log;
 
@@ -202,6 +202,26 @@ abstract class GitPHP_ControllerBase
 
 		$this->projectList = GitPHP_ProjectList::GetInstance();
 
+		$this->projectList->SetMemoryCache(new GitPHP_MemoryCache($this->config->GetValue('objectmemory')));
+		if ($this->config->GetValue('objectcache')) {
+			$strategy = null;
+			$servers = $this->config->GetValue('memcache');
+			if ($servers) {
+				if (class_exists('Memcached')) {
+					$strategy = new GitPHP_Cache_Memcached($servers);
+				} else if (class_exists('Memcache')) {
+					$strategy = new GitPHP_Cache_Memcache($servers);
+				} else {
+					throw new GitPHP_MessageException('MissingMemcacheException', true);
+				}
+			} else {
+				$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', $this->config->GetValue('objectcachecompress'));
+			}
+			$cache = new GitPHP_Cache($strategy);
+			$cache->SetLifetime($this->config->GetValue('objectcachelifetime'));
+			$this->projectList->SetCache($cache);
+		}
+
 		$this->projectList->SetExe($this->exe);
 
 		if ($this->log)
@@ -219,7 +239,24 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->merge_compiled_includes = true;
 		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
-		if ($this->config->GetValue('cache', false)) {
+		if ($this->config->GetValue('cache')) {
+			$cacheDir = GITPHP_CACHEDIR . 'templates';
+
+			if (file_exists($cacheDir)) {
+				if (!is_dir($cacheDir)) {
+					throw new Exception($cacheDir . ' exists but is not a directory');
+				} else if (!is_writable($cacheDir)) {
+					@ chmod($cacheDir, 0775);
+					if (!is_writable($cacheDir))
+						throw new Exception($cacheDir . ' is not writable');
+				}
+			} else {
+				if (!mkdir($cacheDir, 0775))
+					throw new Exception($cacheDir . ' could not be created');
+				@ chmod($cacheDir, 0775);
+			}
+			$this->tpl->setCacheDir($cacheDir);
+
 			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
 			if ($this->config->HasKey('cachelifetime')) {
 				$this->tpl->cache_lifetime = $this->config->GetValue('cachelifetime');
@@ -503,7 +540,7 @@ abstract class GitPHP_ControllerBase
 			if ($eqpos > 0) {
 				$var = substr($varstr, 0, $eqpos);
 				$val = substr($varstr, $eqpos + 1);
-				if (!(empty($var) || empty($val))) {
+				if (!(empty($var) || empty($val)) || ($var == 'q')) {
 					$getvarsmapped[$var] = urldecode($val);
 				}
 			}
@@ -521,7 +558,15 @@ abstract class GitPHP_ControllerBase
 		$this->LoadHeaders();
 
 		if (count($this->headers) > 0) {
+			$hascontenttype = false;
 			foreach ($this->headers as $hdr) {
+				if (empty($hdr))
+					continue;
+
+				if (strncmp($hdr, 'Content-Type:', 13) === 0) {
+					if ($hascontenttype)
+						throw new Exception('Duplicate Content-Type header');
+				}
 				header($hdr);
 			}
 		}
@@ -556,6 +601,9 @@ abstract class GitPHP_ControllerBase
 			$this->Log("Smarty render end");
 
 		$this->tpl->clearAllAssign();
+
+		if ($this->log && $this->projectList)
+			$this->log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
 	}
 
 	/**

@@ -17,72 +17,110 @@ class GitPHP_Cache
 	const Template = 'data.tpl';
 
 	/**
-	 * objectCacheInstance
-	 *
 	 * Stores the singleton instance of the object cache
-	 *
-	 * @access protected
-	 * @static
+	 * @deprecated
 	 */
 	protected static $objectCacheInstance;
 
 	/**
-	 * GetObjectCacheInstance
-	 *
 	 * Return the singleton instance of the object cache
+	 * @deprecated
 	 *
-	 * @access public
-	 * @static
 	 * @return mixed instance of cache class
 	 */
 	public static function GetObjectCacheInstance()
 	{
 		if (!self::$objectCacheInstance) {
-			self::$objectCacheInstance = new GitPHP_Cache();
+			$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR. 'objects', GitPHP_Config::GetInstance()->GetValue('objectcachecompress'));
+			self::$objectCacheInstance = new GitPHP_Cache($strategy);
 			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
 				self::$objectCacheInstance->SetEnabled(true);
-				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400));
+				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime'));
 			}
 		}
 		return self::$objectCacheInstance;
 	}
 
 	/**
-	 * tpl
-	 *
 	 * Smarty instance
-	 *
-	 * @access protected
+	 * @deprecated
 	 */
 	protected $tpl = null;
 
 	/**
-	 * enabled
-	 *
 	 * Stores whether the cache is enabled
-	 *
-	 * @access protected
+	 * @deprecated
 	 */
 	protected $enabled = false;
 
 	/**
-	 * __construct
+	 * Cache strategy
 	 *
+	 * @var GitPHP_CacheStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
+	 * Cache lifetime in seconds
+	 *
+	 * @var int
+	 */
+	protected $lifetime = 86400; // 24*60*60
+
+	/**
 	 * Constructor
 	 *
-	 * @access public
-	 * @return mixed cache object
+	 * @param GitPHP_CacheStrategy_Interface $strategy cache strategy
 	 */
-	public function __construct()
+	public function __construct(GitPHP_CacheStrategy_Interface $strategy)
 	{
+		if (!$strategy)
+			throw new Exception('Cache strategy is required');
+
+		$this->SetStrategy($strategy);
+
+		if (!self::$objectCacheInstance) {
+			self::$objectCacheInstance = $this;
+		}
 	}
 
 	/**
-	 * GetEnabled
+	 * Set the cache strategy
 	 *
+	 * @param GitPHP_CacheStrategy_Interface $strategy cache strategy
+	 */
+	public function SetStrategy(GitPHP_CacheStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
+	}
+
+	/**
+	 * Gets the cache lifetime
+	 *
+	 * @return int cache lifetime in seconds
+	 */
+	public function GetLifetime()
+	{
+		return $this->lifetime;
+	}
+
+	/**
+	 * Sets the cache lifetime
+	 */
+	public function SetLifetime($lifetime)
+	{
+		if (!is_int($lifetime))
+			return;
+
+		$this->lifetime = $lifetime;
+	}
+
+	/**
 	 * Gets whether the cache is enabled
 	 *
-	 * @access public
 	 * @return boolean true if enabled
 	 */
 	public function GetEnabled()
@@ -91,11 +129,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * SetEnabled
-	 *
 	 * Sets whether the cache is enabled
 	 *
-	 * @access public
 	 * @param boolean $enable true to enable, false to disable
 	 */
 	public function SetEnabled($enable)
@@ -112,43 +147,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * GetLifetime
-	 *
-	 * Gets the cache lifetime
-	 *
-	 * @access public
-	 * @return int cache lifetime in seconds
-	 */
-	public function GetLifetime()
-	{
-		if (!$this->enabled)
-			return false;
-
-		return $this->tpl->cache_lifetime;
-	}
-
-	/**
-	 * SetLifetime
-	 *
-	 * Sets the cache lifetime
-	 *
-	 * @access public
-	 * @param int $lifetime cache lifetime in seconds
-	 */
-	public function SetLifetime($lifetime)
-	{
-		if (!$this->enabled)
-			return;
-
-		$this->tpl->cache_lifetime = $lifetime;
-	}
-
-	/**
-	 * Get
-	 *
 	 * Get an item from the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @return the cached object, or false
 	 */
@@ -169,11 +169,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Set
-	 *
 	 * Set an item in the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @param mixed $value value
 	 * @param int $lifetime override the lifetime for this data
@@ -206,11 +203,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Exists
-	 *
 	 * Tests if a key is cached
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 * @return boolean true if cached, false otherwise
 	 */
@@ -226,11 +220,8 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Delete
-	 *
 	 * Delete an item from the cache
 	 *
-	 * @access public
 	 * @param string $key cache key
 	 */
 	public function Delete($key = null)
@@ -245,11 +236,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * Clear
-	 *
 	 * Clear the cache
-	 *
-	 * @access public
 	 */
 	public function Clear()
 	{
@@ -260,11 +247,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * CreateSmarty
-	 *
 	 * Instantiates Smarty cache
-	 *
-	 * @access private
 	 */
 	private function CreateSmarty()
 	{
@@ -286,11 +269,7 @@ class GitPHP_Cache
 	}
 
 	/**
-	 * DestroySmarty
-	 *
 	 * Destroys Smarty cache
-	 *
-	 * @access private
 	 */
 	private function DestroySmarty()
 	{

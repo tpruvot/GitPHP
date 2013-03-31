@@ -395,18 +395,17 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a tree cache key
 	 *
-	 * @access public
-	 * @static
-	 * @param string $proj project
+	 * @param mixed $proj project
 	 * @param string $hash hash
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $hash)
 	{
+		if (is_object($proj))
+			return 'project|' . $proj->GetName() . '|tree|' . $hash;
+
 		return 'project|' . $proj . '|tree|' . $hash;
 	}
 

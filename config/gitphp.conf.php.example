@@ -83,6 +83,108 @@ $gitphp_conf['fixupjs'] = <<<EOT
     });
 EOT;
 
+
+/*******************************************************
+ * Cache options
+ */
+
+/*
+ * cache
+ * Turns on template caching. If in doubt, leave it off
+ * You will need to create a directory 'cache' and make it
+ * writable by the server
+ */
+//$gitphp_conf['cache'] = true;
+
+/*
+ * objectcache
+ * Turns on object caching.  This caches immutable pieces of
+ * data from the git repository.  You will need to create a
+ * directory 'cache' and make it writable by the server.
+ * This can be used in place of the template cache, or
+ * in addition to it for the maximum benefit.
+ */
+//$gitphp_conf['objectcache'] = true;
+
+/*
+ * cacheexpire
+ * Attempts to automatically expire cache when a new commit renders
+ * it out of date.
+ * This is a good option for most users because it ensures the cache
+ * is always up to date and users are seeing correct information,
+ * although it is a slight performance hit.
+ * However, if your commits are coming in so quickly that the cache
+ * is constantly being expired, turn this off.
+ */
+$gitphp_conf['cacheexpire'] = true;
+
+/*
+ * cachelifetime
+ * Sets how long a page will be cached, in seconds
+ * If you are automatically expiring the cache
+ * (see the 'cacheexpire' option above), then this can be set
+ * relatively high - 3600 seconds (1 hour) or even longer.
+ * -1 means no timeout.
+ * If you have turned cacheexpire off because of too many
+ * cache expirations, set this low (5-10 seconds).
+ */
+$gitphp_conf['cachelifetime'] = 3600;
+
+/*
+ * objectcachelifetime
+ * Sets how long git objects will be cached, in seconds
+ * The object cache only stores immutable objects from
+ * the git repository, so there's no harm in setting
+ * this to a high number.  Set to -1 to never expire.
+ */
+$gitphp_conf['objectcachelifetime'] = 86400;
+
+/*
+ * objectcachecompress
+ * Sets the size threshold at which objects will be compressed
+ * when being stored into the object cache.  Compression saves
+ * cache space but adds a very slight decompression overhead.
+ * Set to 0 to disable compression.
+ */
+//$gitphp_conf['objectcachecompress'] = 500;
+
+/*
+ * memcache
+ * Enables memcache support for caching data, instead of
+ * Smarty's standard on-disk cache.
+ * Only applies if cache = true or objectcache = true (or both)
+ * Requires either the Memcached or Memcache PHP extensions.
+ * This is an array of servers.  Each server is specified as an
+ * array.
+ * Index 0 (required): The server hostname/IP
+ * Index 1 (optional): The port, default is 11211
+ * Index 2 (optional): The weight, default is 1
+ */
+//$gitphp_conf['memcache'] = array(
+//	array('127.0.0.1', 11211, 2),
+//	array('memcacheserver1', 11211),
+//	array('memcacheserver2')
+//);
+
+/*
+ * objectmemory
+ * If set, this will limit the number of git objects GitPHP
+ * keeps in PHP's memory during execution, to this specific number.
+ * This can be set if you have a low memory limit on your
+ * webserver.
+ * Please note that setting this too low will severely degrade
+ * performance, as GitPHP will have to repeatedly load the same
+ * objects off of the disk since the limit prevents them from
+ * being kept in memory.  It's strongly recommended that you
+ * turn debug mode on and view the MemoryCache size on various
+ * pages (in the debug output) to get a feel for the size of
+ * your projects before setting this.
+ * 0 means no limit.
+ */
+//$gitphp_conf['objectmemory'] = 0;
+
+
+
 /*******************************************************
  * Debugging options
  */

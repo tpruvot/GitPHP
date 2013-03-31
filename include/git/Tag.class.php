@@ -681,18 +681,17 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a tag cache key
 	 *
-	 * @access public
-	 * @static
-	 * @param string $proj project
+	 * @param mixed $proj project
 	 * @param string $tag tag name
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $tag)
 	{
+		if (is_object($proj))
+			return 'project|' . $proj->GetName() . '|tag|' . $tag;
+
 		return 'project|' . $proj . '|tag|' . $tag;
 	}
 

@@ -79,12 +79,8 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a head hash key
 	 *
-	 * @access public
-	 * @static
 	 * @param string $proj project
 	 * @param string $head head name
 	 * @return string cache key
@@ -92,6 +88,9 @@ class GitPHP_RemoteHead extends GitPHP_Ref
 	public static function CacheKey($proj, $head)
 	{
 		GitPHP_Log::GetInstance()->Log('RemoteHead::CacheKey(): head='.$head);
+
+		if (is_object($proj))
+			return 'project|' . $proj->GetProject . '|head|' . $head;
 
 		return 'project|' . $proj . '|head|' . $head;
 	}

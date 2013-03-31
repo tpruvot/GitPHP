@@ -68,18 +68,17 @@ class GitPHP_Head extends GitPHP_Ref
 	}
 
 	/**
-	 * CacheKey
-	 *
 	 * Generates a head hash key
 	 *
-	 * @access public
-	 * @static
-	 * @param string $proj project
+	 * @param mixed $proj project
 	 * @param string $head head name
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $head)
 	{
+		if (is_object($proj))
+			return 'project|' . $proj->GetProject . '|head|' . $head;
+
 		return 'project|' . $proj . '|head|' . $head;
 	}
 

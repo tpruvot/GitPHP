@@ -932,12 +932,15 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	/**
 	 * Generates a commit cache key
 	 *
-	 * @param string $proj project
+	 * @param mixed $proj project
 	 * @param string $hash hash
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $hash)
 	{
+		if (is_object($proj))
+			return 'project|' . $proj->GetProject() . '|commit|' . $hash;
+
 		return 'project|' . $proj . '|commit|' . $hash;
 	}
 

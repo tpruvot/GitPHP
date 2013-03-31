@@ -70,11 +70,11 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 * PopulateProjects
 	 *
 	 * Populates the internal list of projects
-	 *
-	 * @access protected
 	 */
 	protected function PopulateProjects()
 	{
+		$simpleCache = false;
+
 		if (!GitPHP_Cache::GetObjectCacheInstance()->GetEnabled()) {
 
 			// cache project list even if object cache is disabled (too much files)
@@ -106,6 +106,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$projects[] = $proj->GetProject();;
 			}
 			if ($simpleCache) {
+				// todo: check new xiphux Cache_File class
 				$this->CacheSaveProjectList();
 			}
 		}

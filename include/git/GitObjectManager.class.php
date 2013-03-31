@@ -17,6 +17,12 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $project;
 
 	/**
+	 * MemoryCache instance
+	 *
+	 */
+	protected $memoryCache = null;
+
+	/**
 	 * Executable
 	 *
 	 * @var GitPHP_GitExe
@@ -44,6 +50,22 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	public function SetExe($exe)
 	{
 		$this->exe = $exe;
+	}
+
+	/**
+	 * Get memory cache instance
+	 */
+	public function GetMemoryCache()
+	{
+		return $this->memoryCache;
+	}
+
+	/**
+	 * Set memory cache instance
+	 */
+	public function SetMemoryCache($memoryCache)
+	{
+		$this->memoryCache = $memoryCache;
 	}
 
 	/**
