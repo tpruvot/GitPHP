@@ -46,7 +46,7 @@ class GitPHP_Pack
 	public function __construct($project, $hash)
 	{
 		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
-			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
+			throw new GitPHP_InvalidHashException($hash);
 		}
 		$this->hash = $hash;
 		$this->project = $project->GetProject();
