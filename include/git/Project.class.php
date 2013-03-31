@@ -196,13 +196,13 @@ class GitPHP_Project
 		}
 
 		if (!is_file($fullPath . '/HEAD')) {
-			throw new Exception(sprintf(__('%1$s is not a git repository'), $project));
+			throw new GitPHP_InvalidGitRepositoryException($project);
 		}
 
 		if (GitPHP_Config::GetInstance()->GetValue('projectroot') != '/') {
 
 			if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project))
-			throw new Exception(sprintf(__('%1$s is attempting directory traversal'), $project));
+				throw new GitPHP_DirectoryTraversalException($project);
 
 			// allow /.git parent symlinks
 			$bareOnly = GitPHP_Config::GetInstance()->GetValue('bareonly', true);
@@ -213,7 +213,7 @@ class GitPHP_Project
 			$pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
 			if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0))
-			throw new Exception(sprintf(__('%1$s is outside of the projectroot'), $path));
+				throw new GitPHP_ProjectrootBoundException($project);
 		}
 
 		$this->project = $project;

@@ -207,6 +207,30 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 			return sprintf('%1$s is not a file', $exception->File);
 		}
 
+		if ($exception instanceof GitPHP_InvalidGitRepositoryException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is not a git repository'), $exception->Repository);
+			return sprintf('%1$s is not a git repository', $exception->Repository);
+		}
+
+		if ($exception instanceof GitPHP_ProjectListFileReadException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Failed to open project list file %1$s'), $exception->File);
+			return sprintf('Failed to open project list file %1$s', $exception->File);
+		}
+
+		if ($exception instanceof GitPHP_DirectoryTraversalException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is attempting directory traversal'), $exception->Path);
+			return sprintf('%1$s is attempting directory traversal', $exception->Path);
+		}
+
+		if ($exception instanceof GitPHP_ProjectrootBoundException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('%1$s is outside of the projectroot'), $exception->Path);
+			return sprintf('%1$s is outside of the projectroot', $exception->Path);
+		}
+
 		return $exception->getMessage();
 	}
 

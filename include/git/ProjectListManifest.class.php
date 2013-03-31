@@ -70,7 +70,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		libxml_use_internal_errors($use_errors);
 
 		if (!$xml) {
-			throw new Exception(sprintf('Could not load Manifest %1$s', $this->projectConfig));
+			throw new GitPHP_ProjectListFileReadException($this->projectConfig);
 		}
 
 		//remotes list to associative array
