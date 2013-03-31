@@ -954,7 +954,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	{
 		if ($a->GetAge() === $b->GetAge()) {
 			// fall back on author epoch
-			return 0 - GitPHP_Commit::CompareAuthorEpoch($a, $b);
+			return GitPHP_Commit::CompareAuthorEpoch($a, $b);
 		}
 		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
@@ -980,7 +980,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
 			return 0;
 		}
-		return ($a->GetAuthorEpoch() < $b->GetAuthorEpoch() ? -1 : 1);
+		return ($a->GetAuthorEpoch() < $b->GetAuthorEpoch() ? 1 : -1);
 	}
 
 	/**
