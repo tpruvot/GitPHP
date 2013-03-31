@@ -20,7 +20,7 @@ class GitPHP_GitObjectTest extends PHPUnit_Framework_TestCase
 
 	public function testInvalidHash()
 	{
-		$this->setExpectedException('GitPHP_InvalidHashException');
+		$this->setExpectedException('Exception');
 
 		$object = $this->getMockForAbstractClass('GitPHP_GitObject', array($this->getMockBuilder('GitPHP_Project')->disableOriginalConstructor()->getMock(), 'invalidhash'));
 	}
