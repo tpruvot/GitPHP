@@ -117,6 +117,8 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 		}
 
 		$this->tpl->assign('log', $log);
+
+		$this->tpl->assign('gitexe', $this->exe);
 	}
 
 }
