@@ -1,4 +1,7 @@
 <?php
+
+defined('GITPHP_CACHE_PROJECTLIST') || define('GITPHP_CACHE_PROJECTLIST', GITPHP_CACHEDIR.'projectlist.tmp');
+
 /**
  * Lists all projects in a given directory
  *
@@ -7,9 +10,6 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-defined('GITPHP_CACHE_PROJECTLIST') || define('GITPHP_CACHE_PROJECTLIST', GITPHP_CACHEDIR.'projectlist.tmp');
-
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
 	/**
@@ -47,13 +47,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 
 	/**
-	 * __construct
-	 *
-	 * constructor
+	 * Constructor
 	 *
 	 * @param string $projectDir (deprecated)
 	 * @throws Exception if parameter is not a directory
-	 * @access public
 	 */
 	public function __construct($projectDir = '')
 	{
@@ -113,8 +110,6 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * RecurseDir
-	 *
 	 * Recursively searches for projects
 	 *
 	 * @param string $dir directory to recurse into
@@ -172,11 +167,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project
 	 */
@@ -209,7 +201,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		return null;
 	}
 
-	/** Save and restore project list to prevent parsing directories
+	/**
+	 * Save and restore project list to prevent parsing directories
 	 */
 	public function CacheSaveProjectList()
 	{

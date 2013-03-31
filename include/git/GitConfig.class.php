@@ -9,76 +9,42 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * GitConfig class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_GitConfig
 {
 
 	/**
-	 * TypeDefault
-	 *
 	 * Default config value type (no conversion)
-	 *
-	 * @const
 	 */
 	const TypeDefault = 1;
 
 	/**
-	 * TypeInteger
-	 *
 	 * Integer config value type
-	 *
-	 * @const
 	 */
 	const TypeInteger = 2;
 
 	/**
-	 * TypeBoolean
-	 *
 	 * Boolean config value type
-	 *
-	 * @const
 	 */
 	const TypeBoolean = 3;
 	
 	/**
-	 * project
-	 *
 	 * Stores the project internally
-	 *
-	 * @access protected
 	 */
 	protected $project = null;
 
 	/**
-	 * configRead
-	 *
 	 * Stores whether the config file has been loaded
-	 *
-	 * @access protected
 	 */
 	protected $configRead = false;
 
 	/**
-	 * config
-	 *
 	 * Stores config values
-	 *
-	 * @access protected
 	 */
 	protected $config = array();
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project project
 	 */
 	public function __construct($project)
@@ -87,11 +53,8 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * GetValue
-	 *
 	 * Gets a config value
 	 *
-	 * @access public
 	 * @param string $key config key
 	 * @param boolean $multiValue true to support multivalue config variables
 	 * @param int $forceType force interpretation as a certain type
@@ -146,8 +109,6 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * SetValue
-	 *
 	 * Sets a config value
 	 */
 	public function SetValue($key, $value)
@@ -161,11 +122,8 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * HasValue
-	 *
 	 * Tests if a config value exists
 	 *
-	 * @access public
 	 * @param string $key config key
 	 * @return boolean true if value exists
 	 */
@@ -182,11 +140,7 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * LoadConfig
-	 *
 	 * Loads the config data
-	 *
-	 * @access private
 	 */
 	private function LoadConfig()
 	{
@@ -257,12 +211,8 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * GetType
-	 *
 	 * Gets the default type of a config value
 	 *
-	 * @access protected
-	 * @static
 	 * @param string $key config key
 	 * @return int config value type
 	 */
@@ -279,12 +229,8 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * ToBool
-	 *
 	 * Interpret git config boolean values
 	 *
-	 * @access protected
-	 * @static
 	 * @param mixed $value value to interpret
 	 * @return boolean boolean interpretation
 	 */
@@ -311,12 +257,8 @@ class GitPHP_GitConfig
 	}
 
 	/**
-	 * Unescape
-	 *
 	 * Parses escaped values and comments from git configs
 	 *
-	 * @access protected
-	 * @static
 	 * @param string $value value
 	 * @return string unescaped value
 	 */

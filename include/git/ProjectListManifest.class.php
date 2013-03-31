@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP_ProjectListManifest class
- *
  * Lists all projects in an .repo manifest.xml file
  *
  * @author Tanguy Pruvot
@@ -11,29 +9,17 @@
 class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 {
 	/**
-	 * fileRead
-	 *
 	 * Stores whether the file has been read
-	 *
-	 * @access protected
 	 */
 	protected $fileRead = false;
 
 	/**
-	 * remotes
-	 *
 	 * Stores the manifest remotes
-	 *
-	 * @access protected
 	 */
 	protected $remotes=array();
 
 	/**
-	 * default
-	 *
 	 * Store the manifest default branch/remote
-	 *
-	 * @access protected
 	 */
 	protected $default=array();
 
@@ -44,13 +30,10 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	protected $local_projects=array();
 
 	/**
-	 * __construct
-	 *
 	 * constructor
 	 *
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
-	 * @access public
 	 */
 	public function __construct($projectFile)
 	{
@@ -64,11 +47,8 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
 	 *
-	 * @access protected
 	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
@@ -78,11 +58,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * ReadFile
-	 *
 	 * Reads the file contents
-	 *
-	 * @access private
 	 */
 	protected function ReadFile($refProject = null)
 	{
@@ -223,11 +199,8 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project
 	 */
@@ -244,11 +217,8 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * IncludeLocalManifest
-	 *
 	 * load the local_manifest.xml if present
 	 *
-	 * @access private
 	 * @returns true if done
 	 */
 	private function IncludeLocalManifest($main_xml)
@@ -290,11 +260,8 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * IsRepoManifest
-	 *
 	 * Tests if this file is a valid Manifest file
 	 *
-	 * @access public
 	 * @returns true if file is a Manifest
 	 */
 	public static function IsRepoManifest($file)

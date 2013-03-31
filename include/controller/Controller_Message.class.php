@@ -9,13 +9,6 @@
  * @package GitPHP
  * @subpackage Controller
  */
-
-/**
- * Message controller class
- * 
- * @package GitPHP
- * @subpackage Controller
- */
 class GitPHP_Controller_Message extends GitPHP_ControllerBase
 {
 	/**
@@ -54,11 +47,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetTemplate
-	 *
 	 * Gets the template for this controller
 	 *
-	 * @access protected
 	 * @return string template filename
 	 */
 	protected function GetTemplate()
@@ -67,11 +57,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key for this controller
 	 *
-	 * @access protected
 	 * @return string cache key
 	 */
 	protected function GetCacheKey()
@@ -80,11 +67,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the name of this controller's action
 	 *
-	 * @access public
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
@@ -95,11 +79,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadHeaders
-	 *
 	 * Loads headers for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadHeaders()
 	{
@@ -119,11 +99,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * LoadData
-	 *
 	 * Loads data for this template
-	 *
-	 * @access protected
 	 */
 	protected function LoadData()
 	{
@@ -134,17 +110,18 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * StatusCodeHeader
-	 *
 	 * Gets the header for an HTTP status code
 	 *
-	 * @access private
 	 * @param integer $code status code
 	 * @return string header
 	 */
 	private function StatusCodeHeader($code)
 	{
 		switch ($code) {
+			case 403:
+				return '403 Forbidden';
+			case 404:
+				return '404 Not Found';
 			case 500:
 				return '500 Internal Server Error';
 		}

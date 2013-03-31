@@ -1,7 +1,8 @@
 <?php
+
+defined('GITPHP_NO_CATEGORY') || define('GITPHP_NO_CATEGORY', 'none');
+
 /**
- * GitPHP ProjectListArrayLegacy
- *
  * Lists all projects in a multidimensional array
  * Legacy array format
  *
@@ -10,26 +11,14 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-defined('GITPHP_NO_CATEGORY') || define('GITPHP_NO_CATEGORY', 'none');
-
-/**
- * ProjectListArrayLegacy class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * __construct
-	 *
 	 * constructor
 	 *
 	 * @param mixed $projectArray array to read
 	 * @throws Exception if parameter is not an array
-	 * @access public
 	 */
 	public function __construct($projectArray)
 	{
@@ -43,11 +32,8 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
 	 *
-	 * @access protected
 	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
@@ -70,11 +56,8 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project
 	 */

@@ -13,74 +13,42 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 {
 	
 	/**
-	 * dataRead
-	 *
 	 * Indicates whether data for this tag has been read
-	 *
-	 * @access protected
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * object
-	 *
 	 * Stores the object internally
-	 *
-	 * @access protected
 	 */
 	protected $object;
 
 	/**
-	 * commitHash
-	 *
 	 * Stores the commit hash internally
-	 *
-	 * @access protected
 	 */
 	protected $commitHash;
 
 	/**
-	 * type
-	 *
 	 * Stores the type internally
-	 *
-	 * @access protected
 	 */
 	protected $type;
 
 	/**
-	 * tagger
-	 *
 	 * Stores the tagger internally
-	 *
-	 * @access protected
 	 */
 	protected $tagger;
 
 	/**
-	 * taggerEpoch
-	 *
 	 * Stores the tagger epoch internally
-	 *
-	 * @access protected
 	 */
 	protected $taggerEpoch;
 
 	/**
-	 * taggerTimezone
-	 *
 	 * Stores the tagger timezone internally
-	 *
-	 * @access protected
 	 */
 	protected $taggerTimezone;
 
 	/**
-	 * comment
-	 *
 	 * Stores the tag comment internally
-	 *
-	 * @access protected
 	 */
 	protected $comment = array();
 
@@ -94,11 +62,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Instantiates tag
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $tag tag name
 	 * @param string $tagHash tag hash
-	 * @return mixed tag object
 	 * @throws Exception exception on invalid tag or hash
 	 */
 	public function __construct($project, $tag, $tagHash = '')
@@ -107,11 +73,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Gets the object this tag points to
 	 *
-	 * @access public
 	 * @return mixed object for this tag
 	 */
 	public function GetObject()
@@ -131,11 +94,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetCommit
-	 *
 	 * Gets the commit this tag points to
 	 *
-	 * @access public
 	 * @return mixed commit for this tag
 	 */
 	public function GetCommit()
@@ -160,11 +120,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * SetCommit
-	 *
 	 * Sets the commit this tag points to
 	 *
-	 * @access public
 	 * @param mixed $commit commit object 
 	 */
 	public function SetCommit($commit)
@@ -176,11 +133,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * SetCommitHash
-	 *
 	 * Sets the hash of the commit this tag points to
 	 *
-	 * @access public
 	 * @param string $hash hash
 	 */
 	public function SetCommitHash($hash)
@@ -193,11 +147,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetType
-	 *
 	 * Gets the tag type
 	 *
-	 * @access public
 	 * @return string tag type
 	 */
 	public function GetType()
@@ -209,11 +160,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetTagger
-	 *
 	 * Gets the tagger
 	 *
-	 * @access public
 	 * @return string tagger
 	 */
 	public function GetTagger()
@@ -225,11 +173,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetTaggerEpoch
-	 *
 	 * Gets the tagger epoch
 	 *
-	 * @access public
 	 * @return string tagger epoch
 	 */
 	public function GetTaggerEpoch()
@@ -245,7 +190,6 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	 *
 	 * Gets the tagger local epoch
 	 *
-	 * @access public
 	 * @return string tagger local epoch
 	 */
 	public function GetTaggerLocalEpoch()
@@ -260,11 +204,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetTaggerTimezone
-	 *
 	 * Gets the tagger timezone
 	 *
-	 * @access public
 	 * @return string tagger timezone
 	 */
 	public function GetTaggerTimezone()
@@ -276,11 +217,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetAge
-	 *
 	 * Gets the tag age
 	 *
-	 * @access public
 	 * @return string age
 	 */
 	public function GetAge()
@@ -292,11 +230,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetComment
-	 *
 	 * Gets the tag comment
 	 *
-	 * @access public
 	 * @return array comment lines
 	 */
 	public function GetComment()
@@ -308,11 +243,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * LightTag
-	 *
 	 * Tests if this is a light tag (tag without tag object)
 	 *
-	 * @access public
 	 * @return boolean true if tag is light (has no object)
 	 */
 	public function LightTag()
@@ -331,11 +263,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * ReadData
-	 *
 	 * Reads the tag data
-	 *
-	 * @access protected
 	 */
 	protected function ReadData()
 	{
@@ -353,11 +281,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * ReadDataGit
-	 *
 	 * Reads the tag data using the git executable
-	 *
-	 * @access private
 	 */
 	private function ReadDataGit()
 	{
@@ -440,11 +364,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * ReadDataRaw
-	 *
 	 * Reads the tag data using the raw git object
-	 *
-	 * @access private
 	 */
 	private function ReadDataRaw()
 	{
@@ -517,11 +437,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * ReadCommit
-	 *
 	 * Attempts to dereference the commit for this tag
-	 *
-	 * @access private
 	 */
 	private function ReadCommit()
 	{
@@ -580,11 +496,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
 	 * @return array list of properties to serialize
 	 */
 	public function __sleep()
@@ -594,11 +507,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetCacheKey
-	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()
@@ -607,12 +517,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * GetCreationEpoch
-	 *
 	 * Gets tag's creation epoch
 	 * (tagger epoch, or committer epoch for light tags)
 	 *
-	 * @access public
 	 * @return string creation epoch
 	 */
 	public function GetCreationEpoch()
@@ -630,12 +537,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * CompareAge
-	 *
 	 * Compares two tags by age
 	 *
-	 * @access public
-	 * @static
 	 * @param mixed $a first tag
 	 * @param mixed $b second tag
 	 * @return integer comparison result
@@ -658,12 +561,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	}
 
 	/**
-	 * CompareCreationEpoch
-	 *
 	 * Compares to tags by creation epoch
 	 *
-	 * @access public
-	 * @static
 	 * @param mixed $a first tag
 	 * @param mixed $b second tag
 	 * @return integer comparison result

@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP ProjectListArray
- *
  * Lists all projects in a multidimensional array
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,24 +7,14 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * ProjectListArray class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * __construct
-	 *
 	 * constructor
 	 *
 	 * @param mixed $projectArray array to read
 	 * @throws Exception if parameter is not an array
-	 * @access public
 	 */
 	public function __construct($projectArray)
 	{
@@ -40,11 +28,8 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
 	 *
-	 * @access protected
 	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
@@ -82,11 +67,8 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project
 	 */

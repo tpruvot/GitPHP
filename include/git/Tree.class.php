@@ -13,20 +13,12 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 {
 
 	/**
-	 * contents
-	 *
 	 * Tree contents
-	 *
-	 * @access protected
 	 */
 	protected $contents = array();
 
 	/**
-	 * contentsRead
-	 *
 	 * Stores whether contents were read
-	 *
-	 * @access protected
 	 */
 	protected $contentsRead = false;
 
@@ -50,10 +42,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	/**
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash tree hash
-	 * @return mixed tree object
 	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
@@ -62,11 +52,8 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
-	 * GetContents
-	 *
 	 * Gets the tree contents
 	 *
-	 * @access public
 	 * @return array array of objects for contents
 	 */
 	public function GetContents()
@@ -123,11 +110,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
-	 * ReadContents
-	 *
 	 * Reads the tree contents
-	 *
-	 * @access protected
 	 */
 	protected function ReadContents()
 	{
@@ -145,11 +128,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
-	 * ReadContentsGit
-	 *
 	 * Reads the tree contents using the git executable
-	 *
-	 * @access private
 	 */
 	private function ReadContentsGit()
 	{
@@ -202,11 +181,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
-	 * ReadContentsRaw
-	 *
 	 * Reads the tree contents using the raw git object
-	 *
-	 * @access private
 	 */
 	private function ReadContentsRaw()
 	{
@@ -372,7 +347,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	/**
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
 	 * @return array list of properties to serialize
 	 */
 	public function __sleep()
@@ -386,7 +360,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 *
 	 * Gets the cache key to use for this object
 	 *
-	 * @access public
 	 * @return string cache key
 	 */
 	public function GetCacheKey()

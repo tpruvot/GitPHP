@@ -3,11 +3,8 @@ class GitPHP_Mime
 {
 
 	/**
-	 * FileMime_Extension
-	 *
 	 * Get the file mimetype using the file extension
 	 *
-	 * @access private
 	 * @return string mimetype
 	 */
 	public static function FileMime_Extension($file)
@@ -36,11 +33,8 @@ class GitPHP_Mime
 	}
 
 	/**
-	 * FileMime
-	 *
 	 * Get the file mimetype
 	 *
-	 * @access public
 	 * @param boolean $short true to only the type group
 	 * @return string mime
 	 */

@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Pack
- *
  * Extracts data from a pack
  * Based on code from Glip by Patrik Fimml
  *
@@ -10,16 +8,12 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Pack class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_Pack
 {
 
+	/**
+	 * Object types constants
+	 */
 	const OBJ_COMMIT = 1;
 	const OBJ_TREE = 2;
 	const OBJ_BLOB = 3;
@@ -28,41 +22,25 @@ class GitPHP_Pack
 	const OBJ_REF_DELTA = 7;
 
 	/**
-	 * project
-	 *
 	 * Stores the project internally
-	 *
-	 * @access protected
 	 */
 	protected $project;
 
 	/**
-	 * hash
-	 *
 	 * Stores the hash of the pack
-	 *
-	 * @access protected
 	 */
 	protected $hash;
 
 	/**
-	 * offsetCache
-	 *
 	 * Caches object offsets
-	 *
-	 * @access protected
 	 */
 	protected $offsetCache = array();
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates object
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash pack hash
-	 * @return mixed pack object
 	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
@@ -82,11 +60,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * GetProject
-	 *
 	 * Gets the project
 	 *
-	 * @access public
 	 * @return mixed project
 	 */
 	public function GetProject()
@@ -95,11 +70,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * GetHash
-	 *
 	 * Gets the hash
 	 *
-	 * @access public
 	 * @return string object hash
 	 */
 	public function GetHash()
@@ -108,11 +80,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * ContainsObject
-	 *
 	 * Checks if an object exists in the pack
 	 *
-	 * @access public
 	 * @param string $hash object hash
 	 * @return boolean true if object is in pack
 	 */
@@ -126,13 +95,10 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * FindPackedObject
-	 *
 	 * Searches for an object's offset in the index
 	 *
-	 * @return int offset
 	 * @param string $hash hash
-	 * @access private
+	 * @return int offset
 	 */
 	private function FindPackedObject($hash)
 	{
@@ -167,11 +133,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * SearchIndexV1
-	 *
 	 * Seraches a version 1 index for a hash
 	 *
-	 * @access private
 	 * @param resource $index file pointer to index
 	 * @param string $hash hash to find
 	 * @return int pack offset if found
@@ -225,11 +188,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * SearchIndexV2
-	 *
 	 * Seraches a version 2 index for a hash
 	 *
-	 * @access private
 	 * @param resource $index file pointer to index
 	 * @param string $hash hash to find
 	 * @return int pack offset if found
@@ -300,12 +260,9 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * ReadFanout
-	 *
 	 * Finds the start/end index a hash will be located between,
 	 * acconding to the fanout table
 	 *
-	 * @access private 
 	 * @param resource $index index file pointer
 	 * @param string $binaryHash binary encoded hash to find
 	 * @param int $offset offset in the index file where the fanout table is located
@@ -333,11 +290,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * GetObject
-	 *
 	 * Extracts an object from the pack
 	 *
-	 * @access public
 	 * @param string $hash hash of object to extract
 	 * @param int $type output parameter, returns the type of the object
 	 * @return string object content, or false if not found
@@ -368,11 +322,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * UnpackObject
-	 *
 	 * Extracts an object at an offset
 	 *
-	 * @access private
 	 * @param resource $pack pack file pointer
 	 * @param int $offset object offset
 	 * @return array object type and data
@@ -464,12 +415,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * ApplyDelta
-	 *
 	 * Applies a binary delta to a base object
 	 *
-	 * @static
-	 * @access private
 	 * @param string $delta delta string
 	 * @param string $base base object data
 	 * @return string patched content
@@ -508,11 +455,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * FindHashes
-	 *
 	 * Find hashes in packfile matching a prefix
 	 *
-	 * @access public
 	 * @param string $prefix hash prefix
 	 * @return array matching hashes
 	 */
@@ -548,11 +492,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * FindHashesV1
-	 *
 	 * Find hashes in v1 index matching a prefix
 	 *
-	 * @access private
 	 * @param resource $index file pointer to index
 	 * @param string $prefix hash prefix
 	 * @return array matching hashes
@@ -587,11 +528,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * FindHashesV2
-	 *
 	 * Find hashes in v2 index matching a prefix
 	 *
-	 * @access private
 	 * @param resource $index file pointer to index
 	 * @param string $prefix hash prefix
 	 * @return array matching hashes
@@ -622,16 +560,12 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * ParseVarInt
-	 *
 	 * Reads a git-style packed variable length integer
 	 * sequence of bytes, where each byte's 7 less significant bits
 	 * are pieces of the int in increasing significance for each byte (little endian)
 	 * the most significant bit of each byte is a flag whether to continue
 	 * reading bytes or not
 	 *
-	 * @access private
-	 * @static
 	 * @param string $str packed data string
 	 * @param int $pos position in string to read from
 	 * @return int parsed integer
@@ -648,12 +582,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * uint32
-	 *
 	 * Unpacks a packed 32 bit integer
 	 *
-	 * @static
-	 * @access private
 	 * @return int integer
 	 * @param string $str binary data
 	 */
@@ -664,12 +594,8 @@ class GitPHP_Pack
 	}
 
 	/**
-	 * fuint32
-	 *
 	 * Reads and unpacks the next 32 bit integer
 	 *
-	 * @static
-	 * @access private
 	 * @return int integer
 	 * @param resource $handle file handle
 	 */

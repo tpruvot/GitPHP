@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP ProjectListFile
- *
  * Lists all projects in a given file
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,42 +7,24 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * ProjectListFile class
- *
- * @package GitPHP
- * @subpackage Git
- */
 class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * fileContents
-	 *
 	 * Stores the contents of the project list file
-	 *
-	 * @access protected
 	 */
 	protected $fileContents = array();
 
 	/**
-	 * fileRead
-	 *
 	 * Stores whether the file has been read
-	 *
-	 * @access protected
 	 */
 	protected $fileRead = false;
 	
 	/**
-	 * __construct
-	 *
 	 * constructor
 	 *
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
-	 * @access public
 	 */
 	public function __construct($projectFile)
 	{
@@ -58,11 +38,8 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * PopulateProjects
-	 *
 	 * Populates the internal list of projects
 	 *
-	 * @access protected
 	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
@@ -82,11 +59,8 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * InstantiateProject
-	 *
 	 * Instantiates the project object
 	 *
-	 * @access protected
 	 * @param string $proj project
 	 * @return mixed project object
 	 */
@@ -128,11 +102,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * ReadFile
-	 *
 	 * Reads the file contents
-	 *
-	 * @access protected
 	 */
 	protected function ReadFile()
 	{

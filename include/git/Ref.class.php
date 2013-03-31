@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Ref
- *
  * Base class for ref objects
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -9,46 +7,27 @@
  * @package GitPHP
  * @subpackage Git
  */
-
-/**
- * Git Ref class
- *
- * @package GitPHP
- * @subpackage Git
- */
 abstract class GitPHP_Ref extends GitPHP_GitObject
 {
 	
 	/**
-	 * refName
-	 *
 	 * Stores the ref name
-	 *
-	 * @access protected
 	 */
 	protected $refName;
 
 	/**
-	 * refDir
-	 *
 	 * Stores the ref directory
-	 *
-	 * @access protected
 	 */
 	protected $refDir;
 
 	/**
-	 * __construct
-	 *
 	 * Instantiates ref
 	 *
-	 * @access public
 	 * @param mixed $project the project
 	 * @param string $refDir the ref directory
 	 * @param string $refName the ref name
 	 * @param string $refHash the ref hash
 	 * @throws Exception if not a valid ref
-	 * @return mixed git ref
 	 */
 	public function __construct($project, $refDir, $refName, $refHash = '')
 	{
@@ -61,11 +40,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetHash
-	 *
 	 * Gets the hash for this ref (overrides base)
 	 *
-	 * @access public
 	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
@@ -78,11 +54,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * FindHash
-	 *
 	 * Looks up the hash for the ref
 	 *
-	 * @access protected
 	 * @throws Exception if hash is not found
 	 */
 	protected function FindHash()
@@ -99,11 +72,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetName
-	 *
 	 * Gets the ref name
 	 *
-	 * @access public
 	 * @return string ref name
 	 */
 	public function GetName()
@@ -112,11 +82,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetDirectory
-	 *
 	 * Gets the ref directory
 	 *
-	 * @access public
 	 * @return string ref directory
 	 */
 	public function GetDirectory()
@@ -125,11 +92,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetRefPath
-	 *
 	 * Gets the path to the ref within the project
 	 *
-	 * @access public
 	 * @return string ref path
 	 */
 	public function GetRefPath()
@@ -145,11 +109,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetFullPath
-	 *
 	 * Gets the path to the ref including the project path
 	 *
-	 * @access public
 	 * @return string full ref path
 	 */
 	public function GetFullPath()
@@ -158,11 +119,8 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * __sleep
-	 *
 	 * Called to prepare the object for serialization
 	 *
-	 * @access public
 	 * @return array list of properties to serialize
 	 */
 	public function __sleep()

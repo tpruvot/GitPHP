@@ -11,12 +11,8 @@
 class GitPHP_AutoLoader
 {
 	/**
-	 * AutoLoad
-	 *
 	 * Autoload a class
 	 *
-	 * @access public
-	 * @static
 	 * @param string $classname class name
 	 */
 	public static function AutoLoad($classname)
@@ -33,12 +29,8 @@ class GitPHP_AutoLoader
 	}
 
 	/**
-	 * ClassPath
-	 *
 	 * Gets the path a class
 	 *
-	 * @access public
-	 * @static
 	 * @param string $classname class name
 	 * @return string path
 	 */

@@ -47,12 +47,9 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	}
 
 	/**
-	 * DiffMode
-	 *
 	 * Determines the diff mode to use
 	 *
 	 * @param string $overrideMode mode overridden by the user
-	 * @access protected
 	 */
 	protected function DiffMode($overrideMode = '')
 	{
