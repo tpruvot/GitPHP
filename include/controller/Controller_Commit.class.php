@@ -67,6 +67,9 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$commit = $this->GetProject()->GetCommit($this->params['hash']);
+		if (!is_object($commit))
+			throw new GitPHP_InvalidHashException($this->params['hash']);
+
 		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('tree', $commit->GetTree());
 		$treediff = $commit->DiffToParent($this->exe);
