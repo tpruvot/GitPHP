@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Message
- *
  * Controller for displaying a message page
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -38,7 +36,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 		if (isset($this->params['project']) && $this->projectList) {
 			$project = $this->projectList->GetProject($this->params['project']);
 			if ($project) {
-				 $this->project = $project->GetProject();
+				$this->project = $project->GetProject();
 			}
 		}
 
@@ -53,6 +51,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if ($this->project)
+			return 'projectmessage.tpl';
 		return 'message.tpl';
 	}
 
@@ -63,7 +63,7 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return sha1($this->params['message']) . '|' . ($this->params['error'] ? '1' : '0');;
+		return sha1(serialize($this->params['exception']));
 	}
 
 	/**
@@ -83,8 +83,10 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['statuscode']) && !empty($this->params['statuscode'])) {
-			$partialHeader = $this->StatusCodeHeader($this->params['statuscode']);
+		parent::LoadHeaders();
+
+		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->StatusCode)) {
+			$partialHeader = $this->StatusCodeHeader($this->params['exception']->StatusCode);
 			if (!empty($partialHeader)) {
 				if (substr(php_sapi_name(), 0, 8) == 'cgi-fcgi') {
 					/*
@@ -103,10 +105,43 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('message', $this->params['message']);
-		if (isset($this->params['error']) && ($this->params['error'])) {
+		$message = $this->ExceptionToMessage($this->params['exception']);
+		$this->tpl->assign('message', $message);
+		if (($this->params['exception'] instanceof GitPHP_MessageException) && ($this->params['exception']->Error)) {
+			if (empty($message) && isset($this->params['message']) )
+				$this->tpl->assign('message', $this->params['message']);
 			$this->tpl->assign('error', true);
 		}
+
+		if ($this->project) {
+			try {
+				$co = $this->GetProject()->GetCommit($this->params['hash']);
+				if ($co) {
+					$this->tpl->assign('commit', $co);
+				}
+			} catch (Exception $e) {
+			}
+		}
+	}
+
+	/**
+	 * Gets the user-displayed message for an exception
+	 *
+	 * @param Exception $exception exception
+	 * @return string message
+	 */
+	private function ExceptionToMessage($exception)
+	{
+		if (!$exception)
+			return;
+
+		if ($exception instanceof GitPHP_InvalidProjectParameterException) {
+			if ($this->resource)
+				return sprintf($this->resource->translate('Invalid project %1$s'), $exception->Project);
+			return sprintf('Invalid project %1$s', $exception->Project);
+		}
+
+		return $exception->getMessage();
 	}
 
 	/**

@@ -26,7 +26,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($this->params['project'])) {
 			$project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $this->params['project']));
 			if (!$project) {
-				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $this->params['project']), true);
+				throw new GitPHP_InvalidProjectParameterException($this->params['project']);
 			}
 			$this->project = $project->GetProject();
 		}
