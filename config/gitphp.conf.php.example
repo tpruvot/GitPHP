@@ -46,24 +46,6 @@
  */
 //$gitphp_conf['showremotes'] = true;
 
-/*
- * cache
- * Turns on template caching. If in doubt, leave it off
- * You will need to create a directory 'cache' and make it
- * writable by the server
- */
-//$gitphp_conf['cache'] = true;
-
-/*
- * objectcache
- * Turns on object caching.  This caches immutable pieces of
- * data from the git repository.  You will need to create a
- * directory 'cache' and make it writable by the server.
- * This can be used in place of the template cache, or
- * in addition to it for the maximum benefit.
- */
-//$gitphp_conf['objectcache'] = true;
-
 /* Script added (in Blob and Blame views) at end of html file.
  * Remove all bold,italic attributes, to fix line numbers height
  */
@@ -82,6 +64,140 @@ $gitphp_conf['fixupjs'] = <<<EOT
         }
     });
 EOT;
+
+/*********************************************************
+ * Features
+ */
+
+/*
+ * compat
+ * Set this to true to turn on compatibility mode.  This will cause
+ * GitPHP to rely more on the git executable for loading data,
+ * which will bypass some of the limitations of PHP at the expense
+ * of performance.
+ * Turn this on if you are experiencing issues viewing data for
+ * your projects.
+ */
+//$gitphp_conf['compat'] = true;
+
+/**
+ * largeskip
+ * When GitPHP is reading through the history for pages of the shortlog/log
+ * beyond the first, it needs to read from the tip but skip a number of commits
+ * for the previous pages.  The more commits it needs to skip, the longer it takes.
+ * Calling the git executable is faster when skipping a large number of commits,
+ * ie reading a log page significantly beyond the first.  This determines
+ * the threshold at which GitPHP will fall back to using the git exe for the log.
+ * Currently each log page shows 100 commits, so this would be calculated at
+ * page number * 100.  So for example at the default of 200, pages 0-2 would be
+ * loaded natively and pages 3+ would fall back on the git exe.
+ */
+//$gitphp_conf['largeskip'] = 200;
+
+/*
+ * uniqueabbrev
+ * If this is turned on, when GitPHP abbreviates hashes, it will ensure
+ * that the abbreviated hash is unique for the project, extending the
+ * abbreviated hash if necessary until it becomes unique.
+ * Searching through every single pack in the repository for collisions is a
+ * performance intensive process that can slow down page loads.  If you turn
+ * this on, it's highly recommended to merge all of your existing packs into
+ * a single pack using git gc --aggressive (or git repack -a -d).
+ */
+//$gitphp_conf['uniqueabbrev'] = true;
+
+/*
+ * compressformat
+ * Indicates what kind of compression will be done on the
+ * snapshot archive.  Recognized settings are:
+ *
+ * GITPHP_COMPRESS_BZ2 - create a tar.bz2 file (php must have bz2 support)
+ * GITPHP_COMPRESS_GZ - create a tar.gz file (php must have gzip support)
+ * GITPHP_COMPRESS_ZIP - create a zip file
+ *
+ * Any other setting, or no setting, will create uncompressed tar archives
+ * If you choose a compression format and your php does not support it,
+ * gitphp will fall back to uncompressed tar archives
+ *
+ * Note that users with javascript get to choose their snapshot format when
+ * they request it, so this only applies to users without javascript or if
+ * you turn the javascript setting off
+ */
+//$gitphp_conf['compressformat'] = GITPHP_COMPRESS_GZ;
+
+/*
+ * compresslevel
+ * Sets the compression level for snapshots.  Ranges from 1-9, with
+ * 9 being the most compression but requiring the most processing
+ * (bzip defaults to 4, gzip defaults to -1)
+ */
+//$gitphp_conf['compresslevel'] = 4;
+
+/*
+ * geshi
+ * Run blob output through geshi syntax highlighting
+ * and line numbering
+ */
+//$gitphp_conf['geshi'] = false;
+
+/*
+ * search
+ * Set this to false to disable searching
+ */
+//$gitphp_conf['search'] = false;
+
+/*
+ * filesearch
+ * Set this to false to disable searching within files
+ * (it can be resource intensive)
+ */
+//$gitphp_conf['filesearch'] = false;
+
+/*
+ * filemimetype
+ * Attempt to read the file's mimetype when displaying
+ * (for example, displaying an image as an actual image
+ *  in a browser)
+ * This requires either PHP >= 5.3.0, PECL fileinfo, or
+ * Linux
+ */
+$gitphp_conf['filemimetype'] = true;
+
+/*
+ * graphs
+ * Enable access to graphing and analytics features.
+ * Loading graph data can be resource intensive, especially
+ * on large projects.
+ */
+//$gitphp_conf['graphs'] = true;
+
+/*
+ * abbreviateurl
+ * Generates urls using abbreviated hashes instead of
+ * full hashes.
+ * Note that urls with abbreviated hashes are not safe
+ * to be saved long term (eg bookmarks), as future objects
+ * may be added to the repository that cause an abbreviated
+ * hash to no longer be unique.
+ * This option only takes effect with the 'compat' option
+ * turned off.
+ * Additionally, this option will automatically enable
+ * 'uniqueabbrev', as an abbreviated hash must be unique
+ * in order to resolve it to a full hash.
+ */
+$gitphp_conf['abbreviateurl'] = false;
+
+/*
+ * cleanurl
+ * Uses clean, rest-style urls throughout gitphp.
+ * This requires additional setup in your web server
+ * to rewrite urls (mod_rewrite on Apache, HttpRewriteModule
+ * on Nginx, etc).  URLs must be rewritten to point
+ * to index.php?q={query}.
+ * For more instructions on how to set this up, see
+ * http://www.gitphp.org/projects/gitphp/wiki/Clean_URLs
+ */
+$gitphp_conf['cleanurl'] = false;
 
 
 /*******************************************************
@@ -204,15 +320,4 @@ $gitphp_conf['objectcachelifetime'] = 86400;
  * when debug mode is turned on.  Generates lots of output.
  */
 //$gitphp_conf['benchmark'] = true;
-
-/*
- * compat
- * Set this to true to turn on compatibility mode.  This will cause
- * GitPHP to rely more on the git executable for loading data,
- * which will bypass some of the limitations of PHP at the expense
- * of performance.
- * Turn this on if you are experiencing issues viewing data for
- * your projects.
- */
-$gitphp_conf['compat'] = false;
 
