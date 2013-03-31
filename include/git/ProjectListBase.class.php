@@ -203,17 +203,48 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	 * Instantiates a project object
 	 *
 	 * @param string $proj project
-	 * @return mixed project object
+	 * @return GitPHP_Project project object
 	 */
 	protected function InstantiateProject($proj)
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
+		$this->ApplyGlobalConfig($project);
+
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 		}
 
+		$this->InjectProjectDependencies($project);
+
 		return $project;
+	}
+
+	/**
+	 * Inject project dependency objects
+	 *
+	 * @param GitPHP_Project $project project object
+	 */
+	protected function InjectProjectDependencies($project)
+	{
+		if (!$project)
+			return;
+
+		$compat = $project->GetCompat();
+
+		$manager = new GitPHP_GitObjectManager($project);
+		$manager->SetCompat($compat);
+		if (!$compat) {
+			$manager->SetObjectLoader($loader);
+		}
+		$manager->SetExe($this->exe);
+		if ($this->memoryCache) {
+			$manager->SetMemoryCache($this->memoryCache);
+		}
+		if ($this->cache) {
+			$manager->SetCache($this->cache);
+		}
+		$project->SetObjectManager($manager);
 	}
 
 	/**
@@ -230,6 +261,48 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	public function GetProjectSettings()
 	{
 		return $this->projectSettings;
+	}
+
+	/**
+	 * Applies global config settings to a project
+	 *
+	 * @param GitPHP_Project $project project
+	 */
+	protected function ApplyGlobalConfig($project)
+	{
+		if (!$project)
+			return;
+
+		if (!$this->config)
+			return;
+
+		if ($this->config->GetValue('cloneurl')) {
+			$project->SetCloneUrl(GitPHP_Util::AddSlash($this->config->GetValue('cloneurl'), false) . $project->GetProject());
+		}
+
+		if ($this->config->GetValue('pushurl')) {
+			$project->SetPushUrl(GitPHP_Util::AddSlash($this->config->GetValue('pushurl'), false) . $project->GetProject());
+		}
+
+		if ($this->config->GetValue('bugpattern')) {
+			$project->SetBugPattern($this->config->GetValue('bugpattern'));
+		}
+
+		if ($this->config->GetValue('bugurl')) {
+			$project->SetBugUrl($this->config->GetValue('bugurl'));
+		}
+
+		if ($this->config->HasKey('compat')) {
+			$project->SetCompat($this->config->GetValue('compat'));
+		}
+
+		if ($this->config->HasKey('uniqueabbrev')) {
+			$project->SetUniqueAbbreviation($this->config->GetValue('uniqueabbrev'));
+		}
+
+		if ($this->config->GetValue('abbreviateurl')) {
+			$project->SetUniqueAbbreviation(true);
+		}
 	}
 
 	/**

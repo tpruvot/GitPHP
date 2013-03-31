@@ -117,6 +117,23 @@ class GitPHP_Project
 	protected $website = null;
 
 	/**
+	 * Stores whether this project is running in compatibility mode
+	 */
+	protected $compat = false;
+
+	/**
+	 * The hash abbreviation length
+	 *
+	 * @var int
+	 */
+	protected $abbreviateLength = null;
+
+	/**
+	 * Whether hashes should be guaranteed unique
+	 */
+	protected $uniqueAbbreviation = false;
+
+	/**
 	 * Stores the list of packs
 	 */
 	protected $packs = array();
@@ -127,15 +144,14 @@ class GitPHP_Project
 	protected $packsRead = false;
 
 	/**
-	 * Stores whether this project is running
-	 * in compatibility mode
-	 */
-	protected $compat = null;
-
-	/**
 	 * Stores the config reader internally
 	 */
 	protected $config = null;
+
+	/**
+	 * The git object manager
+	 */
+	protected $objectManager;
 
 	/**
 	 * .repo folders (by tpruvot)
@@ -861,6 +877,9 @@ class GitPHP_Project
 		}
 
 		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
+			if (isset($this->objectManager))
+				return $this->GetObjectManager()->GetCommit($hash);
+
 			$fullHash = $this->ExpandHash($hash);
 			if ($fullHash == $hash)
 				throw new GitPHP_InvalidHashException($hash);
@@ -868,6 +887,69 @@ class GitPHP_Project
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the git object manager for this project
+	 *
+	 * @return GitPHP_GitObjectManager
+	 */
+	public function GetObjectManager()
+	{
+		return $this->objectManager;
+	}
+
+	/**
+	 * Set the git object manager for this project
+	 *
+	 * @param GitPHP_GitObjectManager $objectManager object manager
+	 */
+	public function SetObjectManager($objectManager)
+	{
+		if ($objectManager && ($objectManager->GetProject() !== $this))
+			throw new Exception('Invalid object manager for this project');
+
+		$this->objectManager = $objectManager;
+	}
+
+	/**
+	 * Gets the hash abbreviation length
+	 *
+	 * @return int abbreviate length
+	 */
+	public function GetAbbreviateLength()
+	{
+		return $this->abbreviateLength;
+	}
+
+	/**
+	 * Sets the hash abbreviation length
+	 *
+	 * @param int $length abbreviate length
+	 */
+	public function SetAbbreviateLength($length)
+	{
+		$this->abbreviateLength = $length;
+	}
+
+	/**
+	 * Gets whether abbreviated hashes should be guaranteed unique
+	 *
+	 * @return bool true if hashes are guaranteed unique
+	 */
+	public function GetUniqueAbbreviation()
+	{
+		return $this->uniqueAbbreviation;
+	}
+
+	/**
+	 * Sets whether abbreviated hashes should be guaranteed unique
+	 *
+	 * @param bool true if hashes should be guaranteed unique
+	 */
+	public function SetUniqueAbbreviation($unique)
+	{
+		$this->uniqueAbbreviation = $unique;
 	}
 
 	/**
@@ -1701,6 +1783,13 @@ class GitPHP_Project
 		$args = array();
 		$args[] = '-1';
 		$args[] = '--format=format:%h';
+
+		$projAbbrevLen = $this->GetAbbreviateLength();
+		if ($projAbbrevLen > 0) {
+			$abbrevLen = max(7, min($projAbbrevLen, 40));
+			$args[] = '--abbrev='.$abbrevLen;
+		}
+
 		$args[] = $hash;
 
 		$abbrevData = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_REV_LIST, $args));
