@@ -12,6 +12,14 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	/**
 	 * Constants for the various search types
 	 */
+	const CommitSearch = 'commit';
+	const AuthorSearch = 'author';
+	const CommiterSearch = 'committer';
+	const FileSearch = 'file';
+
+	/**
+	 * Search types (standard style)
+	 */
 	const SEARCH_COMMIT = 'commit';
 	const SEARCH_AUTHOR = 'author';
 	const SEARCH_COMMITTER = 'committer';
@@ -41,10 +49,10 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			}
 		}
 
-		if (($this->params['searchtype'] !== GitPHP_Controller_Search::AuthorSearch)
-		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitterSearch)
-		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::CommitSearch)
-		 && ($this->params['searchtype'] !== GitPHP_Controller_Search::FileSearch))
+		if (($this->params['searchtype'] !== self::SEARCH_AUTHOR)
+		 && ($this->params['searchtype'] !== self::SEARCH_COMMITTER)
+		 && ($this->params['searchtype'] !== self::SEARCH_COMMIT)
+		 && ($this->params['searchtype'] !== self::SEARCH_FILE))
 			throw new GitPHP_InvalidSearchTypeException();
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
