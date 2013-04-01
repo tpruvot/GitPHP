@@ -66,16 +66,25 @@ class GitPHP_Project
 
 	/**
 	 * Stores whether the head ref has been read yet
+	 * @var boolean
 	 */
 	protected $readHeadRef = false;
 
 	/**
+	 * The head list for the project
+	 * @var GitPHP_HeadList
+	 */
+	protected $headList;
+
+	/**
 	 * Stores the tags for the project
+	 * @deprecated
 	 */
 	protected $tags = array();
 
 	/**
 	 * Stores the heads for the project
+	 * @deprecated
 	 */
 	protected $heads = array();
 
@@ -640,6 +649,8 @@ class GitPHP_Project
 
 			if (isset($this->heads[$head])) {
 				$this->head = $this->heads[$head];
+			} elseif ($this->GetHeadList()->Exists($head)) {
+				$this->head = $this->GetHeadList()->GetHead($head)->GetHash();
 			} elseif (isset($this->remotes[$head])) {
 				$this->head = $this->remotes[$head]->GetHash();
 			}
@@ -727,13 +738,11 @@ class GitPHP_Project
 	 */
 	private function ReadEpochRaw()
 	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
 		$epoch = 0;
 		$isRemote = false;
 
-		$array = $this->heads;
+		$array = $this->GetHeadList();
+
 		if (empty($array) && $this->showRemotes) {
 			$array = $this->remotes;
 			//only use selected branch if set, faster
@@ -744,9 +753,8 @@ class GitPHP_Project
 			}
 		}
 
-		foreach ($array as $head => $hash) {
+		foreach ($array as $headObj) {
 			if (!$isRemote) {
-				$headObj = $this->GetHead($head);
 				$commit = $headObj->GetCommit();
 			} else {
 				$rhObj = $this->remotes[$selected];
@@ -789,6 +797,9 @@ class GitPHP_Project
 	public function SetCompat($compat)
 	{
 		$this->compat = $compat;
+
+		if ($this->headList)
+			$this->headList->SetCompat($compat);
 	}
 
 	/**
@@ -846,9 +857,9 @@ class GitPHP_Project
 		}
 
 		if (substr_compare($hash, 'refs/heads/', 0, 11) === 0) {
-			$head = $this->GetHead(substr($hash, 11));
-			if ($head != null)
-				return $head->GetCommit();
+			$head = substr($hash, 11);
+			if ($this->GetHeadList()->Exists($head))
+				return $this->GetHeadList()->GetHead($head)->GetCommit();
 			return null;
 		} else if (substr_compare($hash, 'refs/tags/', 0, 10) === 0) {
 			$tag = $this->GetTag(substr($hash, 10));
@@ -868,6 +879,10 @@ class GitPHP_Project
 
 		if (!$this->readRefs)
 			$this->ReadRefList();
+
+		if ($this->GetHeadList()->Exists($hash)) {
+			return $this->GetHeadList()->GetHead($hash)->GetCommit();
+		}
 
 		if (isset($this->heads[$hash])) {
 			$headObj = $this->GetHead($hash);
@@ -890,6 +905,33 @@ class GitPHP_Project
 		}
 
 		return null;
+	}
+
+	/**
+	 * Gets the head list
+	 *
+	 * @return GitPHP_HeadList head list
+	 */
+	public function GetHeadList()
+	{
+		if (!$this->headList) {
+			$this->headList = new GitPHP_HeadList($this);
+			$this->headList->SetCompat($this->GetCompat());
+		}
+		return $this->headList;
+	}
+
+	/**
+	 * Sets the head list
+	 *
+	 * @param GitPHP_HeadList $headList head list
+	 */
+	public function SetHeadList($headList)
+	{
+		if ($headList && ($headList->GetProject() !== $this))
+			throw new Exception('Invalid headlist for this project');
+
+		$this->headList = $headList;
 	}
 
 	/**
@@ -984,21 +1026,7 @@ class GitPHP_Project
 			return $heads;
 		}
 
-		$heads = array();
-		if ($type !== 'tags') {
-			foreach ($this->heads as $head => $hash) {
-				$heads['refs/heads/' . $head] = $this->GetHead($head);
-			}
-			if ($type == 'heads')
-				return $heads;
-
-			foreach ($this->remotes as $head => $rh) {
-				$heads[$rh->GetName()] = $rh->GetHash();
-			}
-
-		}
-
-		return array_merge($heads, $tags);
+		return $tags;
 	}
 
 	/**
@@ -1022,7 +1050,6 @@ class GitPHP_Project
 	{
 		$args = array();
 		if (!$this->showRemotes) {
-			$args[] = '--heads';
 			$args[] = '--tags';
 		}
 		$args[] = '--dereference';
@@ -1031,7 +1058,7 @@ class GitPHP_Project
 		$lines = explode("\n", $ret);
 
 		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads|remotes)\/([^^]+)(\^{})?$/', $line, $regs)) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|remotes)\/([^^]+)(\^{})?$/', $line, $regs)) {
 				try {
 					$key = 'refs/' . $regs[2] . '/' . $regs[3];
 					if ($regs[2] == 'tags') {
@@ -1045,9 +1072,6 @@ class GitPHP_Project
 						} else if (!isset($this->tags[$regs[3]])) {
 							$this->tags[$regs[3]] = $regs[1];
 						}
-					} else if ($regs[2] == 'heads') {
-
-						$this->heads[$regs[3]] = $regs[1];
 
 					} else if ($this->showRemotes && $regs[2] == 'remotes') {
 						// Todo: convert to ref => hash
@@ -1068,22 +1092,6 @@ class GitPHP_Project
 	{
 		$path = $this->GetPath();
 		$pathlen = strlen($path) + 1;
-
-		// read loose heads
-		$heads = GitPHP_Util::ListDir($path . '/refs/heads');
-		for ($i = 0; $i < count($heads); $i++) {
-			$key = trim(substr($heads[$i], $pathlen), "/\\");
-			$head = substr($key, strlen('refs/heads/'));
-
-			if (isset($this->heads[$head])) {
-				continue;
-			}
-
-			$hash = trim(file_get_contents($heads[$i]));
-			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-				$this->heads[$head] = $hash;
-			}
-		}
 
 		// read loose tags
 		$tags = GitPHP_Util::ListDir($path . '/refs/tags');
@@ -1405,20 +1413,14 @@ class GitPHP_Project
 
 	/**
 	 * Gets list of heads for this project by age descending
+	 * @deprecated
 	 *
 	 * @param integer $count number of tags to load
 	 * @return array array of heads
 	 */
 	public function GetHeads($count = 0)
 	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if ($this->GetCompat()) {
-			return $this->GetHeadsGit($count);
-		} else {
-			return $this->GetHeadsRaw($count);
-		}
+		$this->GetHeadList()->GetHeads()->GetOrderedHeads('-committerdate', $count);
 	}
 
 	/**
@@ -1479,7 +1481,7 @@ class GitPHP_Project
 	 * @param string $head head to find
 	 * @return mixed head object
 	 */
-	public function GetHead($head)
+	public function GetHead($head, $hash = '')
 	{
 		if (empty($head))
 			return null;
@@ -1489,11 +1491,8 @@ class GitPHP_Project
 		$headObj = $memoryCache->Get($key);
 
 		if (!$headObj) {
-			if (!$this->readRefs)
-				$this->ReadRefList();
 
-			$hash = '';
-			if (isset($this->heads[$head]))
+			if (empty($hash) && isset($this->heads[$head]))
 				$hash = $this->heads[$head];
 
 			$headObj = new GitPHP_Head($this, $head, $hash);
@@ -1744,7 +1743,7 @@ class GitPHP_Project
 			return;
 		}
 		while (($file = readdir($dh)) !== false) {
-			if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+			if (preg_match('/^pack-([0-9A-Fa-f]{40})\.pack$/', $file, $regs)) {
 				try {
 					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
 				} catch (Exception $e) {

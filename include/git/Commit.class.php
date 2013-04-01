@@ -588,7 +588,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	{
 		$heads = array();
 
-		$projectRefs = $this->GetProject()->GetRefs('heads');
+		$projectRefs = $this->GetProject()->GetHeadList()->GetHeads();
 
 		foreach ($projectRefs as $ref) {
 			if ($ref->GetHash() == $this->hash) {
