@@ -401,7 +401,7 @@ class GitPHP_Pack
 			 */
 			$hash = fread($pack, 20);
 			$hash = bin2hex($hash);
-			$base = $this->GetProject()->GetObject($hash, $type);
+			$base = $this->GetProject()->GetObjectLoader()->GetObject($hash, $type);
 
 			/*
 			 * then the gzipped delta data

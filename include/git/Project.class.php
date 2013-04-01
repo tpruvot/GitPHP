@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Project
- * 
  * Represents a single git project
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -152,6 +150,11 @@ class GitPHP_Project
 	 * The git object manager
 	 */
 	protected $objectManager;
+
+	/**
+	 * Stores the raw git object loader
+	 */
+	protected $objectLoader;
 
 	/**
 	 * .repo folders (by tpruvot)
@@ -1684,52 +1687,41 @@ class GitPHP_Project
 	}
 
 	/**
+	 * Gets the git object loader for this project
+	 */
+	public function GetObjectLoader()
+	{
+		if (!$this->objectLoader) {
+			$this->objectLoader = new GitPHP_GitObjectLoader($this);
+		}
+
+		return $this->objectLoader;
+	}
+
+
+	/**
+	 * Sets the git object loader for this project
+	 *
+	 * @param GitPHP_GitObjectLoader $objectLoader object loader
+	 */
+	public function SetObjectLoader($objectLoader)
+	{
+		if ($objectLoader && ($objectLoader->GetProject() !== $this))
+			throw new Exception('Invalid object loader for this project');
+
+		$this->objectLoader = $objectLoader;
+	}
+
+	/**
 	 * Gets the raw content of an object
+	 * @deprecated
 	 *
 	 * @param string $hash object hash
 	 * @return string object data
 	 */
 	public function GetObject($hash, &$type = 0)
 	{
-		if (!preg_match('/^[0-9a-f]{40}$/i', $hash)) {
-			return false;
-		}
-
-		// first check if it's unpacked
-		$path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
-		if (file_exists($path)) {
-			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
-			sscanf($header, "%s %d", $typestr, $size);
-			switch ($typestr) {
-				case 'commit':
-					$type = GitPHP_Pack::OBJ_COMMIT;
-					break;
-				case 'tree':
-					$type = GitPHP_Pack::OBJ_TREE;
-					break;
-				case 'blob':
-					$type = GitPHP_Pack::OBJ_BLOB;
-					break;
-				case 'tag':
-					$type = GitPHP_Pack::OBJ_TAG;
-					break;
-			}
-			return $data;
-		}
-
-		if (!$this->packsRead) {
-			$this->ReadPacks();
-		}
-
-		// then try packs
-		foreach ($this->packs as $pack) {
-			$data = $pack->GetObject($hash, $type);
-			if ($data !== false) {
-				return $data;
-			}
-		}
-
-		return false;
+		return $this->GetObjectLoader()->GetObject($hash, $type);
 	}
 
 	/**
@@ -1827,47 +1819,7 @@ class GitPHP_Project
 			return $prefix;
 		}
 
-		$hashMap = array();
-
-		$matches = $this->FindHashObjects($prefix);
-		foreach ($matches as $matchingHash) {
-			$hashMap[$matchingHash] = 1;
-		}
-
-		if (!$this->packsRead) {
-			$this->ReadPacks();
-		}
-
-		foreach ($this->packs as $pack) {
-			$matches = $pack->FindHashes($prefix);
-			foreach ($matches as $matchingHash) {
-				$hashMap[$matchingHash] = 1;
-			}
-		}
-
-		if (count($hashMap) == 0) {
-			return $hash;
-		}
-
-		if (count($hashMap) == 1) {
-			return $prefix;
-		}
-
-		for ($len = $abbrevLen+1; $len < 40; $len++) {
-			$prefix = substr($hash, 0, $len);
-
-			foreach ($hashMap as $matchingHash => $val) {
-				if (substr_compare($matchingHash, $prefix, 0, $len) !== 0) {
-					unset($hashMap[$matchingHash]);
-				}
-			}
-
-			if (count($hashMap) == 1) {
-				return $prefix;
-			}
-		}
-
-		return $hash;
+		return $this->GetObjectLoader()->EnsureUniqueHash($hash, $prefix);
 	}
 
 	/**
@@ -1885,7 +1837,7 @@ class GitPHP_Project
 		if ($this->GetCompat()) {
 			return $this->ExpandHashGit($abbrevHash);
 		}  else {
-			return $this->ExpandHashRaw($abbrevHash);
+			return $this->GetObjectLoader()->ExpandHash($abbrevHash);
 		}
 	}
 

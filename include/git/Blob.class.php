@@ -96,7 +96,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 			$this->data = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
 		} else {
-			$this->data = $this->GetProject()->GetObject($this->hash);
+			$this->data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
 		}
 
 		foreach ($this->observers as $observer) {
