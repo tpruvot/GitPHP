@@ -1,13 +1,11 @@
 <?php
 /**
- * GitPHP ProjectList
- *
- * Project list singleton instance and factory
+ * Project list factory
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectList
 {
@@ -37,16 +35,19 @@ class GitPHP_ProjectList
 	}
 
 	/**
-	 * Instantiates the singleton instance
+	 * Instantiates the project list
 	 *
+	 * @param GitPHP_Config $config config provider
 	 * @param string $file config file with git projects
 	 * @param boolean $legacy true if this is the legacy project config
 	 * @throws Exception if there was an error reading the file
 	 */
-	public static function Instantiate($file = null, $legacy = false)
+	public static function Instantiate($config, $file = null, $legacy = false)
 	{
 		if (self::$instance)
 			return;
+
+		$projectRoot = $config->GetValue('projectroot');
 
 
 		if (!empty($file) && is_file($file) && include($file)) {
@@ -70,11 +71,15 @@ class GitPHP_ProjectList
 		}
 
 		if (!self::$instance) {
-			self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+			self::$instance = new GitPHP_ProjectListDirectory($projectRoot);
 		}
+
+		self::$instance->SetConfig($config);
 
 		if (isset($git_projects_settings) && !$legacy)
 			self::$instance->SetProjectSettings($git_projects_settings);
+
+		return self::$instance;
 	}
 
 }
