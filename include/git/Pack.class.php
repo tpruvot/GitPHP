@@ -401,7 +401,13 @@ class GitPHP_Pack
 			 */
 			$hash = fread($pack, 20);
 			$hash = bin2hex($hash);
-			$base = $this->GetProject()->GetObjectLoader()->GetObject($hash, $type);
+
+			$project = $this->GetProject();
+			$objectLoader = $project->GetObjectLoader();
+			if (!is_object($objectLoader))
+				throw new GitPHP_MessageException(sprintf('Unable to get object loader on project %1$s', $project->GetProject()), true);
+
+			$base = $objectLoader->GetObject($hash, $type);
 
 			/*
 			 * then the gzipped delta data

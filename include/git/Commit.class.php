@@ -512,9 +512,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 		} else {
 
-			$data = $this->GetProject()->GetObject($this->hash);
-			$data = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
-
+			$data = $this->GetProject()->GetObjectByType($this->hash, GitPHP_Pack::OBJ_COMMIT);
 			if (empty($data))
 				return;
 

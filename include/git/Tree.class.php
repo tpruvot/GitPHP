@@ -185,7 +185,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	private function ReadContentsRaw()
 	{
-		$treeData = $this->GetProject()->GetObjectLoader()->GetObject($this->hash);
+		$treeData = $this->GetProject()->GetObjectByType($this->hash, GitPHP_Pack::OBJ_TREE);
 
 		$start = 0;
 		$len = strlen($treeData);

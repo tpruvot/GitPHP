@@ -61,6 +61,8 @@ class GitPHP_GitObjectLoader
 			return false;
 		}
 
+		$wanted_type = $type;
+
 		// first check if it's unpacked
 		$path = $this->project->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
 		if (file_exists($path)) {
@@ -81,6 +83,10 @@ class GitPHP_GitObjectLoader
 					break;
 			}
 			return $data;
+		}
+
+		if ($wanted_type != 0 && $type != $wanted_type) {
+			throw new Exception('Invalid raw object type');
 		}
 
 		if (!$this->packsRead) {

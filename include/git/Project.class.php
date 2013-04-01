@@ -1142,7 +1142,7 @@ class GitPHP_Project
 		}
 
 		// double check the remote heads refs
-		if ($this->showRemotes ) {
+		if ($this->showRemotes) {
 
 			if (count($this->heads) == 1) {
 				// set branch as default HEAD, if alone
@@ -1719,15 +1719,19 @@ class GitPHP_Project
 	}
 
 	/**
-	 * Gets the raw content of an object
-	 * @deprecated
+	 * Gets the raw content of an object with type check
 	 *
 	 * @param string $hash object hash
+	 * @param integer type GitPHP_Pack object type constant
 	 * @return string object data
 	 */
-	public function GetObject($hash, &$type = 0)
+	public function GetObjectByType($hash, $type = 0)
 	{
-		return $this->GetObjectLoader()->GetObject($hash, $type);
+		$loader = $this->GetObjectLoader();
+		if (!is_object($loader))
+			throw new GitPHP_MessageException(sprintf('Unable to get object loader on project %1$s', $this->project), true);
+
+		return $loader->GetObject($hash, $type);
 	}
 
 	/**
