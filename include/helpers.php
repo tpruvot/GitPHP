@@ -35,3 +35,10 @@ function __n($singular, $plural, $count)
 	return $singular;
 }
 
+/**
+ * Log shortcut
+ */
+function LOGI($line)
+{
+	GitPHP_Log::GetInstance()->Log($line);
+}

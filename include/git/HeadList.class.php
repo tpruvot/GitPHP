@@ -93,7 +93,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 	 * @param int $count limit the number of results
 	 * @return GitPHP_Head[] array of heads
 	 */
-	private function GetOrderedHeadsRaw($order, $count = 0)
+	protected function GetOrderedHeadsRaw($order, $count = 0)
 	{
 		$heads = array();
 		foreach ($this->refs as $head => $hash) {

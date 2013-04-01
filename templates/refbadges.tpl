@@ -15,9 +15,9 @@
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=shortlog&amp;h=refs/heads/{$commithead->GetName()}">{$commithead->GetName()}</a>
 		</span>
 	{/foreach}
-	{foreach from=$commit->GetRemoteHeads() item=commitref}
+	{foreach from=$commit->GetRemoteHeads() item=commithead}
 		<span class="remote head">
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=shortlog&amp;h=refs/remotes/{$commitref}">{$commitref}</a>
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=shortlog&amp;h=refs/remotes/{$commithead->GetName()}">{$commithead->GetName()}</a>
 		</span>
 	{/foreach}
 	{foreach from=$commit->GetTags() item=committag}

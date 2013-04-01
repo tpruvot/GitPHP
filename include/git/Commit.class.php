@@ -602,16 +602,16 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 	/**
 	 * Gets remote heads that point to this commit
 	 *
-	 * @return array array of heads
+	 * @return GitPHP_Head[] array of heads
 	 */
 	public function GetRemoteHeads()
 	{
 		$heads = array();
 
-		$projectRefs = $this->GetProject()->GetRefs('remotes');
+		$projectRefs = $this->GetProject()->GetRemoteHeadList()->GetHeads();
 
-		foreach ($projectRefs as $ref => $hash) {
-			if ($hash == $this->hash) {
+		foreach ($projectRefs as $ref) {
+			if ($ref->GetHash() == $this->hash) {
 				$heads[] = $ref;
 			}
 		}

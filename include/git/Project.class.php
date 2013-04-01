@@ -77,21 +77,16 @@ class GitPHP_Project
 	protected $headList;
 
 	/**
+	 * The tracked remote heads
+	 * @var GitPHP_RemoteHeadList
+	 */
+	protected $remoteHeadList;
+
+	/**
 	 * The tag list for the project
 	 * @var GitPHP_TagList
 	 */
 	protected $tagList;
-
-	/**
-	 * Stores the heads for the project
-	 * @deprecated
-	 */
-	protected $heads = array();
-
-	/**
-	 * Stores the remotes for the project
-	 */
-	protected $remotes = array();
 
 	/**
 	 * Stores whether refs have been read yet
@@ -342,6 +337,7 @@ class GitPHP_Project
 	 */
 	public function GetDescription($trim = 0)
 	{
+
 		if (!$this->readDescription) {
 
 			$config = $this->GetConfig();
@@ -361,13 +357,14 @@ class GitPHP_Project
 
 			if (empty($this->description)) {
 
-				if (empty($this->remotes)) {
+				$remotes = $this->GetRemoteHeadList()->GetOrderedHeads('-committerdate', 1);
+				if (empty($remotes)) {
 					//default is 'origin'
 					$remote = $this->repoRemote;
 				} else {
 					//get first remote
-					$rm = reset($this->remotes);
-					$remote = $rm->GetRemoteName();
+					$head = reset($remotes);
+					$remote = GitPHP_RemoteHeadList::GetRemoteName($head);
 				}
 
 				if ($config->HasValue('remote.'.$remote.'.url')) {
@@ -640,12 +637,10 @@ class GitPHP_Project
 			/* standard pointer to head, preg to keep compat with remote heads */
 			$head = preg_replace('#^refs/heads/#', '', $regs[1]);
 
-			if (isset($this->heads[$head])) {
-				$this->head = $this->heads[$head];
-			} elseif ($this->GetHeadList()->Exists($head)) {
+			if ($this->GetHeadList()->Exists($head)) {
 				$this->head = $this->GetHeadList()->GetHead($head)->GetHash();
-			} elseif (isset($this->remotes[$head])) {
-				$this->head = $this->remotes[$head]->GetHash();
+			} elseif ($this->GetRemoteHeadList()->Exists($head)) {
+				$this->head = $this->GetRemoteHeadList()->GetHead($head)->GetHash();
 			}
 		}
 	}
@@ -669,14 +664,11 @@ class GitPHP_Project
 	 */
 	private function ReadHeadCommitRepo()
 	{
-		/* standard pointer to head */
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		$head = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
-		if (is_object($this->remotes[$head]) && empty($this->head)) {
-			$this->head = $this->remotes[$head]->GetHash();
-		}
+		$head = $this->repoRemote.'/'.$this->repoBranch;
+		if ($this->GetRemoteHeadList()->Exists($head))
+			$this->head = $this->GetRemoteHeadList()->GetHead($head)->GetHash();
+		elseif ($this->GetRemoteHeadList()->Exists('refs/remotes/'.$head))
+			$this->head = $this->GetRemoteHeadList()->GetHead('refs/remotes/'.$head)->GetHash();
 	}
 
 	/**
@@ -732,30 +724,23 @@ class GitPHP_Project
 	private function ReadEpochRaw()
 	{
 		$epoch = 0;
-		$isRemote = false;
 
-		$array = $this->GetHeadList();
+		$array = $this->GetHeadList()->GetOrderedHeads('-committerdate', 1);
 
 		if (empty($array) && $this->showRemotes) {
-			$array = $this->remotes;
-			//only use selected branch if set, faster
-			$selected = 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch;
-			if (array_key_exists($selected, $this->remotes)) {
-				$array = array($selected => $this->remotes[$selected]->GetHash());
-				$isRemote = true;
-			}
+
+			$headref = $this->repoRemote.'/'.$this->repoBranch;
+			if (!$this->isAndroidRepo)
+				$array = $this->GetRemoteHeadList()->GetOrderedHeads('-committerdate', 1);
+			elseif ($this->GetRemoteHeadList()->Exists($headref))
+				$array = array($this->GetRemoteHeadList()->GetHead($headref));
 		}
 
 		foreach ($array as $headObj) {
-			if (!$isRemote) {
-				$commit = $headObj->GetCommit();
-			} else {
-				$rhObj = $this->remotes[$selected];
-				$commit = $rhObj->GetCommit();
-			}
+			$commit = $headObj->GetCommit();
 			if ($commit) {
-				if ($commit->GetCommitterEpoch() > $epoch) {
-					$epoch = $commit->GetCommitterEpoch();
+				if (intval($commit->GetCommitterEpoch()) > $epoch) {
+					$epoch = (int) $commit->GetCommitterEpoch();
 				}
 			}
 		}
@@ -863,19 +848,13 @@ class GitPHP_Project
 			}
 			return null;
 		} else if (substr_compare($hash, 'refs/remotes/', 0, 13) === 0) {
-			if (!array_key_exists($hash, $this->remotes)) {
-				$this->remotes[$hash] = new GitPHP_RemoteHead($this, $hash);
-			}
-			return $this->remotes[$hash]->GetCommit();
+			$head = substr($hash, 13);
+			if ($this->GetRemoteHeadList()->Exists($head))
+				return $this->GetRemoteHeadList()->GetHead($head)->GetCommit();
 		}
 
 		if ($this->GetHeadList()->Exists($hash)) {
 			return $this->GetHeadList()->GetHead($hash)->GetCommit();
-		}
-
-		if (isset($this->heads[$hash])) {
-			$headObj = $this->GetHead($hash);
-			return $headObj->GetCommit();
 		}
 
 		if ($this->GetTagList()->Exists($hash)) {
@@ -950,6 +929,35 @@ class GitPHP_Project
 	}
 
 	/**
+	 * Gets the remotes head list
+	 * @author tpruvot
+	 *
+	 * @return GitPHP_HeadList head list
+	 */
+	public function GetRemoteHeadList()
+	{
+		if (!$this->remoteHeadList) {
+			$this->remoteHeadList = new GitPHP_RemoteHeadList($this);
+			$this->remoteHeadList->SetCompat($this->GetCompat());
+		}
+		return $this->remoteHeadList;
+	}
+
+	/**
+	 * Sets the remotes head list
+	 * @author tpruvot
+	 *
+	 * @param GitPHP_RemoteHeadList $headList head list
+	 */
+	public function SetRemoteHeadList($headList)
+	{
+		if ($remoteHeadList && ($remoteHeadList->GetProject() !== $this))
+			throw new Exception('Invalid remote headlist for this project');
+
+		$this->remoteHeadList = $headList;
+	}
+
+	/**
 	 * Get the git object manager for this project
 	 *
 	 * @return GitPHP_GitObjectManager
@@ -1013,237 +1021,14 @@ class GitPHP_Project
 	}
 
 	/**
-	 * Gets the list of refs for the project
-	 *
-	 * @param string $type type of refs to get
-	 * @return array array of refs
-	 */
-	public function GetRefs($type = '')
-	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		$tags = array();
-		if ($type !== 'heads') {
-			foreach ($this->tags as $tag => $hash) {
-				$tags['refs/tags/' . $tag] = $this->GetTag($tag);
-			}
-			if ($type == 'tags')
-				return $tags;
-		}
-
-		if ($type == 'remotes') {
-			// return only remote heads for badges "github/ics" => "32abdc..."
-			$heads = array();
-			foreach ($this->remotes as $head => $rh) {
-				$heads[$rh->GetName()] = $rh->GetHash();
-			}
-			return $heads;
-		}
-
-		return $tags;
-	}
-
-	/**
 	 * Reads the list of refs for this project
 	 */
 	protected function ReadRefList()
 	{
+		$this->GetHeadList();
+		if ($this->showRemotes)
+			$this->GetRemoteHeadList();
 		$this->readRefs = true;
-
-		if ($this->GetCompat() && !$this->isAndroidRepo) {
-			$this->ReadRefListGit();
-		} else {
-			$this->ReadRefListRaw();
-		}
-	}
-
-	/**
-	 * Reads the list of refs for this project using the git executable
-	 */
-	private function ReadRefListGit()
-	{
-		$args = array();
-		if (!$this->showRemotes) {
-			$args[] = '--tags';
-		}
-		$args[] = '--dereference';
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_SHOW_REF, $args);
-
-		$lines = explode("\n", $ret);
-
-		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|remotes)\/([^^]+)(\^{})?$/', $line, $regs)) {
-				try {
-					$key = 'refs/' . $regs[2] . '/' . $regs[3];
-					if ($regs[2] == 'tags') {
-						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
-							if (isset($this->tags[$regs[3]])) {
-								$tagObj = $this->GetTag($regs[3]);
-								$tagObj->SetCommitHash($regs[1]);
-								unset($tagObj);
-							}
-								
-						} else if (!isset($this->tags[$regs[3]])) {
-							$this->tags[$regs[3]] = $regs[1];
-						}
-
-					} else if ($this->showRemotes && $regs[2] == 'remotes') {
-						// Todo: convert to ref => hash
-						// $this->remotes[$regs[3]] = $regs[1];
-						if (!isset($this->remotes[$key]) && substr($key, -5) != '/HEAD')
-							$this->remotes[$key] = new GitPHP_RemoteHead($this, $regs[3], $regs[1]);
-					}
-				} catch (Exception $e) {
-				}
-			}
-		}
-	}
-
-	/**
-	 * Reads the list of refs for this project using the raw git files
-	 */
-	private function ReadRefListRaw()
-	{
-		$path = $this->GetPath();
-		$pathlen = strlen($path) + 1;
-
-		// read loose tags
-		$tags = GitPHP_Util::ListDir($path . '/refs/tags');
-		for ($i = 0; $i < count($tags); $i++) {
-			$key = trim(substr($tags[$i], $pathlen), "/\\");
-			$tag = substr($key, strlen('refs/tags/'));
-
-			if (isset($this->tags[$tag])) {
-				continue;
-			}
-
-			$hash = trim(file_get_contents($tags[$i]));
-			if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
-				$tag = substr($key, strlen('refs/tags/'));
-				$this->tags[$tag] = $hash;
-			}
-		}
-
-		// check packed refs (only updated on git gc !)
-		if (file_exists($path . '/packed-refs')) {
-			$packedRefs = explode("\n", file_get_contents($path . '/packed-refs'));
-
-			$lastTag = null;
-			foreach ($packedRefs as $ref) {
-
-				if (preg_match('/^\^([0-9a-f]{40})$/i', $ref, $regs)) {
-					// dereference of previous ref
-					if (!empty($lastTag)) {
-						$tagObj = $this->GetTag($lastTag);
-						$tagObj->SetCommitHash($regs[1]);
-						unset($tagObj);
-					}
-				}
-
-				$lastTag = null;
-
-				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads|remotes)\/(.+)$/', $ref, $regs)) {
-					// standard tag/head
-					$key = 'refs/' . $regs[2] . '/' . $regs[3];
-					if ($regs[2] == 'tags') {
-						if (!isset($this->tags[$regs[3]])) {
-							$this->tags[$regs[3]] = $regs[1];
-							$lastTag = $regs[3];
-						}
-					} else if ($regs[2] == 'heads') {
-						if (!isset($this->heads[$regs[3]])) {
-							$this->heads[$regs[3]] = $regs[1];
-						}
-					} else if ($this->showRemotes && $regs[2] == 'remotes') {
-						if (!isset($this->remotes[$key])) {
-							$this->remotes[$key] = new GitPHP_RemoteHead($this, $regs[3], $regs[1]);
-						}
-					}
-				}
-			}
-		}
-
-		// double check the remote heads refs
-		if ($this->showRemotes) {
-
-			if (count($this->heads) == 1) {
-				// set branch as default HEAD, if alone
-				$this->head = reset($this->heads);
-				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] use '.$this->head.' as default HEAD');
-			}
-
-			$tag = null;
-			$heads = GitPHP_Util::ListDir($path . '/refs/remotes');
-			for ($i = 0; $i < count($heads); $i++) {
-
-				//sample 'gingerbread' content in 'm' folder:
-				//  ref: refs/remotes/github/gingerbread
-
-				$head = trim(file_get_contents($heads[$i]));
-				if (preg_match('/^ref: (.+)$/', $head, $regs)) {
-					$heads[$i] = $path . "/". $regs[1];
-				}
-
-				$key = trim(substr($heads[$i], $pathlen), "/\\");
-
-				// force double checking only on current repo branch
-				if (isset($this->remotes[$key]) && $key != 'refs/remotes/'.$this->repoRemote.'/'.$this->repoBranch) {
-					continue;
-				}
-
-				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] remote='.$key);
-
-				$m = $heads[$i];
-				if (!is_file($m)) {
-					//replace remote name by "m", look like the current remote
-					$m = preg_replace('#(refs/remotes/)([^\/]+)#','$1m',$m);
-					//GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] replace '.$heads[$i].' by '.$m);
-				}
-
-				if (is_file($m)) {
-					$hash = trim(file_get_contents($m));
-					if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
-						$head = $key;
-						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
-						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found head='.$head.'=>'.$hash);
-
-					} elseif (preg_match('#^refs/tags/#', $hash)) {
-						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found a tag '.$hash.' as remote');
-						$tagObj = $this->GetTag(preg_replace('#^refs/tags/#','',$hash));
-						if (is_object($tagObj)) {
-							$head = $key;
-							$hash = $tagObj->GetCommit()->GetHash();
-							$this->remotes[$key] = new GitPHP_RemoteHead($this, $head, $hash);
-						}
-					}
-
-					// if the remote hash is not found, add it as-is ...
-					$head = $key;
-					if (!array_key_exists($key, $this->remotes)) {
-						$this->remotes[$key] = new GitPHP_RemoteHead($this, $head);
-						GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found head='.$head);
-					}
-
-				} else {
-					GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] '.$key.' not found');
-				}
-			}
-
-			//use defaut branch set in manifest, often missing
-			$default = $this->repoRemote.'/'.$this->repoBranch;
-			$key = 'refs/remotes/'.$default;
-			if (!array_key_exists($key,$this->remotes)) {
-				GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] add missing remote branch '.$key.'');
-
-				$this->remotes[$key] = new GitPHP_RemoteHead($this, $default);
-			} elseif (!isset($this->head)) {
-				// set repo head, with default hash
-				$this->head = $this->remotes[$key]->GetHash();
-			}
-
-			GitPHP_Log::GetInstance()->Log($this->project.': [ReadRefListRaw] found '.count($this->remotes).' remote branches');
-		}
 	}
 
 	/**
@@ -1265,20 +1050,7 @@ class GitPHP_Project
 			$tagObj = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 
 			if (!$tagObj) {
-				if (!$this->readRefs)
-					$this->ReadRefList();
-
-				$hash = '';
-				if (isset($this->tags[$tag]))
-					$hash = $this->tags[$tag];
-
-				$strategy = null;
-				if ($this->GetCompat()) {
-					$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
-				} else {
-					$strategy = new GitPHP_TagLoad_Raw($this->GetObjectLoader());
-				}
-				$tagObj = new GitPHP_Tag($this, $tag, $strategy, $hash);
+				$tagObj = $this->GetObjectManager()->GetTag($tag, $hash);
 			}
 
 			$memoryCache->Set($key, $tagObj);
@@ -1290,7 +1062,7 @@ class GitPHP_Project
 	/**
 	 * list of remote branches for the project
 	 *
-	 * @param integer $count number of tags to load
+	 * @param integer $count number of heads to load
 	 * @return array array of heads
 	 */
 	public function GetRemotes($count = 0)
@@ -1298,125 +1070,19 @@ class GitPHP_Project
 		if (!$this->showRemotes)
 			return null;
 
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
-			return $this->GetRemotesGit($count);
-		} else {
-			return $this->GetRemotesRaw($count);
-		}
-	}
-
-	/**
-	 * Gets the list of sorted remote heads using the git executable
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of heads
-	 */
-	private function GetRemotesGit($count = 0)
-	{
-		$args = array();
-		$args[] = '-r';
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), 'branch', $args);
-
-		$lines = explode("\n", $ret);
-
-		$remotes = array();
-		foreach ($lines as $ref) {
-			$key = 'refs/remotes/'.trim($ref);
-			if (!isset($this->remotes[$key])) {
-				$this->remotes[$key] = new GitPHP_RemoteHead($this, $key);
-			}
-			$remotes[$key] = $this->remotes[$key];
-		}
-		//to fix...
-		//usort($remotes, array('GitPHP_RemoteHead', 'CompareAge'));
-		if (($count > 0) && (count($remotes) > $count)) {
-			$remotes = array_slice($this->remotes, 0, $count);
-		}
-		return $remotes;
-	}
-
-	/**
-	 * Gets the list of sorted remote heads using raw git objects
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of heads
-	 */
-	private function GetRemotesRaw($count = 0)
-	{
-		$heads = $this->remotes;
-		usort($heads, array('GitPHP_RemoteHead', 'CompareAge'));
-
-		if (($count > 0) && (count($heads) > $count)) {
-			$heads = array_slice($heads, 0, $count);
-		}
-		return $heads;
+		return $this->GetRemoteHeadList()->GetOrderedHeads('-committerdate', $count);
 	}
 
 	/**
 	 * Gets list of heads for this project by age descending
 	 * @deprecated
 	 *
-	 * @param integer $count number of tags to load
+	 * @param integer $count number of heads to load
 	 * @return array array of heads
 	 */
 	public function GetHeads($count = 0)
 	{
-		$this->GetHeadList()->GetHeads()->GetOrderedHeads('-committerdate', $count);
-	}
-
-	/**
-	 * Gets the list of sorted heads using the git executable
-	 *
-	 * @param integer $count number of heads to load
-	 * @return array array of heads
-	 */
-	private function GetHeadsGit($count = 0)
-	{
-		$args = array();
-		$args[] = '--sort=-committerdate';
-		$args[] = '--format="%(refname)"';
-		if ($count > 0) {
-			$args[] = '--count=' . $count;
-		}
-		$args[] = '--';
-		$args[] = 'refs/heads';
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args);
-
-		$lines = explode("\n", $ret);
-
-		$heads = array();
-
-		foreach ($lines as $ref) {
-			$head = substr($ref, strlen('refs/heads/'));
-			if (isset($this->heads[$head])) {
-				$heads[] = $this->GetHead($head);
-			}
-		}
-
-		return $heads;
-	}
-
-	/**
-	 * Gets the list of sorted heads using raw git objects
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of heads
-	 */
-	private function GetHeadsRaw($count = 0)
-	{
-		$heads = array();
-		foreach ($this->heads as $head => $hash) {
-			$heads[] = $this->GetHead($head);
-		}
-		usort($heads, array('GitPHP_Head', 'CompareAge'));
-
-		if (($count > 0) && (count($heads) > $count)) {
-			$heads = array_slice($heads, 0, $count);
-		}
-		return $heads;
+		$this->GetHeadList()->GetOrderedHeads('-committerdate', $count);
 	}
 
 	/**
@@ -1435,9 +1101,6 @@ class GitPHP_Project
 		$headObj = $memoryCache->Get($key);
 
 		if (!$headObj) {
-
-			if (empty($hash) && isset($this->heads[$head]))
-				$hash = $this->heads[$head];
 
 			$headObj = new GitPHP_Head($this, $head, $hash);
 
