@@ -11,21 +11,21 @@ class GitPHP_ProjectTest extends PHPUnit_Framework_TestCase
 {
 	public function testInvalidDirectory()
 	{
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('GitPHP_InvalidDirectoryException');
 
 		$project = new GitPHP_Project(GITPHP_TEST_PROJECTROOT, 'nonexistentproject.git', $this->getMock('GitPHP_ProjectLoadStrategy_Interface'));
 	}
 
 	public function testInvalidRepo()
 	{
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('GitPHP_InvalidGitRepositoryException');
 
 		$project = new GitPHP_Project(GITPHP_TEST_RESOURCES, 'testdir', $this->getMock('GitPHP_ProjectLoadStrategy_Interface'));
 	}
 
 	public function testDirectoryTraversal()
 	{
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('GitPHP_DirectoryTraversalException');
 
 		$project = new GitPHP_Project(GITPHP_TEST_PROJECTROOT, '../externalrepo.git', $this->getMock('GitPHP_ProjectLoadStrategy_Interface'));
 	}
