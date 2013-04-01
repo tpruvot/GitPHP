@@ -257,6 +257,10 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		$headList->SetCompat($compat);
 		$project->SetHeadList($headList);
 
+		$tagList = new GitPHP_TagList($project);
+		$tagList->SetCompat($compat);
+		$project->SetTagList($tagList);
+
 		$manager = new GitPHP_GitObjectManager($project);
 		$manager->SetCompat($compat);
 		$manager->SetExe($this->exe);

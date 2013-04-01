@@ -77,10 +77,10 @@ class GitPHP_Project
 	protected $headList;
 
 	/**
-	 * Stores the tags for the project
-	 * @deprecated
+	 * The tag list for the project
+	 * @var GitPHP_TagList
 	 */
-	protected $tags = array();
+	protected $tagList;
 
 	/**
 	 * Stores the heads for the project
@@ -637,15 +637,8 @@ class GitPHP_Project
 			/* Detached HEAD */
 			$this->head = $regs[1];
 		} else if (preg_match('/^ref: (.+)$/', $headPointer, $regs)) {
-			/* standard pointer to head */
-			if (!$this->readRefs)
-				$this->ReadRefList();
-
-			$head = $regs[1];
-			if (!isset($this->heads[$head])) {
-				$head = preg_replace('#^refs/heads/#', '', $regs[1]);
-				GitPHP_Log::GetInstance()->Log($this->project.': [ReadHeadCommitRaw] '.$regs[1].' => '.$head);
-			}
+			/* standard pointer to head, preg to keep compat with remote heads */
+			$head = preg_replace('#^refs/heads/#', '', $regs[1]);
 
 			if (isset($this->heads[$head])) {
 				$this->head = $this->heads[$head];
@@ -800,6 +793,8 @@ class GitPHP_Project
 
 		if ($this->headList)
 			$this->headList->SetCompat($compat);
+		if ($this->tagList)
+			$this->tagList->SetCompat($compat);
 	}
 
 	/**
@@ -862,12 +857,9 @@ class GitPHP_Project
 				return $this->GetHeadList()->GetHead($head)->GetCommit();
 			return null;
 		} else if (substr_compare($hash, 'refs/tags/', 0, 10) === 0) {
-			$tag = $this->GetTag(substr($hash, 10));
-			if ($tag != null) {
-				$obj = $tag->GetCommit();
-				if ($obj != null) {
-					return $obj;
-				}
+			$tag = substr($hash, 10);
+			if ($this->GetTagList()->Exists($tag)) {
+				return $this->GetTagList()->GetTag($tag)->GetCommit();
 			}
 			return null;
 		} else if (substr_compare($hash, 'refs/remotes/', 0, 13) === 0) {
@@ -876,9 +868,6 @@ class GitPHP_Project
 			}
 			return $this->remotes[$hash]->GetCommit();
 		}
-
-		if (!$this->readRefs)
-			$this->ReadRefList();
 
 		if ($this->GetHeadList()->Exists($hash)) {
 			return $this->GetHeadList()->GetHead($hash)->GetCommit();
@@ -889,9 +878,8 @@ class GitPHP_Project
 			return $headObj->GetCommit();
 		}
 
-		if (isset($this->tags[$hash])) {
-			$tagObj = $this->GetTag($hash);
-			return $tagObj->GetCommit();
+		if ($this->GetTagList()->Exists($hash)) {
+			return $this->GetTagList()->GetTag($hash)->GetCommit();
 		}
 
 		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
@@ -905,6 +893,33 @@ class GitPHP_Project
 		}
 
 		return null;
+	}
+
+	/**
+	 * Gets the tag list
+	 *
+	 * @return GitPHP_TagList tag list
+	 */
+	public function GetTagList()
+	{
+		if (!$this->tagList) {
+			$this->tagList = new GitPHP_TagList($this);
+			$this->tagList->SetCompat($this->GetCompat());
+		}
+		return $this->tagList;
+	}
+
+	/**
+	 * Sets the tag list
+	 *
+	 * @param GitPHP_TagList $tagList tag list
+	 */
+	public function SetTagList($tagList)
+	{
+		if ($tagList && ($tagList->GetProject() !== $this))
+			throw new Exception('Invalid taglist for this project');
+
+		$this->tagList = $tagList;
 	}
 
 	/**
@@ -1232,83 +1247,12 @@ class GitPHP_Project
 	}
 
 	/**
-	 * Gets list of tags for this project by age descending
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of tags
-	 */
-	public function GetTags($count = 0)
-	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if ($this->GetCompat()) {
-			return $this->GetTagsGit($count);
-		} else {
-			return $this->GetTagsRaw($count);
-		}
-	}
-
-	/**
-	 * Gets list of tags for this project by age descending using git executable
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of tags
-	 */
-	private function GetTagsGit($count = 0)
-	{
-		$args = array();
-		$args[] = '--sort=-creatordate';
-		$args[] = '--format="%(refname)"';
-		if ($count > 0) {
-			$args[] = '--count=' . $count;
-		}
-		$args[] = '--';
-		$args[] = 'refs/tags';
-		$ret = GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args);
-
-		$lines = explode("\n", $ret);
-
-		$tags = array();
-
-		foreach ($lines as $ref) {
-			$tag = substr($ref, strlen('refs/tags/'));
-			if (isset($this->tags[$tag])) {
-				$tags[] = $this->GetTag($tag);
-			}
-		}
-
-		return $tags;
-	}
-
-	/**
-	 * Gets list of tags for this project by age descending using raw git objects
-	 *
-	 * @param integer $count number of tags to load
-	 * @return array array of tags
-	 */
-	private function GetTagsRaw($count = 0)
-	{
-		$tags = array();
-		foreach ($this->tags as $tag => $hash) {
-			$tags[] = $this->GetTag($tag);
-		}
-		@ usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
-
-		if (($count > 0) && (count($tags) > $count)) {
-			$tags = array_slice($tags, 0, $count);
-		}
-
-		return $tags;
-	}
-
-	/**
 	 * Gets a single tag
 	 *
 	 * @param string $tag tag to find
 	 * @return mixed tag object
 	 */
-	public function GetTag($tag)
+	public function GetTag($tag, $hash = '')
 	{
 		if (empty($tag))
 			return null;

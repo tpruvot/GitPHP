@@ -111,7 +111,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 		if ($this->type == 'commit') {
 			return $this->GetProject()->GetCommit($this->object);
 		} else if ($this->type == 'tag') {
-			return $this->GetProject()->GetTag($this->object);
+			return $this->GetProject()->GetTagList()->GetTag($this->object);
 		} else if ($this->type == 'blob') {
 			return $this->GetProject()->GetBlob($this->object);
 		}
@@ -152,17 +152,11 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	public function GetCommitHash()
 	{
 		if (!$this->commitHash) {
-			if (!$this->dataRead) {
-				$this->ReadData();
-			}
-
-			if (!$this->commitHash) {
-				if ($this->type == 'commit') {
-					$this->commitHash = $this->object;
-				} else if ($this->type == 'tag') {
-					$tag = $this->GetProject()->GetTag($this->object);
-					$this->commitHash = $tag->GetCommitHash();
-				}
+			if ($this->type == 'commit') {
+				$this->commitHash = $this->object;
+			} else if ($this->type == 'tag') {
+				$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
+				$this->commitHash = $tag->GetCommit()->GetHash();
 			}
 		}
 

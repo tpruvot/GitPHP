@@ -210,9 +210,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$tagObj = $this->cache->Get($key);
 			}
 
-			$compat = $this->project->GetCompat();
 			$strategy = null;
-			if ($compat) {
+			if ($this->compat) {
 				$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
 			} else {
 				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());

@@ -63,7 +63,7 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign("head",$head);
 
-		$taglist = $this->GetProject()->GetTags();
+		$taglist = $this->GetProject()->GetTagList()->GetOrderedTags('-creatordate');
 		if (isset($taglist) && (count($taglist) > 0)) {
 			$this->tpl->assign("taglist",$taglist);
 		}
