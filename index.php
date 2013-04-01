@@ -104,7 +104,13 @@ try {
 	}
 
 	unset($messageController);
+}
 
+$log = GitPHP_DebugLog::GetInstance();
+if ($log->GetEnabled() && $log->GetCount()) {
+	echo '<div class="debug_footer"><pre>';
+	echo implode("\n", $log->GetEntries());
+	echo '</pre></div>';
 }
 
 unset($router);

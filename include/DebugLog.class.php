@@ -174,6 +174,14 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Return the number of log/benchmark entries
+	 */
+	public function GetCount()
+	{
+		return count($this->entries);
+	}
+
+	/**
 	 * Calculates times and gets log entries
 	 *
 	 * @return array log entries
