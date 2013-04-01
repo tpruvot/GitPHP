@@ -139,7 +139,7 @@
       {/block}
     </div>
     <div class="attr_footer">
-        <a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP branch by Tanguy Pruvot</a> based on <a href="http://source.gitphp.org/">original version by Chris Han</a>
+        <a href="https://github.com/tpruvot/GitPHP" target="_blank">GitPHP(repo) by Tanguy Pruvot</a>, based on <a href="http://source.gitphp.org/">original version by Chris Han</a>
     </div>
 {if $debug}
     <div class="debug_footer">

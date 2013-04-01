@@ -7,13 +7,13 @@ It implements all the features of xiphux 0.2.7 and some more fixes from the mast
 This Variant is made to be compatible with Google 'repo' architecture which is a SCM
 layer, based on xml manifest(s), used to manage and sync a lot of git projects.
 
-Due to a massive code rewrite in 0.2.8, i stopped trying to merge xiphux work, which is now very hard to do.
+Due to a massive code rewrite in 0.2.8, i stopped trying to merge xiphux commits, which is now very hard to do.
 The only way to include all my features in current xiphux variant is to rewrite them from start...
 
-So for the moment, i will only do backports based on the 0.2.7 architecture, named 0.2.7.y
+So for the moment, i will only do backports of the features step by step, these versions are now named 0.2.7.y
 
-When/If the job will be completed and my diffs reduced enough against xiphux 0.2.8, i will be able to rebase
-the changes to restore normal git merges/rebase...
+When the job will be completed and my diffs reduced enough against xiphux master, i will be able to rebase
+the changes to restore the ability to do normal git merges/rebase... 
 
 
 The original skin can be seen here : http://source.gitphp.org/
@@ -25,9 +25,10 @@ Changes made by Tanguy Pruvot (2011/2013) :
 ===========================================
 
 New abilities :
-+ Added ability to autolist normal "git clone" repositories and not only public "bare" ones.
-+ Added ability to autolist subfolders (and set maximum level, to create groups of repositories)
-+ Added ability to load project list using an android .repo manifest.xml and the local_manifest.xml overrides
++ Autolist normal "git clone" repositories and not only public "bare" ones.
++ Autolist subfolders (and set maximum level, to create groups of repositories)
++ Load a project list using an android .repo manifest.xml and the local_manifest.xml overrides
++ Show diff of pictures
 
 Enhancements :
 + use origin git clone url as description
@@ -37,10 +38,9 @@ Enhancements :
   made with a new config variable "fixupjs" where we can add a jQuery script
 + Show file line changes +/- in Commit view
 + New options to toggle display of owner and for default sort order of project list
-+ Side by Side line numbers, Tab/Space display and copy paste
++ Side by Side line numbers, Tab/Space display and copy paste helpers
 + Support for shortened hashes and search by commit hash
-+ Support pictures diff
-+ Merge tracking (to enhance)
++ Merge tracking in shortlog (to enhance)
 
 Addons :
 + Blueskin alternative skin
@@ -54,12 +54,27 @@ TODO :
 
 - Enhance the log history to identify "merged commits" from merged branches
 
-- Backport Graph features and implement a Calendar view
+- Implement a Calendar view
 
 - Another kind of skin for tablets
+
+- The new local_manifests/ folder handled by new "repo" versions, since 1.12.0+
+  see https://gerrit.googlesource.com/git-repo for more info.
 
 
 Missing features from 0.2.8 :
 =============================
-- hmmm ... ?
+
+- User Authentification
+
+- Disabled PHP functions check
+
+
+Last notes:
+===========
+
+The current 0.2.7.y (at the date of the .4) versions can not be called "stable", some unit tests are failing...
+
+You can use the 0.2.7-repo tagged version for daily use, but for dev work, please consider the latest versions
+which are closer to the current xiphux architecture (Autoloader, Typed Exceptions, URL Router ...)
 
