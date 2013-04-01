@@ -1320,7 +1320,13 @@ class GitPHP_Project
 				if (isset($this->tags[$tag]))
 					$hash = $this->tags[$tag];
 
-				$tagObj = new GitPHP_Tag($this, $tag, $hash);
+				$strategy = null;
+				if ($this->GetCompat()) {
+					$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
+				} else {
+					$strategy = new GitPHP_TagLoad_Raw($this->GetObjectLoader());
+				}
+				$tagObj = new GitPHP_Tag($this, $tag, $strategy, $hash);
 			}
 
 			$memoryCache->Set($key, $tagObj);
