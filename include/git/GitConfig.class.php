@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP GitConfig
- *
  * Parses Git configuration files
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -28,9 +26,10 @@ class GitPHP_GitConfig
 	const TypeBoolean = 3;
 	
 	/**
-	 * Stores the project internally
+	 * The config file path
+	 * @var string
 	 */
-	protected $project = null;
+	protected $configPath = null;
 
 	/**
 	 * Stores whether the config file has been loaded
@@ -45,11 +44,13 @@ class GitPHP_GitConfig
 	/**
 	 * Instantiates object
 	 *
-	 * @param mixed $project project
+	 * @param string $configPath config file path
 	 */
-	public function __construct($project)
+	public function __construct($configPath)
 	{
-		$this->project = $project;
+		if (is_string($configPath)) {
+			$this->configPath = $configPath;
+		}
 	}
 
 	/**
@@ -113,12 +114,16 @@ class GitPHP_GitConfig
 	 */
 	public function SetValue($key, $value)
 	{
-		// todo
+		if (empty($this->configPath))
+			return false;
 
 		// try to save project description if Unnamed (file may be protected)
 		if ($key == 'gitphp.description') {
-			$res = @ file_put_contents($this->project->GetPath() . '/description', $value);
+			$description = dirname($this->configPath).'/description';
+			return @ file_put_contents($description, $value);
 		}
+
+		return true;
 	}
 
 	/**
@@ -146,13 +151,10 @@ class GitPHP_GitConfig
 	{
 		$this->configRead = true;
 
-		$path = $this->project->GetPath() . '/config';
-
-		if (!file_exists($path)) {
+		if (empty($this->configPath))
 			return;
-		}
 
-		$data = explode("\n", file_get_contents($path));
+		$data = explode("\n", file_get_contents($this->configPath));
 
 		$currentSection = '';
 		$currentSetting = '';

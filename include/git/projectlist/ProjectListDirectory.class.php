@@ -8,7 +8,7 @@ defined('GITPHP_CACHE_PROJECTLIST') || define('GITPHP_CACHE_PROJECTLIST', GITPHP
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 {
@@ -18,29 +18,27 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	const CACHE_PROJECTLIST = GITPHP_CACHE_PROJECTLIST;
 
 	/**
-	 * bareOnly
-	 *
+	 * Whether to only list exported projects
+	 * @var boolean
+	 */
+	protected $exportedOnly = false;
+
+	/**
 	 * Ignore working git repositories (project/.git)
 	 */
 	protected $bareOnly = true;
 
 	/**
-	 * repoSupport
-	 *
 	 * Go inside android source .repo folders
 	 */
 	protected $repoSupport = false;
 
 	/**
-	 * sublevels
-	 *
 	 * Search in subfolders, maximum recursive level
 	 */
 	protected $sublevels = 0;
 
 	/**
-	 * curlevel
-	 *
 	 * Search in subfolders, current recursive level
 	 */
 	protected $curlevel = 0;
@@ -49,23 +47,34 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	/**
 	 * Constructor
 	 *
-	 * @param string $projectDir (deprecated)
+	 * @param string $projectRoot project root
+	 * @param boolean $exportedOnly whether to only allow exported projects
 	 * @throws Exception if parameter is not a directory
 	 */
-	public function __construct($projectDir = '')
+	public function __construct($projectRoot, $exportedOnly = false)
 	{
+		$this->exportedOnly = $exportedOnly;
+
 		$Config = GitPHP_Config::GetInstance();
 
 		$this->bareOnly    = $Config->GetValue('bareonly', true);
 		$this->sublevels   = $Config->GetValue('subfolder_levels', 0);
 		$this->repoSupport = $Config->GetValue('reposupport', false);
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
-	 * PopulateProjects
+	 * Gets whether this list only allows exported projects
 	 *
+	 * @return boolean
+	 */
+	public function GetExportedOnly()
+	{
+		return $this->exportedOnly;
+	}
+
+	/**
 	 * Populates the internal list of projects
 	 */
 	protected function PopulateProjects()
@@ -81,12 +90,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$cache_life = '180';  //caching time, in seconds
 				$filemtime = max($stat['mtime'], $stat['ctime']);
 				if  (time() - $filemtime >= $cache_life) {
-					GitPHP_Log::GetInstance()->Log('ProjectListDirCache: expired, reloading...');
+					$this->Log('ProjectListDirCache: expired, reloading...');
 				} else {
 					$data = file_get_contents(self::CACHE_PROJECTLIST);
 					$projects = unserialize($data);
 					if (count($projects) > 0) {
-						GitPHP_Log::GetInstance()->Log('loaded '.count($projects).' projects from cache');
+						$this->Log('loaded '.count($projects).' projects from cache');
 						$this->projects = $projects;
 						return;
 					}
@@ -119,7 +128,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		if (!$this->IsDir($dir))
 			return;
 
-		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
+		$this->Log(sprintf('Searching directory %1$s', $dir));
 
 		if ($dh = opendir($dir)) {
 			$trimlen = strlen(GitPHP_Util::AddSlash($this->projectRoot)) + 1;
@@ -143,8 +152,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				if (is_file($fullPath . '/HEAD') || is_file($fullPath . '/ORIG_HEAD')) {
 					$projectPath = substr($fullPath, $trimlen);
 					if (!isset($this->projects[$projectPath])) {
-						GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $projectPath));
-						$project = $this->InstantiateProject($projectPath);
+						$this->Log(sprintf('Found project %1$s', $projectPath));
+						$project = $this->LoadProject($projectPath);
 						if ($project) {
 
 							$category = trim(substr($dir, $trimlen), '/');
@@ -159,7 +168,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 					$this->RecurseDir($fullPath);
 					$this->curlevel--;
 				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('Skipping %1$s', $fullPath));
+					$this->Log(sprintf('Skipping %1$s', $fullPath));
 				}
 			}
 			closedir($dh);
@@ -167,12 +176,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		try {
 
@@ -183,19 +192,25 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$project->SetCategory($category);
 			}
 
-			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false) && !$project->GetDaemonEnabled()) {
-				GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
+			if ($this->exportedOnly && !$project->GetDaemonEnabled()) {
+				$this->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
 				return null;
 			}
+
+			$this->ApplyGlobalConfig($project);
+
+			$this->ApplyGitConfig($project);
 
 			if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 				$this->ApplyProjectSettings($project, $this->projectSettings[$proj]);
 			}
 
+			$this->InjectProjectDependencies($project);
+
 			return $project;
 
 		} catch (Exception $e) {
-			GitPHP_Log::GetInstance()->Log($e->getMessage());
+			$this->Log($e->getMessage());
 		}
 
 		return null;

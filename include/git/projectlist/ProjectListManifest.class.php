@@ -4,7 +4,7 @@
  *
  * @author Tanguy Pruvot
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 {
@@ -23,19 +23,29 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	 */
 	protected $default=array();
 
+	/**
+	 * TODO: support multiple local manifests (.repo/local_manifests folder)
+	 */
 	protected $local_manifest='';
 
+	/**
+	 * Removed projects from main manifest
+	 */
 	protected $removes=array();
 
+	/**
+	 * Added projects in local manifest
+	 */
 	protected $local_projects=array();
 
 	/**
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
 	 */
-	public function __construct($projectFile)
+	public function __construct($projectRoot, $projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
 			throw new GitPHP_InvalidFileException($projectFile);
@@ -43,7 +53,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectFile;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
@@ -100,13 +110,13 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 				foreach ($this->removes as $project => $b) {
 					if (array_key_exists($project,$projects)) {
-						GitPHP_Log::GetInstance()->Log(sprintf('remove project %1$s',$project));
+						$this->Log(sprintf('remove project %1$s',$project));
 						$projects[$project] = NULL;
 					}
 				}
 
 				foreach ($this->local_projects as $project => $node) {
-					GitPHP_Log::GetInstance()->Log(sprintf('add local project %1$s',$project));
+					$this->Log(sprintf('add local project %1$s',$project));
 					$projects[$project] = $node;
 				}
 			}
@@ -138,7 +148,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 
 			$fullPath = $this->projectRoot . $projPath;
 			if (!is_file($fullPath . '/HEAD')) {
-				GitPHP_Log::GetInstance()->Log(sprintf('%1$s: %2$s is not a git project', __FUNCTION__, $projPath));
+				$this->Log(sprintf('%1$s: %2$s is not a git project', __FUNCTION__, $projPath));
 			} else {
 				try {
 					$projectPath = substr($fullPath, strlen($this->projectRoot));
@@ -146,7 +156,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 					// Allow to apply manifest settings to a single project.
 					$projObj = null;
 					if (empty($refProject))
-						$projObj = $this->InstantiateProject($projectPath);
+						$projObj = $this->LoadProject($projectPath);
 					else {
 						if ($refProject->GetProject() != $projectPath) continue;
 						$projObj = $refProject;
@@ -191,27 +201,33 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 					}
 
 				} catch (Exception $e) {
-					GitPHP_Log::GetInstance()->Log($e->getMessage());
+					$this->Log($e->getMessage());
 				}
 			}
 		}
-		GitPHP_Log::GetInstance()->Log(sprintf('Found %1$d projects in manifest(s)', count($projects)));
+		$this->Log(sprintf('Found %1$d projects in manifest(s)', count($projects)));
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
+
+		$this->ApplyGlobalConfig($projectObj);
+
+		$this->ApplyGitConfig($projectObj);
 
 		// we need to read the xml file if not done... (direct tree link access)
 		if (!$this->fileRead) {
 			$this->ReadFile($projectObj);
 		}
+
+		$this->InjectProjectDependencies($projectObj);
 
 		return $projectObj;
 	}
@@ -221,7 +237,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	 *
 	 * @returns true if done
 	 */
-	private function IncludeLocalManifest($main_xml)
+	protected function IncludeLocalManifest($main_xml)
 	{
 		$use_errors = libxml_use_internal_errors(true);
 
@@ -236,7 +252,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		if ($xml->getName() !== 'manifest')
 			return false;
 
-		GitPHP_Log::GetInstance()->Log(sprintf('Found a local_manifest.xml'));
+		$this->Log(sprintf('Found a local_manifest.xml'));
 
 		//remove-project tags
 		$removes = array();
@@ -254,7 +270,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		}
 		$this->local_projects = $projects;
 
-		GitPHP_Log::GetInstance()->Log(sprintf('Found %1$d projects in local manifest', count($projects)));
+		$this->Log(sprintf('Found %1$d projects in local manifest', count($projects)));
 
 		return true;
 	}

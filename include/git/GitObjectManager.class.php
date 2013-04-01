@@ -17,10 +17,25 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	protected $project;
 
 	/**
+	 * Cache instance
+	 *
+	 * @var GitPHP_Cache
+	 */
+	protected $cache = null;
+
+	/**
 	 * MemoryCache instance
 	 *
+	 * @var GitPHP_MemoryCache
 	 */
 	protected $memoryCache = null;
+
+	/**
+	 * Compatibility mode
+	 *
+	 * @var boolean
+	 */
+	protected $compat = false;
 
 	/**
 	 * Executable
@@ -53,7 +68,39 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
-	 * Get memory cache instance
+	 * Get project
+	 *
+	 * @return GitPHP_Project
+	 */
+	public function GetProject()
+	{
+		return $this->project;
+	}
+
+	/**
+	 * Gets the cache instance being used
+	 *
+	 * @return GitPHP_Cache|null cache instance
+	 */
+	public function GetCache()
+	{
+		return $this->cache;
+	}
+
+	/**
+	 * Set the cache instance to use
+	 *
+	 * @param GitPHP_Cache|null $cache cache instance
+	 */
+	public function SetCache($cache)
+	{
+		$this->cache = $cache;
+	}
+
+	/**
+	 * Gets the memory cache instance being used
+	 *
+	 * @return GitPHP_MemoryCache|null memory cache instance
 	 */
 	public function GetMemoryCache()
 	{
@@ -61,11 +108,33 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 	}
 
 	/**
-	 * Set memory cache instance
+	 * Sets the memory cache instance to use
+	 *
+	 * @param GitPHP_MemoryCache|null $memoryCache memory cache instance
 	 */
 	public function SetMemoryCache($memoryCache)
 	{
 		$this->memoryCache = $memoryCache;
+	}
+
+	/**
+	 * Gets the compatibility mode
+	 *
+	 * @return boolean
+	 */
+	public function GetCompat()
+	{
+		return $this->compat;
+	}
+
+	/**
+	 * Sets the compatibility mode
+	 *
+	 * @param boolean $compat compatibility mode
+	 */
+	public function SetCompat($compat)
+	{
+		$this->compat = $compat;
 	}
 
 	/**
@@ -90,23 +159,27 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Commit::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$commit = $memoryCache->Get($key);
+
+		$commit = null;
+		if ($this->memoryCache)
+			$commit = $this->memoryCache->Get($key);
 
 		if (!$commit) {
 
-			$commit = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+			if ($this->cache) {
+				$commit = $this->cache->Get($key);
+			}
 
 			if ($commit) {
 				$commit->SetProject($this->project);
 			} else {
 				$commit = new GitPHP_Commit($this->project, $hash);
 			}
+
 			$commit->AddObserver($this);
 
-			$commit->SetCompat($this->project->GetCompat());
-
-			$memoryCache->Set($key, $commit);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $commit);
 
 		}
 
@@ -126,22 +199,27 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Tag::CacheKey($this->project->GetProject(), $tag);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tagObj = $memoryCache->Get($key);
+
+		$tagObj = null;
+		if ($this->memoryCache)
+			$tagObj = $this->memoryCache->Get($key);
 
 		if (!$tagObj) {
-			$tagObj = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+			if ($this->cache) {
+				$tagObj = $this->cache->Get($key);
+			}
 
 			if ($tagObj) {
 				$tagObj->SetProject($this->project);
 			} else {
 				$tagObj = new GitPHP_Tag($this->project, $tag, $hash);
 			}
+
 			$tagObj->AddObserver($this);
 
-			$tagObj->SetCompat($this->project->GetCompat());
-
-			$memoryCache->Set($key, $tagObj);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $tagObj);
 		}
 
 		return $tagObj;
@@ -160,13 +238,16 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Head::CacheKey($this->project->GetProject(), $head);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$headObj = $memoryCache->Get($key);
+
+		$headObj = null;
+		if ($this->memoryCache)
+			$headObj = $this->memoryCache->Get($key);
 
 		if (!$headObj) {
 			$headObj = new GitPHP_Head($this->project, $head, $hash);
 
-			$memoryCache->Set($key, $headObj);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $headObj);
 		}
 
 		return $headObj;
@@ -194,22 +275,27 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Blob::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$blob = $memoryCache->Get($key);
+
+		$blob = null;
+		if ($this->memoryCache)
+			$blob = $this->memoryCache->Get($key);
 
 		if (!$blob) {
-			$blob = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+			if ($this->cache) {
+				$blob = $this->cache->Get($key);
+			}
 
 			if ($blob) {
 				$blob->SetProject($this->project);
 			} else {
 				$blob = new GitPHP_Blob($this->project, $hash);
 			}
+
 			$blob->AddObserver($this);
 
-			$blob->SetCompat($this->project->GetCompat());
-
-			$memoryCache->Set($key, $blob);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $blob);
 		}
 
 		return $blob;
@@ -237,25 +323,57 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			return null;
 
 		$key = GitPHP_Tree::CacheKey($this->project->GetProject(), $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$tree = $memoryCache->Get($key);
+		$tree = null;
+		if ($this->memoryCache)
+			$tree = $this->memoryCache->Get($key);
 
 		if (!$tree) {
-			$tree = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+
+			if ($this->cache) {
+				$tree = $this->cache->Get($key);
+			}
 
 			if ($tree) {
 				$tree->SetProject($this->project);
 			} else {
 				$tree = new GitPHP_Tree($this->project, $hash);
 			}
+
 			$tree->AddObserver($this);
 
-			$tree->SetCompat($this->project->GetCompat());
-
-			$memoryCache->Set($key, $tree);
+			if ($this->memoryCache)
+				$this->memoryCache->Set($key, $tree);
 		}
 
 		return $tree;
+	}
+
+	/**
+	 * Gets a file diff
+	 *
+	 * @param string $fromHash source hash, can also be a diff-tree info line
+	 * @param string $toHash target hash, required if $fromHash is a hash
+	 * @return GitPHP_FileDiff file diff object
+	 */
+	public function GetFileDiff($fromHash, $toHash = '')
+	{
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $fromHash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($fromHash);
+			if ($fullHash == $fromHash)
+				throw new GitPHP_InvalidHashException($fromHash);
+			$fromHash = $fullHash;
+		}
+
+		if (!empty($toHash) && preg_match('/^[0-9A-Fa-f]{4,39}$/', $toHash) && !$this->compat) {
+			$fullHash = $this->project->ExpandHash($toHash);
+			if ($fullHash == $toHash)
+				throw new GitPHP_InvalidHashException($toHash);
+			$toHash = $fullHash;
+		}
+
+		$fileDiff = new GitPHP_FileDiff($this->project, $fromHash, $toHash);
+		$fileDiff->SetCache($this->cache);
+		return $fileDiff;
 	}
 
 	/**
@@ -273,10 +391,13 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 		if ($changeType !== GitPHP_Observer_Interface::CacheableDataChange)
 			return;
 
+		if (!$this->cache)
+			return;
+
 		if (!(($object instanceof GitPHP_Observable_Interface) && ($object instanceof GitPHP_Cacheable_Interface)))
 			return;
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($object->GetCacheKey(), $object);
+		$this->cache->Set($object->GetCacheKey(), $object);
 	}
 
 }

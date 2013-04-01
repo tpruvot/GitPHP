@@ -5,28 +5,33 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 {
 
 	/**
-	 * Stores the contents of the project list file
+	 * The contents of the project list file
+	 *
+	 * @var string[]
 	 */
 	protected $fileContents = array();
 
 	/**
-	 * Stores whether the file has been read
+	 * Whether the file has been read
+	 *
+	 * @var boolean
 	 */
 	protected $fileRead = false;
 	
 	/**
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param string $projectFile file to read
 	 * @throws Exception if parameter is not a readable file
 	 */
-	public function __construct($projectFile)
+	public function __construct($projectRoot, $projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
 			throw new GitPHP_InvalidFileException($projectFile);
@@ -34,13 +39,11 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectFile;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
 	 * Populates the internal list of projects
-	 *
-	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
 	{
@@ -49,7 +52,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		foreach ($this->fileContents as $lineData) {
 			if (isset($lineData['project'])) {
-				$projObj = $this->InstantiateProject($lineData['project']);
+				$projObj = $this->LoadProject($lineData['project']);
 				if ($projObj) {
 					$this->projects[$lineData['project']] = $projObj;
 					unset($projObj);
@@ -59,12 +62,12 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates the project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
-	 * @return mixed project object
+	 * @return GitPHP_Project project object
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		if (!$this->fileRead)
 			$this->ReadFile();
@@ -80,7 +83,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 						$owner = $lineData['owner'];
 					}
 				} else {
-					GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projectRoot . $proj));
+					$this->Log(sprintf('%1$s is not a git project', $projectRoot . $proj));
 				}
 				break;
 			}
@@ -91,12 +94,18 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->ApplyGlobalConfig($projectObj);
+
+		$this->ApplyGitConfig($projectObj);
+
 		if (!empty($owner))
 			$projectObj->SetOwner($owner);
 
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($projectObj, $this->projectSettings[$proj]);
 		}
+
+		$this->InjectProjectDependencies($projectObj);
 
 		return $projectObj;
 	}

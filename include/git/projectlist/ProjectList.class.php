@@ -45,7 +45,9 @@ class GitPHP_ProjectList
 	public static function Instantiate($config, $file = null, $legacy = false)
 	{
 		if (self::$instance)
-			return;
+			return self::$instance;
+
+		$instance = null;
 
 		$projectRoot = $config->GetValue('projectroot');
 
@@ -54,30 +56,32 @@ class GitPHP_ProjectList
 			if (isset($git_projects)) {
 				if (is_string($git_projects)) {
 					if (function_exists('simplexml_load_file') && GitPHP_ProjectListScmManager::IsSCMManager($git_projects)) {
-						self::$instance = new GitPHP_ProjectListScmManager($git_projects);
+						$instance = new GitPHP_ProjectListScmManager($projectRoot, $git_projects);
 					} elseif (function_exists('simplexml_load_file') && GitPHP_ProjectListManifest::IsRepoManifest($git_projects)) {
-						self::$instance = new GitPHP_ProjectListManifest($git_projects);
+						$instance = new GitPHP_ProjectListManifest($projectRoot, $git_projects);
 					} else {
-						self::$instance = new GitPHP_ProjectListFile($git_projects);
+						$instance = new GitPHP_ProjectListFile($projectRoot, $git_projects);
 					}
 				} else if (is_array($git_projects)) {
 					if ($legacy) {
-						self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
+						$instance = new GitPHP_ProjectListArrayLegacy($projectRoot, $git_projects);
 					} else {
-						self::$instance = new GitPHP_ProjectListArray($git_projects);
+						$instance = new GitPHP_ProjectListArray($projectRoot, $git_projects);
 					}
 				}
 			}
 		}
 
-		if (!self::$instance) {
-			self::$instance = new GitPHP_ProjectListDirectory($projectRoot);
+		if (!$instance) {
+			$instance = new GitPHP_ProjectListDirectory($projectRoot, $config->GetValue('exportedonly'));
 		}
 
-		self::$instance->SetConfig($config);
+		$instance->SetConfig($config);
 
 		if (isset($git_projects_settings) && !$legacy)
-			self::$instance->SetProjectSettings($git_projects_settings);
+			$instance->SetProjectSettings($git_projects_settings);
+
+		self::$instance = $instance;
 
 		return self::$instance;
 	}

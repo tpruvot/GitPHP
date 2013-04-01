@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 {
@@ -13,10 +13,11 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	/**
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param mixed $projectArray array to read
 	 * @throws Exception if parameter is not an array
 	 */
-	public function __construct($projectArray)
+	public function __construct($projectRoot, $projectArray)
 	{
 		if (!is_array($projectArray)) {
 			throw new Exception('An array of projects is required');
@@ -24,13 +25,11 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectArray;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
 	 * Populates the internal list of projects
-	 *
-	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
 	{
@@ -38,7 +37,7 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 			try {
 				if (is_string($projData)) {
 					// Just flat array of project paths
-					$projObj = $this->InstantiateProject($projData);
+					$projObj = $this->LoadProject($projData);
 					if ($projObj) {
 						$this->projects[$projData] = $projObj;
 						unset($projObj);
@@ -46,14 +45,14 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 				} else if (is_array($projData)) {
 					if (is_string($proj) && !empty($proj)) {
 						// Project key pointing to data array
-						$projObj = $this->InstantiateProject($proj);
+						$projObj = $this->LoadProject($proj);
 						if ($projObj) {
 							$this->projects[$proj] = $projObj;
 							unset($projObj);
 						}
 					} else if (isset($projData['project'])) {
 						// List of data arrays with projects inside
-						$projObj = $this->InstantiateProject($projData['project']);
+						$projObj = $this->LoadProject($projData['project']);
 						if ($projObj) {
 							$this->projects[$projData['project']] = $projObj;
 							unset($projObj);
@@ -61,18 +60,18 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 					}
 				}
 			} catch (Exception $e) {
-				GitPHP_Log::GetInstance()->Log($e->getMessage());
+				$this->Log($e->getMessage());
 			}
 		}
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$found = false;
 		$projectSettings = null;
@@ -103,12 +102,18 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
 
+		$this->ApplyGlobalConfig($projectObj);
+
+		$this->ApplyGitConfig($projectObj);
+
 		if ($projectSettings != null)
 			$this->ApplyProjectSettings($projectObj, $projectSettings);
 
 		if ($this->projectSettings && isset($this->projectSettings[$proj])) {
 			$this->ApplyProjectSettings($projectObj, $this->projectSettings[$proj]);
 		}
+
+		$this->InjectProjectDependencies($projectObj);
 
 		return $projectObj;
 	}

@@ -1,26 +1,29 @@
 <?php
-
-defined('GITPHP_NO_CATEGORY') || define('GITPHP_NO_CATEGORY', 'none');
-
 /**
- * Lists all projects in a multidimensional array
- * Legacy array format
+ * Lists all projects in a multidimensional array (Legacy array format)
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 {
+	/**
+	 * No category indicator
+	 *
+	 * @var string
+	 */
+	const NoCategory = 'none';
 
 	/**
 	 * constructor
 	 *
+	 * @param string $projectRoot project root
 	 * @param mixed $projectArray array to read
 	 * @throws Exception if parameter is not an array
 	 */
-	public function __construct($projectArray)
+	public function __construct($projectRoot, $projectArray)
 	{
 		if (!is_array($projectArray)) {
 			throw new Exception('An array of projects is required.');
@@ -28,13 +31,11 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 
 		$this->projectConfig = $projectArray;
 
-		parent::__construct();
+		parent::__construct($projectRoot);
 	}
 
 	/**
 	 * Populates the internal list of projects
-	 *
-	 * @throws Exception if file cannot be read
 	 */
 	protected function PopulateProjects()
 	{
@@ -42,13 +43,13 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 			if (is_array($plist)) {
 				foreach ($plist as $pname => $ppath) {
 					try {
-						$projObj = $this->InstantiateProject($ppath);
+						$projObj = $this->LoadProject($ppath);
 						if ($projObj) {
 							$this->projects[$ppath] = $projObj;
 							unset($projObj);
 						}
 					} catch (Exception $e) {
-						GitPHP_Log::GetInstance()->Log($e->getMessage());
+						$this->Log($e->getMessage());
 					}
 				}
 			}
@@ -56,15 +57,15 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	}
 
 	/**
-	 * Instantiates project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$found = false;
-		$projectCat = GITPHP_NO_CATEGORY;
+		$projectCat = GitPHP_ProjectListArrayLegacy::NoCategory;
 		foreach ($this->projectConfig as $cat => $plist) {
 			if (is_array($plist) && (array_search($proj, $plist) !== false)) {
 				$found = true;
@@ -78,8 +79,15 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 		}
 
 		$projectObj = new GitPHP_Project($this->projectRoot, $proj);
-		if ($projectCat != GITPHP_NO_CATEGORY)
+
+		$this->ApplyGlobalConfig($projectObj);
+
+		$this->ApplyGitConfig($projectObj);
+
+		if ($projectCat != GitPHP_ProjectListArrayLegacy::NoCategory)
 			$projectObj->SetCategory($projectCat);
+
+		$this->InjectProjectDependencies($projectObj);
 
 		return $projectObj;
 	}

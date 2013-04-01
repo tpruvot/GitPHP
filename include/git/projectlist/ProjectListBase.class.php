@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\ProjectList
  */
 abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Interface
 {
@@ -13,68 +13,88 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Sort constants
 	 */
-	const SORT_PROJECT = 'project';
+	const ProjectSort = 'project';
+	const DescriptionSort = 'descr';
+	const OwnerSort = 'owner';
+	const AgeSort = 'age';
+
+	/**
+	 * More standard constants style
+	 */
 	const SORT_DESCRIPTION = 'descr';
+	const SORT_PROJECT = 'project';
 	const SORT_OWNER = 'owner';
 	const SORT_AGE = 'age';
 
 	/**
-	 * Stores array of projects internally
+	 * Project list
+	 * @var GitPHP_Project[]
 	 */
 	protected $projects;
 
 	/**
-	 * Stores whether the list of projects has been loaded
+	 * Whether the list of projects has been loaded
+	 * @var boolean
 	 */
 	protected $projectsLoaded = false;
 
 	/**
-	 * Stores the project configuration internally
+	 * The projectlist configuration
+	 * @var string
 	 */
 	protected $projectConfig = null;
 
 	/**
-	 * Stores the project settings internally
+	 * Project settings
+	 * @var array
 	 */
 	protected $projectSettings = null;
 
 	/**
-	 * Stores the project root internally
+	 * The project root
+	 * @var string
 	 */
 	protected $projectRoot = null;
 
 	/**
 	 * Object cache instance for all projects
+	 * @var GitPHP_Cache
 	 */
 	protected $cache = null;
 
 	/**
 	 * Memory cache instance for all projects
+	 * @var GitPHP_MemoryCache
 	 */
 	protected $memoryCache = null;
 
 	/**
 	 * Executable for all projects
+	 * @var GitPHP_GitExe
 	 */
 	protected $exe = null;
 
 	/**
 	 * Config provider
+	 * @var GitPHP_Config
 	 */
 	protected $config = null;
 
 	/**
+	 * Observers
 	 * @var GitPHP_Observer_Interface[]
 	 */
 	protected $observers = array();
 
 	/**
 	 * Constructor
+	 *
+	 * @param string $projectRoot project root
 	 */
-	public function __construct()
+	public function __construct($projectRoot)
 	{
 		$this->projects = array();
-		$this->projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		if (empty($this->projectRoot)) {
 			throw new GitPHP_MissingProjectrootException();
 		}
@@ -162,11 +182,10 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	}
 
 	/**
-	 * Test if the projectlist contains
-	 * the given project
+	 * Test if the projectlist contains the given project
 	 *
 	 * @return boolean true if project exists in list
-	 * @param string $project the project string to find
+	 * @param string $project the project to find
 	 */
 	public function HasProject($project)
 	{
@@ -179,7 +198,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Gets a particular project
 	 *
-	 * @return mixed project object or null
+	 * @return GitPHP_Project|null project object or null
 	 * @param string $project the project to find
 	 */
 	public function GetProject($project)
@@ -191,7 +210,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			return $this->projects[$project];
 
 		if (!$this->projectsLoaded) {
-			$projObj = $this->InstantiateProject($project);
+			$projObj = $this->LoadProject($project);
 			$this->projects[$project] = $projObj;
 			return $projObj;
 		}
@@ -200,12 +219,12 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	}
 
 	/**
-	 * Instantiates a project object
+	 * Loads a project
 	 *
 	 * @param string $proj project
 	 * @return GitPHP_Project project object
 	 */
-	protected function InstantiateProject($proj)
+	protected function LoadProject($proj)
 	{
 		$project = new GitPHP_Project(GitPHP_Util::AddSlash($this->projectRoot), $proj);
 
@@ -236,9 +255,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 
 		$manager = new GitPHP_GitObjectManager($project);
 		$manager->SetCompat($compat);
-		if (!$compat) {
-			$manager->SetObjectLoader($loader);
-		}
 		$manager->SetExe($this->exe);
 		if ($this->memoryCache) {
 			$manager->SetMemoryCache($this->memoryCache);
@@ -466,8 +482,8 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Returns a filtered list of projects
 	 *
-	 * @param string $filter filter pattern
-	 * @return array array of filtered projects
+	 * @param string $pattern filter pattern
+	 * @return GitPHP_Project[] array of filtered projects
 	 */
 	public function Filter($pattern = null)
 	{
@@ -508,12 +524,12 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Applies override settings for a project
 	 *
-	 * @param string $project the project object
+	 * @param GitPHP_Project $project the project object
 	 * @param array $projData project data array
 	 */
 	protected function ApplyProjectSettings($project, $projData)
 	{
-		if (!$project)
+		if (!$project || !is_object($project))
 			return;
 
 		if (isset($projData['category']) && is_string($projData['category'])) {
