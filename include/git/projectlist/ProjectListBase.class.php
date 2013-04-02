@@ -98,7 +98,7 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 		if (empty($this->projectRoot)) {
 			throw new GitPHP_MissingProjectrootException();
 		}
-		if (!$this->IsDir($this->projectRoot)) {
+		if (!GitPHP_Util::IsDir($this->projectRoot)) {
 			throw new GitPHP_InvalidDirectoryConfigurationException($this->projectRoot);
 		}
 
@@ -170,15 +170,6 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	public function SetExe($exe)
 	{
 		$this->exe = $exe;
-	}
-
-	/**
-	 * @return boolean true if folder or a link pointing to a folder
-	 * @param string path to check
-	 */
-	protected function IsDir($dir)
-	{
-		return is_dir($dir) || (is_link($dir) && is_dir("$dir/."));
 	}
 
 	/**

@@ -140,13 +140,13 @@ class GitPHP_Util
 	public static function ListDir($dir)
 	{
 		$files = array();
-		if ($dh = opendir($dir)) {
+		if (self::IsDir($dir) && $dh = opendir($dir)) {
 			while (($file = readdir($dh)) !== false) {
 				if (($file == '.') || ($file == '..')) {
 					continue;
 				}
 				$fullFile = $dir . '/' . $file;
-				if (is_dir($fullFile) || (is_link($fullFile) && is_dir("$fullFile/."))) {
+				if (self::IsDir($fullFile)) {
 					$subFiles = self::ListDir($fullFile);
 					if (count($subFiles) > 0) {
 						$files = array_merge($files, $subFiles);
@@ -157,6 +157,13 @@ class GitPHP_Util
 			}
 		}
 		return $files;
+	}
+
+	/**
+	 * custom is_dir function, return true if a link point to a directory
+	 */
+	public static function IsDir($dir) {
+		return is_dir($dir) || (is_link($dir) && is_dir("$dir/."));
 	}
 
 	/**

@@ -125,7 +125,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	private function RecurseDir($dir)
 	{
-		if (!$this->IsDir($dir))
+		if (!GitPHP_Util::IsDir($dir))
 			return;
 
 		$this->Log(sprintf('Searching directory %1$s', $dir));
@@ -135,7 +135,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 
-				if (!$this->IsDir($fullPath) || $file == '.' || $file == '..')
+				if (!GitPHP_Util::IsDir($fullPath) || $file == '.' || $file == '..')
 					continue;
 
 				elseif ( $this->repoSupport and $file == '.repo' )
@@ -143,7 +143,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 				elseif ( substr($file,-4) != '.git') {
 					// working copy repositories (git clone)
-					if ( !$this->bareOnly && $this->IsDir($fullPath . '/.git') )
+					if ( !$this->bareOnly && GitPHP_Util::IsDir($fullPath . '/.git') )
 						$fullPath .= '/.git';
 					elseif ($this->curlevel >= $this->sublevels or substr($file,0,1) == '.')
 						continue;
