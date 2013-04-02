@@ -66,15 +66,16 @@ class GitPHP_TagList extends GitPHP_RefList
 	 *
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return GitPHP_Tag[] array of tags
 	 */
-	public function GetOrderedTags($order, $count = 0)
+	public function GetOrderedTags($order, $count = 0, $skip = 0)
 	{
 		if (!$this->dataLoaded)
 			$this->LoadData();
 
 		if ($this->compat) {
-			$ordered = $this->GetOrderedRefsGit('tags', $order, $count);
+			$ordered = $this->GetOrderedRefsGit('tags', $order, $count, $skip);
 			$tags = array();
 			foreach ($ordered as $tag) {
 				if (isset($this->refs[$tag])) {
@@ -83,7 +84,7 @@ class GitPHP_TagList extends GitPHP_RefList
 			}
 			return $tags;
 		} else {
-			return $this->GetOrderedTagsRaw($order, $count);
+			return $this->GetOrderedTagsRaw($order, $count, $skip);
 		}
 	}
 
@@ -92,9 +93,10 @@ class GitPHP_TagList extends GitPHP_RefList
 	 *
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return GitPHP_Tag[] array of tags
 	 */
-	private function GetOrderedTagsRaw($order, $count = 0)
+	private function GetOrderedTagsRaw($order, $count = 0, $skip = 0)
 	{
 		$tags = array();
 		foreach ($this->refs as $tag => $hash) {
@@ -107,7 +109,7 @@ class GitPHP_TagList extends GitPHP_RefList
 		}
 
 		if (($count > 0) && (count($tags) > $count)) {
-			$tags = array_slice($tags, 0, $count);
+			$tags = array_slice($tags, $skip, $count);
 		}
 		return $tags;
 	}

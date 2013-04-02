@@ -167,9 +167,10 @@ abstract class GitPHP_RefList implements Iterator
 	 * @param string $type type of ref
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return array array of refs
 	 */
-	protected function GetOrderedRefsGit($type, $order, $count = 0)
+	protected function GetOrderedRefsGit($type, $order, $count = 0, $skip = 0)
 	{
 		if (empty($type) || empty($order))
 			return null;
@@ -178,7 +179,11 @@ abstract class GitPHP_RefList implements Iterator
 		$args[] = '--sort=' . $order;
 		$args[] = '--format="%(refname)"';
 		if ($count > 0) {
-			$args[] = '--count=' . $count;
+			if ($skip > 0) {
+				$args[] = '--count=' . ($count + $skip);
+			} else {
+				$args[] = '--count=' . $count;
+			}
 		}
 		$args[] = '--';
 		$args[] = 'refs/' . $type;
@@ -195,6 +200,10 @@ abstract class GitPHP_RefList implements Iterator
 			$ref = substr($ref, $prefixLen);
 			if (!empty($ref))
 				$refs[] = $ref;
+		}
+
+		if ($skip > 0) {
+			$refs = array_slice($refs, $skip);
 		}
 
 		return $refs;

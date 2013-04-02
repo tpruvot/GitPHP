@@ -27,8 +27,8 @@
    {if $hasmoreremotes}
        <tr>
        {if $source == 'summary'}
-       <td><a href="{$baseurl}&amp;a=remotes">&hellip;</a></td>
-       {else if $source == 'remotes'}
+       <td><a href="{geturl project=$project action=remotes}">&hellip;</a></td>
+       {else}
        <td><a href="{geturl project=$project action=remotes page=$page+1}" title="Alt-n">{t}next{/t}</a></td>
        {/if}
        <td></td><td></td>

@@ -88,15 +88,16 @@ class GitPHP_RemoteHeadList extends GitPHP_HeadList
 	 *
 	 * @param string $order order to use
 	 * @param int $count limit the number of results
+	 * @param int $skip skip a number of results
 	 * @return GitPHP_Head[] array of heads
 	 */
-	public function GetOrderedHeads($order, $count = 0)
+	public function GetOrderedHeads($order, $count = 0, $skip = 0)
 	{
 		if (!$this->dataLoaded)
 			$this->LoadData();
 
 		if ($this->compat) {
-			$ordered = $this->GetOrderedRefsGit('remotes', $order, $count);
+			$ordered = $this->GetOrderedRefsGit('remotes', $order, $count, $skip);
 			$heads = array();
 			foreach ($ordered as $head) {
 				if (isset($this->refs[$head])) {
@@ -105,7 +106,7 @@ class GitPHP_RemoteHeadList extends GitPHP_HeadList
 			}
 			return $heads;
 		} else {
-			return $this->GetOrderedHeadsRaw($order, $count);
+			return $this->GetOrderedHeadsRaw($order, $count, $skip);
 		}
 	}
 

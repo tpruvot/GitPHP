@@ -41,7 +41,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return $this->params['hash'];
+		return isset($this->params['tag']) ? sha1($this->params['tag']) : '';
 	}
 
 	/**
@@ -66,7 +66,7 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
-		$tag = $this->GetProject()->GetTagList()->GetTag($this->params['hash']);
+		$tag = $this->GetProject()->GetTagList()->GetTag($this->params['tag']);
 
 		$this->tpl->assign("tag", $tag);
 	}
