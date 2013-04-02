@@ -25,7 +25,7 @@
    {/foreach}
    {if $hasmoreremotes}
        <tr>
-       <td><a href="{$baseurl}&amp;a=remotes">&hellip;</a></td>
+       <td colspan="3"><a href="{$baseurl}&amp;a=remotes">&hellip;</a></td>
        </tr>
    {/if}
  </table>

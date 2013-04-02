@@ -21,7 +21,7 @@
    {/foreach}
    {if $hasmoreheads}
        <tr>
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=heads">&hellip;</a></td>
+       <td colspan="3"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=heads">&hellip;</a></td>
        </tr>
    {/if}
  </table>
