@@ -189,10 +189,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 		$mime = '';
 
-		$magicdb = GitPHP_Config::GetInstance()->GetValue('magicdb', null);
+		$magicdb = GitPHP_Util::CleanPath(GitPHP_Config::GetInstance()->GetValue('magicdb', null));
 		if (empty($magicdb)) {
 			if (GitPHP_Util::IsWindows()) {
-				$magicdb = 'C:\\wamp\\php\\extras\\magic';
+				$magicdb = GitPHP_Util::AddSlash(PHP_BINDIR) . 'extras/magic';
 			} else {
 				$magicdb = '/usr/share/misc/magic';
 			}

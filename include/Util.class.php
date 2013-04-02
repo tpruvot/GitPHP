@@ -24,14 +24,14 @@ class GitPHP_Util
 		$end = substr($path, -1);
 
 		if (!(( ($end == '/') || ($end == ':')) || ($filesystem && GitPHP_Util::IsWindows() && ($end == '\\')))) {
-			if (GitPHP_Util::IsWindows() && $filesystem) {
-				$path .= '\\';
-			} else {
+			//if (GitPHP_Util::IsWindows() && $filesystem) {
+			//	$path .= '\\';
+			//} else {
 				$path .= '/';
-			}
+			//}
 		}
 
-		return $path;
+		return self::CleanPath($path);
 	}
 
 	/**
@@ -87,9 +87,18 @@ class GitPHP_Util
 	}
 
 	/**
+	 * Uniformize separators in a path
+	 * @param string $path
+	 * @return string
+	 */
+	public static function CleanPath($path)
+	{
+		// windows also supports also the "/" separator, but should not mix both
+		return preg_replace('@[\\\\]+@','/',$path);
+	}
+
+	/**
 	 * Get the filename of a given path
-	 *
-	 * Based on Drupal's basename
 	 *
 	 * @param string $path path
 	 * @param string $suffix optionally trim this suffix
@@ -97,23 +106,9 @@ class GitPHP_Util
 	 */
 	public static function BaseName($path, $suffix = null)
 	{
-		$sep = '/';
-		if (GitPHP_Util::IsWindows()) {
-			$sep .= '\\';
-		}
+		$filename = self::CleanPath($path);
 
-		$path = rtrim($path, $sep);
-
-		if (!preg_match('@[^' . preg_quote($sep) . ']+$@', $path, $matches)) {
-			return '';
-		}
-
-		$filename = $matches[0];
-
-		if ($suffix) {
-			$filename = preg_replace('@' . preg_quote($suffix, '@') . '$@', '', $filename);
-		}
-		return $filename;
+		return basename($filename);
 	}
 
 	/**
@@ -160,9 +155,13 @@ class GitPHP_Util
 	}
 
 	/**
-	 * custom is_dir function, return true if a link point to a directory
+	 * Custom is_dir function, return true if a link point to a directory
+	 *
+	 * @param string
+	 * @return boolean
 	 */
-	public static function IsDir($dir) {
+	public static function IsDir($path) {
+		$dir = rtrim(self::CleanPath($path),'/');
 		return is_dir($dir) || (is_link($dir) && is_dir("$dir/."));
 	}
 
@@ -184,8 +183,6 @@ class GitPHP_Util
 			else
 				$baseurl = 'http://' . $baseurl;
 		}
-		if (GitPHP_Util::IsWindows())
-			$baseurl = rtrim($baseurl, "\\");
-		return rtrim($baseurl, "/");
+		return rtrim(self::CleanPath($baseurl), "/");
 	}
 }

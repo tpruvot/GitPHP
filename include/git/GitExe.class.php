@@ -93,7 +93,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();
 		}
-		$this->binary = $binary;
+		$this->binary = GitPHP_Util::CleanPath($binary);
 	}
 
 	/**
@@ -146,7 +146,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	{
 		$gitDir = '';
 		if (!empty($projectPath)) {
-			$gitDir = '--git-dir=' . escapeshellarg($projectPath);
+			$gitDir = '--git-dir=' . escapeshellarg(GitPHP_Util::CleanPath($projectPath));
 		}
 
 		$command = $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
