@@ -609,7 +609,7 @@ class GitPHP_Router
 					$params[$paramname] = GitPHP_Router::GetTag($paramval);
 					break;
 				case 'project':
-					$params[$paramname] = GitPHP_Router::GetProject($paramval);
+					$params[$paramname] = GitPHP_Router::GetProject($paramval, $this->cleanurl);
 					break;
 			}
 		}
@@ -712,10 +712,15 @@ class GitPHP_Router
 	 * @param string|GitPHP_Project $value string or project
 	 * @return string identifier
 	 */
-	private static function GetProject($value)
+	private static function GetProject($value, $url_rewrite = false)
 	{
 		if ($value instanceof GitPHP_Project) {
-			return $value->GetProject();
+
+			if ($url_rewrite)
+				return $value->GetProject();
+			else
+				return $value->GetProject('f');
+
 		} else if (is_string($project)) {
 			return $value;
 		}
