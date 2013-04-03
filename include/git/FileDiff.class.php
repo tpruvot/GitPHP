@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP File Diff
- *
  * Represents a single file difference
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -16,27 +14,27 @@ require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php')
 class GitPHP_FileDiff
 {
 	/**
-	 * Stores whether diff info has been read
+	 * Whether diff info has been read
 	 */
 	protected $diffInfoRead = false;
 
 	/**
-	 * Stores whether diff data has been read
+	 * Whether diff data has been read
 	 */
 	protected $diffDataRead = false;
 
 	/**
-	 * Stores the diff data
+	 * Diff data
 	 */
 	protected $diffData;
 
 	/**
-	 * Stores whether split diff data has been read
+	 * Whether split diff data has been read
 	 */
 	protected $diffDataSplitRead = false;
 
 	/**
-	 * Stores the diff data split up by left/right changes
+	 * Diff data split up by left/right changes
 	 */
 	protected $diffDataSplit;
 
@@ -46,27 +44,27 @@ class GitPHP_FileDiff
 	protected $diffDataName;
 
 	/**
-	 * Stores the from file mode
+	 * From file mode
 	 */
 	protected $fromMode;
 
 	/**
-	 * Stores the to file mode
+	 * To file mode
 	 */
 	protected $toMode;
 
 	/**
-	 * Stores the from hash
+	 * From blob hash
 	 */
 	protected $fromHash;
 
 	/**
-	 * Stores the to hash
+	 * To blob hash
 	 */
 	protected $toHash;
 
 	/**
-	 * Stores the status
+	 * Change status
 	 */
 	protected $status;
 
@@ -118,19 +116,22 @@ class GitPHP_FileDiff
 	/**
 	 * Constructor
 	 *
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
 	 * @param string $fromHash source hash, can also be a diff-tree info line
 	 * @param string $toHash target hash, required if $fromHash is a hash
 	 * @throws Exception on invalid parameters
 	 */
 	public function __construct($project, $fromHash, $toHash = '')
 	{
-		$this->project = $project->GetProject();
+		if (is_object($project))
+			$this->project = $project->GetProject();
+		else
+			$this->project = $project;
 
 		if ($this->ParseDiffTreeLine($fromHash))
 			return;
 
-		if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
+		if (!(preg_match('/^[0-9a-fA-F]{4,40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{4,40}$/', $toHash))) {
 			throw new Exception('Invalid parameters for FileDiff');
 		}
 

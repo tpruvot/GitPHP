@@ -25,7 +25,7 @@
     </author>
     <published>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</published>
     <updated>{$logitem->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
-    <link rel="alternate" href="{scripturl}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$logitem->GetHash()}"/>
+    <link rel="alternate" href="{geturl fullurl=true project=$project action=commit hash=$logitem}"/>
     <summary>{$logitem->GetTitle()|escape:'html'}</summary>
     <content type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
