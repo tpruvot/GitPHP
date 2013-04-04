@@ -609,7 +609,7 @@ class GitPHP_Router
 					$params[$paramname] = GitPHP_Router::GetTag($paramval);
 					break;
 				case 'project':
-					$params[$paramname] = GitPHP_Router::GetProject($paramval, $this->cleanurl);
+					$params[$paramname] = GitPHP_Router::GetProject($paramval);
 					break;
 			}
 		}
@@ -668,7 +668,19 @@ class GitPHP_Router
 				continue;
 			if (!empty($querystr))
 				$querystr .= '&';
-			$querystr .= $var . '=' . rawurlencode($val);
+
+			switch ($var)
+			{
+				case 'f':
+				case 'p':
+					if (!$this->cleanurl) {
+						// do not encode file slashes, not required
+						$querystr .= $var . '=' . GitPHP_Util::UrlEncodeFilePath($val);
+						continue;
+					}
+				default:
+					$querystr .= $var . '=' . rawurlencode($val);
+			}
 		}
 
 		return $querystr;
@@ -712,18 +724,14 @@ class GitPHP_Router
 	 * @param string|GitPHP_Project $value string or project
 	 * @return string identifier
 	 */
-	private static function GetProject($value, $url_rewrite = false)
+	private static function GetProject($value)
 	{
 		if ($value instanceof GitPHP_Project) {
 
-			if ($url_rewrite)
-				return $value->GetProject();
-			else
-				return $value->GetProject('f');
+			return $value->GetProject();
 
 		} else if (is_string($project)) {
 			return $value;
 		}
 	}
-
 }

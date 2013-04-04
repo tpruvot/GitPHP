@@ -98,7 +98,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
        {localfiletype type=$filediff->GetFromFileType() assign=localfromtype}
-       {$localfromtype}:<a href="{geturl project=$project action=blob hash=$filediff->GetFromBlob() hashbase=$commit file=$filediff->GetFromFile('f')}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
+       {$localfromtype}:<a href="{geturl project=$project action=blob hash=$filediff->GetFromBlob() hashbase=$commit file=$filediff->GetFromFile()}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
          {t}(deleted){/t}
        {/if}
@@ -110,7 +110,7 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
 
      {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
        {localfiletype type=$filediff->GetToFileType() assign=localtotype}
-       {$localtotype}:<a href="{geturl project=$project action=blob hash=$filediff->GetToBlob() hashbase=$commit file=$filediff->GetToFile('f')}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
+       {$localtotype}:<a href="{geturl project=$project action=blob hash=$filediff->GetToBlob() hashbase=$commit file=$filediff->GetToFile()}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
        {if $filediff->GetStatus() == 'A'}
          {t}(new){/t}
        {/if}
@@ -135,9 +135,9 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
       {if $filediff->GetStatus() == 'A'}
        {t}(new){/t}
       {else}
-       <img class="old" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetFromBlob() file=$filediff->GetFromFile('f') output=plain}">
+       <img class="old" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetFromBlob() file=$filediff->GetFromFile() output=plain}">
       {/if}
-       <img class="new" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetToBlob() file=$filediff->GetToFile('f') output=plain}">
+       <img class="new" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetToBlob() file=$filediff->GetToFile() output=plain}">
      </div>
      {elseif $sidebyside}
         {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
