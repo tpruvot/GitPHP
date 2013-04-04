@@ -78,9 +78,10 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 				throw new GitPHP_FileNotFoundException($this->params['file']);
 		}
 		
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
-		if ($this->params['file'])
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
+		if (isset($this->params['file']))
 			$blob->SetPath($this->params['file']);
+
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 

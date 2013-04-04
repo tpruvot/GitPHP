@@ -40,7 +40,7 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '');
+		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : ''). '|' . $this->params['page'];
 	}
 
 	/**
@@ -72,17 +72,16 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		if (empty($blobhash))
 			throw new GitPHP_FileNotFoundException($this->params['file']);
 
-		$blob = $this->GetProject()->GetBlob($blobhash);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($blobhash);
 
 		$blob->SetCommit($co);
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 
-		/**
-		todo
 		$this->tpl->assign('page',$this->params['page']);
 		$skip = $this->params['page'] * 100;
 
+		/* todo
 		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co, 101, $skip);
 		if ($history->GetCount() > 100) {
 			$this->tpl->assign('hasmorehistory', true);

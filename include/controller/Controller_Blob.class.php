@@ -87,8 +87,9 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 							throw new GitPHP_FileNotFoundException($this->params['file']);
 					}
 
-					$blob = $this->GetProject()->GetBlob($this->params['hash']);
-					$blob->SetPath($this->params['file']);
+					$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
+					if (isset($this->params['file']))
+						$blob->SetPath($this->params['file']);
 
 					$mime = $blob->FileMime();
 				}
@@ -105,6 +106,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			$out = $this->tpl->fetch('blobheaders.tpl', $this->GetFullCacheKey());
 
 			$this->headers = unserialize(trim($out));
+		} else {
+			parent::LoadHeaders();
 		}
 
 	}
@@ -126,7 +129,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				throw new GitPHP_FileNotFoundException($this->params['file']);
 		}
 
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 		if (!empty($this->params['file']))
 			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);
