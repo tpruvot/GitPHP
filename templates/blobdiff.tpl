@@ -24,9 +24,9 @@
    {include file='nav.tpl' treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file diffmode=unified}">{t}unified{/t}</a>
+   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file output=unified}">{t}unified{/t}</a>
    {else}
-   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file diffmode=sidebyside}#D1">{t}side by side{/t}</a>
+   <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent hashbase=$commit file=$file output=sidebyside}#D1">{t}side by side{/t}</a>
    {/if}
     |
    <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$blobparent file=$file output=plain}">{t}plain{/t}</a>

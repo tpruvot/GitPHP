@@ -26,9 +26,9 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent diffmode=unified}">{t}unified{/t}</a>
+   <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent output=unified}">{t}unified{/t}</a>
    {else}
-   <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent diffmode=sidebyside}">{t}side by side{/t}</a>
+   <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent output=sidebyside}">{t}side by side{/t}</a>
    {/if}
    | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent output=plain}">{t}plain{/t}</a>
  </div>
