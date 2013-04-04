@@ -81,7 +81,8 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 				$hash = $rm->GetHash();
 				$this->params['hash'] = $hash;
 				$commit = $this->GetProject()->GetCommit($hash);
-				$this->params['hashbase'] = $commit->GetTree()->GetHash();
+				//$this->params['hashbase'] = $commit->GetTree()->GetHash();
+				$this->params['hashbase'] = $commit->GetTreeHash();
 				unset($remotes);
 			}
 		}
@@ -94,15 +95,11 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 				if (empty($this->params['hash']))
 					throw new GitPHP_DirectoryNotFoundException($this->params['file']);
 			} else {
-				$tree =	$commit->GetTree();
-				if (empty($tree))
-					$this->params['hash'] =	$commit->GetHash();
-				else
-					$this->params['hash'] =	$tree->GetHash();
+				$this->params['hash'] = $commit->GetTreeHash();
 			}
 		}
 
-		$tree = $this->GetProject()->GetTree($this->params['hash']);
+		$tree = $this->GetProject()->GetObjectManager()->GetTree($this->params['hash']);
 		if (!$tree->GetCommit()) {
 			$tree->SetCommit($commit);
 		}
