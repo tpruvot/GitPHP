@@ -43,7 +43,7 @@ function($) {
    {include file='nav.tpl' treecommit=$commit}
    <br />
    <a href="{geturl project=$project action=blob hash=$blob file=$blob->GetPath() output=plain}">{t}plain{/t}</a> |
-   {if isset($head) && ($commit->GetHash() != $head->GetHash()) && ($head->PathToHash($blob->GetPath()))}
+   {if isset($head) && ($commit->GetHash() != $head->GetHash()) && ($tree->PathToHash($blob->GetPath()))}
      <a href="{geturl project=$project action=blob hashbase=HEAD file=$blob->GetPath()}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}

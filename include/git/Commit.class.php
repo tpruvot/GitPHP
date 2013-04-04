@@ -72,16 +72,19 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 	/**
 	 * Stores blob hash to path mappings
+	 * @deprecated (to Tree)
 	 */
 	protected $blobPaths = array();
 
 	/**
 	 * Stores tree hash to path mappings
+	 * @deprecated (to Tree)
 	 */
 	protected $treePaths = array();
 
 	/**
 	 * Stores whether hash paths have been read
+	 * @deprecated (to Tree)
 	 */
 	protected $hashPathsRead = false;
 
@@ -710,9 +713,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 	/**
 	 * Given a filepath, get its hash
-	 *
-	 * @param string $path path
-	 * @return string hash
+	 * @deprecated (to Tree)
 	 */
 	public function PathToHash($path)
 	{
@@ -735,6 +736,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 	/**
 	 * Read hash to path mappings
+	 * @deprecated (to Tree)
 	 */
 	private function ReadHashPaths()
 	{
@@ -751,6 +753,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 	/**
 	 * Reads hash to path mappings using git exe
+	 * @deprecated (to Tree)
 	 */
 	private function ReadHashPathsGit()
 	{
@@ -778,6 +781,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 
 	/**
 	 * Reads hash to path mappings using raw objects
+	 * @deprecated (to Tree)
 	 */
 	private function ReadHashPathsRaw($tree)
 	{
@@ -799,127 +803,6 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 				$this->ReadHashPathsRaw($obj);
 			}
 		}
-	}
-
-	/**
-	 * Returns array of objects matching pattern
-	 *
-	 * @param string $pattern pattern to find
-	 * @return array array of objects
-	 */
-	public function SearchFilenames($pattern)
-	{
-		if (empty($pattern))
-			return;
-
-		if (!$this->hashPathsRead)
-			$this->ReadHashPaths();
-
-		$results = array();
-		$usedTrees = array();
-		$usedBlobs = array();
-
-		foreach ($this->treePaths as $path => $hash) {
-			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
-				$obj = $this->GetProject()->GetTree($hash);
-				if (isset($usedTrees[$hash])) {
-					$obj = clone $obj;
-				} else {
-					$usedTrees[$hash] = 1;
-				}
-				$obj->SetCommitHash($this->hash);
-				$obj->SetPath($path);
-				$results[$path] = $obj;
-			}
-		}
-
-		foreach ($this->blobPaths as $path => $hash) {
-			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
-				$obj = $this->GetProject()->GetBlob($hash);
-				if (isset($usedBlobs[$hash])) {
-					$obj = clone $obj;
-				} else {
-					$usedBlobs[$hash] = 1;
-				}
-				$obj->SetCommitHash($this->hash);
-				$obj->SetPath($path);
-				$results[$path] = $obj;
-			}
-		}
-
-		ksort($results);
-
-		return $results;
-	}
-
-	/**
-	 * Searches for a pattern in file contents
-	 *
-	 * @param string $pattern pattern to search for
-	 * @return array multidimensional array of results
-	 */
-	public function SearchFileContents($pattern)
-	{
-		if (empty($pattern))
-			return;
-
-		$args = array();
-		$args[] = '-I';
-		$args[] = '--full-name';
-		$args[] = '--ignore-case';
-		$args[] = '-n';
-		$args[] = '-e';
-		$args[] = '"' . addslashes($pattern) . '"';
-		$args[] = $this->hash;
-
-		$lines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_GREP, $args));
-
-		$results = array();
-
-		foreach ($lines as $line) {
-			if (preg_match('/^[^:]+:([^:]+):([0-9]+):(.+)$/', $line, $regs)) {
-				if (!isset($results[$regs[1]]['object'])) {
-					$hash = $this->PathToHash($regs[1]);
-					if (!empty($hash)) {
-						$obj = $this->GetProject()->GetBlob($hash);
-						$obj->SetCommitHash($this->hash);
-						$results[$regs[1]]['object'] = $obj;
-					}
-				}
-				$results[$regs[1]]['lines'][(int)($regs[2])] = $regs[3];
-			}
-		}
-
-		return $results;
-	}
-
-	/**
-	 * Searches filenames and file contents for a pattern
-	 *
-	 * @param string $pattern pattern to search
-	 * @param integer $count number of results to get
-	 * @param integer $skip number of results to skip
-	 * @return array array of results
-	 */
-	public function SearchFiles($pattern, $count = 100, $skip = 0)
-	{
-		if (empty($pattern))
-			return;
-
-		$grepresults = $this->SearchFileContents($pattern);
-
-		$nameresults = $this->SearchFilenames($pattern);
-
-		/* Merge the results together */
-		foreach ($nameresults as $path => $obj) {
-			if (!isset($grepresults[$path]['object'])) {
-				$grepresults[$path]['object'] = $obj;
-			}
-		}
-
-		ksort($grepresults);
-
-		return array_slice($grepresults, $skip, $count, true);
 	}
 
 	/**

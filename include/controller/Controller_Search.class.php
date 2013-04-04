@@ -103,36 +103,57 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$co = $this->GetProject()->GetCommit($this->params['hash']);
+
+		if (!$co) {
+			return;
+		}
+
 		$this->tpl->assign('commit', $co);
 
 		$results = array();
-		if ($co) {
-			switch ($this->params['searchtype']) {
+		$skip = $this->params['page'] * 100;
 
-				case self::SEARCH_COMMIT:
-					if (preg_match('/^([0-9a-f]{5,40})$/i', $this->params['search'], $regs)) {
+		switch ($this->params['searchtype']) {
+
+			case self::SEARCH_COMMIT:
+				if (preg_match('/^([0-9a-f]{5,40})$/i', $this->params['search'], $regs)) {
 						$hash = $this->GetProject()->ExpandHash($this->params['search']);
 						$this->params['search'] = $hash;
-					} else {
+				} else {
 						$hash = $co->GetHash();
-					}
-					$results = $this->GetProject()->SearchCommit($this->params['search'], $hash, 101, ($this->params['page'] * 100));
-					break;
+				}
+				$results = $this->GetProject()->SearchCommit($this->params['search'], $hash, 101, $skip);
+				break;
 
-				case self::SEARCH_AUTHOR:
-					$results = $this->GetProject()->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
+			case self::SEARCH_AUTHOR:
+				$results = $this->GetProject()->SearchAuthor($this->params['search'], $co->GetHash(), 101, $skip);
+				break;
 
-				case self::SEARCH_COMMITTER:
-					$results = $this->GetProject()->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-					break;
-				case self::SEARCH_FILE:
-					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
-					break;
-				default:
-					throw new GitPHP_MessageException(__('Invalid search type'));
+			case self::SEARCH_COMMITTER:
+				$results = $this->GetProject()->SearchCommitter($this->params['search'], $co->GetHash(), 101, $skip);
+				break;
+			case self::SEARCH_FILE:
+				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], $this->exe, 101, $skip);
+				break;
+			default:
+				throw new GitPHP_MessageException(__('Invalid search type'));
+		}
 
+		if (is_object($results)) {
+
+			if ($results->GetCount() > 0) {
+				$this->tpl->assign('results', $results);
 			}
+
+			if ($results->GetCount() > 100) {
+				$results->SetLimit(100);
+			}
+
+			$results = $results->GetItemsAsArray();
+		}
+
+		if (is_array($results) && count($results) > 0) {
+			$this->tpl->assign('results', $results);
 		}
 
 		if (count($results) < 1) {
@@ -143,12 +164,11 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			$this->tpl->assign('hasmore', true);
 			$results = array_slice($results, 0, 100, true);
 		}
-		$this->tpl->assign('results', $results);
 
 		$this->tpl->assign('tree', $co->GetTree());
 
 		$this->tpl->assign('page', $this->params['page']);
 
 	}
-	
+
 }

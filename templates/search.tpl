@@ -7,6 +7,15 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=links append}
+{if $page > 0}
+<link rel="prev" href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype page=$page-1}" />
+{/if}
+{if $hasmore}
+<link rel="next" href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype page=$page+1}" />
+{/if}
+{/block}
+
 {block name=main}
 
 {* Nav *}
@@ -14,19 +23,19 @@
   {include file='nav.tpl' logcommit=$commit treecommit=$commit}
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}">{t}first{/t}</a>
+    <a href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype}">{t}first{/t}</a>
   {else}
     {t}first{/t}
   {/if}
     &sdot; 
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+    <a href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype page=$page-1}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
   {else}
     {t}prev{/t}
   {/if}
     &sdot; 
   {if $hasmore}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+    <a href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype page=$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
   {else}
     {t}next{/t}
   {/if}
@@ -35,6 +44,7 @@
 
 {include file='title.tpl' titlecommit=$commit}
 
+{if $results}
 <table>
   {* Print each match *}
   {foreach from=$results item=result}
@@ -51,7 +61,7 @@
 	  {/if}
         </em>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$result->GetHash()}" class="list commitTip" {if strlen($result->GetTitle()) > 80}title="{$result->GetTitle()|escape}"{/if}><strong>{$result->GetTitle(80)|escape:'html'}</strong>
+      <td><a href="{geturl project=$project action=commit hash=$result}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()|escape}"{/if}><strong>{$result->GetTitle(80)|escape:'html'}</strong></a>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
           <br />{$line|escape|highlight:$search:80}
@@ -59,19 +69,30 @@
       {/if}
       </td>
       {assign var=resulttree value=$result->GetTree()}
-      <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$result->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commitdiff&amp;h={$result->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;h={$resulttree->GetHash()}&amp;hb={$result->GetHash()}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=snapshot&amp;h={$result->GetHash()}" class="snapshotTip">{t}snapshot{/t}</a>
+      <td class="link">
+        <a href="{geturl project=$project action=commit hash=$result}">{t}commit{/t}</a>
+      | <a href="{geturl project=$project action=commitdiff hash=$result}">{t}commitdiff{/t}</a>
+      | <a href="{geturl project=$project action=tree hash=$resulttree hashbase=$result}">{t}tree{/t}</a>
+      | <a href="{geturl project=$project action=snapshot hash=$result}" class="snapshotTip">{t}snapshot{/t}</a>
       </td>
     </tr>
   {/foreach}
 
   {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=search&amp;h={$commit->GetHash()}&amp;s={$search}&amp;st={$searchtype}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
+      <td><a href="{geturl project=$project action=search hash=$commit search=$search searchtype=$searchtype page=$page+1}" title="Alt-n">{t}next{/t}</a></td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
   {/if}
 </table>
+
+{else}
+<div class="message">
+{t 1=$search}No matches for "%1"{/t}
+</div>
+{/if}
+
 
 {/block}

@@ -1,9 +1,6 @@
 <?php
 /**
- * GitPHP Filesystem Object
- *
- * Base class for all git objects that represent
- * a filesystem item
+ * Base class for all git objects that represent a filesystem item
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
@@ -21,27 +18,36 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	const FileType = 3;
 
 	/**
-	 * Stores the object path
+	 * Standard style constants
+	 */
+	const TYPE_UNKNOWN = 0;
+	const TYPE_FOLDER = 1;
+	const TYPE_LINK = 2;
+	const TYPE_FILE = 3;
+
+	/**
+	 * Object path
 	 */
 	protected $path = '';
 
 	/**
-	 * Stores the object mode
+	 * Object mode
 	 */
 	protected $mode;
 
 	/**
-	 * Stores the hash of the commit this object belongs to
+	 * Hash of the commit this object belongs to
 	 */
 	protected $commitHash;
 
 	/**
-	 * Stores the trees of this object's base path
+	 * The trees of this object's base path
+	 * @var array
 	 */
 	protected $pathTree;
 
 	/**
-	 * Stores whether the trees of the object's base path have been read
+	 * Whether the trees of the object's base path have been read
 	 */
 	protected $pathTreeRead = false;
 
@@ -182,7 +188,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	/**
 	 * Gets the objects of the base path
 	 *
-	 * @return array array of tree objects
+	 * @return GitPHP_Tree[] array of tree objects
 	 */
 	public function GetPathTree()
 	{
@@ -195,7 +201,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 			$data = $this->pathTree[$i];
 
 			if (isset($data['hash']) && !empty($data['hash'])) {
-				$tree = $this->GetProject()->GetTree($data['hash']);
+				$tree = $this->GetProject()->GetObjectManager()->GetTree($data['hash']);
 				if (isset($usedTrees[$data['hash']])) {
 					$tree = clone $obj;
 				} else {
@@ -223,11 +229,11 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 
 		$path = $this->path;
 
-		$commit = $this->GetCommit();
+		$tree = $this->GetCommit()->GetTree();
 
 		while (($pos = strrpos($path, '/')) !== false) {
 			$path = substr($path, 0, $pos);
-			$pathhash = $commit->PathToHash($path);
+			$pathhash = $tree->PathToHash($path);
 			if (!empty($pathhash)) {
 				$data = array();
 				$data['hash'] = $pathhash;
@@ -252,21 +258,21 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 		$mode = octdec($octMode);
 
 		if (($mode & 0x4000) == 0x4000) {
-			return GitPHP_FilesystemObject::DirectoryType;
+			return self::TYPE_FOLDER;
 		} else if (($mode & 0xA000) == 0xA000) {
-			return GitPHP_FilesystemObject::SymlinkType;
+			return self::TYPE_LINK;
 		} else if (($mode & 0x8000) == 0x8000) {
-			return GitPHP_FilesystemObject::FileType;
+			return self::TYPE_FILE;
 		}
 
-		return GitPHP_FilesystemObject::UnknownType;
+		return self::TYPE_UNKNOWN;
 	}
 
 	/**
 	 * Compares two objects by path
 	 *
-	 * @param mixed $a first object
-	 * @param mixed $b second object
+	 * @param GitPHP_FilesystemObject $a first object
+	 * @param GitPHP_FilesystemObject $b second object
 	 * @return integer comparison result
 	 */
 	public static function ComparePath($a, $b)
