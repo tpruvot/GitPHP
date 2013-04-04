@@ -195,7 +195,7 @@ class GitPHP_Project
 	 *
 	 * @return string the project
 	 */
-	public function GetProject()
+	public function GetProject($urlencode='') /* transition param, no more used */
 	{
 		return $this->project;
 	}

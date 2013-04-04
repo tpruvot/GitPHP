@@ -9,16 +9,16 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <title>{$project->GetProject()}</title>
   <subtitle type="text">{$project->GetProject()} log</subtitle>
-  <link href="{scripturl}?p={$project->GetProject('f')}&amp;a=summary"/>
-  <link rel="self" href="{scripturl}?p={$project->GetProject('f')}&amp;a=atom"/>
-  <id>{scripturl}?p={$project->GetProject('f')}</id>
+  <link href="{geturl fullurl=true project=$project}"/>
+  <link rel="self" href="{geturl fullurl=true project=$project action=atom}"/>
+  <id>{geturl fullurl=true project=$project}</id>
   {if $log}
   <updated>{$log.0->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 
 {foreach from=$log item=logitem}
   <entry>
-    <id>{scripturl}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$logitem->GetHash()}</id>
+    <id>{geturl fullurl=true project=$project action=commit hash=$logitem}</id>
     <title>{$logitem->GetTitle()|escape:'html'}</title>
     <author>
       <name>{$logitem->GetAuthorName()|escape:'html'}</name>

@@ -15,18 +15,24 @@
 {/block}
 
 {block name=feeds}
-  <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=atom" type="application/atom+xml" />
-  <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=rss" type="application/rss+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (Atom)" href="{geturl project=$project action=atom}" type="application/atom+xml" />
+  <link rel="alternate" title="{$project->GetProject()|escape} log (RSS)" href="{geturl project=$project action=rss}" type="application/rss+xml" />
+{/block}
+
+{block name=links}
+  {if $project->GetCloneUrl()}
+  <link rel="vcs-git" href="{$project->GetCloneUrl()}" title="{$project->GetDescription()|escape}" />
+  {/if}
 {/block}
 
 {block name=header}
-  <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=summary">{$project->GetProject()}</a>
+  <a href="{geturl}">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> /
+  <a href="{geturl project=$project}">{$project->GetProject()}</a>
   {if $actionlocal}
      / {$actionlocal}
   {/if}
   {if $enablesearch}
-    <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
+    <form method="get" action="{geturl project=$project action=search hash=$commit}" enctype="application/x-www-form-urlencoded">
       <div class="search">
         <input type="hidden" name="p" value="{$project->GetProject()}" />
         <input type="hidden" name="a" value="search" />
@@ -38,7 +44,7 @@
           {if $filesearch}
             <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{t}file{/t}</option>
           {/if}
-        </select> {t}search{/t}: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+        </select> {t}search{/t}: <input type="search" name="s" {if $search}value="{$search}"{/if} />
       </div>
     </form>
   {/if}
@@ -47,11 +53,11 @@
 {block name=footer}
   <div class="page_footer_text">
   {if $project->GetWebsite()}
-  <a href="{$project->GetWebsite()}">{$project->GetDescription()}</a>
+  <a href="{$project->GetWebsite()}">{$project->GetDescription()|escape}</a>
   {else}
-  {$project->GetDescription()}
+  {$project->GetDescription()|escape}
   {/if}
   </div>
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=rss" class="rss_logo">{t}RSS{/t}</a>
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=atom" class="rss_logo">{t}Atom{/t}</a>
+  <a href="{geturl project=$project action=rss}" class="rss_logo">{t}RSS{/t}</a>
+  <a href="{geturl project=$project action=atom}" class="rss_logo">{t}Atom{/t}</a>
 {/block}

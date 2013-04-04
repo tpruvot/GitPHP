@@ -19,9 +19,9 @@
  {assign var=objtype value=$tag->GetType()}
  <div class="title">
    {if $objtype == 'blob'}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   <a href="{geturl project=$project action=blob hash=$object}" class="title">{$tag->GetName()}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   <a href="{geturl project=$project action=commit hash=$object}" class="title">{$tag->GetName()}</a>
    {/if}
  </div>
  <div class="title_text">
@@ -29,20 +29,20 @@
      <tr>
        <td>{t}object{/t}</td>
        {if $objtype == 'commit'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$object->GetHash()}">{t}commit{/t}</a></td>
+         <td class="monospace"><a href="{geturl project=$project action=commit hash=$object}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{geturl project=$project action=commit hash=$object}">{t}commit{/t}</a></td>
        {elseif $objtype == 'tag'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tag&amp;h={$object->GetName()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tag&amp;h={$object->GetName()}">{t}tag{/t}</a></td>
+         <td class="monospace"><a href="{geturl project=$project action=tag tag=$object}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{geturl project=$project action=tag tag=$object}">{t}tag{/t}</a></td>
        {elseif $objtype == 'blob'}
-         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;h={$object->GetHash()}">{t}blob{/t}</a></td>
+         <td class="monospace"><a href="{geturl project=$project action=blob hash=$object}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{geturl project=$project action=blob hash=$object}">{t}blob{/t}</a></td>
        {/if}
      </tr>
      {if $tag->GetTagger()}
        <tr>
          <td>{t}author{/t}</td>
-	 <td>{$tag->GetTagger()}</td>
+         <td>{$tag->GetTagger()}</td>
        </tr>
        <tr>
          <td></td>
