@@ -81,14 +81,12 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		$this->tpl->assign('page',$this->params['page']);
 		$skip = $this->params['page'] * 100;
 
-		/* todo
 		$history = new GitPHP_FileHistory($this->GetProject(), $this->params['file'], $this->exe, $co, 101, $skip);
 		if ($history->GetCount() > 100) {
 			$this->tpl->assign('hasmorehistory', true);
 			$history->SetLimit(100);
 		}
 		$this->tpl->assign('history', $history);
-		**/
 	}
 
 }

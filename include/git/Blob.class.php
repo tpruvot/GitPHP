@@ -26,16 +26,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $size = null;
 
 	/**
-	 * Stores the history
-	 */
-	protected $history = array();
-
-	/**
-	 * Stores whether the history has been read
-	 */
-	protected $historyRead = false;
-
-	/**
 	 * Stores blame info
 	 */
 	protected $blame = array();
@@ -283,58 +273,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		}
 
 		return '';
-	}
-
-	/**
-	 * Gets the history of this file
-	 *
-	 * @return array array of filediff changes
-	 */
-	public function GetHistory()
-	{
-		if (!$this->historyRead)
-			$this->ReadHistory();
-
-		return $this->history;
-	}
-
-	/**
-	 * Reads the file history
-	 */
-	private function ReadHistory()
-	{
-		$this->historyRead = true;
-
-		$args = array();
-		if ($this->commitHash)
-			$args[] = $this->commitHash;
-		else
-			$args[] = 'HEAD';
-		$args[] = '|';
-		$args[] = GitPHP_GitExe::GetInstance()->GetBinary();
-		$args[] = '--git-dir=' . escapeshellarg($this->GetProject()->GetPath());
-		$args[] = GIT_DIFF_TREE;
-		$args[] = '-r';
-		$args[] = '--stdin';
-		$args[] = '--';
-		$args[] = $this->GetPath();
-		
-		$historylines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_REV_LIST, $args));
-
-		$commitHash = null;
-		foreach ($historylines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40})/', $line, $regs)) {
-				$commitHash = $regs[1];
-			} else if ($commitHash) {
-				try {
-					$history = new GitPHP_FileDiff($this->GetProject(), $line);
-					$history->SetCommitHash($commitHash);
-					$this->history[] = $history;
-				} catch (Exception $e) {
-				}
-				$commitHash = null;
-			}
-		}
 	}
 
 	/**
