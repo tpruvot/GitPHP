@@ -51,6 +51,12 @@
      {/if}
       <img class="new" valign="middle" src="{geturl project=$project action=blob hash=$blob file=$file output=plain}">
 
+{elseif $filediff->IsBinary()}
+ 
+ <pre>
+  {t 1=$filediff->GetFromLabel($file) 2=$filediff->GetToLabel($file)}Binary files %1 and %2 differ{/t}
+ </pre>
+
 {else}
 
      {t}numstat{/t}:<span class="commit_fadd">{if $filediff->totAdd}+{$filediff->totAdd}{/if}</span>
@@ -76,7 +82,7 @@
    {include file='filediff.tpl' diff=$filediff->GetDiff($file, false, true)}
    {/if}
 
-/if}
+{/if}
 
  </div>
 

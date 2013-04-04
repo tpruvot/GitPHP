@@ -1,16 +1,16 @@
 <?php
+
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
+
 /**
- * Represents a single file difference
+ * Diffs two blobs
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Git
  */
-
-require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
-require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
-
 class GitPHP_FileDiff
 {
 	/**
@@ -69,37 +69,38 @@ class GitPHP_FileDiff
 	protected $status;
 
 	/**
-	 * Stores the similarity
+	 * File similarity
 	 */
 	protected $similarity;
 
 	/**
-	 * Stores the from filename
+	 * From filename
 	 */
 	protected $fromFile;
 
 	/**
-	 * Stores the to filename
+	 * To filename
 	 */
 	protected $toFile;
 
 	/**
-	 * Stores the from file type
+	 * From file type
 	 */
 	protected $fromFileType;
 
 	/**
-	 * Stores the to file type
+	 * To file type
 	 */
 	protected $toFileType;
 
 	/**
-	 * Stores the project name
+	 * Project
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
 	/**
-	 * Stores the hash of the commit that caused this filediff
+	 * Hash of the commit that caused this filediff
 	 */
 	protected $commitHash;
 
@@ -107,10 +108,16 @@ class GitPHP_FileDiff
 	public $totAdd=0;
 	public $totDel=0;
 
-	/* count of diff blocs for <a names> */
+	/**
+	 * Count of diff blocs for <a names> anchors
+	 * @tpruvot
+	 */
 	protected $diffCount=0;
 
-	/* used for pictures in treediff */
+	/** 
+	 * used for pictures in treediff
+	 * @tpruvot
+	 */
 	public $isPicture=false;
 
 	/**
@@ -119,19 +126,18 @@ class GitPHP_FileDiff
 	 * @param GitPHP_Project $project project
 	 * @param string $fromHash source hash, can also be a diff-tree info line
 	 * @param string $toHash target hash, required if $fromHash is a hash
-	 * @throws Exception on invalid parameters
 	 */
 	public function __construct($project, $fromHash, $toHash = '')
 	{
 		if (is_object($project))
-			$this->project = $project->GetProject();
-		else
 			$this->project = $project;
+		else
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($project);
 
 		if ($this->ParseDiffTreeLine($fromHash))
 			return;
 
-		if (!(preg_match('/^[0-9a-fA-F]{4,40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{4,40}$/', $toHash))) {
+		if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
 			throw new Exception('Invalid parameters for FileDiff');
 		}
 
@@ -146,9 +152,28 @@ class GitPHP_FileDiff
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return $this->project;
 	}
 
+	/**
+	 * Get the cache instance
+	 *
+	 * @return GitPHP_Cache|null object cache
+	 */
+	public function GetCache()
+	{
+		return $this->cache;
+	}
+
+	/**
+	 * Set the cache instanc
+	 *
+	 * @param GitPHP_Cache|null $cache object cache
+	 */
+	public function SetCache($cache)
+	{
+		$this->cache = $cache;
+	}
 	/**
 	 * ParseDiffTreeLine
 	 *
@@ -190,8 +215,7 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * Gets the from file mode
-	 * (full a/u/g/o)
+	 * Gets the from file mode (full a/u/g/o)
 	 *
 	 * @return string from file mode
 	 */
@@ -204,8 +228,7 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * Gets the from file mode in short form
-	 * (standard u/g/o)
+	 * Gets the from file mode in short form (standard u/g/o)
 	 *
 	 * @return string short from file mode
 	 */
@@ -218,8 +241,7 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * Gets the to file mode
-	 * (full a/u/g/o)
+	 * Gets the to file mode (full a/u/g/o)
 	 *
 	 * @return string to file mode
 	 */
@@ -232,8 +254,7 @@ class GitPHP_FileDiff
 	}
 
 	/**
-	 * Gets the to file mode in short form
-	 * (standard u/g/o)
+	 * Gets the to file mode in short form (standard u/g/o)
 	 *
 	 * @return string short to file mode
 	 */
@@ -497,6 +518,8 @@ class GitPHP_FileDiff
 	 * Gets the diff output
 	 *
 	 * @param string $file override the filename on the diff
+	 * @param boolean $readFileData whether file info data should also be read
+	 * @param boolean $explode whether data should be exploded into an array of lines
 	 * @return string diff output
 	 */
 	public function GetDiff($file = '', $readFileData = true, $explode = false)
@@ -741,7 +764,7 @@ class GitPHP_FileDiff
 				$output = '--- ' . $this->GetFromLabel($file) . "\n" . '+++ ' . $this->GetToLabel($file) . "\n";
 			}
 
-			$cacheKey = 'project|' . $this->project . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
 			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 			if ($diffOutput === false) {
 
@@ -802,7 +825,7 @@ class GitPHP_FileDiff
 	/**
 	 * Gets the commit for this filediff
 	 *
-	 * @return commit object
+	 * @return GitPHP_Commit commit object
 	 */
 	public function GetCommit()
 	{
@@ -812,7 +835,7 @@ class GitPHP_FileDiff
 	/**
 	 * Sets the commit for this filediff
 	 *
-	 * @param mixed $commit commit object
+	 * @param GitPHP_Commit $commit commit object
 	 */
 	public function SetCommit($commit)
 	{

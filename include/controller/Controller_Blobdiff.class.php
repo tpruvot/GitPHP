@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Controller Blobdiff
- *
  * Controller for displaying a blobdiff
  *
  * @author Christopher Han <xiphux@gmail.com>
@@ -69,7 +67,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		if (isset($this->params['file']))
 			$this->tpl->assign('file', $this->params['file']);
 
-		$filediff = new GitPHP_FileDiff($this->GetProject(), $this->params['hashparent'], $this->params['hash']);
+		$filediff = $this->GetProject()->GetObjectManager()->GetFileDiff($this->params['hashparent'], $this->params['hash']);
 
 		$filediff->GetStats();
 
@@ -90,12 +88,12 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 		$filediff->isPicture = ($mimetype == 'image');
 		$this->tpl->assign('picture', $filediff->isPicture);
 
-		$blobparent = $this->GetProject()->GetBlob($this->params['hashparent']);
+		$blobparent = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hashparent']);
 		$blobparent->SetCommit($commit);
 		$blobparent->SetPath($this->params['file']);
 		$this->tpl->assign('blobparent', $blobparent);
 
-		$blob = $this->GetProject()->GetBlob($this->params['hash']);
+		$blob = $this->GetProject()->GetObjectManager()->GetBlob($this->params['hash']);
 		$blob->SetPath($this->params['file']);
 		$this->tpl->assign('blob', $blob);
 
