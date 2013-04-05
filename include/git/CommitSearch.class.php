@@ -145,7 +145,11 @@ class GitPHP_CommitSearch extends GitPHP_RevList
 
 		switch ($this->type) {
 			case self::SEARCH_COMMIT:
-				$args[] = '--grep="' . addslashes($this->search) . '"';
+				// if we search a commit hash, dont use grep
+				if (preg_match('/^([0-9a-f]{7,40})$/', $this->search, $regs))
+					$this->SetLimit(1);
+				else
+					$args[] = '--grep="' . addslashes($this->search) . '"';
 				break;
 			case self::SEARCH_AUTHOR:
 				$args[] = '--author="' . addslashes($this->search) . '"';
