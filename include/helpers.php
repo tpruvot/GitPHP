@@ -40,5 +40,5 @@ function __n($singular, $plural, $count)
  */
 function LOGI($line)
 {
-	GitPHP_Log::GetInstance()->Log($line);
+	GitPHP_DebugLog::GetInstance()->Log($line);
 }

@@ -119,6 +119,6 @@ GitPHP_ProjectList::DestroyInstance();
 GitPHP_MemoryCache::DestroyInstance();
 GitPHP_Config::DestroyInstance();
 GitPHP_GitExe::DestroyInstance();
-GitPHP_Log::DestroyInstance();
+GitPHP_DebugLog::DestroyInstance();
 
 ?>

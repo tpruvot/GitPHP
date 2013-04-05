@@ -1249,7 +1249,7 @@ class GitPHP_Project
 				try {
 					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
 				} catch (Exception $e) {
-					GitPHP_Log::GetInstance()->Log($this->project.': error in '.$file);
+					GitPHP_DebugLog::GetInstance()->Log($this->project.': error in '.$file);
 				}
 			}
 		}

@@ -67,7 +67,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	{
 		if (!self::$instance) {
 			self::$instance = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
-			self::$instance->AddObserver(GitPHP_Log::GetInstance());
+			self::$instance->AddObserver(GitPHP_DebugLog::GetInstance());
 		}
 		return self::$instance;
 	}

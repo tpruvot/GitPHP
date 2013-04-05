@@ -310,7 +310,7 @@ abstract class GitPHP_ControllerBase
 		$debug = $this->config->GetValue('debug', false);
 
 		if ($debug) {
-			$this->log = new GitPHP_Log($debug, $this->config->GetValue('benchmark', false));
+			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark', false));
 			$this->log->SetStartTime(GITPHP_START_TIME);
 			$this->log->SetStartMemory(GITPHP_START_MEM);
 
