@@ -93,7 +93,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 		if (empty($binary)) {
 			$binary = GitPHP_GitExe::DefaultBinary();
 		}
-		$this->binary = GitPHP_Util::CleanPath($binary);
+		$this->binary = escapeshellarg(GitPHP_Util::CleanPath($binary));
 	}
 
 	/**
