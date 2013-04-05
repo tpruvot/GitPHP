@@ -94,11 +94,11 @@ class GitPHP_Util
 	public static function CleanPath($path)
 	{
 		// windows also supports also the "/" separator, but should not mix both
-		return preg_replace('@[\\\\]+@','/',$path);
+		return preg_replace('@[/\\\\]+@','/',$path);
 	}
 
 	/**
-	 * Get the filename of a given path
+	 * Get the filename of a given path (without .ext)
 	 *
 	 * @param string $path path
 	 * @param string $suffix optionally trim this suffix
@@ -106,9 +106,14 @@ class GitPHP_Util
 	 */
 	public static function BaseName($path, $suffix = null)
 	{
-		$filename = self::CleanPath($path);
+		$ext = $suffix;
 
-		return basename($filename);
+		$filename = self::CleanPath($path);
+		if ($ext == null) {
+			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+		}
+
+		return basename($filename, $ext);
 	}
 
 	/**

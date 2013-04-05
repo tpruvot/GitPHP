@@ -18,33 +18,22 @@ class GitPHP_UtilTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals('/url/with/colon:', GitPHP_Util::AddSlash('/url/with/colon:'));
 		$this->assertEquals('/', GitPHP_Util::AddSlash('/'));
-	}
-
-	public function testAddSlashNix()
-	{
-		if (GitPHP_Util::IsWindows()) {
-			$this->markTestSkipped();
-		}
 
 		$this->assertEquals('/path/with/slash/', GitPHP_Util::AddSlash('/path/with/slash/', true));
 		$this->assertEquals('/path/without/slash/', GitPHP_Util::AddSlash('/path/without/slash', true));
-		$this->assertEquals('/path/with/backslash\\/', GitPHP_Util::AddSlash('/path/with/backslash\\', true));
+		$this->assertEquals('/path/with/backslash/', GitPHP_Util::AddSlash('/path/with/backslash\\', true));
 		$this->assertEquals('/path/with/colon:', GitPHP_Util::AddSlash('/path/with/colon:', true));
 		$this->assertEquals('/', GitPHP_Util::AddSlash('/', true));
-		$this->assertEquals('\\/', GitPHP_Util::AddSlash('\\', true));
-	}
+		$this->assertEquals('/', GitPHP_Util::AddSlash('\\', true));
 
-	public function testAddSlashWin()
-	{
-		if (!GitPHP_Util::IsWindows()) {
-			$this->markTestSkipped();
-		}
-
-		$this->assertEquals('path\\with\\backslash\\', GitPHP_Util::AddSlash('path\\with\\backslash\\', true));
-		$this->assertEquals('path\\without\\backslash\\', GitPHP_Util::AddSlash('path\\without\\backslash', true));
-		$this->assertEquals('path\\with\\slash/', GitPHP_Util::AddSlash('path\\with\\slash/', true));
+		$this->assertEquals('path/with/backslash/', GitPHP_Util::AddSlash('path\\with\\backslash\\', true));
+		$this->assertEquals('path/without/backslash/', GitPHP_Util::AddSlash('path\\without\\backslash', true));
+		$this->assertEquals('path/with/slash/', GitPHP_Util::AddSlash('path\\with\\slash/', true));
 		$this->assertEquals('/path/with/colon:', GitPHP_Util::AddSlash('/path/with/colon:', true));
-		$this->assertEquals('\\', GitPHP_Util::AddSlash('\\', true));
+
+		$this->assertEquals('C:/php/', GitPHP_Util::AddSlash('C:\\php\\', true));
+
+		$this->assertEquals('/', GitPHP_Util::AddSlash('\\', true));
 		$this->assertEquals('/', GitPHP_Util::AddSlash('/', true));
 	}
 
