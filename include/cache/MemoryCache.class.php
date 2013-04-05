@@ -164,7 +164,7 @@ class GitPHP_MemoryCache
 
 		if ($this->autoManaged) {
 			$project = $this->ExtractProject($key);
-			if (empty($this->lastProject) || ($this->lastProject != $project)) {
+			if (!empty($project) && (empty($this->lastProject) || ($this->lastProject != $project))) {
 				if (count($this->objects) > 0) {
 					$this->Clear();
 				}

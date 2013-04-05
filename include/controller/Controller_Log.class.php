@@ -75,15 +75,23 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		if ($this->GetProject()->isAndroidRepo) {
 			$this->tpl->assign('branch', $this->GetProject()->repoBranch);
 		}
-		$this->tpl->assign('commit', $this->GetProject()->GetCommit($this->params['hash']));
+		$commit = $this->GetProject()->GetCommit($this->params['hash']);
+		$this->tpl->assign('commit', $commit);
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 
-		$revlist = $this->GetProject()->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
+		$compat = $this->GetProject()->GetCompat();
+		$skip = $this->params['page'] * 100;
+
+		$revlist = new GitPHP_GitLog($this->GetProject(), $commit, 101, $skip);
+		$revlist->SetCompat($compat);
+		if ($this->config->HasKey('largeskip')) {
+			$revlist->SetSkipFallback($this->config->GetValue('largeskip'));
+		}
 		if ($revlist) {
-			if (count($revlist) > 100) {
+			if ($revlist->GetCount() > 100) {
 				$this->tpl->assign('hasmorerevs', true);
-				$revlist = array_slice($revlist, 0, 100);
+				$revlist->SetLimit(100);
 			}
 			$this->tpl->assign('revlist', $revlist);
 		}

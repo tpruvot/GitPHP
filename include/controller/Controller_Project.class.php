@@ -1,18 +1,9 @@
 <?php
 /**
- * GitPHP Controller Project
- *
  * Controller for displaying a project summary
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-
-/**
- * Project controller class
- *
  * @package GitPHP
  * @subpackage Controller
  */
@@ -60,11 +51,11 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('head', $this->GetProject()->GetHeadCommit());
 
-		$revlist = $this->GetProject()->GetLog('HEAD', 17);
+		$revlist = new GitPHP_GitLog($this->GetProject(), $this->GetProject()->GetHeadCommit(), 17);
 		if ($revlist) {
-			if (count($revlist) > 16) {
+			if ($revlist->GetCount() > 16) {
 				$this->tpl->assign('hasmorerevs', true);
-				$revlist = array_slice($revlist, 0, 16);
+				$revlist->SetLimit(16);
 			}
 			$this->tpl->assign('revlist', $revlist);
 		}

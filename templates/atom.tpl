@@ -13,7 +13,7 @@
   <link rel="self" href="{geturl fullurl=true project=$project action=atom}"/>
   <id>{geturl fullurl=true project=$project}</id>
   {if $log}
-  <updated>{$log.0->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
+  <updated>{$log->GetHead()->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 
 {foreach from=$log item=logitem}
