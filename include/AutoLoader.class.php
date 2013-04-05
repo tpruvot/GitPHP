@@ -58,7 +58,6 @@ class GitPHP_AutoLoader
 		} else if (in_array($classname, array(
 				'Config',
 				'DebugLog',
-				'Log',
 				'Mime',
 				'Resource',
 				'Util'
