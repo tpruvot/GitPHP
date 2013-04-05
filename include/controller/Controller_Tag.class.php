@@ -19,6 +19,9 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 
 		if (!empty($this->params['output']) && ($this->params['output'] == 'jstip'))
 			$this->DisableLogging();
+
+		if (!isset($this->params['tag']))
+			$this->params['tag'] = $this->params['hash'];
 	}
 
 	/**
