@@ -106,14 +106,18 @@ class GitPHP_Util
 	 */
 	public static function BaseName($path, $suffix = null)
 	{
-		$ext = $suffix;
-
 		$filename = self::CleanPath($path);
-		if ($ext == null) {
-			$ext = pathinfo($filename, PATHINFO_EXTENSION);
-		}
 
-		return basename($filename, $ext);
+		/* wanted ??
+		if ($suffix != null) {
+			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+			if (strlen($ext)) {
+				$suffix = '.'.$ext;
+			}
+		}
+		*/
+
+		return basename($filename, $suffix);
 	}
 
 	/**
