@@ -12,46 +12,49 @@
  {* Nav *}
  <div class="page_nav">
    {include file='nav.tpl' current='log' logcommit=$commit treecommit=$commit logmark=$mark}
+   {assign var=wraptext value=30}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log{if $mark}&amp;m={$mark->GetHash()}{/if}">{t}HEAD{/t}</a>
+     <a href="{geturl project=$project action=log mark=$mark}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}
    {/if}
    &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log&amp;h={$commit->GetHash()}&amp;pg={$page-1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+     <a href="{geturl project=$project action=log hash=$commit page=$page-1 mark=$mark}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
    {else}
      {t}prev{/t}
    {/if}
    &sdot; 
    {if $hasmorerevs}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log&amp;h={$commit->GetHash()}&amp;pg={$page+1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+     <a href="{geturl project=$project action=log hash=$commit page=$page+1 mark=$mark}" accesskey="n" title="Alt-n">{t}next{/t}</a>
    {else}
      {t}next{/t}
    {/if}
    <br />
    {if $mark}
      {t}selected{/t} &sdot;
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 30}title="{$mark->GetTitle()|escape}"{/if}><strong>{$mark->GetTitle(30)|escape:'html'}</strong></a>
+     <a href="{geturl project=$project action=commit hash=$mark}" class="list commitTip" {if strlen($mark->GetTitle()) > $wraptext}title="{$mark->GetTitle()|escape}"{/if}><strong>{$mark->GetTitle($wraptext)|escape:'html'}</strong></a>
      &sdot;
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
+     <a href="{geturl project=$project action=log hash=$commit page=$page}">{t}deselect{/t}</a>
      <br />
    {/if}
  </div>
  {foreach from=$revlist item=rev}
    <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$rev->GetHash()}" class="title"><span class="age">{agestring age=$rev->GetAge()}</span>{$rev->GetTitle()|escape:'html'}</a>
+     <a href="{geturl project=$project action=commit hash=$rev}" class="title"><span class="age">{agestring age=$rev->GetAge()}</span>{$rev->GetTitle()|escape:'html'}</a>
      {include file='refbadges.tpl' commit=$rev}
    </div>
    <div class="title_text">
      <div class="log_link">
        {assign var=revtree value=$rev->GetTree()}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$rev->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commitdiff&amp;h={$rev->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;h={$revtree->GetHash()}&amp;hb={$rev->GetHash()}">{t}tree{/t}</a>
+       <a href="{geturl project=$project action=commit hash=$rev}">{t}commit{/t}</a>
+     | <a href="{geturl project=$project action=commitdiff hash=$rev}">{t}commitdiff{/t}</a>
+     | <a href="{geturl project=$project action=tree hash=$revtree hashbase=$rev}">{t}tree{/t}</a>
        <br />
        {if $mark}
          {if $mark->GetHash() == $rev->GetHash()}
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
+           <a href="{geturl project=$project action=log hash=$commit page=$page}">{t}deselect{/t}</a>
 	 {else}
 	   {if $mark->GetCommitterEpoch() > $rev->GetCommitterEpoch()}
 	     {assign var=markbase value=$mark}
@@ -60,10 +63,10 @@
 	     {assign var=markbase value=$rev}
 	     {assign var=markparent value=$mark}
 	   {/if}
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commitdiff&amp;h={$markbase->GetHash()}&amp;hp={$markparent->GetHash()}">{t}diff with selected{/t}</a>
+           <a href="{geturl project=$project action=commitdiff hash=$markbase hashparent=$markparent}">{t}diff with selected{/t}</a>
 	 {/if}
        {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=log&amp;h={$commit->GetHash()}&amp;pg={$page}&amp;m={$rev->GetHash()}">{t}select for diff{/t}</a>
+         <a href="{geturl project=$project action=log hash=$commit page=$page mark=$rev}">{t}select for diff{/t}</a>
        {/if}
        <br />
      </div>
@@ -93,7 +96,7 @@
    </div>
  {foreachelse}
    <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=summary" class="title">&nbsp</a>
+     <a href="{geturl project=$project}" class="title">&nbsp</a>
    </div>
    <div class="page_body">
      {if $commit}

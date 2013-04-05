@@ -17,7 +17,7 @@
          <td><em>{agestring age=$headcommit->GetAge()}</em></td>
          <td><a href="{if $router->GetCleanUrl()}{geturl project=$project action=heads hash=$head->GetName()}{else}{geturl project=$project action=shortlog hash=$head}{/if}" class="list"><strong>{$head->GetName()}</strong></a></td>
          <td class="link"><a href="{geturl project=$project action=shortlog hash=$head}">{t}shortlog{/t}</a> | <a href="{geturl project=$project action=log hash=$head}">{t}log{/t}</a> |
-          <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=tree&amp;hb={$headcommit->GetHash()}">{t}tree{/t}</a></td>
+          <a href="{geturl project=$project action=tree hashbase=$headcommit}">{t}tree{/t}</a></td>
        </tr>
    {/foreach}
    {if $hasmoreheads}

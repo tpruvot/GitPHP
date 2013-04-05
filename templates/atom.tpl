@@ -12,7 +12,7 @@
   <link href="{geturl fullurl=true project=$project}"/>
   <link rel="self" href="{geturl fullurl=true project=$project action=atom}"/>
   <id>{geturl fullurl=true project=$project}</id>
-  {if $log}
+  {if $log->GetHead()}
   <updated>{$log->GetHead()->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}</updated>
   {/if}
 

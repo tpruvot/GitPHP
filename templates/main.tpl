@@ -21,18 +21,18 @@
     {block name=feeds}
     {/block}
     {if file_exists('css/gitphp.min.css')}
-    <link rel="stylesheet" href="css/gitphp.min.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/gitphp.min.css" type="text/css" />
     {else}
-    <link rel="stylesheet" href="css/gitphp.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/gitphp.css" type="text/css" />
     {/if}
     {if file_exists("css/$stylesheet.min.css")}
-    <link rel="stylesheet" href="css/{$stylesheet}.min.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/{$stylesheet}.min.css" type="text/css" />
     {else}
-    <link rel="stylesheet" href="css/{$stylesheet}.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/{$stylesheet}.css" type="text/css" />
     {/if}
     {block name=css}
     {/block}
-    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
+    <link rel="stylesheet" href="{$baseurl}/css/ext/jquery.qtip.css" type="text/css" />
     {if $extracss}
     <style type="text/css">
     {$extracss}
@@ -105,7 +105,7 @@
   <body>
     <div class="page_header">
       <a href="http://git-scm.com" title="git homepage">
-        <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
+        <img src="{$baseurl}/images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
       {if $supportedlocales}
       <div class="lang_select">
@@ -128,7 +128,7 @@
       </div>
       {/if}
       {block name=header}
-      <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> /
+      <a href="{$baseurl}/">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> /
       {/block}
     </div>
 {block name=main}

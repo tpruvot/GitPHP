@@ -67,7 +67,7 @@ function($) {
      </div>
    {elseif $picture}
     <div class="picture">
-      <img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$blob->GetHash()|escape:'url'}&amp;f={$file}">
+      <img class="new" src="{geturl project=$project action=blob output=plain hash=$blob file=$blob->GetPath() hashbase=$commit}" />
     </div>
    {elseif $geshi}
      {* We're using the highlighted output from geshi *}

@@ -82,7 +82,7 @@ function($) {
 	    </td>
 	    <td class="num"><a id="l{$smarty.foreach.blob.iteration}" href="#l{$smarty.foreach.blob.iteration}" class="linenr">{$smarty.foreach.blob.iteration}</a></td>
 	    {if $picture}
-	    <td class="picture"><img class="new" src="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$file}"></td>
+	    <td class="picture"><img class="new" src="{geturl project=$project action=blob output=plain hash=$blob file=$file}"></td>
 	    {else}
 	    <td class="codeline">{$blobline|escape}</td>
 	    {/if}

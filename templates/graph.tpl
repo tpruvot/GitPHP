@@ -30,16 +30,17 @@ GitPHPJSModules = ['common'];
 <div class="page_nav">
 {include file='nav.tpl' commit=$head current='graph'}
 <br />
+<br />
 {if $graphtype=='commitactivity'}
   {t}commit activity{/t}
 {else}
-  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=graph&g=commitactivity">{t}commit activity{/t}</a>
+  <a href="{geturl project=$project action=graph graphtype=commitactivity}">{t}commit activity{/t}</a>
 {/if}
 |
 {if $graphtype=='languagedist'}
   {t}language distribution{/t}
 {else}
-  <a href="{$scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=graph&g=languagedist">{t}language distribution{/t}</a>
+  <a href="{geturl project=$project action=graph graphtype=languagedist}">{t}language distribution{/t}</a>
 {/if}
 </div>
 

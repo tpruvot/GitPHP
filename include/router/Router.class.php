@@ -168,7 +168,7 @@ class GitPHP_Router
 
 		// map heads to shortlog
 		$this->routes[] = new GitPHP_Route(':action/:hash', array(
-			'action' => 'heads',
+			'action' => 'heads|remotes',
 			'hash' => '[^\?]+'
 		), array(
 			'action' => 'shortlog'
@@ -207,7 +207,7 @@ class GitPHP_Router
 
 		// project-specific action only
 		$this->routes[] = new GitPHP_Route(':action', array(
-			'action' => 'tags|heads|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
+			'action' => 'tags|heads|remotes|shortlog|log|search|atom|rss|snapshot|commits|graphs|trees|blobs|history|commitdiff|blobdiff'
 		), array(), $projectroute);
 
 		$this->routes[] = $projectroute;
@@ -727,11 +727,10 @@ class GitPHP_Router
 	private static function GetProject($value)
 	{
 		if ($value instanceof GitPHP_Project) {
-
 			return $value->GetProject();
-
 		} else if (is_string($project)) {
 			return $value;
 		}
 	}
+
 }

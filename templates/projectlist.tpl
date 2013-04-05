@@ -30,8 +30,8 @@ git source code archive
 </div>
 
 <div class="projectSearch">
-<form method="get" action="index.php" id="projectSearchForm" enctype="application/x-www-form-urlencoded">
-{t}Search projects{/t}: <input type="text" name="s" class="projectSearchBox" {if $search}value="{$search}"{/if} /> <a href="index.php" class="clearSearch" {if !$search}style="display: none;"{/if}>X</a> {if $javascript}<img src="images/search-loader.gif" class="searchSpinner" style="display: none;" alt="{t}Loading…{/t}" />{/if}
+<form method="get" action="{geturl}" id="projectSearchForm" enctype="application/x-www-form-urlencoded">
+{t}Search projects{/t}: <input type="text" name="s" class="projectSearchBox" {if $search}value="{$search}"{/if} /> <a href="{geturl}" class="clearSearch" {if !$search}style="display: none;"{/if}>X</a> {if $javascript}<img src="images/search-loader.gif" class="searchSpinner" style="display: none;" alt="{t}Loading…{/t}" />{/if}
 </form>
 </div>
 
@@ -44,27 +44,27 @@ git source code archive
         {if $sort == "project"}
           <th>{t}Project{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?sort=project">{t}Project{/t}</a></th>
+          <th><a class="header" href="{geturl sort=project}">{t}Project{/t}</a></th>
         {/if}
         {if $sort == "descr"}
           <th>{t}Description{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?sort=descr">{t}Description{/t}</a></th>
+          <th><a class="header" href="{geturl sort=descr}">{t}Description{/t}</a></th>
         {/if}
         {if $sort == "age"}
           <th>{t}Last Change{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?sort=age">{t}Last Change{/t}</a></th>
+          <th><a class="header" href="{geturl sort=age}">{t}Last Change{/t}</a></th>
         {/if}
         {if $show_owner }
          {if $sort == "owner"}
           <th>{t}Owner{/t}</th>
          {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?sort=owner">{t}Owner{/t}</a></th>
+          <th><a class="header" href="{geturl sort=owner}">{t}Owner{/t}</a></th>
          {/if}
         {/if}
         <th class="actions">{t}Actions{/t}</th>
-	<th></th>
+        <th></th>
       </tr>
     {/if}
 
@@ -83,9 +83,9 @@ git source code archive
 
     <tr class="{cycle values="light,dark"} projectRow">
       <td class="projectName">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{geturl project=$proj}" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td class="projectDescription"><a href="{geturl project=$proj}" class="list">{$proj->GetDescription()}</a></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
         {if $projecthead}
@@ -98,22 +98,21 @@ git source code archive
           {else}
             <em>{agestring age=$proj->GetAge()}</em>
           {/if}
-	{else}
-	  <em class="empty">{t}No commits{/t}</em>
-	{/if}
+        {else}
+            <em class="empty">{t}No commits{/t}</em>
+        {/if}
       </td>
       {if $show_owner }
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {/if}
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=summary">{t}summary{/t}</a>
-	{if $projecthead}
-	| 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=shortlog">{t}shortlog{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=log">{t}log{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=tree">{t}tree{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject('f')}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
-	{/if}
+        <a href="{geturl project=$proj}">{t}summary{/t}</a>
+{if $projecthead}
+      | <a href="{geturl project=$proj action=shortlog}">{t}shortlog{/t}</a>
+      | <a href="{geturl project=$proj action=log}">{t}log{/t}</a>
+      | <a href="{geturl project=$proj action=tree}">{t}tree{/t}</a>
+      | <a href="{geturl project=$proj action=snapshot hash=HEAD}" class="snapshotTip">{t}snapshot{/t}</a>
+{/if}
       </td>
     </tr>
   {foreachelse}
@@ -129,7 +128,7 @@ git source code archive
 {/block}
 
 {block name=footer}
-  <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">{t}OPML{/t}</a>
-  <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">{t}TXT{/t}</a>
+  <a href="{geturl action=opml}" class="rss_logo">{t}OPML{/t}</a>
+  <a href="{geturl action=projectindex}" class="rss_logo">{t}TXT{/t}</a>
 {/block}
 
