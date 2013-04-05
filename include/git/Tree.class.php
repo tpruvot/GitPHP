@@ -1,7 +1,5 @@
 <?php
 /**
- * GitPHP Tree
- *
  * Represents a single tree
  *
  * @author Christopher Han <xiphux@gmail.com>

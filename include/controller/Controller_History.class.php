@@ -72,6 +72,13 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		if (empty($blobhash))
 			throw new GitPHP_FileNotFoundException($this->params['file']);
 
+		$type = 0; /* retrieve type (folder or file) */
+		$this->GetProject()->GetObjectLoader()->GetObject($blobhash, $type);
+		if ($type != GitPHP_Pack::OBJ_BLOB) {
+			$folder = $this->GetProject()->GetObjectManager()->GetTree($blobhash);
+			$this->tpl->assign('foldertree', $folder);
+		}
+
 		$blob = $this->GetProject()->GetObjectManager()->GetBlob($blobhash);
 
 		$blob->SetCommit($co);

@@ -20,17 +20,34 @@
  {include file='path.tpl' pathobject=$blob target='blob'}
  
  {if $blob}
+ {assign var=wraptext value=80}
  <table>
    {* Display each history line *}
    {foreach from=$history item=historyitem}
      {assign var=historycommit value=$historyitem->GetCommit()}
      <tr class="{cycle values="light,dark"}">
-       <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{agestring age=$historycommit->GetAge()}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$historycommit->GetAge()}{/if}</em></td>
-       <td><em>{$historycommit->GetAuthorName()}</em></td>
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$historycommit->GetHash()}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 80}title="{$historycommit->GetTitle()|escape}"{/if}><strong>{$historycommit->GetTitle(80)|escape:'html'}</strong></a>
-       {include file='refbadges.tpl' commit=$historycommit}
+       <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{agestring age=$historycommit->GetAge()}{else}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}">
+         <em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$historycommit->GetAge()}{/if}</em>
        </td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commit&amp;h={$historycommit->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=commitdiff&amp;h={$historycommit->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blob&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$SCRIPT_NAME}?p={$project->GetProject('f')}&amp;a=blobdiff&amp;h={$blob->GetHash()}&amp;hp={$historyitem->GetToHash()}&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}#D1">{t}diff to current{/t}</a>{/if}
+       <td><em>{$historycommit->GetAuthorName()}</em></td>
+       <td>
+         <a href="{geturl project=$project action=commit hash=$historycommit}" class="list commitTip" {if strlen($historycommit->GetTitle()) > $wraptext}title="{$historycommit->GetTitle()|escape}"{/if}>
+           <strong>{$historycommit->GetTitle($wraptext)|escape:'html'}</strong>
+         </a>
+         {include file='refbadges.tpl' commit=$historycommit}
+       </td>
+       <td class="link">
+         <a href="{geturl project=$project action=commit hash=$historycommit}">{t}commit{/t}</a>
+       | <a href="{geturl project=$project action=commitdiff hash=$historycommit}">{t}commitdiff{/t}</a>
+     {if !$foldertree}
+       | <a href="{geturl project=$project action=blob hashbase=$historycommit file=$blob->GetPath()}">{t}blob{/t}</a>
+       | <a href="{geturl project=$project action=blobdiff hash=$historyitem->GetToBlob() hashparent=$historyitem->GetFromBlob() file=$blob->GetPath() hashbase=$historycommit}">{t}blobdiff{/t}</a>
+       {if $blob->GetHash() != $historyitem->GetToHash()}
+       | <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$historyitem->GetToBlob() file=$blob->GetPath() hashbase=$historycommit}#D1">{t}diff to current{/t}</a>
+       {/if}
+     {else}
+       {$tree->GetPath()}
+     {/if}
        </td>
      </tr>
    {/foreach}
