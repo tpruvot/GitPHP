@@ -47,6 +47,7 @@
 {if $results}
 <table>
   {* Print each match *}
+  {assign var=wraptext value=80}
   {foreach from=$results item=result}
     <tr class="{cycle values="light,dark"}">
       <td title="{if $result->GetAge() > 60*60*24*7*2}{agestring age=$result->GetAge()}{else}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $result->GetAge() > 60*60*24*7*2}{$result->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$result->GetAge()}{/if}</em></td>
@@ -61,10 +62,10 @@
 	  {/if}
         </em>
       </td>
-      <td><a href="{geturl project=$project action=commit hash=$result}" class="list commitTip" {if strlen($result->GetTitle()) > 50}title="{$result->GetTitle()|escape}"{/if}><strong>{$result->GetTitle(80)|escape:'html'}</strong></a>
+      <td><a href="{geturl project=$project action=commit hash=$result}" class="list commitTip" {if strlen($result->GetTitle()) > $wraptext}title="{$result->GetTitle()|escape}"{/if}><strong>{$result->GetTitle($wraptext)|escape:'html'}</strong></a>
       {if $searchtype == 'commit'}
         {foreach from=$result->SearchComment($search) item=line name=match}
-          <br />{$line|escape|highlight:$search:80}
+          <br />{$line|escape|highlight:$search:$wraptext}
         {/foreach}
       {/if}
       </td>

@@ -113,24 +113,18 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		$results = array();
 		$skip = $this->params['page'] * 100;
 
+		$exe = GitPHP_GitExe::GetInstance();
+
 		switch ($this->params['searchtype']) {
 
 			case self::SEARCH_COMMIT:
-				if (preg_match('/^([0-9a-f]{5,40})$/i', $this->params['search'], $regs)) {
-						$hash = $this->GetProject()->ExpandHash($this->params['search']);
-						$this->params['search'] = $hash;
-				} else {
-						$hash = $co->GetHash();
-				}
-				$results = $this->GetProject()->SearchCommit($this->params['search'], $hash, 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitType, $this->params['search'], $exe, $co, 101, $skip);
 				break;
-
 			case self::SEARCH_AUTHOR:
-				$results = $this->GetProject()->SearchAuthor($this->params['search'], $co->GetHash(), 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::AuthorType, $this->params['search'], $exe, $co, 101, $skip);
 				break;
-
 			case self::SEARCH_COMMITTER:
-				$results = $this->GetProject()->SearchCommitter($this->params['search'], $co->GetHash(), 101, $skip);
+				$results = new GitPHP_CommitSearch($this->GetProject(), GitPHP_CommitSearch::CommitterType, $this->params['search'], $exe, $co, 101, $skip);
 				break;
 			case self::SEARCH_FILE:
 				$results = new GitPHP_FileSearch($this->GetProject(), $co->GetTree(), $this->params['search'], $this->exe, 101, $skip);
@@ -139,31 +133,16 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 				throw new GitPHP_MessageException(__('Invalid search type'));
 		}
 
-		if (is_object($results)) {
-
-			if ($results->GetCount() > 0) {
-				$this->tpl->assign('results', $results);
-			}
-
-			if ($results->GetCount() > 100) {
-				$results->SetLimit(100);
-			}
-
-			$results = $results->GetItemsAsArray();
-		}
-
-		if (is_array($results) && count($results) > 0) {
-			$this->tpl->assign('results', $results);
-		}
-
-		if (count($results) < 1) {
+		if ($results->GetCount() < 1) {
 			throw new GitPHP_MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
 		}
 
-		if (count($results) > 100) {
+		if ($results->GetCount() > 100) {
 			$this->tpl->assign('hasmore', true);
-			$results = array_slice($results, 0, 100, true);
+			$results->SetLimit(100);
 		}
+
+		$this->tpl->assign('results', $results);
 
 		$this->tpl->assign('tree', $co->GetTree());
 

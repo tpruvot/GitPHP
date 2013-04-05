@@ -444,24 +444,4 @@ class GitPHP_FileSearch implements Iterator
 		}
 	}
 
-	/**
-	 * Compat function (to be removed)
-	 * @deprecated
-	 *
-	 * @return array
-	 */
-	public function GetItemsAsArray()
-	{
-		$data = array();
-		foreach ($this->resultList as $result)
-		{
-			$row = array(
-				'object' => $result->GetObject(),
-				'lines'  => $result->GetMatchingLines(),
-			);
-			$data[] = $row;
-		}
-		return $data;
-	}
-
 }

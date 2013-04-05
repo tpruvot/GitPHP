@@ -49,9 +49,9 @@
   {* Print each match *}
   {foreach from=$results item=result key=path}
     <tr class="{cycle values="light,dark"}">
-      {assign var=resultobject value=$result.object}
-      {assign var=resultpath value=$resultobject->GetPath()}
-      {assign var=wrap value=160}
+      {assign var=resultobject value=$result->GetObject()}
+      {assign var=resultpath value=$result->GetPath()}
+      {assign var=wraptext value=160}
       {if $resultobject instanceof GitPHP_Tree}
       <td>
         <a href="{geturl project=$project action=tree hash=$resultobject hashbase=$commit file=$resultpath}" class="list"><strong>{$resultpath|highlight:$search}</strong></a>
@@ -62,8 +62,8 @@
       {else}
       <td>
         <a href="{geturl project=$project action=blob hash=$resultobject hashbase=$commit file=$resultpath}" class="list"><strong>{$resultpath|highlight:$search}</strong></a>
-        {foreach from=$result.lines item=line name=match key=lineno}
-          {if $smarty.foreach.match.first}<br />{/if}<span class="matchline">{$lineno}. {$line|highlight:$search:$wrap:true}</span><br />
+        {foreach from=$result->GetMatchingLines() item=line name=match key=lineno}
+          {if $smarty.foreach.match.first}<br />{/if}<span class="matchline">{$lineno}. {$line|highlight:$search:$wraptext:true}</span><br />
         {/foreach}
       </td>
       <td class="link">
