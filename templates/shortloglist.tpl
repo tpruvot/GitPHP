@@ -10,6 +10,7 @@
  *}
 
  <table class="shortlog">
+   {assign var=wraptext value=80}
    {foreach from=$revlist item=rev}
 
      <tr class="{cycle values="light,dark"} {$rev->glyphClass}" title="{foreach from=$rev->GetParents() item=par}{$par->GetHash(true)} {/foreach}">
@@ -18,8 +19,8 @@
        <td title="{if $rev->GetAge() > 60*60*24*7*2}{agestring age=$rev->GetAge()}{else}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{/if}"><em>{if $rev->GetAge() > 60*60*24*7*2}{$rev->GetCommitterEpoch()|date_format:"%Y-%m-%d"}{else}{agestring age=$rev->GetAge()}{/if}</em></td>
        <td><em>{$rev->GetAuthorName()}</em></td>
        <td>
-         <a href="{geturl project=$project action=commit hash=$rev}" class="list commitTip" {if strlen($rev->GetTitle()) > 80}title="{$rev->GetTitle()|escape}"{/if}>
-         {if $rev->IsMergeCommit()}<span class="merge_title">{else}<span class="commit_title">{/if}{$rev->GetTitle(80)|escape}</span>
+         <a href="{geturl project=$project action=commit hash=$rev}" class="list commitTip" {if strlen($rev->GetTitle()) > $wraptext}title="{$rev->GetTitle()|escape}"{/if}>
+         {if $rev->IsMergeCommit()}<span class="merge_title">{else}<span class="commit_title">{/if}{$rev->GetTitle($wraptext)|escape}</span>
          </a>
 	 {include file='refbadges.tpl' commit=$rev}
        </td>

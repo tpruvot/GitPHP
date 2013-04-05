@@ -21,6 +21,7 @@
  {* Nav *}
  <div class="page_nav">
    {include file='nav.tpl' current='shortlog' logcommit=$commit treecommit=$commit logmark=$mark}
+   {assign var=wraptext value=80}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
      <a href="{geturl project=$project action=shortlog mark=$mark}">{t}HEAD{/t}</a>
@@ -42,7 +43,7 @@
    <br />
    {if $mark}
      {t}selected{/t} &sdot;
-     <a href="{geturl project=$project action=commit hash=$mark}" class="list commitTip" {if strlen($mark->GetTitle()) > 80}title="{$mark->GetTitle()|escape}"{/if}><strong>{$mark->GetTitle(80)|escape:'html'}</strong></a>
+     <a href="{geturl project=$project action=commit hash=$mark}" class="list commitTip" {if strlen($mark->GetTitle()) > $wraptext}title="{$mark->GetTitle()|escape}"{/if}><strong>{$mark->GetTitle($wraptext)|escape:'html'}</strong></a>
      &sdot;
      <a href="{geturl project=$project action=shortlog hash=$commit page=$page}">{t}deselect{/t}</a>
      <br />
