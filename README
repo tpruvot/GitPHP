@@ -34,13 +34,13 @@ New abilities :
 Enhancements :
 + use origin git clone url as description
 + use git user.name as default owner
-+ remote branches support (and badges)
++ Optional remote branches support (and badges)
 + fix line numbers sync in IE 8,9 and Chrome (11), Mozilla dont change line height if monospace text is bold or italic
   made with a new config variable "fixupjs" where we can add a jQuery script
 + Show file line changes +/- in Commit view
 + New options to toggle display of owner and for default sort order of project list
 + Side by Side line numbers, Tab/Space display and copy paste helpers
-+ Support for shortened hashes and search by commit hash
++ Search by commit hash
 + Merge tracking in shortlog (to enhance)
 
 Addons :
@@ -74,9 +74,11 @@ Missing features from 0.2.8 :
 Last notes:
 ===========
 
-The current 0.2.7.y (at the date of the .5) versions can not be called "stable", some unit tests are failing...
+In the current 0.2.7.y (at the date of the .5), some unit tests are failing...
 Most of them because i dont have all the Load Strategy exploded (sub)classes of git objects
 
 You can use the 0.2.7-repo tagged version for daily use, but for dev work, please consider the latest versions
 which are closer to the current xiphux architecture (Autoloader, Typed Exceptions, URL Router ...)
+
+I will tag a 0.2.8-repo when all xiphux features will be included and class paths moved to subfolders.
 
