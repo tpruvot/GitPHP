@@ -66,9 +66,9 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
        <li class="SBSTOCFile">
        <a href="#{$filediff->GetFromHash()}_{$filediff->GetToHash()}" class="SBSTOCItem">
        {if $filediff->GetStatus() == 'A'}
-         {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a> <span class="add">{t}(new){/t}</span>
+         {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a> <span class="add">({t}new{/t})</span>
        {elseif $filediff->GetStatus() == 'D'}
-         {if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetToFile()}{/if}</a> <span class="del">{t}(deleted){/t}</span>
+         {if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetToFile()}{/if}</a> <span class="del">({t}deleted{/t})</span>
        {elseif $filediff->GetStatus() == 'M'}
 	 {if $filediff->GetFromFile()}
 	   {assign var=fromfilename value=$filediff->GetFromFile()}
@@ -96,23 +96,23 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    {foreach from=$treediff item=filediff}
      <div class="diffBlob diff-file" id="{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
      <div class="diff_info">
-     {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
+     {if $filediff->GetStatus() != 'A'}
        {localfiletype type=$filediff->GetFromFileType() assign=localfromtype}
        {$localfromtype}:<a href="{geturl project=$project action=blob hash=$filediff->GetFromBlob() hashbase=$commit file=$filediff->GetFromFile()}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
-         {t}(deleted){/t}
+         ({t}deleted{/t})
        {/if}
      {/if}
 
-     {if $filediff->GetStatus() == 'M'}
+     {if $filediff->GetStatus() == 'M' || $filediff->GetStatus() == 'R'}
        -&gt;
      {/if}
 
-     {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
+     {if $filediff->GetStatus() != 'D'}
        {localfiletype type=$filediff->GetToFileType() assign=localtotype}
        {$localtotype}:<a href="{geturl project=$project action=blob hash=$filediff->GetToBlob() hashbase=$commit file=$filediff->GetToFile()}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
        {if $filediff->GetStatus() == 'A'}
-         {t}(new){/t}
+         ({t}new{/t})
        {/if}
      {/if}
 
@@ -133,11 +133,15 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
      {if $filediff->isPicture}
      <div class="diff_pict">
       {if $filediff->GetStatus() == 'A'}
-       {t}(new){/t}
+       ({t}new{/t})
       {else}
        <img class="old" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetFromBlob() file=$filediff->GetFromFile() output=plain}">
       {/if}
+      {if $filediff->GetStatus() == 'D'}
+       ({t}deleted{/t})
+      {else}
        <img class="new" valign="middle" src="{geturl project=$project action=blob hash=$filediff->GetToBlob() file=$filediff->GetToFile() output=plain}">
+      {/if}
      </div>
      {elseif $sidebyside}
         {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}

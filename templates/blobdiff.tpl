@@ -45,11 +45,15 @@
    </div>
    <div class="diff_pict">
      {if $filediff->GetStatus() == 'A'}
-      {t}(new){/t}
+      ({t}new{/t})
      {else}
       <img class="old" valign="middle" src="{geturl project=$project action=blob hash=$blobparent file=$file output=plain}">
      {/if}
+     {if $filediff->GetStatus() == 'D'}
+      ({t}deleted{/t})
+     {else}
       <img class="new" valign="middle" src="{geturl project=$project action=blob hash=$blob file=$file output=plain}">
+     {/if}
 
 {elseif $filediff->IsBinary()}
  
