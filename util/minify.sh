@@ -63,5 +63,5 @@ for i in ${CSSDIR}/*${MINCSSEXT}; do
 	touch ${i} ${i}${GZEXT}
 done
 
-gzip -v -c ${CSSDIR}/ext/jquery.qtip.min.css > ${CSSDIR}/ext/jquery.qtip.min.css${GZEXT}
-touch ${CSSDIR}/ext/jquery.qtip.min.css ${CSSDIR}/ext/jquery.qtip.min.css${GZEXT}
+gzip -v -c ${CSSDIR}/ext/jquery.qtip.css > ${CSSDIR}/ext/jquery.qtip.css${GZEXT}
+touch ${CSSDIR}/ext/jquery.qtip.css ${CSSDIR}/ext/jquery.qtip.css${GZEXT}
