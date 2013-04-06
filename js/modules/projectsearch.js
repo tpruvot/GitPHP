@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", 'modules/resources'],
-	function($, resources) {
+define(["jquery", 'modules/resources', 'modules/hassearchreset'],
+	function($, resources, hassearchreset) {
 
 		var table = null;
 		var searchPanel = null;
@@ -52,7 +52,9 @@ define(["jquery", 'modules/resources'],
 				}
 			});
 			if (table.find('tr.projectRow').size() > 0) {
-				searchPanel.find('a.clearSearch').click(clearSearch);
+				if (!hassearchreset()) {
+					searchPanel.find('a.clearSearch').click(clearSearch);
+				}
 				searchPanel.find('input.projectSearchBox').keyup(doSearch).bind('input paste', doSearch);
 			}
 		}
@@ -99,10 +101,12 @@ define(["jquery", 'modules/resources'],
 			clearTimeout(searchTimer);
 			searchTimer = null;
 
-			if (searchString.length == 0) {
-				searchPanel.find('a.clearSearch').hide();
-			} else {
-				searchPanel.find('a.clearSearch').show();
+			if (!hassearchreset()) {
+				if (searchString.length == 0) {
+					searchPanel.find('a.clearSearch').hide();
+				} else {
+					searchPanel.find('a.clearSearch').show();
+				}
 			}
 
 			var hasMatch = false;

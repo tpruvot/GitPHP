@@ -42,12 +42,13 @@
     <script type="text/javascript">
 	var GitPHPJSPaths = {
 		jquery: [
-		{if $googlejs}
-		'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
-		{/if}
-		'ext/jquery.min'
+			{if $googlejs}
+			'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
+			{/if}
+			'ext/jquery.min'
 		],
-		qtip: 'ext/jquery.qtip'
+		qtip: 'ext/jquery.qtip',
+		modernizr: 'ext/modernizr.custom'
 	};
 
 	{block name=javascriptpaths}
