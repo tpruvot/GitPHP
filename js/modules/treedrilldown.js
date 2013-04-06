@@ -109,9 +109,9 @@ define(["jquery", "modules/geturl", 'modules/resources'],
 		var expanderClick = function() {
 			var jThis = $(this);
 
-			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{4,40}|HEAD)/);
+			var treeHash = jThis.attr('href').match(/h=([0-9a-fA-F]{7,40}|HEAD)/);
 			if (!treeHash) {
-				treeHash = jThis.attr('href').match(/\/trees\/([0-9a-fA-F]{4,40})/);
+				treeHash = jThis.attr('href').match(/\/trees\/([0-9a-fA-F]{7,40})/);
 			}
 			if (!treeHash) {
 				return false;

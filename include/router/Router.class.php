@@ -150,14 +150,14 @@ class GitPHP_Router
 		// project-specific action with hash and output method
 		$this->routes[] = new GitPHP_Route(':action/:hash/:output', array(
 			'action' => 'blobs',
-			'hash' => '[0-9A-Fa-f]{4,40}|HEAD',
+			'hash' => '[0-9A-Fa-f]{7,40}|HEAD',
 			'output' => 'plain'
 		), array(), $projectroute);
 
 		// project-specific action with hash
 		$this->routes[] = new GitPHP_Route(':action/:hash', array(
 			'action' => 'commits|trees|blobs|search|snapshot|commitdiff|blobdiff|blame',
-			'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
+			'hash' => '[0-9A-Fa-f]{7,40}|HEAD'
 		), array(), $projectroute);
 
 		// project-specific action with hash or ref
@@ -192,7 +192,7 @@ class GitPHP_Router
 			// project specific snapshot format with hash
 			$this->routes[] = new GitPHP_Route(':format/:hash', array(
 				'format' => $formatconstraint,
-				'hash' => '[0-9A-Fa-f]{4,40}|HEAD'
+				'hash' => '[0-9A-Fa-f]{7,40}|HEAD'
 			), array(
 				'action' => 'snapshot'
 			), $projectroute);

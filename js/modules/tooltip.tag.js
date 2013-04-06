@@ -13,7 +13,7 @@ define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
 	function($, url, project, resources) {
 
 		function getTagName(element) {
-			var tag = element.attr('href').match(/h=([^&]+)/);
+			var tag = element.attr('href').match(/[ht]=([^&]+)/);
 			if (!tag) {
 				tag = element.attr('href').match(/\/tags\/([^\/\?]+)/);
 			}
@@ -30,6 +30,7 @@ define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
 							p: project,
 							a: 'tag',
 							o: 'jstip',
+							t: tag,
 							h: tag
 						},
 						type: 'GET'
@@ -48,17 +49,19 @@ define(["jquery", "modules/geturl", "modules/getproject", 'modules/resources'],
 		}
 
 		return function(elements) {
-			require(['qtip'], function() {
-				elements.each(function(){
-					var jThis = $(this);
-					var tag = getTagName(jThis);
-					if (!tag) {
-						return;
-					}
-					var config = buildTipConfig(tag);
-					jThis.qtip(config);
+			if (elements && (elements.size() > 0)) {
+				require(['qtip'], function() {
+					elements.each(function(){
+						var jThis = $(this);
+						var tag = getTagName(jThis);
+						if (!tag) {
+							return;
+						}
+						var config = buildTipConfig(tag);
+						jThis.qtip(config);
+					});
 				});
-			});
+			}
 		}
 	}
 );
