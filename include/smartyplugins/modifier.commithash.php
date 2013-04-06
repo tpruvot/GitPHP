@@ -1,18 +1,10 @@
 <?php
 /**
- * Commit hashes
- *
  * Modifier to parse git commit hashes in commit messages
  *
  * @author Tanguy Pruvot <tpruvot@github>
  * @package GitPHP
  * @subpackage Smarty
- */
-
-require('function.scripturl.php');
-
-/**
- * commithash smarty modifier
  *
  * @param string $text text to find bug references in
  * @param string $project name used in url
@@ -28,18 +20,23 @@ function smarty_modifier_commithash($text, $projName = '')
 		$projName = $_REQUEST['p'];
 	}
 
-	$smarty = null;
-	$script = smarty_function_scripturl(null, $smarty);
-	$script .= '?p='.$projName;
+	// $vars = Smarty::$global_tpl_vars;
+	// $script = $vars['SCRIPT_NAME']->value;
 
-	$pattern = '/\\b([0-9a-f]{7,40})\\b/i';
-	$link = $script.'&a=commit&h=${1}';
+	$link = '?p='.$projName.'&a=commit&h=${1}';
 
-	if (preg_match($pattern, $text)) {
+	$pattern = '/\\b([0-9a-f]{7,40})\\b/';
+
+	if (preg_match($pattern, $text, $regs)) {
 
 		$fullLink = '<a class="commithash" href="' . $link . '">${1}</a>';
 
-		return preg_replace($pattern, $fullLink, $text);
+		$atag = preg_replace($pattern, $fullLink, $text);
+
+		// abbreviate
+		$atag = str_replace($regs[1].'</a>', substr($regs[1],0,7).'</a>', $atag);
+
+		return $atag;
 	}
 
 	return $text;

@@ -1,17 +1,11 @@
 <?php
 /**
- * Buglink
- *
  * Modifier to turn bug references into links
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Smarty
- */
-
-/**
- * buglink smarty modifier
  *
  * @param string $text text to find bug references in
  * @param string $pattern search pattern
