@@ -49,6 +49,8 @@ class GitPHP_AutoLoader
 			$path = 'controller/';
 		} else if (strncmp($classname, 'ProjectList', 11) === 0) {
 			$path = 'git/projectlist/';
+		} else if (strncmp($classname, 'FileMimeType', 12) === 0) {
+			$path = 'git/filemimetype/';
 		} else if (($classname == 'Blob') || (strncmp($classname, 'BlobLoad', 8) === 0)) {
 			$path = 'git/blob/';
 		} else if (($classname == 'Tag') || (strncmp($classname, 'TagLoad', 7) === 0)) {

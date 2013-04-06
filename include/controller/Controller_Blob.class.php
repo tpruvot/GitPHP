@@ -89,7 +89,8 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					if (isset($this->params['file']))
 						$blob->SetPath($this->params['file']);
 
-					$mime = $blob->FileMime();
+					$mimeReader = new GitPHP_FileMimeTypeReader($blob, $this->GetMimeStrategy());
+					$mime = $mimeReader->GetMimeType();
 				}
 
 				if (strpos($mime,"text") === false)
@@ -141,16 +142,14 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $head);
 
 		$isPicture = false;
-		if ($this->config->GetValue('filemimetype', true)) {
-			$mime = $blob->FileMime();
-			if ($mime) {
-				$mimetype = strtok($mime, '/');
-				if ($mimetype == 'image') {
-					$this->tpl->assign('datatag', true);
-					$this->tpl->assign('mime', $mime);
-					$this->tpl->assign('data', base64_encode($blob->GetData()));
-					return;
-				}
+		if ($this->config->GetValue('filemimetype')) {
+			$mimeReader = new GitPHP_FileMimeTypeReader($blob, $this->GetMimeStrategy());
+			$mimetype = $mimeReader->GetMimeType(true);
+			if ($mimetype == 'image') {
+				$this->tpl->assign('datatag', true);
+				$this->tpl->assign('mime', $mimeReader->GetMimeType());
+				$this->tpl->assign('data', base64_encode($blob->GetData()));
+				return;
 			}
 		}
 
@@ -195,6 +194,24 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * Get valid mime strategy
+	 */
+	private function GetMimeStrategy()
+	{
+		$strategy = new GitPHP_FileMimeType_Fileinfo($this->config->GetValue('magicdb'));
+		if ($strategy->Valid())
+			return $strategy;
+
+		$strategy = new GitPHP_FileMimeType_FileExe();
+		if ($strategy->Valid())
+			return $strategy;
+
+		$strategy = new GitPHP_FileMimeType_Extension();
+		if ($strategy->Valid())
+			return $strategy;
+	}
+
+	/**
 	 * Tests whether we are outputting a plaintext blob
 	 *
 	 * @return boolean true if plaintext blob
@@ -206,4 +223,5 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		return false;
 	}
+
 }
