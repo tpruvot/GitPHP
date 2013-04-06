@@ -33,13 +33,15 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent file=$file output=plain}">{t}plain{/t}</a>
  </div>
 
+ {if !$file}{* hide commit title for aaa..bbb git-diff *}
  {include file='title.tpl' titlecommit=$commit}
+ {/if}
 
  <div class="page_body">
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
    {assign var=comment value=$commit->GetComment()}
-   {if end($comment) != $commit->GetTitle()}
+   {if !$file && end($comment) != $commit->GetTitle()}
    {foreach from=$comment item=line}
      {if strstr(trim($line),'-by: ') || strstr(trim($line),'Cc: ')}
      <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
@@ -53,6 +55,11 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
      <br />
    {/foreach}
    <br />
+   {/if}
+   {if $file}
+     <div class="gitdiff title">
+       <strong>git diff {$treediff->GetFromHash()}..{$treediff->GetToHash()}</strong> -- {$file}<br/>
+     </div>
    {/if}
 
    {if $sidebyside && ($treediff->Count() > 1)}
