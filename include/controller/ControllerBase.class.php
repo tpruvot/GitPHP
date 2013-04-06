@@ -509,18 +509,6 @@ abstract class GitPHP_ControllerBase
 		if ($this->config->GetValue('graphs'))
 			$this->tpl->assign('enablegraphs', true);
 
-		$scripturl = $_SERVER['SCRIPT_NAME'];
-
-		if ($this->config->HasKey('self')) {
-			$selfurl = $this->config->GetValue('self');
-			if (!empty($selfurl)) {
-				if (substr($selfurl, -4) != '.php') {
-					$selfurl = GitPHP_Util::AddSlash($selfurl);
-				}
-			}
-		}
-		$this->tpl->assign('scripturl', $scripturl);
-
 		$this->tpl->assign('baseurl', GitPHP_Util::BaseUrl());
 
 		$requesturl = $_SERVER['REQUEST_URI'];
@@ -604,6 +592,7 @@ abstract class GitPHP_ControllerBase
 		if (!$this->preserveWhitespace) {
 			//$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
+
 		if ($this->log && $this->log->GetBenchmark())
 			$this->log->Log("Smarty render begin");
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
