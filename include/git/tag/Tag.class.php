@@ -1,67 +1,71 @@
 <?php
 /**
- * GitPHP Tag
- *
  * Represents a single tag object
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Tag
  */
 class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
 	
 	/**
-	 * Indicates whether data for this tag has been read
+	 * Whether data for this tag has been read
+	 * @var boolean
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * Stores the object internally
+	 * The identifier for the tagged object
+	 * @var string
 	 */
 	protected $object;
 
 	/**
-	 * Stores the commit hash internally
+	 * The commit hash
+	 * @var string
 	 */
 	protected $commitHash;
 
 	/**
-	 * Stores the type internally
+	 * The tagged object type
+	 * @var string
 	 */
 	protected $type;
 
 	/**
-	 * Stores the tagger internally
+	 * The tagger
+	 * @var string
 	 */
 	protected $tagger;
 
 	/**
-	 * Stores the tagger epoch internally
+	 * The tagger epoch
+	 * @var string
 	 */
 	protected $taggerEpoch;
 
 	/**
-	 * Stores the tagger timezone internally
+	 * The tagger timezone
+	 * @var string
 	 */
 	protected $taggerTimezone;
 
 	/**
-	 * Stores the tag comment internally
+	 * The tag comment
+	 * @var string
 	 */
 	protected $comment = array();
 
 	/**
 	 * Observers
-	 *
 	 * @var array
 	 */
 	protected $observers = array();
 
 	/**
 	 * Data load strategy
-	 *
 	 * @var GitPHP_TagLoadStrategy_Interface
 	 */
 	protected $strategy;
@@ -69,11 +73,10 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Instantiates tag
 	 *
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $tag tag name
 	 * @param GitPHP_TagLoadStrategy_Interface $strategy load strategy
 	 * @param string $tagHash tag hash
-	 * @throws Exception exception on invalid tag or hash
 	 */
 	public function __construct($project, $tag, GitPHP_TagLoadStrategy_Interface $strategy, $tagHash = '')
 	{
@@ -101,7 +104,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Gets the object this tag points to
 	 *
-	 * @return mixed object for this tag
+	 * @return GitPHP_Commit|GitPHP_Tag|GitPHP_Blob object for this tag
 	 */
 	public function GetObject()
 	{
@@ -113,7 +116,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 		} else if ($this->type == 'tag') {
 			return $this->GetProject()->GetTagList()->GetTag($this->object);
 		} else if ($this->type == 'blob') {
-			return $this->GetProject()->GetBlob($this->object);
+			return $this->GetProject()->GetObjectManager()->GetBlob($this->object);
 		}
 
 		return null;
@@ -140,8 +143,11 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	public function GetCommit()
 	{
 		$hash = $this->GetCommitHash();
+
 		if ($hash)
 			return $this->GetProject()->GetCommit($hash);
+
+		return null;
 	}
 
 	/**
@@ -152,11 +158,17 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	public function GetCommitHash()
 	{
 		if (!$this->commitHash) {
-			if ($this->type == 'commit') {
-				$this->commitHash = $this->object;
-			} else if ($this->type == 'tag') {
-				$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
-				$this->commitHash = $tag->GetCommit()->GetHash();
+			if (!$this->dataRead) {
+				$this->ReadData();
+			}
+
+			if (!$this->commitHash) {
+				if ($this->type == 'commit') {
+					$this->commitHash = $this->object;
+				} else if ($this->type == 'tag') {
+					$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
+					$this->commitHash = $tag->GetCommitHash();
+				}
 			}
 		}
 
@@ -184,6 +196,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	public function SetCommitHash($hash)
 	{
 		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash))
+			return;
+
+		if ($this->type == 'blob')
 			return;
 
 		if (!$this->commitHash)
@@ -248,12 +263,17 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Gets the tagger timezone
 	 *
+	 * @param boolean $separator true to return with separator
 	 * @return string tagger timezone
 	 */
-	public function GetTaggerTimezone()
+	public function GetTaggerTimezone($separator = false)
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
+
+		if ($separator && preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $this->taggerTimezone, $regs)) {
+			return $regs[1] . ':' . $regs[2];
+		}
 
 		return $this->taggerTimezone;
 	}
@@ -274,7 +294,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Gets the tag comment
 	 *
-	 * @return array comment lines
+	 * @return string[] comment lines
 	 */
 	public function GetComment()
 	{
@@ -320,6 +340,9 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 			$this->taggerTimezone,
 			$this->comment
 		) = $this->strategy->Load($this);
+
+		if (($this->type == 'blob') && (!empty($this->commitHash)))
+			$this->commitHash = null;
 
 		if (!empty($commitHash))
 			$this->commitHash = $commitHash;
@@ -381,7 +404,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Tag::CacheKey($this->project, $this->refName);
+		return GitPHP_Tag::CacheKey($this->project->GetProject(), $this->refName);
 	}
 
 	/**
@@ -449,14 +472,14 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Generates a tag cache key
 	 *
-	 * @param mixed $proj project
+	 * @param string|GitPHP_Project $proj project
 	 * @param string $tag tag name
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $tag)
 	{
 		if (is_object($proj))
-			return 'project|' . $proj->GetName() . '|tag|' . $tag;
+			return 'project|' . $proj->GetProject() . '|tag|' . $tag;
 
 		return 'project|' . $proj . '|tag|' . $tag;
 	}
