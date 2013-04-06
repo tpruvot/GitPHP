@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Blob
  */
 class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_Interface, GitPHP_Cacheable_Interface
 {
