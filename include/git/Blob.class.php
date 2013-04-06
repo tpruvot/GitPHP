@@ -39,15 +39,18 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $blameRead = false;
 
 	/**
+	 * Whether data has been encoded for serialization
+	 */
+	protected $dataEncoded = false;
+
+	/**
 	 * Observers
-	 *
 	 * @var array
 	 */
 	protected $observers = array();
 
 	/**
 	 * Data load strategy
-	 *
 	 * @var GitPHP_BlobLoadStrategy_Interface
 	 */
 	protected $strategy;
@@ -80,6 +83,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->dataEncoded)
+			$this->DecodeData();
+
 		if ($explode)
 			return explode("\n", $this->data);
 		else
@@ -107,6 +113,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		$this->dataRead = true;
 
 		$this->data = $this->strategy->Load($this);
+
+		$this->dataEncoded = false;
 
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
@@ -335,6 +343,32 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
+	 * Encodes data so it can be serialized safely
+	 */
+	private function EncodeData()
+	{
+		if ($this->dataEncoded)
+			return;
+
+		$this->data = base64_encode($this->data);
+
+		$this->dataEncoded = true;
+	}
+
+	/**
+	 * Decodes data after unserialization
+	 */
+	private function DecodeData()
+	{
+		if (!$this->dataEncoded)
+			return;
+
+		$this->data = base64_decode($this->data);
+
+		$this->dataEncoded = false;
+	}
+
+	/**
 	 * Add a new observer
 	 *
 	 * @param GitPHP_Observer_Interface $observer observer
@@ -375,7 +409,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function __sleep()
 	{
-		$properties = array('data', 'dataRead');
+		if (!$this->dataEncoded)
+			$this->EncodeData();
+
+		$properties = array('data', 'dataRead', 'dataEncoded');
 
 		return array_merge($properties, parent::__sleep());
 	}
