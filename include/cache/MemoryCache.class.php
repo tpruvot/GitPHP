@@ -27,6 +27,7 @@ class GitPHP_MemoryCache
 
 	/**
 	 * Stores the last project that stored into this cache
+	 * @var string
 	 */
 	protected $lastProject;
 
@@ -247,6 +248,8 @@ class GitPHP_MemoryCache
 
 	/**
 	 * Extracts the project from a key
+	 *
+	 * @param string $key cache key
 	 */
 	private function ExtractProject($key)
 	{

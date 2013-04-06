@@ -62,6 +62,8 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		$this->repoSupport = $Config->GetValue('reposupport', false);
 
 		parent::__construct($projectRoot);
+
+		$this->SetConfig($Config);
 	}
 
 	/**
@@ -81,7 +83,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	{
 		$simpleCache = false;
 
-		if (!GitPHP_Cache::GetObjectCacheInstance()->GetEnabled()) {
+		if (!$this->config->GetValue('cache')) {
 
 			// cache project list even if object cache is disabled (too much files)
 			$simpleCache = true;

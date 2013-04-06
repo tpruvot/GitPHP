@@ -10,13 +10,6 @@
 class GitPHP_Cache
 {
 	/**
-	 * Template
-	 *
-	 * Cache template
-	 */
-	const Template = 'data.tpl';
-
-	/**
 	 * Stores the singleton instance of the object cache
 	 * @deprecated
 	 */
@@ -34,24 +27,11 @@ class GitPHP_Cache
 			$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR. 'objects', GitPHP_Config::GetInstance()->GetValue('objectcachecompress'));
 			self::$objectCacheInstance = new GitPHP_Cache($strategy);
 			if (GitPHP_Config::GetInstance()->GetValue('objectcache', false)) {
-				self::$objectCacheInstance->SetEnabled(true);
 				self::$objectCacheInstance->SetLifetime(GitPHP_Config::GetInstance()->GetValue('objectcachelifetime'));
 			}
 		}
 		return self::$objectCacheInstance;
 	}
-
-	/**
-	 * Smarty instance
-	 * @deprecated
-	 */
-	protected $tpl = null;
-
-	/**
-	 * Stores whether the cache is enabled
-	 * @deprecated
-	 */
-	protected $enabled = false;
 
 	/**
 	 * Cache strategy
@@ -109,6 +89,8 @@ class GitPHP_Cache
 
 	/**
 	 * Sets the cache lifetime
+	 *
+	 * @param int $lifetime cache lifetime in seconds
 	 */
 	public function SetLifetime($lifetime)
 	{
@@ -116,34 +98,6 @@ class GitPHP_Cache
 			return;
 
 		$this->lifetime = $lifetime;
-	}
-
-	/**
-	 * Gets whether the cache is enabled
-	 *
-	 * @return boolean true if enabled
-	 */
-	public function GetEnabled()
-	{
-		return $this->enabled;
-	}
-
-	/**
-	 * Sets whether the cache is enabled
-	 *
-	 * @param boolean $enable true to enable, false to disable
-	 */
-	public function SetEnabled($enable)
-	{
-		if ($enable == $this->enabled)
-			return;
-
-		$this->enabled = $enable;
-
-		if ($this->enabled)
-			$this->CreateSmarty();
-		else
-			$this->DestroySmarty();
 	}
 
 	/**
@@ -157,15 +111,7 @@ class GitPHP_Cache
 		if (empty($key))
 			return false;
 
-		if (!$this->enabled)
-			return false;
-
-		if (!$this->tpl->isCached(GitPHP_Cache::Template, $key))
-			return false;
-
-		$data = $this->tpl->fetch(GitPHP_Cache::Template, $key);
-
-		return unserialize(trim($data));
+		return $this->strategy->Get($key);
 	}
 
 	/**
@@ -180,26 +126,10 @@ class GitPHP_Cache
 		if (empty($key) || empty($value))
 			return;
 
-		if (!$this->enabled)
-			return;
+		if ($lifetime === null)
+			$lifetime = $this->lifetime;
 
-		$oldLifetime = null;
-		if ($lifetime !== null) {
-			$oldLifetime = $this->tpl->cache_lifetime;
-			$this->tpl->cache_lifetime = $lifetime;
-		}
-
-		$this->Delete($key);
-		$this->tpl->clearAllAssign();
-		$this->tpl->assign('data', serialize($value));
-
-		// Force it into smarty's cache
-		$tmp = $this->tpl->fetch(GitPHP_Cache::Template, $key);
-		unset($tmp);
-
-		if ($lifetime !== null) {
-			$this->tpl->cache_lifetime = $oldLifetime;
-		}
+		$this->strategy->Set($key, $value, $lifetime);
 	}
 
 	/**
@@ -213,10 +143,7 @@ class GitPHP_Cache
 		if (empty($key))
 			return false;
 
-		if (!$this->enabled)
-			return false;
-
-		return $this->tpl->isCached(GitPHP_Cache::Template, $key);
+		return $this->strategy->Exists($key);
 	}
 
 	/**
@@ -229,10 +156,7 @@ class GitPHP_Cache
 		if (empty($key))
 			return;
 
-		if (!$this->enabled)
-			return;
-
-		$this->tpl->clearCache(GitPHP_Cache::Template, $key);
+		$this->strategy->Delete($key);
 	}
 
 	/**
@@ -240,43 +164,7 @@ class GitPHP_Cache
 	 */
 	public function Clear()
 	{
-		if (!$this->enabled)
-			return;
-
-		$this->tpl->clearAllCache();
-	}
-
-	/**
-	 * Instantiates Smarty cache
-	 */
-	private function CreateSmarty()
-	{
-		if ($this->tpl)
-			return;
-
-		require_once(GITPHP_SMARTYDIR . 'Smarty.class.php');
-		$this->tpl = new Smarty;
-		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
-
-		$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
-
-		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
-		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-			$this->tpl->registerCacheResource('memcache', new GitPHP_CacheResource_Memcache($servers));
-			$this->tpl->caching_type = 'memcache';
-		}
-
-	}
-
-	/**
-	 * Destroys Smarty cache
-	 */
-	private function DestroySmarty()
-	{
-		if (!$this->tpl)
-			return;
-
-		$this->tpl = null;
+		$this->strategy->Clear();
 	}
 
 }
