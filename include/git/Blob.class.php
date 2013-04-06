@@ -29,16 +29,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $size = null;
 
 	/**
-	 * Stores blame info
-	 */
-	protected $blame = array();
-
-	/**
-	 * Whether blame was read
-	 */
-	protected $blameRead = false;
-
-	/**
 	 * Whether data has been encoded for serialization
 	 */
 	protected $dataEncoded = false;
@@ -297,49 +287,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		}
 
 		return '';
-	}
-
-	/**
-	 * Gets blame info
-	 *
-	 * @return array blame array (line to commit mapping)
-	 */
-	public function GetBlame()
-	{
-		if (!$this->blameRead)
-			$this->ReadBlame();
-
-		return $this->blame;
-	}
-
-	/**
-	 * Read blame info
-	 */
-	private function ReadBlame()
-	{
-		$this->blameRead = true;
-
-		$args = array();
-		$args[] = '-s';
-		$args[] = '-l';
-		if ($this->commitHash)
-			$args[] = $this->commitHash;
-		else
-			$args[] = 'HEAD';
-		$args[] = '--';
-		$args[] = $this->GetPath();
-
-		$blamelines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_BLAME, $args));
-
-		$lastcommit = '';
-		foreach ($blamelines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
-				if ($regs[1] != $lastcommit) {
-					$this->blame[(int)($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
-					$lastcommit = $regs[1];
-				}
-			}
-		}
 	}
 
 	/**

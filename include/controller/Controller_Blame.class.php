@@ -85,8 +85,9 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		$blame = $blob->GetBlame();
-		$this->tpl->assign('blame', $blame);
+		$blame = new GitPHP_FileBlame($this->GetProject(), $commit, $this->params['file'], $this->exe);
+
+		$this->tpl->assign('blame', $blame->GetBlame());
 
 		if (isset($this->params['output']) && ($this->params['output'] == 'js')) {
 			return;
