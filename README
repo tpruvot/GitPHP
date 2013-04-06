@@ -41,6 +41,7 @@ Enhancements :
 + New options to toggle display of owner and for default sort order of project list
 + Side by Side line numbers, Tab/Space display and copy paste helpers
 + Search by commit hash
++ Abbreviated Commit hashes links in commit messages (like github)
 + Merge tracking in shortlog (to enhance)
 
 Addons :
@@ -63,18 +64,18 @@ TODO :
   see https://gerrit.googlesource.com/git-repo for more info.
 
 
-Missing features from 0.2.8 :
-=============================
+Missing features from xiphux/master :
+=====================================
 
-- User Authentification
+- User Authentification (0.2.9)
 
-- Disabled PHP functions check
+- Disabled PHP functions check (0.2.9)
 
 
 Last notes:
 ===========
 
-In the current 0.2.7.y (at the date of the .5), some unit tests are failing...
+In the current 0.2.7.y (at the date of the .6), some unit tests are failing...
 Most of them because i dont have all the Load Strategy exploded (sub)classes of git objects
 
 You can use the 0.2.7-repo tagged version for daily use, but for dev work, please consider the latest versions
