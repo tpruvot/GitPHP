@@ -212,7 +212,7 @@ abstract class GitPHP_ControllerBase
 				} else if (class_exists('Memcache')) {
 					$strategy = new GitPHP_Cache_Memcache($servers);
 				} else {
-					throw new GitPHP_MessageException('MissingMemcacheException', true);
+					throw new GitPHP_MissingMemcacheException();
 				}
 			} else {
 				$strategy = new GitPHP_Cache_File(GITPHP_CACHEDIR . 'objects', $this->config->GetValue('objectcachecompress'));
@@ -292,7 +292,9 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
-	 * Logger instance
+	 * Get log instance
+	 *
+	 * @return GitPHP_DebugLog
 	 */
 	public function GetLog()
 	{
@@ -307,10 +309,10 @@ abstract class GitPHP_ControllerBase
 		if ($this->log)
 			return;
 
-		$debug = $this->config->GetValue('debug', false);
+		$debug = $this->config->GetValue('debug');
 
 		if ($debug) {
-			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark', false));
+			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark'));
 			$this->log->SetStartTime(GITPHP_START_TIME);
 			$this->log->SetStartMemory(GITPHP_START_MEM);
 
@@ -441,6 +443,9 @@ abstract class GitPHP_ControllerBase
 		if (empty($value))
 			unset($this->params[$key]);
 
+		if (is_string($value))
+			$value = str_replace(chr(0), '', $value);
+
 		$this->params[$key] = $value;
 	}
 
@@ -473,17 +478,19 @@ abstract class GitPHP_ControllerBase
 		}
 		$this->tpl->assign('stylesheet', preg_replace('/\.css$/', '', $stylesheet));
 
+		$homelink = $this->resource ? $this->resource->translate('projects') : 'projects';
+
 		$this->tpl->assign('javascript', $this->config->GetValue('javascript', true));
 		$this->tpl->assign('googlejs', $this->config->GetValue('googlejs', false));
 		$this->tpl->assign('pagetitle', $this->config->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', $this->config->GetValue('homelink'));
+		$this->tpl->assign('homelink', $this->config->GetValue('homelink', $homelink));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->GetProject());
-		if ($this->config->GetValue('search', true))
+		if ($this->config->GetValue('search'))
 			$this->tpl->assign('enablesearch', true);
-		if ($this->config->GetValue('filesearch', true))
+		if ($this->config->GetValue('filesearch'))
 			$this->tpl->assign('filesearch', true);
 		if (isset($this->params['search']))
 			$this->tpl->assign('search', $this->params['search']);
@@ -542,7 +549,7 @@ abstract class GitPHP_ControllerBase
 			if ($eqpos > 0) {
 				$var = substr($varstr, 0, $eqpos);
 				$val = substr($varstr, $eqpos + 1);
-				if (!(empty($var) || empty($val)) || ($var == 'q')) {
+				if (!(empty($var) || empty($val) || ($var == 'q'))) {
 					$getvarsmapped[$var] = urldecode($val);
 				}
 			}
@@ -568,6 +575,7 @@ abstract class GitPHP_ControllerBase
 				if (strncmp($hdr, 'Content-Type:', 13) === 0) {
 					if ($hascontenttype)
 						throw new Exception('Duplicate Content-Type header');
+					$hascontenttype = true;
 				}
 				header($hdr);
 			}
@@ -579,11 +587,12 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function Render()
 	{
-		if (($this->config->GetValue('cache', false) == true) && ($this->config->GetValue('cacheexpire', true) === true))
+		if (($this->config->GetValue('cache') == true) && ($this->config->GetValue('cacheexpire') === true))
 			$this->CacheExpire();
 
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
+
 			if ($this->log && $this->log->GetBenchmark())
 				$this->log->Log("Data load begin");
 			$this->LoadCommonData();
@@ -605,7 +614,6 @@ abstract class GitPHP_ControllerBase
 
 		if ($this->log && $this->projectList)
 			$this->log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
-
 	}
 
 	/**

@@ -70,16 +70,14 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			// XXX: Nasty hack to cache headers
 			if (!$this->tpl->isCached('blobheaders.tpl', $this->GetFullCacheKey())) {
 				if (isset($this->params['file']))
-					$saveas = $this->params['file'];
+					$saveas = GitPHP_Util::BaseName($this->params['file']);
 				else
 					$saveas = $this->params['hash'] . ".txt";
-
-				$saveas = basename($saveas);
 
 				$headers = array();
 
 				$mime = null;
-				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+				if ($this->config->GetValue('filemimetype')) {
 					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
 						$commit = $this->GetProject()->GetCommit($this->params['hashbase']);
 						$this->params['hash'] = $commit->GetTree()->PathToHash($this->params['file']);
@@ -143,7 +141,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $head);
 
 		$isPicture = false;
-		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+		if ($this->config->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
 			if ($mime) {
 				$mimetype = strtok($mime, '/');
@@ -165,8 +163,9 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			return;
 		}
 
-		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
-			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
+		if ($this->config->GetValue('geshi')) {
+			include_once(GITPHP_GESHIDIR . "geshi.php");
+			//include_once(GitPHP_Util::AddSlash($this->config->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {
@@ -183,7 +182,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 						$geshi->set_overall_id('blobData');
 						$this->tpl->assign('geshiout', $geshi->parse_code());
-						$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
+						$this->tpl->assign('fixupjs',  $this->config->GetValue('fixupjs', ''));
 						$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 						$this->tpl->assign('geshi', true);
 						return;

@@ -31,6 +31,12 @@ abstract class GitPHP_Controller_DiffBase extends GitPHP_ControllerBase
 	const DIFF_SIDEBYSIDE = 2;
 
 	/**
+	 * Xiphux style constants
+	 */
+	const UnifiedDiff = 1;
+	const SideBySideDiff = 2;
+
+	/**
 	 * Initialize controller
 	 */
 	public function Initialize()

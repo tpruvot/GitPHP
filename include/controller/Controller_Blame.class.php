@@ -103,8 +103,9 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 			return;
 		}
 
-		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
-			include_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
+		if ($this->config->GetValue('geshi')) {
+			include_once(GITPHP_GESHIDIR . "geshi.php");
+			//include_once(GitPHP_Util::AddSlash($this->config->GetValue('geshiroot', 'lib/geshi/')) . "geshi.php");
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {
@@ -132,7 +133,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 							$this->tpl->assign('geshihead', $geshihead);
 							$this->tpl->assign('geshibody', $geshibody);
 							$this->tpl->assign('geshifoot', $geshifoot);
-							$this->tpl->assign('fixupjs',  GitPHP_Config::GetInstance()->GetValue('fixupjs', ''));
+							$this->tpl->assign('fixupjs', $this->config->GetValue('fixupjs', ''));
 							$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 							$this->tpl->assign('geshi', true);
 						}
