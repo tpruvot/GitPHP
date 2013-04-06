@@ -77,6 +77,7 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		if ($type != GitPHP_Pack::OBJ_BLOB) {
 			$folder = $this->GetProject()->GetObjectManager()->GetTree($blobhash);
 			$this->tpl->assign('foldertree', $folder);
+			$this->tpl->assign('file', $this->params['file']);
 		}
 
 		$blob = $this->GetProject()->GetObjectManager()->GetBlob($blobhash);

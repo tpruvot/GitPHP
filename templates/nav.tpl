@@ -36,7 +36,7 @@
    {if $current=='commitdiff' || !$commit}
      {t}commitdiff{/t}
    {else}
-     <a href="{geturl project=$project action=commitdiff hash=$commit}">{t}commitdiff{/t}</a>
+     <a href="{geturl project=$project action=commitdiff hash=$commit file=$file}">{t}commitdiff{/t}</a>
    {/if}
    | 
    {if $current=='tree' || !$commit}

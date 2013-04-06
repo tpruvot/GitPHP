@@ -29,6 +29,7 @@ New abilities :
 + Autolist subfolders (and set maximum level, to create groups of repositories)
 + Load a project list using an android .repo manifest.xml and the local_manifest.xml overrides
 + Show diff of pictures
++ Show and diff folder history
 
 Enhancements :
 + use origin git clone url as description
@@ -73,7 +74,8 @@ Missing features from 0.2.8 :
 Last notes:
 ===========
 
-The current 0.2.7.y (at the date of the .4) versions can not be called "stable", some unit tests are failing...
+The current 0.2.7.y (at the date of the .5) versions can not be called "stable", some unit tests are failing...
+Most of them because i dont have all the Load Strategy exploded (sub)classes of git objects
 
 You can use the 0.2.7-repo tagged version for daily use, but for dev work, please consider the latest versions
 which are closer to the current xiphux architecture (Autoloader, Typed Exceptions, URL Router ...)

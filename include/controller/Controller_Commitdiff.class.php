@@ -76,11 +76,22 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign("hashparent", $this->params['hashparent']);
 		}
 
+		if (isset($this->params['file'])) {
+			/* folder filter */
+			$this->tpl->assign('file', $this->params['file']);
+		}
+
 		if (isset($this->params['output']) && ($this->params['output'] == 'sidebyside')) {
 			$this->tpl->assign('sidebyside', true);
 		}
 
-		$treediff = new GitPHP_TreeDiff($this->GetProject(), $this->exe, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
+		$treediff = new GitPHP_TreeDiff(
+			$this->GetProject(),
+			$this->exe,
+			$this->params['hash'],
+			(isset($this->params['hashparent']) ? $this->params['hashparent'] : ''),
+			(isset($this->params['file']) ? $this->params['file'] : '')
+		);
 		$this->tpl->assign('treediff', $treediff);
 	}
 

@@ -53,6 +53,12 @@ class GitPHP_TreeDiff implements Iterator
 	protected $totalStat = -1;
 
 	/**
+	 * Path filter for the Diff
+	 * @var string
+	 */
+	protected $path = '';
+
+	/**
 	 * Executable
 	 * @var GitPHP_GitExe
 	 */
@@ -65,9 +71,10 @@ class GitPHP_TreeDiff implements Iterator
 	 * @param GitPHP_GitExe $exe executable
 	 * @param string $toHash to commit hash
 	 * @param string $fromHash from commit hash
+	 $ @param string $path Path filter to diff two revisions
 	 * @param boolean $renames whether to detect file renames
 	 */
-	public function __construct($project, $exe, $toHash, $fromHash = '', $renames = false)
+	public function __construct($project, $exe, $toHash, $fromHash = '', $path = '', $renames = false)
 	{
 		if (!$project || is_string($project))
 			throw new Exception('Project is required');
@@ -90,6 +97,8 @@ class GitPHP_TreeDiff implements Iterator
 		} else {
 			$this->fromHash = $fromHash;
 		}
+
+		$this->path = $path;
 
 		$this->renames = $renames;
 	}
@@ -132,6 +141,11 @@ class GitPHP_TreeDiff implements Iterator
 			$args[] = $this->fromHash;
 
 		$args[] = $this->toHash;
+
+		if (!empty($this->path)) {
+			$args[] = '--';
+			$args[] = escapeshellarg($this->path);
+		}
 
 		$diffTreeLines = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
 		foreach ($diffTreeLines as $line) {
@@ -182,6 +196,11 @@ class GitPHP_TreeDiff implements Iterator
 
 		$args[] = $this->toHash;
 
+		if (!empty($this->path)) {
+			$args[] = '--';
+			$args[] = escapeshellarg($this->path);
+		}
+
 		//Sample output : (added, deleted, file)
 		//14      0       css/gitweb.css
 		//0       5       doc/AUTHORS
@@ -217,6 +236,16 @@ class GitPHP_TreeDiff implements Iterator
 	public function GetToHash()
 	{
 		return $this->toHash;
+	}
+
+	/**
+	 * Gets the path filter
+	 *
+	 * @return string
+	 */
+	public function GetPath()
+	{
+		return $this->path;
 	}
 
 	/**

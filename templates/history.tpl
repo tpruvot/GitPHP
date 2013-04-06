@@ -9,15 +9,40 @@
 
 {block name=main}
 
+{if $blob && !$foldertree}
+  {assign var=file value=$blob->GetPath()}
+{/if}
+
  {* Page header *}
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
-   <br /><br />
+   <br/>
+   {if $page > 0}
+     <a href="{geturl project=$project action=history hash=$commit file=$file}">{t}first{/t}</a>
+   {else}
+     {t}first{/t}
+   {/if}
+   &sdot;
+   {if $page > 0}
+     <a href="{geturl project=$project action=history hash=$commit file=$file page=$page-1}">{t}prev{/t}</a>
+   {else}
+     {t}prev{/t}
+   {/if}
+   &sdot;
+   {if $hasmorehistory}
+     <a href="{geturl project=$project action=history hash=$commit file=$file page=$page+1}">{t}next{/t}</a>
+   {else}
+     {t}next{/t}
+   {/if}
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
 
- {include file='path.tpl' pathobject=$blob target='blob'}
+ {if $foldertree}
+   {include file='path.tpl' pathobject=$foldertree target='tree' file=$file}
+ {else}
+   {include file='path.tpl' pathobject=$blob target='blob'}
+ {/if}
  
  {if $blob}
  {assign var=wraptext value=80}
@@ -46,11 +71,17 @@
        | <a href="{geturl project=$project action=blobdiff hash=$blob hashparent=$historyitem->GetToBlob() file=$blob->GetPath() hashbase=$historycommit}#D1">{t}diff to current{/t}</a>
        {/if}
      {else}
-       {$tree->GetPath()}
+       | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$historycommit file=$file}">{t}diff to current{/t}</a>
      {/if}
        </td>
      </tr>
    {/foreach}
+   {if $hasmorehistory}
+     <tr>
+       <td><a href="{geturl project=$project action=history hash=$commit file=$file page=$page+1}">{t}next{/t}</a></td>
+       <td></td><td></td><td></td>
+     </tr>
+   {/if}
  </table>
  {/if}
 
