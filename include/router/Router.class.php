@@ -373,6 +373,29 @@ class GitPHP_Router
 		if (!empty($params['action']))
 			$action = $params['action'];
 
+		/* Reduce web crawlers rights */
+		$agent = '';
+		if (isset($_SERVER["HTTP_USER_AGENT"]))
+			$agent = $_SERVER["HTTP_USER_AGENT"];
+
+		if (preg_match('/(Googlebot|bingbot|robot|spider|crawler)/i', $agent, $regs)) {
+			switch ($action) {
+				// allowed actions ...
+				case 'atom':
+				case 'opml':
+				case 'rss':
+				case 'heads':
+				case 'tags':
+				case 'log':
+				case 'shortlog':
+				case 'projectindex':
+					break;
+				default:
+					// disallow bot exploration, diff and blobs
+					return null;
+			}
+		}
+
 		switch ($action) {
 
 
