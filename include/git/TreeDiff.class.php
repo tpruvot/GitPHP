@@ -27,6 +27,7 @@ class GitPHP_TreeDiff implements Iterator
 
 	/**
 	 * Stores the project
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
@@ -52,17 +53,31 @@ class GitPHP_TreeDiff implements Iterator
 	protected $totalStat = -1;
 
 	/**
+	 * Executable
+	 * @var GitPHP_GitExe
+	 */
+	protected $exe;
+
+	/**
 	 * Constructor
 	 *
-	 * @param mixed $project project
+	 * @param GitPHP_Project $project project
+	 * @param GitPHP_GitExe $exe executable
 	 * @param string $toHash to commit hash
 	 * @param string $fromHash from commit hash
 	 * @param boolean $renames whether to detect file renames
-	 * @throws Exception exception on invalid parameters
 	 */
-	public function __construct($project, $toHash, $fromHash = '', $renames = false)
+	public function __construct($project, $exe, $toHash, $fromHash = '', $renames = false)
 	{
-		$this->project = $project->GetProject();
+		if (!$project || is_string($project))
+			throw new Exception('Project is required');
+
+		$this->project = $project;
+
+		if (!$exe)
+			$exe = GitPHP_GitExe::GetInstance();
+
+		$this->exe = $exe;
 
 		$toCommit = $project->GetCommit($toHash);
 		$this->toHash = $toHash;
@@ -118,11 +133,14 @@ class GitPHP_TreeDiff implements Iterator
 
 		$args[] = $this->toHash;
 
-		$diffTreeLines = explode("\n", GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
+		$diffTreeLines = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args));
 		foreach ($diffTreeLines as $line) {
 			$trimmed = trim($line);
 			if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
 				try {
+					// $this->fileDiffs[] = $this->GetProject()->GetObjectManager()->GetFileDiff($trimmed);
+
+					// TODO: add this in GitPHP_FileDiff
 					$fileDiff = new GitPHP_FileDiff($this->GetProject(), $trimmed);
 					$file = $fileDiff->GetFromFile();
 					$mimetype = GitPHP_Mime::FileMime($file, true);
@@ -135,6 +153,7 @@ class GitPHP_TreeDiff implements Iterator
 						}
 					}
 					$this->fileDiffs[] = $fileDiff;
+
 				} catch (Exception $e) {
 				}
 			}
@@ -168,7 +187,7 @@ class GitPHP_TreeDiff implements Iterator
 		//0       5       doc/AUTHORS
 		//0       124     gitphp.css
 
-		$output = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args);
+		$output = $this->exe->Execute($this->GetProject()->GetPath(), GIT_DIFF_TREE, $args);
 		$re_split = "^(\d+)\s+(\d+)\s+(.*)$";
 		if (preg_match_all('/'.$re_split.'/m', $output, $m, PREG_PATTERN_ORDER)) {
 			foreach ($m[3] as $key => $file) {

@@ -189,19 +189,24 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	/**
 	 * Gets a particular project
 	 *
-	 * @return GitPHP_Project|null project object or null
 	 * @param string $project the project to find
+	 * @return GitPHP_Project|null project object or null
 	 */
 	public function GetProject($project)
 	{
 		if (empty($project))
 			return null;
 
-		if (isset($this->projects[$project]))
-			return $this->projects[$project];
+		if (is_object($project))
+			return $project;
+
+		$projectName = $project;
+
+		if (isset($this->projects[$projectName]))
+			return $this->projects[$projectName];
 
 		if (!$this->projectsLoaded) {
-			$projObj = $this->LoadProject($project);
+			$projObj = $this->LoadProject($projectName);
 			$this->projects[$project] = $projObj;
 			return $projObj;
 		}

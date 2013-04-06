@@ -708,7 +708,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 		if (is_null($exe)) {
 			$exe = GitPHP_GitExe::GetInstance();
 		}
-		return new GitPHP_TreeDiff($this->GetProject(), $this->hash);
+		return new GitPHP_TreeDiff($this->GetProject(), $exe, $this->hash);
 	}
 
 	/**

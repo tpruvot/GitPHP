@@ -23,6 +23,7 @@ class GitPHP_Pack
 
 	/**
 	 * Stores the project internally
+	 * @var GitPHP_Project
 	 */
 	protected $project;
 
@@ -39,7 +40,7 @@ class GitPHP_Pack
 	/**
 	 * Instantiates object
 	 *
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash pack hash
 	 * @throws Exception exception on invalid hash
 	 */
@@ -49,12 +50,16 @@ class GitPHP_Pack
 			throw new GitPHP_InvalidHashException($hash);
 		}
 		$this->hash = $hash;
-		$this->project = $project->GetProject();
 
-		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
+		if (is_string($project))
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($project);
+		else
+			$this->project = $project;
+
+		if (!file_exists($this->project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
 			throw new Exception('Pack index does not exist');
 		}
-		if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
+		if (!file_exists($this->project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
 			throw new Exception('Pack file does not exist');
 		}
 	}
@@ -62,11 +67,11 @@ class GitPHP_Pack
 	/**
 	 * Gets the project
 	 *
-	 * @return mixed project
+	 * @return GitPHP_Project project
 	 */
 	public function GetProject()
 	{
-		return GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+		return $this->project;
 	}
 
 	/**
@@ -106,7 +111,7 @@ class GitPHP_Pack
 			return false;
 		}
 
-		$indexFile = $this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
 
 		if (isset($this->offsetCache[$hash])) {
 			return $this->offsetCache[$hash];
@@ -303,7 +308,7 @@ class GitPHP_Pack
 			return false;
 		}
 
-		$pack = fopen($this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.pack', 'rb');
+		$pack = fopen($this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.pack', 'rb');
 		flock($pack, LOCK_SH);
 
 		$magic = fread($pack, 4);
@@ -402,8 +407,7 @@ class GitPHP_Pack
 			$hash = fread($pack, 20);
 			$hash = bin2hex($hash);
 
-			$project = $this->GetProject();
-			$objectLoader = $project->GetObjectLoader();
+			$objectLoader = $this->project->GetObjectLoader();
 			if (!is_object($objectLoader))
 				throw new GitPHP_MessageException(sprintf('Unable to get object loader on project %1$s', $project->GetProject()), true);
 
@@ -476,7 +480,7 @@ class GitPHP_Pack
 			return array($prefix);
 		}
 
-		$indexFile = $this->GetProject()->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
 
 		$matches = array();
 
