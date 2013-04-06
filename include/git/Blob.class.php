@@ -11,17 +11,20 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 {
 
 	/**
-	 * Stores the file data
+	 * The blob data
+	 * @var string
 	 */
 	protected $data;
 
 	/**
-	 * Stores whether data has been read
+	 * Whether data has been read
+	 * @var boolean
 	 */
 	protected $dataRead = false;
 
 	/**
-	 * Stores the size
+	 * The blob size
+	 * @var int
 	 */
 	protected $size = null;
 
@@ -31,7 +34,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $blame = array();
 
 	/**
-	 * Stores whether blame was read
+	 * Whether blame was read
 	 */
 	protected $blameRead = false;
 
@@ -52,12 +55,11 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	/**
 	 * Instantiates object
 	 *
-	 * @param mixed $project the project
+	 * @param GitPHP_Project $project the project
 	 * @param string $hash object hash
-	 * @return mixed blob object
-	 * @throws Exception exception on invalid hash
+	 * @param GitPHP_BlobLoadStrategy_Interface $strategy load strategy
 	 */
-	public function __construct($project, $hash, $strategy)
+	public function __construct($project, $hash, GitPHP_BlobLoadStrategy_Interface $strategy)
 	{
 		parent::__construct($project, $hash);
 
@@ -122,10 +124,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 			return $this->size;
 		}
 
-		if (!$this->dataRead)
-			$this->ReadData();
-
-		return strlen($this->data);
+		return strlen($this->GetData());
 	}
 
 	/**
@@ -148,8 +147,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		$data = $this->data;
-		if (strlen($this->data) > 8000)
+		$data = $this->GetData();
+		if (strlen($data) > 8000)
 			$data = substr($data, 0, 8000);
 
 		return strpos($data, chr(0)) !== false;
@@ -178,7 +177,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		return $mime;
 	}
 
-	/** 
+	/**
 	 * Get the file mimetype using fileinfo
 	 *
 	 * @return string mimetype
@@ -372,7 +371,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	/**
 	 * Called to prepare the object for serialization
 	 *
-	 * @return array list of properties to serialize
+	 * @return string[] list of properties to serialize
 	 */
 	public function __sleep()
 	{
@@ -388,19 +387,24 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function GetCacheKey()
 	{
-		return GitPHP_Blob::CacheKey($this->GetProject()->GetProject(), $this->hash);
+		return GitPHP_Blob::CacheKey($this->project->GetProject(), $this->hash);
 	}
 
 	/**
 	 * Generates a blob cache key
 	 *
-	 * @param string $proj project
+	 * @param string|GitPHP_Project $proj project
 	 * @param string $hash hash
 	 * @return string cache key
 	 */
 	public static function CacheKey($proj, $hash)
 	{
-		return 'project|' . $proj . '|blob|' . $hash;
+		if (is_string($proj))
+			$projName = $proj;
+		else
+			$projName = $this->project->GetProject();
+
+		return 'project|' . $projName . '|blob|' . $hash;
 	}
 
 }
