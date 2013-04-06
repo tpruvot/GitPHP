@@ -43,6 +43,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	protected $observers = array();
 
 	/**
+	 * Data load strategy
+	 *
+	 * @var GitPHP_BlobLoadStrategy_Interface
+	 */
+	protected $strategy;
+
+	/**
 	 * Instantiates object
 	 *
 	 * @param mixed $project the project
@@ -50,9 +57,14 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 * @return mixed blob object
 	 * @throws Exception exception on invalid hash
 	 */
-	public function __construct($project, $hash)
+	public function __construct($project, $hash, $strategy)
 	{
 		parent::__construct($project, $hash);
+
+		if (!$strategy)
+			throw new Exception('Blob load strategy is required');
+
+		$this->SetStrategy($strategy);
 	}
 
 	/**
@@ -73,21 +85,26 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
+	 * Set the load strategy
+	 *
+	 * @param GitPHP_BlobLoadStrategy_Interface $strategy load strategy
+	 */
+	public function SetStrategy(GitPHP_BlobLoadStrategy_Interface $strategy)
+	{
+		if (!$strategy)
+			return;
+
+		$this->strategy = $strategy;
+	}
+
+	/**
 	 * Reads the blob data
 	 */
 	private function ReadData()
 	{
 		$this->dataRead = true;
 
-		if ($this->GetProject()->GetCompat()) {
-			$args = array();
-			$args[] = 'blob';
-			$args[] = $this->hash;
-
-			$this->data = GitPHP_GitExe::GetInstance()->Execute($this->GetProject()->GetPath(), GIT_CAT_FILE, $args);
-		} else {
-			$this->data = $this->GetProject()->GetObjectByType($this->hash, GitPHP_Pack::OBJ_BLOB);
-		}
+		$this->data = $this->strategy->Load($this);
 
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);

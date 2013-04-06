@@ -1141,29 +1141,13 @@ class GitPHP_Project
 
 	/**
 	 * Gets a blob from this project
+	 * @deprecated
 	 *
 	 * @param string $hash blob hash
 	 */
 	public function GetBlob($hash)
 	{
-		if (empty($hash))
-			return null;
-
-		$key = GitPHP_Blob::CacheKey($this->project, $hash);
-		$memoryCache = GitPHP_MemoryCache::GetInstance();
-		$blob = $memoryCache->Get($key);
-
-		if (!$blob) {
-			$blob = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
-
-			if (!$blob) {
-				$blob = new GitPHP_Blob($this, $hash);
-			}
-
-			$memoryCache->Set($key, $blob);
-		}
-
-		return $blob;
+		return $this->GetObjectManager()->GetBlob($hash);
 	}
 
 	/**

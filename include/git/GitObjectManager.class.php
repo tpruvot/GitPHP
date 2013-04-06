@@ -55,6 +55,8 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			throw new Exception('Project is required');
 
 		$this->project = $project;
+
+		$this->compat = $this->project->GetCompat();
 	}
 
 	/**
@@ -212,7 +214,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 
 			$strategy = null;
 			if ($this->compat) {
-				$strategy = new GitPHP_TagLoad_Git(GitPHP_GitExe::GetInstance());
+				$strategy = new GitPHP_TagLoad_Git($this->exe);
 			} else {
 				$strategy = new GitPHP_TagLoad_Raw($this->project->GetObjectLoader());
 			}
@@ -294,10 +296,18 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 				$blob = $this->cache->Get($key);
 			}
 
+			$strategy = null;
+			if ($this->compat) {
+				$strategy = new GitPHP_BlobLoad_Git($this->exe);
+			} else {
+				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
+			}
+
 			if ($blob) {
 				$blob->SetProject($this->project);
+				$blob->SetStrategy($strategy);
 			} else {
-				$blob = new GitPHP_Blob($this->project, $hash);
+				$blob = new GitPHP_Blob($this->project, $hash, $strategy);
 			}
 
 			$blob->AddObserver($this);
