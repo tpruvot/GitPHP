@@ -159,6 +159,8 @@ abstract class GitPHP_ControllerBase
 		$locale = null;
 
 		$baseurl = GitPHP_Util::BaseUrl();
+		if (empty($baseurl) && $this->config->GetValue('cleanurl'))
+			$baseurl = '/';
 
 		if (!empty($this->params['lang'])) {
 			/*
