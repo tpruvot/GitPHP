@@ -87,7 +87,8 @@ class GitPHP_Controller_GraphData extends GitPHP_ControllerBase
 
 			$data = array();
 
-			require_once(GITPHP_GESHIDIR . "geshi.php");
+			include_once(GITPHP_GESHIDIR . "geshi.php");
+			//include_once(GitPHP_Util::AddSlash($this->config->GetValue('geshiroot', GITPHP_GESHIDIR)) . "geshi.php");
 			$geshi = new GeSHi("",'php');
 
 			$files = explode("\n", $this->exe->Execute($this->GetProject()->GetPath(), 'ls-tree', array('-r', '--name-only', $head->GetTree()->GetHash())));
