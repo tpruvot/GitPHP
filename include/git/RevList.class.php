@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-abstract class GitPHP_RevList implements Iterator
+abstract class GitPHP_RevList implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
 	 * The project

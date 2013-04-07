@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileHistory implements Iterator
+class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
 	 * The project

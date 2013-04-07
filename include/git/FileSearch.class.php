@@ -7,7 +7,7 @@
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_FileSearch implements Iterator
+class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 {
 	/**
 	 * The project
