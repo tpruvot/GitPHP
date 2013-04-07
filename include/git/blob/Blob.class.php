@@ -11,6 +11,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 {
 
 	/**
+	 * Large blob threshold
+	 *
+	 * @var int
+	 */
+	const LargeBlobSize = 5242880;	// 5 megs
+
+	/**
 	 * The blob data
 	 * @var string
 	 */
@@ -27,6 +34,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 * @var int
 	 */
 	protected $size = null;
+
+	/**
+	 * Whether the data is binary
+	 *
+	 * @var boolean|null
+	 */
+	protected $binary = null;
 
 	/**
 	 * Whether data has been encoded for serialization
@@ -83,6 +97,16 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	}
 
 	/**
+	 * Gets whether data has been loaded
+	 *
+	 * @return boolean true if data is loaded
+	 */
+	public function DataLoaded()
+	{
+		return $this->dataRead;
+	}
+
+	/**
 	 * Set the load strategy
 	 *
 	 * @param GitPHP_BlobLoadStrategy_Interface $strategy load strategy
@@ -106,9 +130,30 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 		$this->dataEncoded = false;
 
+		$datachanged = false;
+
+		if ($this->size === null) {
+			$this->size = strlen($this->data);
+			$datachanged = true;
+		}
+
+		if ($this->binary === null) {
+			$this->binary = GitPHP_Blob::DataIsBinary($this->data);
+			$datachanged = true;
+		}
+
+		if ($this->size > GitPHP_Blob::LargeBlobSize) {
+			$this->data = null;
+			$this->dataRead = false;
+		} else {
+			$datachanged = true;
+		}
+
+		if ($datachanged) {
 		foreach ($this->observers as $observer) {
 			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
 		}
+	}
 	}
 
 	/**
@@ -118,11 +163,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function GetSize()
 	{
-		if ($this->size !== null) {
-			return $this->size;
+		if ($this->size === null) {
+			$this->size = $this->strategy->Size($this);
+
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
 		}
 
-		return strlen($this->GetData());
+		return $this->size;
 	}
 
 	/**
@@ -142,14 +191,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function IsBinary()
 	{
-		if (!$this->dataRead)
-			$this->ReadData();
+		if ($this->binary === null) {
+			$this->binary = GitPHP_Blob::DataIsBinary($this->GetData());
 
-		$data = $this->GetData();
-		if (strlen($data) > 8000)
-			$data = substr($data, 0, 8000);
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
+		}
 
-		return strpos($data, chr(0)) !== false;
+		return $this->binary;
 	}
 
 	/**
@@ -219,10 +269,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 	 */
 	public function __sleep()
 	{
-		if (!$this->dataEncoded)
-			$this->EncodeData();
+		$properties = array('data', 'dataRead', 'dataEncoded', 'binary', 'size');
 
-		$properties = array('data', 'dataRead', 'dataEncoded');
+		if ($this->dataRead && strlen($this->data) > GitPHP_Blob::LargeBlobSize) {
+			$this->data = null;
+			$this->dataRead = false;
+		}
+		
+		if ($this->dataRead && !$this->dataEncoded)
+			$this->EncodeData();
 
 		return array_merge($properties, parent::__sleep());
 	}
@@ -252,6 +307,23 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 			$projName = $this->project->GetProject();
 
 		return 'project|' . $projName . '|blob|' . $hash;
+	}
+
+	/**
+	 * Determines whether a data buffer is binary
+	 *
+	 * @param string $data data buffer
+	 * @return boolean true if binary
+	 */
+	public static function DataIsBinary($data)
+	{
+		if (empty($data))
+			return false;
+
+		if (strlen($data) > 8000)
+			$data = substr($data, 0, 8000);
+
+		return strpos($data, chr(0)) !== false;
 	}
 
 }

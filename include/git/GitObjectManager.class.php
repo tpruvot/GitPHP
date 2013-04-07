@@ -300,7 +300,7 @@ class GitPHP_GitObjectManager implements GitPHP_Observer_Interface
 			if ($this->compat) {
 				$strategy = new GitPHP_BlobLoad_Git($this->exe);
 			} else {
-				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader());
+				$strategy = new GitPHP_BlobLoad_Raw($this->project->GetObjectLoader(), $this->exe);
 			}
 
 			if ($blob) {
