@@ -1305,7 +1305,7 @@ class GitPHP_Project
 		$abbrevLen = self::ABBREV_HASH_MIN;
 
 		if ($this->GetConfig()->HasValue('core.abbrev')) {
-			$abbrevLen = max(4, min($this->GetConfig()->GetValue('core.abbrev'), 40));
+			$abbrevLen = max(7, min($this->GetConfig()->GetValue('core.abbrev'), 40));
 		}
 
 		$prefix = substr($hash, 0, $abbrevLen);
