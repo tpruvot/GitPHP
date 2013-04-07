@@ -159,10 +159,10 @@ class GitPHP_Config
 		$this->values['objectcachecompress'] = 500;
 
 		// gitphp-repo additions
-		$this->values['bareonly'] = true;
-		$this->values['reposupport'] = false;
+		$this->values['bareonly'] = false;
+		$this->values['reposupport'] = true;
 		$this->values['subfolder_levels'] = 1;
-		$this->values['showremotes'] = false;
+		$this->values['showremotes'] = true;
 		$this->values['projectlist_show_owner'] = true;
 		$this->values['projectlist_order'] = 'project';
 	}
