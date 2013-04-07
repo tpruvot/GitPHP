@@ -5,6 +5,7 @@ spl_autoload_register(array('GitPHP_AutoLoader', 'AutoLoad'));
 
 define('GITPHP_BASEDIR', dirname(__FILE__) . '/../');
 define('GITPHP_CACHEDIR', GITPHP_BASEDIR . 'cache/');
+define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
 
 define('GITPHP_COMPRESS_TAR', 'tar');
 define('GITPHP_COMPRESS_BZ2', 'tbz2');

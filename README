@@ -41,6 +41,8 @@ Enhancements :
 + New options to toggle display of owner and for default sort order of project list
 + Side by Side line numbers, Tab/Space display and copy paste helpers
 + Search by commit hash
++ Indexing bots limited access (googlebot, bingbot...), enabled by default to reduce server load
++ Follow renames in file history
 + Abbreviated Commit hashes links in commit messages (like github)
 + Merge tracking in shortlog (to enhance)
 

@@ -374,25 +374,57 @@ class GitPHP_Router
 			$action = $params['action'];
 
 		/* Reduce web crawlers rights */
-		$agent = '';
-		if (isset($_SERVER["HTTP_USER_AGENT"]))
-			$agent = $_SERVER["HTTP_USER_AGENT"];
+		$restrict = GitPHP_Config::GetInstance()->GetValue('robots_restrict');
 
-		if (preg_match('/(Googlebot|bingbot|robot|spider|crawler)/i', $agent, $regs)) {
+		$agent = isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : '';
+
+		if ($restrict && preg_match("/(Googlebot|bingbot|robot|spider|crawler)/i", $agent, $regs)) {
 			switch ($action) {
+
 				// allowed actions ...
+				case null:
 				case 'atom':
 				case 'opml':
 				case 'rss':
+				case 'summary':
 				case 'heads':
 				case 'tags':
 				case 'log':
 				case 'shortlog':
 				case 'projectindex':
 					break;
+
+				// restricted
+				case 'commit':
+				case 'commits':
+				case 'commitdiff':
+					// allow commits, but only as text patch output
+					$redirect = !isset($params['output']) || $params['output'] != 'plain';
+					$redirect = $redirect || $action != 'commitdiff';
+					if ($redirect) {
+						$params['output'] = 'plain';
+						$params['action'] = 'commitdiff';
+						header('Location: '.$this->GetUrl($params));
+						return null;
+					}
+					break;
+				case 'blob':
+				case 'blobs':
+					// only plain blobs and HEAD version
+					if (!isset($params['output']) || $params['output'] != 'plain') {
+						$params['output'] = 'plain';
+						$params['action'] = 'blob';
+						unset($params['hash']); // redirect to HEAD
+						header('Location: '.$this->GetUrl($params));
+						return null;
+					}
+					break;
+
+				// forbidden
+				case 'snapshot':
 				default:
 					// disallow bot exploration, diff and blobs
-					return null;
+					throw new GitPHP_MessageException('Access restricted for '.$action, true, 403);
 			}
 		}
 
@@ -751,7 +783,7 @@ class GitPHP_Router
 	{
 		if ($value instanceof GitPHP_Project) {
 			return $value->GetProject();
-		} else if (is_string($project)) {
+		} else if (is_string($value)) {
 			return $value;
 		}
 	}

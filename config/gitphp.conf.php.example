@@ -199,12 +199,18 @@ $gitphp_conf['abbreviateurl'] = false;
  */
 $gitphp_conf['cleanurl'] = false;
 
-
 /*
  * magicdb
  * Location of magic.mime file found in apache folder
  */
 //$gitphp_conf['magicdb'] = '';
+
+/*
+ * robots_restrict (default enabled on gitphp-repo)
+ * Restrict access to indexing web crawlers like Googlebot
+ * Only allow project views, logs and feeds, but no diff/blob
+ */
+//$gitphp_conf['robots_restrict'] = false;
 
 /*******************************************************
  * Cache options

@@ -28,7 +28,10 @@ class GitPHP_Config
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new GitPHP_Config();
+			// still required for router config
+			$config = new GitPHP_Config();
+			$config->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+			self::$instance = $config;
 		}
 		return self::$instance;
 	}
@@ -48,8 +51,9 @@ class GitPHP_Config
 	public function __construct()
 	{
 		$this->InitializeDefaults();
-		if (!self::$instance)
+		if (!self::$instance) {
 			self::$instance = $this;
+		}
 	}
 
 	/**
@@ -165,6 +169,7 @@ class GitPHP_Config
 		$this->values['showremotes'] = true;
 		$this->values['projectlist_show_owner'] = true;
 		$this->values['projectlist_order'] = 'project';
+		$this->values['robots_restrict'] = true;
 	}
 
 }
