@@ -13,7 +13,7 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	/**
 	 * Constant for the number of items to load into the feed
 	 */
-	const FEED_ITEMS = 150;
+	const MAX_FEED_ITEMS = 150;
 
 	/**
 	 * Constants for the different feed formats
@@ -99,22 +99,14 @@ class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->GetProject()->GetLog('HEAD', self::FEED_ITEMS);
+		$log = new GitPHP_GitLog($this->GetProject(), $this->GetProject()->GetHeadCommit(), self::MAX_FEED_ITEMS);
 
-		$entries = count($log);
+		//todo: backport..
+		//if ($this->config->HasKey('feedfilter')) {
+		//	$log->FilterCommits($this->config->GetValue('feedfilter'));
 
-		if ($entries > 20) {
-			/*
-			 * Don't show commits older than 48 hours,
-			 * but show a minimum of 20 entries
-			 */
-			for ($i = 20; $i < $entries; ++$i) {
-				if ((time() - $log[$i]->GetCommitterEpoch()) > 48*60*60) {
-					$log = array_slice($log, 0, $i);
-					break;
-				}
-			}
-		}
+		// Don't show commits older than 48 hours, but show a minimum of 20 entries
+		$log->FilterOldCommits(48*60*60, 20);
 
 		$this->tpl->assign('log', $log);
 

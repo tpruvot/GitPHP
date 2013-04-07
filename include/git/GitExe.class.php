@@ -274,7 +274,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 			return false;
 
 		$code = 0;
-		$out = exec($this->binary . ' --version', $tmp, $code);
+		exec($this->binary . ' --version', $tmp, $code);
 
 		return $code == 0;
 	}

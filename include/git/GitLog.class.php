@@ -142,19 +142,19 @@ class GitPHP_GitLog extends GitPHP_RevList
 	}
 
 	/**
-	 * Filters out commits older than a certain age
+	 * Filters out commits older than $age if count > $mini
 	 *
 	 * @param int $age age in seconds
-	 * @param int $min minimum number of commits to retain
+	 * @param int $mini minimum number of commits to retain
 	 */
-	public function FilterOldCommits($age, $min = 0)
+	public function FilterOldCommits($age, $mini = 0)
 	{
 		if (!$this->dataLoaded) {
 			$this->LoadData();
 		}
 
-		if (count($this->hashList) > $min) {
-			for ($i = $min; $i < count($this->hashList); ++$i) {
+		if (count($this->hashList) > $mini) {
+			for ($i = $mini; $i < count($this->hashList); ++$i) {
 				$commit = $this->project->GetCommit($this->hashList[$i]);
 				if ((time() - $commit->GetCommitterEpoch()) > $age) {
 					$this->hashList = array_slice($this->hashList, 0, $i);

@@ -39,9 +39,9 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		foreach ($this->projectConfig as $cat => $plist) {
+		foreach ($this->projectConfig as $plist) {
 			if (is_array($plist)) {
-				foreach ($plist as $pname => $ppath) {
+				foreach ($plist as $ppath) {
 					try {
 						$projObj = $this->LoadProject($ppath);
 						if ($projObj) {

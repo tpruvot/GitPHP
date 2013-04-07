@@ -74,7 +74,7 @@ class GitPHP_TagLoad_Raw implements GitPHP_TagLoadStrategy_Interface
 		$objectHash = null;
 
 		$readInitialData = false;
-		foreach ($lines as $i => $line) {
+		foreach ($lines as $line) {
 			if (!$readInitialData) {
 				if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
 					$objectHash = $regs[1];

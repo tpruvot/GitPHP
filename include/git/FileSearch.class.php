@@ -428,11 +428,10 @@ class GitPHP_FileSearch implements Iterator, GitPHP_Pagination_Interface
 		}
 
 		$pos = 0;
-		$count = 0;
 
 		$this->resultList = array();
 
-		foreach ($this->allResults as $path => $result) {
+		foreach ($this->allResults as $result) {
 
 			if ($pos++ < $this->skip)
 				continue;

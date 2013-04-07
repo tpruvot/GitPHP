@@ -152,7 +152,6 @@ abstract class GitPHP_ControllerBase
 			 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
 			 */
 			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-				$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 				$locale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 				if (!empty($locale)) {
 					setcookie(GitPHP_Resource::LocaleCookie, $locale, time()+GitPHP_Resource::LocaleCookieLifetime, $baseurl);
