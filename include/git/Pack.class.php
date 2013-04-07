@@ -46,21 +46,21 @@ class GitPHP_Pack
 	 */
 	public function __construct($project, $hash)
 	{
-		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
+		if (!(preg_match('/[0-9a-f]{40}/', $hash))) {
 			throw new GitPHP_InvalidHashException($hash);
 		}
-		$this->hash = $hash;
 
 		if (is_string($project))
 			$this->project = GitPHP_ProjectList::GetInstance()->GetProject($project);
 		else
 			$this->project = $project;
 
-		if (!file_exists($this->project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
-			throw new Exception('Pack index does not exist');
-		}
-		if (!file_exists($this->project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
-			throw new Exception('Pack file does not exist');
+		$pack = $this->project->GetPath() . '/objects/pack/pack-' . $hash;
+		if (is_readable($pack . '.pack')) {
+			if (!file_exists($pack . '.idx'))
+				throw new GitPHP_MessageException('Pack index does not exist', false);
+
+			$this->hash = $hash;
 		}
 	}
 
@@ -85,6 +85,14 @@ class GitPHP_Pack
 	}
 
 	/**
+	 * Check if the Pack Data was loaded
+	 */
+	public function Valid()
+	{
+		return isset($this->hash);
+	}
+
+	/**
 	 * Checks if an object exists in the pack
 	 *
 	 * @param string $hash object hash
@@ -92,6 +100,10 @@ class GitPHP_Pack
 	 */
 	public function ContainsObject($hash)
 	{
+		if (!$this->Valid()) {
+			return false;
+		}
+
 		if (!preg_match('/[0-9a-fA-F]{40}/', $hash)) {
 			return false;
 		}
@@ -303,6 +315,10 @@ class GitPHP_Pack
 	 */
 	public function GetObject($hash, &$type = 0)
 	{
+		if (!$this->Valid()) {
+			return false;
+		}
+
 		$offset = $this->FindPackedObject($hash);
 		if ($offset === false) {
 			return false;
@@ -472,7 +488,7 @@ class GitPHP_Pack
 	 */
 	public function FindHashes($prefix)
 	{
-		if (empty($prefix)) {
+		if (empty($prefix) || !$this->Valid()) {
 			return array();
 		}
 
