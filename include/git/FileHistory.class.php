@@ -109,7 +109,7 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 
 		$this->exe = $exe;
 
-		$this->renamesDepth = $renamesDepth;
+		$this->renamesDepth = max(0, $renamesDepth); // prevent negative values
 	}
 
 	/**
