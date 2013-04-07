@@ -31,6 +31,13 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 	protected $path;
 
 	/**
+	 * Number of tracked renames
+	 *
+	 * @var int
+	 */
+	protected $renamesDepth;
+
+	/**
 	 * The limit of objects to load
 	 *
 	 * @var int
@@ -74,8 +81,9 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 	 * @param GitPHP_Commit $head commit to start history from
 	 * @param int $limit limit of revisions to walk
 	 * @param int $skip number of revisions to skip
+	 * @param int $renamesDepth number of tracked $path renames
 	 */
-	public function __construct($project, $path, $exe, $head = null, $limit = 0, $skip = 0)
+	public function __construct($project, $path, $exe, $head = null, $limit = 0, $skip = 0, $renamesDepth = 1)
 	{
 		if (!$project) {
 			throw new Exception('Project is required');
@@ -100,6 +108,8 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 		$this->path = $path;
 
 		$this->exe = $exe;
+
+		$this->renamesDepth = $renamesDepth;
 	}
 
 	/**
@@ -276,6 +286,8 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 			}
 		}
 
+		$hasGrep = !GitPHP_Util::isWindows();
+
 		$args[] = '--';
 		$args[] = $this->path;
 		$args[] = '|';
@@ -284,22 +296,54 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
 		$args[] = '--stdin';
-		$args[] = '--';
-		$args[] = $this->path;
+		if ($this->renamesDepth && $hasGrep) {
+			$args[] = '-w';    // ignore spaces changes for similarity
+			$args[] = '-M85%'; // minimum similary for renames detection (default is 50%)
+			$args[] = '|';
+			$args[] = 'grep';
+			$args[] = '-e';    // first pattern (note: basic grep regexp doesnt support + and {})
+			$args[] = escapeshellarg('^[0-9a-f][0-9a-f]*$'); // commitHash alone and no empty lines
+			$args[] = '-e';    // OR next pattern (path)
+		} else {
+			$args[] = '--';
+		}
+		$args[] = escapeshellarg($this->path);
 		
 		$historylines = explode("\n", $this->exe->Execute($this->project->GetPath(), GIT_REV_LIST, $args));
 
 		$commitHash = null;
 		foreach ($historylines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40})/', $line, $regs)) {
+			if (preg_match('/^([0-9a-f]{40})/', $line, $regs)) {
 				$commitHash = $regs[1];
 			} else if ($commitHash) {
 				try {
 					$this->history[] = array('diffline' => $line, 'commithash' => $commitHash);
+
+					if ($this->renamesDepth && !isset($renamedFile)) {
+						$words = explode("\t",$line);
+						if (isset($words[2]) && $words[1] != $words[2]) {
+							$renamedFile = $words[1]; // modes/hashes/simil. are space separated
+							$renamedCommit = $this->project->GetCommit($commitHash);
+							if (is_object($renamedCommit))
+								$renamedCommit = $renamedCommit->GetParent();
+						}
+					}
+
 				} catch (Exception $e) {
 				}
 				$commitHash = null;
 			}
+		}
+
+		if ($this->renamesDepth && isset($renamedCommit) && is_object($renamedCommit)) {
+
+			$renamedHistory = new GitPHP_FileHistory($this->project,
+				$renamedFile, $this->exe, $renamedCommit,
+				$this->limit - count($this->history),
+				0,
+				$this->renamesDepth - 1
+			);
+			$this->history = array_merge($this->history, $renamedHistory->GetHistoryArray());
 		}
 
 		if (($this->skip > 0) && (!$canSkip)) {
@@ -310,6 +354,18 @@ class GitPHP_FileHistory implements Iterator, GitPHP_Pagination_Interface
 			}
 		}
 
+	}
+
+	/**
+	 * Get the diff History, used to follow renames
+	 */
+	public function GetHistoryArray()
+	{
+		if (!$this->dataLoaded) {
+			$this->LoadData();
+		}
+
+		return $this->history;
 	}
 
 	/**
