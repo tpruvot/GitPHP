@@ -112,7 +112,7 @@ class GitPHP_GitObjectLoader
 		$dh = opendir($this->project->GetPath() . '/objects/pack');
 		if ($dh !== false) {
 			while (($file = readdir($dh)) !== false) {
-				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.pack$/', $file, $regs)) {
 					$this->packs[] = new GitPHP_Pack($this->project, $regs[1], $this);
 				}
 			}
