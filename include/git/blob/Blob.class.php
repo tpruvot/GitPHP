@@ -12,7 +12,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 	/**
 	 * Large blob threshold
-	 *
 	 * @var int
 	 */
 	const LargeBlobSize = 5242880;	// 5 megs
@@ -37,13 +36,13 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 
 	/**
 	 * Whether the data is binary
-	 *
 	 * @var boolean|null
 	 */
 	protected $binary = null;
 
 	/**
 	 * Whether data has been encoded for serialization
+	 * @var boolean
 	 */
 	protected $dataEncoded = false;
 
@@ -150,10 +149,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		}
 
 		if ($datachanged) {
-		foreach ($this->observers as $observer) {
-			$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			foreach ($this->observers as $observer) {
+				$observer->ObjectChanged($this, GitPHP_Observer_Interface::CacheableDataChange);
+			}
 		}
-	}
 	}
 
 	/**
@@ -304,7 +303,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject implements GitPHP_Observable_I
 		if (is_string($proj))
 			$projName = $proj;
 		else
-			$projName = $this->project->GetProject();
+			$projName = $proj->GetProject();
 
 		return 'project|' . $projName . '|blob|' . $hash;
 	}
