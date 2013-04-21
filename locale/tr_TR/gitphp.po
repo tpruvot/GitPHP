@@ -2,18 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # zeugma, 2012.
+# Volkan Gezer <volkangezer@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.4\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2011-08-25 20:54-0500\n"
-"PO-Revision-Date: 2012-03-17 21:10+0200\n"
-"Last-Translator: zeugma\n"
+"PO-Revision-Date: 2013-04-20 13:14+0200\n"
+"Last-Translator: Volkan Gezer <volkangezer@gmail.com>\n"
 "Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 1.5\n"
 
 # Used as link to and title for page displaying a blob, which is what git calls a single file
 #: templates/tag.tpl
@@ -25,7 +28,7 @@ msgstr ""
 #: templates/history.tpl
 #: include/controller/Controller_Blob.class.php:78
 msgid "blob"
-msgstr ""
+msgstr "sayfa"
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
 #: templates/commit.tpl
@@ -79,7 +82,7 @@ msgstr "nesne"
 #: templates/shortloglist.tpl
 #: include/controller/Controller_Commit.class.php:79
 msgid "commit"
-msgstr ""
+msgstr "gönderi"
 
 # Used as link to and title for page displaying detailed info about a tag
 #: templates/tag.tpl
@@ -152,7 +155,7 @@ msgstr "sonraki"
 #: templates/shortloglist.tpl
 #: include/controller/Controller_Commitdiff.class.php:85
 msgid "commitdiff"
-msgstr "işlemefark"
+msgstr "gönderifarkı"
 
 # Used to label the committer of the commit, and as a field to search
 # The committer is the person who put the commit into this project
@@ -160,7 +163,7 @@ msgstr "işlemefark"
 #: templates/committip.tpl
 #: templates/header.tpl
 msgid "committer"
-msgstr "işleyen"
+msgstr "gönderen"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
@@ -176,15 +179,13 @@ msgstr "temel"
 msgid "%1 file changed:"
 msgid_plural "%1 files changed:"
 msgstr[0] "%1 dosya değiştirildi:"
-msgstr[1] "%1 dosya değiştirildi:"
-msgstr[2] "%1 dosya değiştirildi:"
 
 # Used to indicate a new object was added with an access mode
 # %1: the type of object
 # %2: the mode
 #: templates/commit.tpl
 msgid "new %1 with mode %2"
-msgstr "%1 yeni %2 modu ile"
+msgstr "%1 yeni, %2 kipi ile"
 
 # Used to indicate a new object was added
 # %1: the type of object
@@ -206,7 +207,7 @@ msgstr "%1 silindi"
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3 -> %4"
-msgstr "%1 dan  %2 değiştirildi  mod: %3 -> %4"
+msgstr "%1 türünden %2 türüne değiştirildi. Kip: %3 -> %4"
 
 # Used to indicate a file type changed, with only new file mode
 # (when old file type wasn't a normal file)
@@ -216,14 +217,14 @@ msgstr "%1 dan  %2 değiştirildi  mod: %3 -> %4"
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3"
-msgstr "%1 dan  %2 değiştirildi  mod: %3"
+msgstr "%1 türünden %2 türüne değiştirildi. Kip: %3"
 
 # Used to indicate a file type changed
 # %1: the original file type
 # %2: the new file type
 #: templates/commit.tpl
 msgid "changed from %1 to %2"
-msgstr "%1 dan  %2  değiştirildi"
+msgstr "%1 türünden %2 türüne değiştirildi"
 
 # Used to indicate a file mode changed
 # %1: the original file mode
@@ -236,7 +237,7 @@ msgstr "mod değiştirildi: %1 -> %2"
 # %1: the new file mode
 #: templates/commit.tpl
 msgid "changed mode: %1"
-msgstr "mod değiştirldi: %1"
+msgstr "kip değiştirildi: %1"
 
 # Used to indicate a file mode changed
 #: templates/commit.tpl
@@ -255,7 +256,7 @@ msgstr "fark"
 # %3: the new file mode
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr ""
+msgstr "%1 dosyasından %%%2 benzerlik ile taşındı, kip: %3"
 
 # Used to indicate a file was moved
 # This string should be HTML safe
@@ -263,7 +264,7 @@ msgstr ""
 # %2: the similarity as a percent number
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity"
-msgstr ""
+msgstr "%1 dosyasından %%%2 benzerlik ile taşındı"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
 #: templates/headlist.tpl
@@ -273,7 +274,7 @@ msgstr ""
 #: templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:80
 msgid "shortlog"
-msgstr ""
+msgstr "kısagünlük"
 
 # Used as title for and link to log view with full commit messages
 #: templates/headlist.tpl
@@ -282,7 +283,7 @@ msgstr ""
 #: templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:85
 msgid "log"
-msgstr ""
+msgstr "günlük"
 
 # Used as title for and link to project summary page
 #: templates/nav.tpl
@@ -317,7 +318,7 @@ msgstr "arama"
 #: templates/shortlog.tpl
 #: templates/blob.tpl
 msgid "HEAD"
-msgstr ""
+msgstr "HEAD"
 
 # Used to indicate the last change in a project
 # %1: the timestamp of the latest change
@@ -335,7 +336,7 @@ msgstr "Yorum yok"
 # Used as link to diff this file version with the current file
 #: templates/history.tpl
 msgid "diff to current"
-msgstr ""
+msgstr "şimdiki ile fark"
 
 # Used as link to and title for page showing all tags in a project
 #: templates/title.tpl
@@ -347,7 +348,7 @@ msgstr "etiketler"
 #: templates/title.tpl
 #: include/controller/Controller_Heads.class.php:76
 msgid "heads"
-msgstr ""
+msgstr "başlıklar"
 
 # Used when diffing a file, to indicate that it's been deleted
 #: templates/commitdiff.tpl
@@ -378,12 +379,12 @@ msgstr "son değişiklik"
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "clone url"
+msgstr "klon adresi"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "push url"
+msgstr "itme adresi"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
@@ -420,7 +421,7 @@ msgstr "Proje bulunamadı"
 #: templates/blob.tpl
 #: include/controller/Controller_Blame.class.php:79
 msgid "blame"
-msgstr ""
+msgstr "değiştiren"
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
 #: include/controller/Controller_Feed.class.php:45
@@ -450,7 +451,7 @@ msgstr "rss"
 # Used as link to and title for a diff of a single file
 #: include/controller/Controller_Blobdiff.class.php:81
 msgid "blobdiff"
-msgstr ""
+msgstr "değiştirmefark"
 
 # Error message when user tries to access a project that doesn't exist
 # %1$s: the project the user tried to access
@@ -474,7 +475,7 @@ msgstr "proje indeks"
 # Error message when a user tries to search but searching has been disabled in the config
 #: include/controller/Controller_Search.class.php:41
 msgid "Search has been disabled"
-msgstr ""
+msgstr "Arama devre dışı bırakıldı"
 
 # Error message when a user tries to do a file search but searching files has been disabled in the config
 #: include/controller/Controller_Search.class.php:112
@@ -487,9 +488,7 @@ msgstr "Dosya arama devre dışı bırakıldı"
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Arama metni olarak en az %1$d karakter girmelisiniz"
 
 # Error message when the user enters an unsupported search type
 #: include/controller/Controller_Search.class.php:162
@@ -511,7 +510,7 @@ msgstr "dizin"
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:172
 msgid "symlink"
-msgstr ""
+msgstr "symlink"
 
 # Used when an object is stored in a project but git doesn't know what type it is
 #: include/git/Blob.class.php:185
@@ -524,28 +523,28 @@ msgstr "bilinmiyor"
 #: include/git/Project.class.php:326
 #, php-format
 msgid "%1$s is not a directory"
-msgstr "%1$s bir dizin değildir"
+msgstr "%1$s bir dizin değil"
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
 #: include/git/Project.class.php:330
 #, php-format
 msgid "%1$s is not a git repository"
-msgstr "%1$s bir git deposu değildir"
+msgstr "%1$s bir git deposu değil"
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
 #: include/git/Project.class.php:334
 #, php-format
 msgid "%1$s is attempting directory traversal"
-msgstr ""
+msgstr "%1$s dizin değiştirmeye çalışıyor"
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
 #: include/git/Project.class.php:340
 #, php-format
 msgid "%1$s is outside of the projectroot"
-msgstr ""
+msgstr "%1$s proje kökü dışında"
 
 # Error message when user tries to specify a file with a list of the projects, but it isn't a file
 # %1$s: the path the user specified
@@ -560,14 +559,14 @@ msgstr "%1$s bir dosya değildir"
 #: include/git/ProjectListFile.class.php:57
 #, php-format
 msgid "Failed to open project list file %1$s"
-msgstr ""
+msgstr "Liste dosyası %1$s açılamadı"
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
 #: include/git/Pack.class.php:80 include/git/GitObject.class.php:107
 #, php-format
 msgid "Invalid hash %1$s"
-msgstr ""
+msgstr "Geçersiz doğrulama %1$s"
 
 # Used to represent an age in years
 # %1$d: the number of years
@@ -576,8 +575,6 @@ msgstr ""
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
 msgstr[0] "%1$d yıl önce"
-msgstr[1] "%1$d yıl önce"
-msgstr[2] "%1$d yıl önce"
 
 # Used to represent an age in months
 # %1$d: the number of months
@@ -586,8 +583,6 @@ msgstr[2] "%1$d yıl önce"
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
 msgstr[0] "%1$d ay önce"
-msgstr[1] "%1$d ay önce"
-msgstr[2] "%1$d ay önce"
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
@@ -596,8 +591,6 @@ msgstr[2] "%1$d ay önce"
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
 msgstr[0] "%1$d hafta önce"
-msgstr[1] "%1$d hafta önce"
-msgstr[2] "%1$d hafta önce"
 
 # Used to represent an age in days
 # %1$d: the number of days
@@ -606,8 +599,6 @@ msgstr[2] "%1$d hafta önce"
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
 msgstr[0] "%1$d gün önce"
-msgstr[1] "%1$d gün önce"
-msgstr[2] "%1$d gün önce"
 
 # Used to represent an age in hours
 # %1$d: the number of hours
@@ -616,8 +607,6 @@ msgstr[2] "%1$d gün önce"
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
 msgstr[0] "%1$d saat önce"
-msgstr[1] "%1$d saat önce"
-msgstr[2] "%1$d saat önce"
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
@@ -626,8 +615,6 @@ msgstr[2] "%1$d saat önce"
 msgid "%1$d min ago"
 msgid_plural "%1$d min ago"
 msgstr[0] "%1$d dakika önce"
-msgstr[1] "%1$d dakika önce"
-msgstr[2] "%1$d dakika önce"
 
 # Used to represent an age in seconds
 # %1$d: the number of seconds
@@ -636,8 +623,6 @@ msgstr[2] "%1$d dakika önce"
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
 msgstr[0] "%1$d sn önce"
-msgstr[1] "%1$d sn önce"
-msgstr[2] "%1$d sn önce"
 
 # Used to represent a modification time of right now
 #: include/smartyplugins/modifier.agestring.php:59
@@ -648,7 +633,7 @@ msgstr "hemen şimdi"
 # "projectroot" refers to a root directory where the user's git projects are stored
 #: index.php:125
 msgid "A projectroot must be set in the config"
-msgstr ""
+msgstr "projectroot, config dosyasında ayarlanmalıdır"
 
 # Caption for the rss button for a project
 # rss is a standard web feed format
@@ -700,18 +685,18 @@ msgstr "Yükleniyor..."
 # Used as a loading message while blame data is being pulled from the server
 #: templates/header.tpl
 msgid "Loading blame data…"
-msgstr ""
+msgstr "Değiştiren verisi yükleniyor..."
 
 # Used as a label by the language selector drop-down box
 #: templates/header.tpl
 msgid "language:"
-msgstr "Lisan:"
+msgstr "dil:"
 
 # Used as a button by the language selector drop-down box to set the
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
-msgstr ""
+msgstr "ayarla"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
@@ -730,7 +715,7 @@ msgstr "atom"
 #: include/cache/Memcache.class.php:103
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
-msgstr ""
+msgstr "Memcached veya Memcache PHP uzantısı Memcache desteği için gereklidir"
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
@@ -753,6 +738,8 @@ msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
 "config value."
 msgstr ""
+"Git çalıştırılabiliri \"%1$s\" açılamadı. \"%2$s\" yapılandırma değerini "
+"ayarlamanız gerekebilir."
 
 # Link displayed in commitdiff view, when the user has filtered
 # the display to a single file using the list of changed files.
@@ -767,7 +754,7 @@ msgstr "(tümünü göster)"
 #: include/git/FileDiff.class.php:810
 #, php-format
 msgid "Binary files %1 and %2 differ"
-msgstr "İkili dosyalar  %1 ve %2 farklı"
+msgstr "İkili dosyalar %1 ve %2 farklı"
 
 # Used to label the url of the website of the project
 #: templates/project.tpl
@@ -783,4 +770,5 @@ msgstr "website"
 #: include/Resource.class.php:121
 msgid "English"
 msgstr "Türkçe"
+
 
