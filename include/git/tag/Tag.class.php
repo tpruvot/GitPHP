@@ -153,7 +153,7 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 	/**
 	 * Gets the hash of the commit this tag points to
 	 *
-	 * @return string commit hash for this tag
+	 * @return string commit hash for this tag (or null)
 	 */
 	public function GetCommitHash()
 	{
@@ -167,6 +167,8 @@ class GitPHP_Tag extends GitPHP_Ref implements GitPHP_Observable_Interface, GitP
 					$this->commitHash = $this->object;
 				} else if ($this->type == 'tag') {
 					$tag = $this->GetProject()->GetTagList()->GetTag($this->object);
+					if (!$tag)
+						return null;
 					$this->commitHash = $tag->GetCommitHash();
 				}
 			}
