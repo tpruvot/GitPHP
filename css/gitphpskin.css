@@ -189,6 +189,9 @@ tr.clast td {
         border-bottom: 1px dotted gray;
 }
 
+.shortlog tr td.age {
+	min-width: 64px;
+}
 
 /*
  * Messages
