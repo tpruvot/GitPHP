@@ -43,7 +43,7 @@
 	var GitPHPJSPaths = {
 		jquery: [
 			{if $googlejs}
-			'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
+			'//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
 			{/if}
 			'ext/jquery.min'
 		],
