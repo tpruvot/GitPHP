@@ -114,22 +114,37 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		switch ($this->archive->GetFormat()) {
-			case GITPHP_COMPRESS_TAR:
-				$this->headers[] = 'Content-Type: application/x-tar';
-				break;
-			case GITPHP_COMPRESS_BZ2:
-				$this->headers[] = 'Content-Type: application/x-bzip2';
-				break;
-			case GITPHP_COMPRESS_GZ:
-				$this->headers[] = 'Content-Type: application/x-gzip';
-				break;
-			case GITPHP_COMPRESS_ZIP:
-				$this->headers[] = 'Content-Type: application/x-zip';
-				break;
-			default:
-				throw new Exception('Unknown compression type');
+		$strategy = null;
+		$this->exe = GitPHP_GitExe::GetInstance();
+		if ($this->params['format'] == GITPHP_COMPRESS_TAR) {
+			$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_BZ2) {
+			$strategy = new GitPHP_Archive_Bzip2($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_GZ) {
+			$strategy = new GitPHP_Archive_Gzip($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_ZIP) {
+			$strategy = new GitPHP_Archive_Zip($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
 		}
+
+		$this->archive = new GitPHP_Archive($this->GetProject(), null, $strategy, (isset($this->params['file']) ? $this->params['file'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		$commit = null;
+
+		if (!isset($this->params['hash']))
+			$commit = $this->GetProject()->GetHeadCommit();
+		else
+			$commit = $this->GetProject()->GetCommit($this->params['hash']);
+
+		$this->archive->SetObject($commit);
+
+		$mimetype = $strategy->MimeType();
+		if (!empty($mimetype))
+			$this->headers[] = 'Content-Type: ' . $mimetype;
 
 		$this->headers[] = 'Content-Disposition: attachment; filename=' . $this->archive->GetFilename();
 
@@ -219,9 +234,26 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	private function InitializeArchive()
 	{
+		$strategy = null;
+		if ($this->params['format'] == GITPHP_COMPRESS_TAR) {
+			$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_BZ2) {
+			$strategy = new GitPHP_Archive_Bzip2($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_GZ) {
+			$strategy = new GitPHP_Archive_Gzip($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
+		} else if ($this->params['format'] == GITPHP_COMPRESS_ZIP) {
+			$strategy = new GitPHP_Archive_Zip($this->exe, $this->config->GetValue('compresslevel'));
+			if (!$strategy->Valid())
+				$strategy = new GitPHP_Archive_Tar($this->exe);
+		}
+		//$strategy->SetExe($this->exe);
 
 		$this->archive = new GitPHP_Archive($this->GetProject(), null,
-			$this->params['format'],
+			$strategy,
 			(isset($this->params['file']) ? $this->params['file'] : ''),
 			(isset($this->params['prefix']) ? $this->params['prefix'] : '')
 		);
