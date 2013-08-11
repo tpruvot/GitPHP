@@ -55,6 +55,8 @@ class GitPHP_AutoLoader
 			$path = 'git/blob/';
 		} else if (($classname == 'Tag') || (strncmp($classname, 'TagLoad', 7) === 0)) {
 			$path = 'git/tag/';
+		} else if (strncmp($classname, 'Archive', 7) === 0) {
+			$path = 'git/archive/';
 		} else if ((strlen($classname) > 9) && (substr_compare($classname, 'Exception', -9, 9) === 0)) {
 			$path = 'exception/';
 		} else if (strpos($classname, 'Cache') !== false) {
