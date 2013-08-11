@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Archive
  */
 class GitPHP_Archive_Gzip implements GitPHP_ArchiveStrategy_Interface
 {
@@ -40,20 +40,24 @@ class GitPHP_Archive_Gzip implements GitPHP_ArchiveStrategy_Interface
 	/**
 	 * Constructor
 	 *
-	 * @param GitPHP_GitExe $exe executable
 	 * @param integer $compressLevel compression level
 	 */
-	public function __construct($exe, $compressLevel = null)
+	public function __construct($compressLevel = null)
 	{
-		if (!$exe)
-			throw new Exception('Git exe is required');
-
-		$this->exe = $exe;
-
 		if (!(($compressLevel === null) || (is_int($compressLevel) && ($compressLevel >= 1) && ($compressLevel <= 9))))
 			throw new Exception('Invalid compression level');
 
 		$this->compressLevel = $compressLevel;
+	}
+
+	/**
+	 * Set executable for this archive
+	 *
+	 * @param GitPHP_GitExe $exe git exe
+	 */
+	public function SetExe($exe)
+	{
+		$this->exe = $exe;
 	}
 
 	/**

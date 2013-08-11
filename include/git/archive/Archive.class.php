@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Archive
  */
 
 class GitPHP_Archive
@@ -20,31 +20,43 @@ class GitPHP_Archive
 
 	/**
 	 * The object type for this archive
+	 *
+	 * @var string
 	 */
 	protected $objectType;
 
 	/**
 	 * The object hash for this archive
+	 *
+	 * @var string
 	 */
 	protected $objectHash;
 
 	/**
 	 * The project for this archive
+	 *
+	 * @var GitPHP_Project|string
 	 */
 	protected $project;
 
 	/**
 	 * The archive filename
+	 *
+	 * @var string
 	 */
 	protected $fileName = '';
 
 	/**
 	 * The archive path
+	 *
+	 * @var string
 	 */
 	protected $path = '';
 
 	/**
 	 * The archive prefix
+	 *
+	 * @var string
 	 */
 	protected $prefix = '';
 
@@ -259,6 +271,16 @@ class GitPHP_Archive
 	}
 
 	/**
+	 * Gets the mime type for this archive
+	 *
+	 * @return string mime type
+	 */
+	public function GetMimeType()
+	{
+		return $this->strategy->MimeType();
+	}
+
+	/**
 	 * Opens a descriptor for reading archive data
 	 *
 	 * @return boolean true on success
@@ -303,19 +325,19 @@ class GitPHP_Archive
 	{
 		$formats = array();
 
-		$strategy = new GitPHP_Archive_Tar(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Tar();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_TAR] = $strategy->Extension();
 	
-		$strategy = new GitPHP_Archive_Zip(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Zip();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_ZIP] = $strategy->Extension();
 
-		$strategy = new GitPHP_Archive_Bzip2(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Bzip2();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_BZ2] = $strategy->Extension();
 
-		$strategy = new GitPHP_Archive_Gzip(GitPHP_GitExe::GetInstance());
+		$strategy = new GitPHP_Archive_Gzip();
 		if ($strategy->Valid())
 			$formats[GITPHP_COMPRESS_GZ] = $strategy->Extension();
 

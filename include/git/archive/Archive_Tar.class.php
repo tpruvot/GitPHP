@@ -5,7 +5,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2012 Christopher Han
  * @package GitPHP
- * @subpackage Git
+ * @subpackage Git\Archive
  */
 class GitPHP_Archive_Tar implements GitPHP_ArchiveStrategy_Interface
 {
@@ -24,15 +24,12 @@ class GitPHP_Archive_Tar implements GitPHP_ArchiveStrategy_Interface
 	protected $handle;
 
 	/**
-	 * Constructor
+	 * Set executable for this archive
 	 *
-	 * @param GitPHP_GitExe $exe executable
+	 * @param GitPHP_GitExe $exe git exe
 	 */
-	public function __construct($exe)
+	public function SetExe($exe)
 	{
-		if (!$exe)
-			throw new Exception('Git exe is required');
-
 		$this->exe = $exe;
 	}
 
