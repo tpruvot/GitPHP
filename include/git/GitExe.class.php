@@ -217,8 +217,13 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 
 	protected function DestroyProcess($projectPath)
 	{
-		proc_terminate(self::$processes[$projectPath]);
-		proc_close(self::$processes[$projectPath]);
+		$pipes = self::$processes[$projectPath]['pipes'];
+		foreach ($pipes as $pipe) {
+			fclose($pipe);
+		}
+		$process = self::$processes[$projectPath]['process'];
+		proc_terminate($process);
+		proc_close($process);
 		unset(self::$processes[$projectPath]);
 	}
 
