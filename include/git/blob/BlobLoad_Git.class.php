@@ -20,11 +20,8 @@ class GitPHP_BlobLoad_Git extends GitPHP_BlobLoad_Base
 		if (!$blob)
 			return;
 
-		$args = array();
-		$args[] = 'blob';
-		$args[] = $blob->GetHash();
-
-		return $this->exe->Execute($blob->GetProject()->GetPath(), GIT_CAT_FILE, $args);
+		$result = $this->exe->GetObjectData($blob->GetProject()->GetPath(), $blob->GetHash());
+		return $result['contents'];
 	}
 
 	/**

@@ -348,7 +348,8 @@ abstract class GitPHP_ControllerBase
 
 		$debug = $this->config->GetValue('debug');
 		if ($debug) {
-			$this->log = new GitPHP_DebugLog($debug, $this->config->GetValue('benchmark'));
+			$this->log = GitPHP_DebugLog::GetInstance();
+			$this->log->init($debug, $this->config->GetValue('benchmark'));
 			$this->log->SetStartTime(GITPHP_START_TIME);
 			$this->log->SetStartMemory(GITPHP_START_MEM);
 			if ($this->exe)
@@ -421,11 +422,11 @@ abstract class GitPHP_ControllerBase
 		if ($this->project && $projectKeys) {
 			$cacheKeyPrefix .= '|' . sha1($this->project);
 		}
-		
+
 		return $cacheKeyPrefix;
 	}
 
-	/** 
+	/**
 	 * Get the full cache key
 	 *
 	 * @return string full cache key
@@ -549,7 +550,7 @@ abstract class GitPHP_ControllerBase
 		if ($querypos !== false)
 			$requesturl = substr($requesturl, 0, $querypos);
 		$this->tpl->assign('requesturl', $requesturl);
-		
+
 		if ($this->router) {
 			$this->router->SetCleanUrl($this->config->GetValue('cleanurl') ? true : false);
 			$this->router->SetAbbreviate($this->config->GetValue('abbreviateurl') ? true : false);
@@ -621,30 +622,32 @@ abstract class GitPHP_ControllerBase
 		if (($this->config->GetValue('cache') == true) && ($this->config->GetValue('cacheexpire') === true))
 			$this->CacheExpire();
 
+		$log = GitPHP_DebugLog::GetInstance();
+
 		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
 			$this->tpl->clearAllAssign();
-			if ($this->log && $this->log->GetBenchmark())
-				$this->log->Log("Data load begin");
+
+			$log->TimerStart();
 			$this->LoadCommonData();
+			$log->TimerStop('Common data');
+
+			$log->TimerStart();
 			$this->LoadData();
-			if ($this->log && $this->log->GetBenchmark())
-				$this->log->Log("Data load end");
+			$log->TimerStop('Data');
 		}
 
 		if (!$this->preserveWhitespace) {
 			//$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
-		if ($this->log && $this->log->GetBenchmark())
-			$this->log->Log("Smarty render begin");
+		$log->TimerStart();
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
-		if ($this->log && $this->log->GetBenchmark())
-			$this->log->Log("Smarty render end");
+		$log->TimerStop('Render');
 
 		$this->tpl->clearAllAssign();
 
-		if ($this->log && $this->projectList)
-			$this->log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
+		if ($this->projectList)
+			$log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
 	}
 
 	/**

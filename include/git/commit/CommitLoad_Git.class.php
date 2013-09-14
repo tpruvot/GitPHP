@@ -32,31 +32,15 @@ class GitPHP_CommitLoad_Git extends GitPHP_CommitLoad_Base
 		$title = null;
 		$comment = array();
 
+		$ret = $this->exe->GetObjectData($commit->GetProject()->GetPath(), $commit->GetHash());
 
-		/* get data from git_rev_list */
-		$args = array();
-		$args[] = '--header';
-		$args[] = '--parents';
-		$args[] = '--max-count=1';
-		$args[] = '--abbrev-commit';
-		$args[] = $commit->GetHash();
-		$ret = $this->exe->Execute($commit->GetProject()->GetPath(), GIT_REV_LIST, $args);
-
-		$lines = explode("\n", $ret);
+		$lines = explode("\n", $ret['contents']);
 
 		if (!isset($lines[0]))
 			return;
 
-		/* In case we returned something unexpected */
-		$tok = strtok($lines[0], ' ');
-		if ((strlen($tok) == 0) || (substr_compare($commit->GetHash(), $tok, 0, strlen($tok)) !== 0)) {
-			return;
-		}
-		$abbreviatedHash = $tok;
-
-		array_shift($lines);
-
-
+		/* Sadly, git cat-file does not support abbreviation of hashes in batch mode so we have to substr :( */
+		$abbreviatedHash = substr($commit->GetHash(), 0, 7);
 		$linecount = count($lines);
 		$i = 0;
 		$encoding = null;

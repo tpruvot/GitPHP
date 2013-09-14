@@ -40,6 +40,21 @@ if (function_exists('mb_internal_encoding')) {
 }
 date_default_timezone_set('UTC');
 
+/* strlen() can be overloaded in mbstring extension, so always using mb_orig_strlen for binary data */
+if (!function_exists('mb_orig_strlen')) {
+	function mb_orig_strlen($str)
+	{
+		return strlen($str);
+	}
+}
+
+if (!function_exists('mb_orig_substr')) {
+	function mb_orig_substr($str, $offset, $len = null)
+	{
+		return isset($len) ? substr($str, $offset, $len) : substr($str, $offset);
+	}
+}
+
 /**
  * Version header
  */
@@ -88,12 +103,9 @@ unset($router);
 if (isset($controller)) {
 	$log = $controller->GetLog();
 	if ($log && $log->GetEnabled()) {
-		$entries = $log->GetEntries();
-		foreach ($entries as $logline) {
-			echo "<br />\n" . htmlspecialchars($logline, ENT_QUOTES, 'UTF-8', true);
-		}
-		unset($logline);
-		unset($entries);
+		$log->PrintHtmlHeader();
+		$log->PrintHtml();
+		$log->PrintHtmlFooter();
 	}
 	unset($controller);
 }

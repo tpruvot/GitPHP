@@ -44,12 +44,36 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	protected $entries = array();
 
 	/**
+	 * Stores the timers
+	 *
+	 * @var float[]
+	 */
+	protected $timers = array();
+
+	/**
+	 * @return GitPHP_DebugLog
+	 */
+	public static function GetInstance()
+	{
+		static $instance;
+		if (!$instance) $instance = new self();
+		return $instance;
+	}
+
+	/**
+	 * You must use GetInstance()
+	 */
+	private function __construct()
+	{
+	}
+
+	/**
 	 * Constructor
 	 *
 	 * @param boolean $enabled whether log should be enabled
 	 * @param boolean $benchmark whether benchmarking should be enabled
 	 */
-	public function __construct($enabled = false, $benchmark = false)
+	public function init($enabled = false, $benchmark = false)
 	{
 		$this->startTime = microtime(true);
 		$this->startMem = memory_get_usage();
@@ -79,23 +103,59 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Shortcut to start timer
+	 */
+	public function TimerStart()
+	{
+		if (!$this->benchmark) return;
+		$this->Log('', '', 'start');
+	}
+
+	/**
+	 * Shortcut to stop timer
+	 *
+	 * @param $msg
+	 * @param $msg_data
+	 */
+	public function TimerStop($msg, $msg_data = '')
+	{
+		if (!$this->benchmark) return;
+		$this->Log($msg, $msg_data, 'stop');
+	}
+
+	/**
 	 * Log an entry
 	 *
-	 * @param string $message message to log
+	 * @param string $msg message to log
 	 */
-	public function Log($message)
+	public function Log($msg, $msg_data = '', $type = 'ts')
 	{
 		if (!$this->enabled)
 			return;
 
 		$entry = array();
-		
-		if ($this->benchmark) {
-			$entry['time'] = microtime(true);
-			$entry['mem'] = memory_get_usage();
+
+		if ($type == 'start') {
+			array_push($this->timers, microtime(true));
+			return;
+		} else if ($type == 'stop') {
+			$timer = array_pop($this->timers);
+			$entry['time'] = $duration = microtime(true) - $timer;
+			foreach ($this->timers as &$item) $item += $duration;
+		} else {
+			if ($this->benchmark) {
+				$entry['time'] = (microtime(true) - $this->startTime);
+				$entry['reltime'] = true;
+				$entry['mem'] = memory_get_usage();
+			}
 		}
 
-		$entry['msg'] = $message;
+		$entry['name'] = $msg;
+		$entry['value'] = $msg_data;
+		$bt = explode("\n", new Exception());
+		array_shift($bt);
+		array_shift($bt);
+		$entry['bt'] = implode("\n", $bt);
 		$this->entries[] = $entry;
 	}
 
@@ -140,46 +200,6 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	}
 
 	/**
-	 * Gets log entries
-	 *
-	 * @return string[] log entries
-	 */
-	public function GetEntries()
-	{
-		$data = array();
-	
-		if ($this->enabled) {
-
-			if ($this->benchmark) {
-				$endTime = microtime(true);
-				$endMem = memory_get_usage();
-
-				$lastTime = $this->startTime;
-				$lastMem = $this->startMem;
-
-				$data[] = 'DEBUG: [' . $this->startTime . '] [' . $this->startMem . ' bytes] Start';
-
-			}
-
-			foreach ($this->entries as $entry) {
-				if ($this->benchmark) {
-					$data[] = 'DEBUG: [' . $entry['time'] . '] [' . ($entry['time'] - $this->startTime) . ' sec since start] [' . ($entry['time'] - $lastTime) . ' sec since last] [' . $entry['mem'] . ' bytes] [' . ($entry['mem'] - $this->startMem) . ' bytes since start] [' . ($entry['mem'] - $lastMem) . ' bytes since last] ' . $entry['msg'];
-					$lastTime = $entry['time'];
-					$lastMem = $entry['mem'];
-				} else {
-					$data[] = 'DEBUG: ' . $entry['msg'];
-				}
-			}
-
-			if ($this->benchmark) {
-				$data[] = 'DEBUG: [' . $endTime . '] [' . ($endTime - $this->startTime) . ' sec since start] [' . ($endTime - $lastTime) . ' sec since last] [' . $endMem . ' bytes] [' . ($endMem - $this->startMem) . ' bytes since start] [' . ($endMem - $lastMem) . ' bytes since last] End';
-			}
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Clears the log
 	 */
 	public function Clear()
@@ -206,8 +226,87 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 			return;
 
 		$msg = $args[0];
+		$msg_data = isset($args[1]) ? $args[1] : '';
+		$type = isset($args[2]) ? $args[2] : 'ts';
 
-		$this->Log($msg);
+		$this->Log($msg, $msg_data, $type);
 	}
 
+	public function PrintHtml()
+	{
+		if (!$this->enabled) return;
+
+		foreach ($this->entries as $i => $e) {
+			$bt_id = 'bt_' . $i;
+			if (strlen($e['value']) > 512) {
+				$contents  = htmlspecialchars(substr($e['value'], 0, 512) . "...");
+				$contents .= "\n\n<i>" . (strlen($e['value']) - 512) . " bytes more in output</i>";
+			} else {
+				$contents = htmlspecialchars($e['value']);
+			}
+			echo "<tr>
+				<td class='debug_key'>$e[name]</td>
+				<td class='debug_value'>
+					" . nl2br($contents) . ($contents != "" ? "<br§ />" : "") . "
+					<span class='debug_toggle' onclick='bt_toggle(\"$bt_id\");'>trace</span>&nbsp;
+					<div style='display: none;' class='debug_bt' id='$bt_id'>$e[bt]</div>
+				</td>
+				<td class='debug_time'>
+					" . ($e['time'] ? sprintf("%.1f", $e['time'] * 1000) : '') . "
+					" . ($e['time'] ? (!empty($e['reltime']) ? " ms from start" : " ms") : '') . "
+				</td>
+			</tr>";
+		}
+	}
+
+	public function PrintHtmlHeader()
+	{
+		if (!$this->enabled) return;
+
+		echo
+<<<HEREDOC
+		<script type="text/javascript">
+			function bt_toggle(id) {
+				var el = document.getElementById(id);
+				el.style.display = ((el.style.display == 'none') ? 'block' : 'none');
+			}
+		</script>
+		<style type="text/css">
+			.debug {
+				border: 0;
+				border-spacing: 0;
+				width: 100%;
+			}
+			.debug_toggle {
+				color: #88a; border-bottom: 1px dashed blue;
+				display: inline-block;
+				margin: 3px;
+				cursor: pointer;
+			}
+			.debug_key {
+				background: #ccf; border-bottom: 1px solid #888;
+				max-width: 100px;
+				word-wrap: break-word;
+			}
+			.debug_value {
+				background: #ccc; border-bottom: 1px solid #888;
+				max-width: 900px;
+				word-wrap: break-word;
+			}
+			.debug_bt {
+				white-space: pre;
+			}
+			.debug_time {
+				background: #cff; border-bottom: 1px solid #888;
+			}
+		</style>
+		<table class="debug"><tbody>
+HEREDOC;
+	}
+
+	public function PrintHtmlFooter()
+	{
+		if (!$this->enabled) return;
+		echo '</tbody></table>';
+	}
 }

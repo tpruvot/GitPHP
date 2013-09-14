@@ -49,10 +49,14 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
+		$log = GitPHP_DebugLog::GetInstance();
+
+		$log->TimerStart();
 		$head = $this->GetProject()->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 		if (!$head)
 			$this->tpl->assign('enablesearch', false);
+		$log->TimerStop('GetHeadCommit');
 
 		//$compat = $this->GetProject()->GetCompat();
 		$strategy = null;
@@ -69,7 +73,9 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 		}
 		$this->tpl->assign('revlist', $revlist);
 
+		$log->TimerStart();
 		$taglist = $this->GetProject()->GetTagList()->GetOrderedTags('-creatordate', 17);
+		$log->TimerStop('GetTagList');
 		if ($taglist) {
 			if (count($taglist) > 16) {
 				$this->tpl->assign('hasmoretags', true);
@@ -78,7 +84,9 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 			$this->tpl->assign('taglist', $taglist);
 		}
 
+		$log->TimerStart();
 		$headlist = $this->GetProject()->GetHeadList()->GetOrderedHeads('-committerdate', 17);
+		$log->TimerStop('GetHeadList');
 		if ($headlist) {
 			if (count($headlist) > 17) {
 				$this->tpl->assign('hasmoreheads', true);

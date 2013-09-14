@@ -80,12 +80,12 @@ class GitPHP_HeadList extends GitPHP_RefList
 		if (!$this->dataLoaded)
 			$this->LoadData();
 
+		if (!isset($this->invertedRefs[$commitHash])) return array();
+		$headNames = $this->invertedRefs[$commitHash];
 		$heads = array();
 
-		foreach ($this->refs as $head => $hash) {
-			if ($commitHash == $hash) {
-				$heads[] = $this->project->GetObjectManager()->GetHead($head, $hash);
-			}
+		foreach ($headNames as $head) {
+			$heads[] = $this->project->GetObjectManager()->GetHead($head, $commitHash);
 		}
 
 		return $heads;
@@ -99,6 +99,7 @@ class GitPHP_HeadList extends GitPHP_RefList
 		$this->dataLoaded = true;
 
 		$this->refs = $this->strategy->Load($this);
+		foreach ($this->refs as $ref => $hash) $this->invertedRefs[$hash][] = $ref;
 	}
 
 	/**

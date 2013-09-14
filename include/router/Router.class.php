@@ -352,7 +352,7 @@ class GitPHP_Router
 	/**
 	 * Gets a controller for an action
 	 *
-	 * @return mixed controller object
+	 * @return GitPHP_ControllerBase
 	 */
 	public function GetController()
 	{
@@ -483,7 +483,7 @@ class GitPHP_Router
 				$controller->SetParam('opml', true);
 				break;
 
-			
+
 			case 'login':
 				$controller = new GitPHP_Controller_Login();
 				if (!empty($_POST['username']))

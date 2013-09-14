@@ -72,7 +72,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 * @var string
 	 */
 	protected $binary;
-	
+
 	/**
 	 * The binary version
 	 *
@@ -116,6 +116,27 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	protected $popenAllowed = null;
 
 	/**
+	 * Whether the proc_open function is allowed by the install
+	 *
+	 * @var null|boolean
+	 */
+	protected $procOpenAllowed = null;
+
+	/**
+	 * Whether or not caching function GetProcess is initialized
+	 *
+	 * @var null|boolean
+	 */
+	protected $getProcessInitialized = false;
+
+	/**
+	 * Processes spawned for batch object fetching
+	 *
+	 * @var array
+	 */
+	protected static $processes = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $binary path to git binary
@@ -147,14 +168,114 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 
 		$fullCommand = $this->CreateCommand($projectPath, $command, $args);
 
-		$this->Log('Begin executing "' . $fullCommand . '"');
+		$this->Log('Execute', '', 'start');
 
 		$ret = shell_exec($fullCommand);
 
-		$this->Log('Finish executing "' . $fullCommand . '"' .
-			"\nwith result: " . $ret);
+		$this->Log('Execute', $fullCommand . "\n\n" . $ret, 'stop');
 
 		return $ret;
+	}
+
+	protected function GetProcess($projectPath)
+	{
+		if (!$this->getProcessInitialized) {
+			register_shutdown_function(array($this, 'DestroyAllProcesses'));
+			$this->getProcessInitialized = true;
+		}
+
+		if (!isset(self::$processes[$projectPath])) {
+			GitPHP_DebugLog::GetInstance()->TimerStart();
+
+			$process = proc_open(
+				$cmd = $this->CreateCommand($projectPath, GIT_CAT_FILE, array('--batch')),
+				array(
+					0 => array('pipe', 'r'),
+					1 => array('pipe', 'w'),
+					2 => array('file', GitPHP_Util::NullFile(), 'w'),
+				),
+				$pipes
+			);
+
+			self::$processes[$projectPath] = array(
+				'process' => $process,
+				'pipes'   => $pipes,
+			);
+
+			GitPHP_DebugLog::GetInstance()->TimerStop('proc_open', $cmd);
+		}
+
+		return self::$processes[$projectPath];
+	}
+
+	public function DestroyAllProcesses()
+	{
+		foreach (self::$processes as $projectPath => $process) {
+			$this->DestroyProcess($projectPath);
+		}
+	}
+
+	protected function DestroyProcess($projectPath)
+	{
+		proc_terminate(self::$processes[$projectPath]);
+		proc_close(self::$processes[$projectPath]);
+		unset(self::$processes[$projectPath]);
+	}
+
+	public function GetObjectData($projectPath, $hash)
+	{
+		if ($this->procOpenAllowed === null) {
+			$this->procOpenAllowed = GitPHP_Util::FunctionAllowed('proc_open');
+			if (!$this->procOpenAllowed) {
+				throw new GitPHP_DisabledFunctionException('proc_open');
+			}
+		}
+
+		$process = $this->GetProcess($projectPath);
+		$pipes = $process['pipes'];
+
+		$data = $hash . "\n";
+		if (fwrite($pipes[0], $data) !== mb_orig_strlen($data)) {
+			$this->DestroyProcess($projectPath);
+			return false;
+		}
+		fflush($pipes[0]);
+
+		$ln = rtrim(fgets($pipes[1]));
+		if (!$ln) {
+			$this->DestroyProcess($projectPath);
+			return false;
+		}
+
+		$parts = explode(" ", rtrim($ln));
+		if (count($parts) == 2 && $parts[1] == 'missing') {
+			return false;
+		} else if (count($parts) != 3) {
+			$this->DestroyProcess($projectPath);
+			return false;
+		}
+
+		list($hash, $type, $n) = $parts;
+
+		$contents = '';
+		while (mb_orig_strlen($contents) < $n) {
+			$buf = fread($pipes[1], min(4096, $n - mb_orig_strlen($contents)));
+			if ($buf === false) {
+				$this->DestroyProcess($projectPath);
+				return false;
+			}
+			$contents .= $buf;
+		}
+
+		if (fgetc($pipes[1]) != "\n") {
+			$this->DestroyProcess($projectPath);
+			return false;
+		}
+
+		return array(
+			'contents' => $contents,
+			'type' => $type,
+		);
 	}
 
 	/**
@@ -194,7 +315,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 		if (!empty($projectPath)) {
 			$gitDir = '--git-dir=' . escapeshellarg($projectPath);
 		}
-		
+
 		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
 	}
 
@@ -371,14 +492,16 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 	 * Log an execution
 	 *
 	 * @param string $message message
+	 * @param string $msg_data message
+	 * @param string $type message
 	 */
-	private function Log($message)
+	private function Log($message, $msg_data, $type)
 	{
 		if (empty($message))
 			return;
 
 		foreach ($this->observers as $observer) {
-			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message, $msg_data, $type));
 		}
 	}
 

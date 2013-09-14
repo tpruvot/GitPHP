@@ -48,13 +48,9 @@ class GitPHP_TagLoad_Git implements GitPHP_TagLoadStrategy_Interface
 		$taggerTimezone = null;
 		$comment = array();
 
+		$result = $this->exe->GetObjectData($tag->GetProject()->GetPath(), $tag->GetHash());
 
-		$args = array();
-		$args[] = '-t';
-		$args[] = $tag->GetHash();
-		$ret = trim($this->exe->Execute($tag->GetProject()->GetPath(), GIT_CAT_FILE, $args));
-		
-		if ($ret === 'commit') {
+		if ($result['type'] === 'commit') {
 			/* light tag */
 			$object = $tag->GetHash();
 			$commitHash = $tag->GetHash();
@@ -71,12 +67,9 @@ class GitPHP_TagLoad_Git implements GitPHP_TagLoadStrategy_Interface
 		}
 
 		/* get data from tag object */
-		$args = array();
-		$args[] = 'tag';
-		$args[] = $tag->GetName();
-		$ret = $this->exe->Execute($tag->GetProject()->GetPath(), GIT_CAT_FILE, $args);
+		$result = $this->exe->GetObjectData($tag->GetProject()->GetPath(), $tag->GetName());
 
-		$lines = explode("\n", $ret);
+		$lines = explode("\n", $result['contents']);
 
 		if (!isset($lines[0]))
 			return;

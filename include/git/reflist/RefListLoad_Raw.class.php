@@ -24,6 +24,8 @@ abstract class GitPHP_RefListLoad_Raw
 		if (empty($type))
 			return;
 
+		$autotimer = new GitPHP_DebugAutoLog();
+
 		$refs = array();
 
 		$prefix = 'refs/' . $type;
@@ -34,7 +36,7 @@ abstract class GitPHP_RefListLoad_Raw
 		$refFiles = GitPHP_Util::ListDir($fullPath);
 		for ($i = 0; $i < count($refFiles); ++$i) {
 			$ref = substr($refFiles[$i], $fullPathLen);
-			
+
 			if (empty($ref) || isset($refs[$ref]))
 				continue;
 

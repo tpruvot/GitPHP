@@ -24,6 +24,14 @@ abstract class GitPHP_RefList implements Iterator
 	protected $refs = array();
 
 	/**
+	 * The inverted refs
+	 *
+	 * @var array
+	 */
+	protected $invertedRefs = array();
+
+
+	/**
 	 * Whether data has been loaded
 	 *
 	 * @var boolean

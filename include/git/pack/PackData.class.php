@@ -162,7 +162,7 @@ class GitPHP_PackData
 			/*
 			 * next read the compressed delta data
 			 */
-			$delta = gzuncompress(substr($buf, $pos), $size);
+			$delta = gzuncompress(mb_orig_substr($buf, $pos), $size);
 
 			$baseOffset = $offset - $off;
 			if ($baseOffset > 0) {
@@ -230,9 +230,9 @@ class GitPHP_PackData
 				if ($opcode & 0x20) $len |= ord($delta{$pos++}) <<  8;
 				if ($opcode & 0x40) $len |= ord($delta{$pos++}) << 16;
 				if ($len == 0) $len = 0x10000;
-				$data .= substr($base, $off, $len);
+				$data .= mb_orig_substr($base, $off, $len);
 			} else if ($opcode > 0) {
-				$data .= substr($delta, $pos, $opcode);
+				$data .= mb_orig_substr($delta, $pos, $opcode);
 				$pos += $opcode;
 			}
 		}

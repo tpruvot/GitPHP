@@ -44,6 +44,11 @@ class GitPHP_Util
 		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 	}
 
+	public static function NullFile()
+	{
+		return self::IsWindows() ? 'NUL' : '/dev/null';
+	}
+
 	/**
 	 * Tests if this is a 64 bit machine
 	 *
