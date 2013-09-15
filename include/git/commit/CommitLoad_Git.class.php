@@ -32,15 +32,19 @@ class GitPHP_CommitLoad_Git extends GitPHP_CommitLoad_Base
 		$title = null;
 		$comment = array();
 
-		$ret = $this->exe->GetObjectData($commit->GetProject()->GetPath(), $commit->GetHash());
+		$commitHash = $commit->GetHash();
+		$projectPath = $commit->GetProject()->GetPath();
 
-		$lines = explode("\n", $ret['contents']);
+		/* Try to get abbreviated hash first try. Go up to max hash length on collision. */
+		for ($i = 7; $i <= 40; $i++) {
+			$abbreviatedHash = substr($commitHash, 0, $i);
+			$ret = $this->exe->GetObjectData($projectPath, $abbreviatedHash);
+			if (!$ret) return false;
+			if ($ret['hash'] !== $commitHash) continue;
+			$lines = explode("\n", $ret['contents']);
+			break;
+		}
 
-		if (!isset($lines[0]))
-			return;
-
-		/* Sadly, git cat-file does not support abbreviation of hashes in batch mode so we have to substr :( */
-		$abbreviatedHash = substr($commit->GetHash(), 0, 7);
 		$linecount = count($lines);
 		$i = 0;
 		$encoding = null;

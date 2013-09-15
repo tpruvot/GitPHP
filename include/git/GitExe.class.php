@@ -278,6 +278,7 @@ class GitPHP_GitExe implements GitPHP_Observable_Interface
 		}
 
 		return array(
+			'hash' => $hash,
 			'contents' => $contents,
 			'type' => $type,
 		);
