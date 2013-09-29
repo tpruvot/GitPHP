@@ -237,7 +237,6 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 		if (!$this->enabled) return;
 
 		foreach ($this->entries as $i => $e) {
-			$bt_id = 'bt_' . $i;
 			if (strlen($e['value']) > 512) {
 				$contents  = htmlspecialchars(substr($e['value'], 0, 512) . "...");
 				$contents .= "\n\n<i>" . (strlen($e['value']) - 512) . " bytes more in output</i>";
@@ -248,8 +247,8 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 				<td class='debug_key'>$e[name]</td>
 				<td class='debug_value'>
 					" . nl2br($contents) . ($contents != "" ? "<br§ />" : "") . "
-					<span class='debug_toggle' onclick='bt_toggle(\"$bt_id\");'>trace</span>&nbsp;
-					<div style='display: none;' class='debug_bt' id='$bt_id'>$e[bt]</div>
+					<span class='debug_toggle'>trace</span>&nbsp;
+					<div class='debug_bt'>$e[bt]</div>
 				</td>
 				<td class='debug_time'>
 					" . ($e['time'] ? sprintf("%.1f", $e['time'] * 1000) : '') . "
@@ -265,12 +264,6 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 
 		echo
 <<<HEREDOC
-		<script type="text/javascript">
-			function bt_toggle(id) {
-				var el = document.getElementById(id);
-				el.style.display = ((el.style.display == 'none') ? 'block' : 'none');
-			}
-		</script>
 		<table class="debug"><tbody>
 HEREDOC;
 	}

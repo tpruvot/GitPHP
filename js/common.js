@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modules/loginpopup', 'modernizr'],
+define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modules/loginpopup', 'modernizr', 'modules/debug'],
 	function($, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag, loginpopup) {
 		$(function() {
 			lang($('div.lang_select'));
