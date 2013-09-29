@@ -13,7 +13,7 @@ define(["jquery"],
   function($) {
     $('span.debug_toggle').click(
       function() {
-        $(this).siblings('div.debug_bt').toggle();
+        $(this).siblings('div.debug_bt').toggle('fast');
       }
     );
   }
