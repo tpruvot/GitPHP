@@ -612,12 +612,19 @@ span.searchmatch {
 .debug_toggle {
 	color: #88a; border-bottom: 1px dashed blue;
 }
+
 .debug_key {
 	background: #ccf; border-bottom: 1px solid #888;
 }
+
 .debug_value {
 	background: #ccc; border-bottom: 1px solid #888;
 }
+
+.debug_value .debug_addl {
+	font-style: italic;
+}
+
 .debug_time {
 	background: #cff; border-bottom: 1px solid #888;
 }

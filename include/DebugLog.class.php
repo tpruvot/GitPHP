@@ -208,6 +208,16 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 	}
 
 	/**
+	 * Gets the log entries
+	 *
+	 * @return array entry data
+	 */
+	public function GetEntries()
+	{
+		return $this->entries;
+	}
+
+	/**
 	 * Notify that observable object changed
 	 *
 	 * @param GitPHP_Observable_Interface $object object
@@ -232,45 +242,4 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 		$this->Log($msg, $msg_data, $type);
 	}
 
-	public function PrintHtml()
-	{
-		if (!$this->enabled) return;
-
-		foreach ($this->entries as $i => $e) {
-			if (strlen($e['value']) > 512) {
-				$contents  = htmlspecialchars(substr($e['value'], 0, 512) . "...");
-				$contents .= "\n\n<i>" . (strlen($e['value']) - 512) . " bytes more in output</i>";
-			} else {
-				$contents = htmlspecialchars($e['value']);
-			}
-			echo "<tr>
-				<td class='debug_key'>$e[name]</td>
-				<td class='debug_value'>
-					" . nl2br($contents) . ($contents != "" ? "<br§ />" : "") . "
-					<span class='debug_toggle'>trace</span>&nbsp;
-					<div class='debug_bt'>$e[bt]</div>
-				</td>
-				<td class='debug_time'>
-					" . ($e['time'] ? sprintf("%.1f", $e['time'] * 1000) : '') . "
-					" . ($e['time'] ? (!empty($e['reltime']) ? " ms from start" : " ms") : '') . "
-				</td>
-			</tr>";
-		}
-	}
-
-	public function PrintHtmlHeader()
-	{
-		if (!$this->enabled) return;
-
-		echo
-<<<HEREDOC
-		<table class="debug"><tbody>
-HEREDOC;
-	}
-
-	public function PrintHtmlFooter()
-	{
-		if (!$this->enabled) return;
-		echo '</tbody></table>';
-	}
 }

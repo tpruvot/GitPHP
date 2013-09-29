@@ -100,14 +100,4 @@ try {
 
 unset($router);
 
-if (isset($controller)) {
-	$log = $controller->GetLog();
-	if ($log && $log->GetEnabled()) {
-		$log->PrintHtmlHeader();
-		$log->PrintHtml();
-		$log->PrintHtmlFooter();
-	}
-	unset($controller);
-}
-
 ?>
