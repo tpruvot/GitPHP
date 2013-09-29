@@ -589,6 +589,10 @@ abstract class GitPHP_ControllerBase
 				}
 			}
 		}
+
+		if ($this->log && $this->log->GetEnabled()) {
+			$this->tpl->assign('debug', true);
+		}
 	}
 
 	/**

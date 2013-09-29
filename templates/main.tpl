@@ -62,6 +62,11 @@
 			project: '{$project->GetProject()}'
 		},
 		{/if}
+    {if $debug}
+    'common': {
+      debug: true
+    },
+    {/if}
 		'modules/geturl': {
 			baseurl: '{$baseurl}/'
 		},

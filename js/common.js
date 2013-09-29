@@ -9,8 +9,8 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modules/loginpopup', 'modernizr', 'modules/debug'],
-	function($, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag, loginpopup) {
+define(["jquery", "module", "modules/getproject", "modules/lang", "modules/tooltip.snapshot", "modules/tooltip.commit", "modules/tooltip.tag", 'modules/loginpopup', 'modernizr'],
+	function($, module, project, lang, tooltipSnapshot, tooltipCommit, tooltipTag, loginpopup) {
 		$(function() {
 			lang($('div.lang_select'));
 			tooltipSnapshot($('a.snapshotTip'));
@@ -23,5 +23,8 @@ define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapsho
       }
       loginpopup('a.loginLink');
 		});
+    if (module.config().debug) {
+      require(['modules/debug']);
+    }
 	}
 );
