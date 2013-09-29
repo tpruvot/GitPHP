@@ -271,35 +271,6 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 				el.style.display = ((el.style.display == 'none') ? 'block' : 'none');
 			}
 		</script>
-		<style type="text/css">
-			.debug {
-				border: 0;
-				border-spacing: 0;
-				width: 100%;
-			}
-			.debug_toggle {
-				color: #88a; border-bottom: 1px dashed blue;
-				display: inline-block;
-				margin: 3px;
-				cursor: pointer;
-			}
-			.debug_key {
-				background: #ccf; border-bottom: 1px solid #888;
-				max-width: 100px;
-				word-wrap: break-word;
-			}
-			.debug_value {
-				background: #ccc; border-bottom: 1px solid #888;
-				max-width: 900px;
-				word-wrap: break-word;
-			}
-			.debug_bt {
-				white-space: pre;
-			}
-			.debug_time {
-				background: #cff; border-bottom: 1px solid #888;
-			}
-		</style>
 		<table class="debug"><tbody>
 HEREDOC;
 	}

@@ -206,3 +206,33 @@ div.loginForm div.submit input[type='submit'] {
 	font-weight: normal;
 	vertical-align: top;
 }
+
+/*
+ * Debug styles
+ */
+.debug {
+	border: 0;
+	border-spacing: 0;
+	width: 100%;
+}
+
+.debug_toggle {
+	display: inline-block;
+	margin: 3px;
+	cursor: pointer;
+}
+
+.debug_key {
+	max-width: 100px;
+	word-wrap: break-word;
+}
+
+.debug_value {
+	max-width: 900px;
+	word-wrap: break-word;
+}
+
+.debug_bt {
+	white-space: pre;
+}
+
