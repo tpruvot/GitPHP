@@ -59,7 +59,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		if (!(is_dir($dir) && is_readable($dir)))
 			return;
 
-		$this->Log(sprintf('Searching directory %1$s', $dir));
+		$this->Log('Search directory', $dir);
 
 		if ($dh = opendir($dir)) {
 			$trimlen = strlen(GitPHP_Util::AddSlash($this->projectRoot)) + 1;
@@ -67,7 +67,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				$fullPath = $dir . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
 					if (is_file($fullPath . '/HEAD')) {
-						$this->Log(sprintf('Found project %1$s', $fullPath));
+						$this->Log('Found project', $fullPath);
 						$projectPath = substr($fullPath, $trimlen);
 						if (!isset($this->projects[$projectPath])) {
 							$project = $this->LoadProject($projectPath);
@@ -80,7 +80,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 						$this->RecurseDir($fullPath);
 					}
 				} else {
-					$this->Log(sprintf('Skipping %1$s', $fullPath));
+					$this->Log('Skip', $fullPath);
 				}
 			}
 			closedir($dh);
@@ -105,7 +105,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			}
 
 			if ($this->exportedOnly && !$project->GetDaemonEnabled()) {
-				$this->Log(sprintf('Project %1$s not enabled for export', $project->GetPath()));
+				$this->Log('Project export disabled', $project->GetPath());
 				return null;
 			}
 
@@ -122,7 +122,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			return $project;
 
 		} catch (Exception $e) {
-			$this->Log($e->getMessage());
+			$this->Log('Project error', $e->getMessage());
 		}
 
 		return null;

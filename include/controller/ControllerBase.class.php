@@ -651,7 +651,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->clearAllAssign();
 
 		if ($this->projectList)
-			$log->Log('MemoryCache count: ' . $this->projectList->GetMemoryCache()->GetCount());
+			$log->Log('MemoryCache', 'Count: ' . $this->projectList->GetMemoryCache()->GetCount());
 
 		if ($log->GetEnabled()) {
 			$this->tpl->assign('debuglog', $log);

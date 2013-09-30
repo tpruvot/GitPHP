@@ -236,8 +236,8 @@ class GitPHP_DebugLog implements GitPHP_Observer_Interface
 			return;
 
 		$msg = $args[0];
-		$msg_data = isset($args[1]) ? $args[1] : '';
-		$type = isset($args[2]) ? $args[2] : 'ts';
+		$msg_data = !empty($args[1]) ? $args[1] : '';
+		$type = !empty($args[2]) ? $args[2] : 'ts';
 
 		$this->Log($msg, $msg_data, $type);
 	}

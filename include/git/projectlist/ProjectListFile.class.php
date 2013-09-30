@@ -83,7 +83,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 						$owner = $lineData['owner'];
 					}
 				} else {
-					$this->Log(sprintf('%1$s is not a git project', $projectRoot . $proj));
+					$this->Log('Invalid project', $projectRoot . $proj);
 				}
 				break;
 			}

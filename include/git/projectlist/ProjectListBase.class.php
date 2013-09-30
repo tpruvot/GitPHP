@@ -708,13 +708,13 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	 *
 	 * @param string $message message
 	 */
-	protected function Log($message)
+	protected function Log($message, $messagedata = null)
 	{
 		if (empty($message))
 			return;
 
 		foreach ($this->observers as $observer) {
-			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message));
+			$observer->ObjectChanged($this, GitPHP_Observer_Interface::LoggableChange, array($message, $messagedata));
 		}
 	}
 
