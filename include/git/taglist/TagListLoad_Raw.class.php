@@ -40,7 +40,7 @@ class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_Ta
 
 		/* TODO add different orders */
 		if ($order == '-creatordate') {
-			usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
+			@usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
 		}
 
 		if ((($count > 0) && (count($tags) > $count)) || ($skip > 0)) {

@@ -42,7 +42,7 @@ class GitPHP_HeadListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_H
 
 		/* TODO add different orders */
 		if ($order == '-committerdate') {
-			usort($heads, array('GitPHP_Head', 'CompareAge'));
+			@usort($heads, array('GitPHP_Head', 'CompareAge'));
 		}
 
 		if ((($count > 0) && (count($heads) > $count)) || ($skip > 0)) {
