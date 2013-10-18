@@ -9,8 +9,10 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
-	function($, project, lang, tooltipSnapshot) {
+define(["jquery", "migrate", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
+	function(jQuery, migrate, project, lang, tooltipSnapshot) {
+
+		$ = jQuery;
 
 		lang($('div.lang_select'));
 		tooltipSnapshot($('a.snapshotTip'));

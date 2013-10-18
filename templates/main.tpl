@@ -43,10 +43,11 @@
 	var GitPHPJSPaths = {
 		jquery: [
 			{if $googlejs}
-			'//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
+			'//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min',
 			{/if}
 			'ext/jquery.min'
 		],
+		migrate: 'ext/jquery-migrate.dev',
 		qtip: 'ext/jquery.qtip',
 		modernizr: 'ext/modernizr.custom'
 	};
