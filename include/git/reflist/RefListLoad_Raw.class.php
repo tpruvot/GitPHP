@@ -24,7 +24,8 @@ abstract class GitPHP_RefListLoad_Raw
 		if (empty($type))
 			return;
 
-		$autotimer = new GitPHP_DebugAutoLog();
+		if (GitPHP_DebugLog::GetInstance()->GetEnabled())
+			$autotimer = new GitPHP_DebugAutoLog();
 
 		$refs = array();
 

@@ -36,7 +36,8 @@ class GitPHP_HeadListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_H
 		if (empty($order))
 			return;
 
-		$autotimer = new GitPHP_DebugAutoLog();
+		if (GitPHP_DebugLog::GetInstance()->GetEnabled())
+			$autotimer = new GitPHP_DebugAutoLog();
 
 		$heads = $headList->GetHeads();
 

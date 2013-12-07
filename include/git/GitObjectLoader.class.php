@@ -66,7 +66,8 @@ class GitPHP_GitObjectLoader
 			return false;
 		}
 
-		$autolog = new GitPHP_DebugAutoLog();
+		if (GitPHP_DebugLog::GetInstance()->GetEnabled())
+			$autolog = new GitPHP_DebugAutoLog();
 
 		// first check if it's unpacked
 		$path = $this->project->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
