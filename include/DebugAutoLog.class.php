@@ -13,7 +13,10 @@ class GitPHP_DebugAutoLog
 	public function __construct($name = null)
 	{
 		if (is_null($name)) {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			if (PHP_VERSION_ID >= 50306)
+                                $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                        else
+                                $trace = debug_backtrace();
 			if (!isset($trace[1]['class']) || !isset($trace[1]['function'])) {
 				throw new InvalidArgumentException("You need to specify name when not in method context");
 			}
