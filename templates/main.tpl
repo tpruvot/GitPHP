@@ -47,7 +47,7 @@
 			{/if}
 			'ext/jquery.min'
 		],
-		migrate: 'ext/jquery-migrate.dev',
+		migrate: 'ext/jquery-migrate.min',
 		qtip: 'ext/jquery.qtip',
 		modernizr: 'ext/modernizr.custom'
 	};
