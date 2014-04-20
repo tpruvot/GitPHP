@@ -74,17 +74,20 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 
 		$type = 0; /* retrieve type (folder or file) */
 		$this->GetProject()->GetObjectLoader()->GetObject($blobhash, $type);
-		if ($type != GitPHP_Pack::OBJ_BLOB) {
+		if ($type == GitPHP_Pack::OBJ_TREE) {
 			$folder = $this->GetProject()->GetObjectManager()->GetTree($blobhash);
+
+			$folder->SetCommit($co);
+			$folder->SetPath($this->params['file']);
 			$this->tpl->assign('foldertree', $folder);
-			$this->tpl->assign('file', $this->params['file']);
+			//$this->tpl->assign('folder', $this->params['file']);
+		} else {
+			$blob = $this->GetProject()->GetObjectManager()->GetBlob($blobhash);
+
+			$blob->SetCommit($co);
+			$blob->SetPath($this->params['file']);
+			$this->tpl->assign('blob', $blob);
 		}
-
-		$blob = $this->GetProject()->GetObjectManager()->GetBlob($blobhash);
-
-		$blob->SetCommit($co);
-		$blob->SetPath($this->params['file']);
-		$this->tpl->assign('blob', $blob);
 
 		$this->tpl->assign('page',$this->params['page']);
 		$skip = $this->params['page'] * 100;
