@@ -1,0 +1,61 @@
+/* common */
+a { text-decoration: none; }
+body { margin: 0; }
+
+/* hide useless objects */
+div.lang_select,
+div.page_footer a.rss_logo,
+div.debug_footer {
+	display: none;
+}
+
+div.page_nav {
+	max-height: 25px; overflow: hidden; padding: 0 4px;
+	display: none; /* comment to debug print css */
+}
+
+/* portrait only, try to reduce overall font size */
+@media (orientation: portrait) {
+	body { font-size: 7pt; }
+	div.page_header { font-size: 11pt; }
+	a,span,td,div,em { font-size: inherit; }
+	span.tag, span.head { font-size: inherit; }
+	div.attr_footer { font-size: 5pt; }
+}
+
+form div.search,
+.projectSearch,
+.projectList th.actions {
+	display: none;
+}
+
+/* short log */
+table.shortlog {
+	padding-left: 0;
+	padding-right: 0;
+	margin: 0;
+}
+
+td.link {
+	display: none;
+}
+
+/* full log */
+div.title_text .log_link {
+	display: none;
+}
+div.title_text em {
+	padding-left: 8px;
+}
+div.title, div.title_text {
+	page-break-inside: avoid;
+	page-break-after: avoid;
+}
+div.log_body {
+	page-break-inside: avoid;
+	border-bottom: 1px solid gray;
+}
+
+#blobData td.ln {
+	border-right-color: transparent;
+}

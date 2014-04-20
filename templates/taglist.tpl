@@ -15,7 +15,7 @@
            {assign var=object value=$tag->GetObject()}
            {assign var=tagcommit value=$tag->GetCommit()}
            {assign var=objtype value=$tag->GetType()}
-           <td><em>{if $tagcommit}<time datetime="{$tagcommit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{agestring age=$tagcommit->GetAge()}</time>{else}<time datetime="{$tag->GetTaggerEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{agestring age=$tag->GetAge()}</time>{/if}</em></td>
+           <td class="age"><em>{if $tagcommit}<time datetime="{$tagcommit->GetCommitterEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{agestring age=$tagcommit->GetAge()}</time>{else}<time datetime="{$tag->GetTaggerEpoch()|date_format:"%Y-%m-%dT%H:%M:%S+00:00"}">{agestring age=$tag->GetAge()}</time>{/if}</em></td>
            <td>
            {if $objtype == 'commit'}
              <a href="{geturl project=$project action=commit hash=$object}" class="list"><strong>{$tag->GetName()}</strong></a>

@@ -38,6 +38,7 @@
     {$extracss}
     </style>
     {/if}
+    <link rel="stylesheet" href="{$baseurl}/css/print.css" type="text/css" media="print" />
     {if $javascript}
     <script type="text/javascript">
 	var GitPHPJSPaths = {

@@ -189,8 +189,12 @@ tr.clast td {
         border-bottom: 1px dotted gray;
 }
 
+.shortlog td.hash {
+	min-width: 70px;
+}
+
 .shortlog tr td.age {
-	min-width: 64px;
+	min-width: 70px;
 }
 
 /*
@@ -647,6 +651,10 @@ div.projectSearch {
 	margin-left: 8px;
 }
 
+.tagTable td.age,
+.headlist td.age {
+	min-width: 70px;
+}
 
 /*
  * Tree view
