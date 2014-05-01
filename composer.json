@@ -1,0 +1,20 @@
+{
+    "name": "tpruvot/gitphp-repo",
+    "description": "A repo compatible fork of GitPHP",
+    "authors": [
+        {
+            "name": "Tanguy Pruvot"
+        },
+        {
+            "name": "Chris Han"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "psr-0": {
+             "GitPHP": "include/"
+        }
+    }
+}
