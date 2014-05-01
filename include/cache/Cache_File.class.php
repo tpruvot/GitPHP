@@ -60,7 +60,7 @@ class GitPHP_Cache_File implements GitPHP_CacheStrategy_Interface
 				throw new Exception($cacheDir . ' is not writable');
 			}
 		} else {
-			if (!mkdir($cacheDir, 0775))
+			if (!is_dir($cacheDir) && !mkdir($cacheDir, 0775))
 				throw new Exception($cacheDir . ' could not be created');
 			@ chmod($cacheDir, 0775);
 		}
