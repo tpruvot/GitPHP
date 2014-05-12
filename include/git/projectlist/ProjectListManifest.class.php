@@ -103,6 +103,11 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		//        remote (remote attribute)
 		$this->default = $xml->default;
 
+		if (isset($this->default['revision'])) {
+			// ignore refs/heads/ prefix, not compatible
+			$this->default['revision'] = str_replace('refs/heads/','',$this->default['revision']);
+		}
+
 		$local_manifest = str_replace('/manifest.xml','/local_manifest.xml',$this->projectConfig);
 		if (is_file($local_manifest)) {
 			$this->local_manifest = $local_manifest;
