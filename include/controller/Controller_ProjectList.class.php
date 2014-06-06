@@ -116,9 +116,9 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		}
 
 		//From config, show hide columns
-		$pname = 'projectlist_show_owner';
-		$show_col = GitPHP_Config::GetInstance()->GetValue($pname);
-		$this->tpl->assign('show_owner', $show_col);
+		$cfg = $this->config;
+		$this->tpl->assign('show_branch', $cfg->GetValue('projectlist_show_branch'));
+		$this->tpl->assign('show_owner', $cfg->GetValue('projectlist_show_owner'));
 	}
 
 }

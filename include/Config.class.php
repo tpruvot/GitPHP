@@ -167,7 +167,8 @@ class GitPHP_Config
 		$this->values['reposupport'] = true;
 		$this->values['subfolder_levels'] = 1;
 		$this->values['showremotes'] = true;
-		$this->values['projectlist_show_owner'] = true;
+		$this->values['projectlist_show_branch'] = $this->values['reposupport'];
+		$this->values['projectlist_show_owner'] = !$this->values['reposupport'];
 		$this->values['projectlist_order'] = 'project';
 		$this->values['robots_restrict'] = true;
 	}

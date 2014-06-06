@@ -56,6 +56,13 @@ git source code archive
         {else}
           <th><a class="header" href="{geturl sort=age}">{t}Last Change{/t}</a></th>
         {/if}
+        {if $show_branch }
+         {if $sort == "branch"}
+          <th>{t}Branch{/t}</th>
+         {else}
+          <th><a class="header" href="{geturl sort=branch}">{t}Branch{/t}</a></th>
+         {/if}
+        {/if}
         {if $show_owner }
          {if $sort == "owner"}
           <th>{t}Owner{/t}</th>
@@ -102,6 +109,9 @@ git source code archive
             <em class="empty">{t}No commits{/t}</em>
         {/if}
       </td>
+      {if $show_branch }
+      <td class="projectBranch"><em>{$proj->repoRemote}/{$proj->repoBranch|escape:'html'}</em></td>
+      {/if}
       {if $show_owner }
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {/if}

@@ -26,6 +26,8 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 	const SORT_OWNER = 'owner';
 	const SORT_AGE = 'age';
 
+	const SORT_BRANCH = 'branch';
+
 	/**
 	 * Project list
 	 * @var GitPHP_Project[]
@@ -465,6 +467,9 @@ abstract class GitPHP_ProjectListBase implements Iterator, GitPHP_Observable_Int
 			case self::SORT_AGE:
 				$this->GetCategoryAges();
 				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
+				break;
+			case self::SORT_BRANCH:
+				uasort($this->projects, array('GitPHP_Project', 'CompareBranch'));
 				break;
 			case self::SORT_PROJECT:
 			default:

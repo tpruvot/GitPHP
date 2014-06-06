@@ -1506,6 +1506,14 @@ class GitPHP_Project
 	}
 
 	/**
+	 * Compares two projects by branch
+	 */
+	public static function CompareBranch($a, $b)
+	{
+		return strcmp($a->repoRemote.$a->repoBranch, $b->repoRemote.$b->repoBranch);
+	}
+
+	/**
 	 * Compares two projects by category
 	 *
 	 * @param mixed $a first project
