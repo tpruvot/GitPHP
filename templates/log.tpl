@@ -71,6 +71,9 @@
        <br />
      </div>
      <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />
+     {if $rev->GetAuthorEpoch() != $rev->GetCommitterEpoch()}
+     <em>{$rev->GetCommitterName()} [{$rev->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}] [{$rev->GetCommitterLocalEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {$rev->GetCommitterTimezone()}]</em>
+     {/if}
    </div>
    <div class="log_body">
    {assign var=comment value=$rev->GetComment()}

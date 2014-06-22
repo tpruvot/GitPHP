@@ -460,7 +460,7 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 			$this->ReadData();
 
 		if (!empty($this->committerEpoch))
-			return time() - $this->committerEpoch;
+			return time() - $this->GetCommitterEpoch();
 
 		return '';
 	}
@@ -559,6 +559,19 @@ class GitPHP_Commit extends GitPHP_GitObject implements GitPHP_Observable_Interf
 			} else if (strlen($line) == 0) {
 				break;
 			}
+		}
+
+		/* Merge commits could be reversed, use the newer date */
+		if ($this->IsMergeCommit() && $this->GetAuthorEpoch() > $this->GetCommitterEpoch()) {
+			$a = $this->author;
+			$e = $this->authorEpoch;
+			$t = $this->authorTimezone;
+			$this->author = $this->committer;
+			$this->authorEpoch = $this->committerEpoch;
+			$this->authorTimezone = $this->committerTimezone;
+			$this->committer = $a;
+			$this->committerEpoch = $e;
+			$this->committerTimezone = $t;
 		}
 
 		/* Commit body */
