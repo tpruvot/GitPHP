@@ -121,6 +121,10 @@ td, th {
 	clear:both;
 }
 
+.page_footer .timestamp {
+	color: #fff;
+}
+
 .page_footer a {
 	padding-top: 30px;
 }

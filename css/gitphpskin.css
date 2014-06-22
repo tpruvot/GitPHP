@@ -119,6 +119,11 @@ div.page_footer_text {
 	font-style: italic;
 }
 
+div.page_footer .timestamp {
+	color: #555555;
+	font-style: italic;
+}
+
 div.page_footer_text a {
 	color: #555555;
 	font-style: italic;
