@@ -110,7 +110,11 @@ git source code archive
         {/if}
       </td>
       {if $show_branch }
+        {if $proj->repoTag == ''}
       <td class="projectBranch"><em>{$proj->repoRemote}/{$proj->repoBranch|escape:'html'}</em></td>
+        {else}
+      <td class="projectBranch"><em>{$proj->repoTag|escape:'html'}</em></td>
+        {/if}
       {/if}
       {if $show_owner }
       <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>

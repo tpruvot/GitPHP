@@ -166,6 +166,7 @@ class GitPHP_Project
 	public $isAndroidRepo = false;
 	public $repoRemote = "origin";
 	public $repoBranch = "master";
+	public $repoTag = "";
 
 	public $showRemotes = false;
 
@@ -661,6 +662,15 @@ class GitPHP_Project
 	 */
 	private function ReadHeadCommitRepo()
 	{
+		if (!empty($this->repoTag)) {
+			if ($this->GetTagList()->Exists($this->repoTag)) {
+				$commit = $this->GetTagList()->GetTag($this->repoTag)->GetCommit();
+				if ($commit) {
+					$this->head = $commit->GetHash();
+					return;
+				}
+			}
+		}
 		$head = $this->repoRemote.'/'.$this->repoBranch;
 		if ($this->GetRemoteHeadList()->Exists($head))
 			$this->head = $this->GetRemoteHeadList()->GetHead($head)->GetHash();
@@ -690,7 +700,7 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
-		if ($this->GetCompat() && !$this->isAndroidRepo) {
+		if ($this->GetCompat()) {
 			$this->ReadEpochGit();
 		} else {
 			$this->ReadEpochRaw();
@@ -706,7 +716,10 @@ class GitPHP_Project
 		$args[] = '--format="%(committer)"';
 		$args[] = '--sort=-committerdate';
 		$args[] = '--count=1';
-		$args[] = 'refs/heads';
+		if (!empty($this->repoTag))
+			$args[] = 'refs/tags';
+		else
+			$args[] = 'refs/heads';
 
 		$epochstr = trim(GitPHP_GitExe::GetInstance()->Execute($this->GetPath(), GIT_FOR_EACH_REF, $args));
 
@@ -726,11 +739,18 @@ class GitPHP_Project
 
 		if (empty($array) && $this->showRemotes) {
 
-			$headref = $this->repoRemote.'/'.$this->repoBranch;
-			if (!$this->isAndroidRepo)
-				$array = $this->GetRemoteHeadList()->GetOrderedHeads('-committerdate', 1);
-			elseif ($this->GetRemoteHeadList()->Exists($headref))
-				$array = array($this->GetRemoteHeadList()->GetHead($headref));
+			if (!empty($this->repoTag)) {
+
+				$array = $this->GetTagList()->GetOrderedTags('-committerdate', 1);
+
+			} else {
+
+				$headref = $this->repoRemote.'/'.$this->repoBranch;
+				if (!$this->isAndroidRepo)
+					$array = $this->GetRemoteHeadList()->GetOrderedHeads('-committerdate', 1);
+				elseif ($this->GetRemoteHeadList()->Exists($headref))
+					$array = array($this->GetRemoteHeadList()->GetHead($headref));
+			}
 		}
 
 		foreach ($array as $headObj) {
@@ -1510,7 +1530,9 @@ class GitPHP_Project
 	 */
 	public static function CompareBranch($a, $b)
 	{
-		return strcmp($a->repoRemote.$a->repoBranch, $b->repoRemote.$b->repoBranch);
+		$br_a = $a->repoRemote.(!empty($a->repoTag) ? $a->repoTag : $a->repoBranch);
+		$br_b = $a->repoRemote.(!empty($b->repoTag) ? $b->repoTag : $b->repoBranch);
+		return strcmp($br_a, $br_b);
 	}
 
 	/**
