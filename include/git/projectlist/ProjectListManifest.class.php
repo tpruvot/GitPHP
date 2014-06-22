@@ -108,21 +108,31 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 			$this->default['revision'] = str_replace('refs/heads/','',$this->default['revision']);
 		}
 
-		$local_manifest = str_replace('/manifest.xml','/local_manifest.xml',$this->projectConfig);
-		if (is_file($local_manifest)) {
-			$this->local_manifest = $local_manifest;
-			if ($this->IncludeLocalManifest($xml)) {
+		$local_manifests[] = str_replace('/manifest.xml','/local_manifest.xml',$this->projectConfig);
+		$local_manif_dir = str_replace('/manifest.xml','/local_manifests/.',$this->projectConfig);
+		if (is_dir($local_manif_dir) && ($handle = opendir($local_manif_dir))) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'xml')
+					$local_manifests[] = $local_manif_dir.'/'.$file;
+			}
+			closedir($handle);
+		}
+		foreach ($local_manifests as $local_manifest) {
+			if (is_file($local_manifest)) {
+				$this->local_manifest = $local_manifest;
+				if ($this->IncludeLocalManifest($xml)) {
 
-				foreach ($this->removes as $project => $b) {
-					if (array_key_exists($project,$projects)) {
-						$this->Log(sprintf('remove project %1$s',$project));
-						$projects[$project] = NULL;
+					foreach ($this->removes as $project => $b) {
+						if (array_key_exists($project,$projects)) {
+							$this->Log(sprintf('remove project %1$s',$project));
+							$projects[$project] = NULL;
+						}
 					}
-				}
 
-				foreach ($this->local_projects as $project => $node) {
-					$this->Log(sprintf('add local project %1$s',$project));
-					$projects[$project] = $node;
+					foreach ($this->local_projects as $project => $node) {
+						$this->Log(sprintf('add local project %1$s',$project));
+						$projects[$project] = $node;
+					}
 				}
 			}
 		}
