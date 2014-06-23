@@ -96,13 +96,11 @@ img.logo {
 }
 
 /*
- * Footer local time for date ref
+ * Header or Footer local time for date ref
  */
-div.page_footer .timestamp {
+span.timestamp {
 	float: right;
-	margin-right: 20px;
-	display: inline-block;
-	line-height: 18px;
+	display: none; /* only visible on print */
 }
 
 /*

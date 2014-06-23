@@ -121,7 +121,7 @@ td, th {
 	clear:both;
 }
 
-.page_footer .timestamp {
+span.timestamp {
 	color: #fff;
 }
 

@@ -25,6 +25,8 @@
 		{/if}
 		{include file='refbadges.tpl' commit=$titlecommit}
 
+		<span class="timestamp">{time()|date_format:"%a, %d %b %Y %H:%M"} {date('T')}</span>
+
 	{else}
 		{if $target == 'shortlog'}
 			{if $disablelink}
