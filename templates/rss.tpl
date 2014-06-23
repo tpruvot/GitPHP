@@ -18,7 +18,7 @@
       <item>
         <title>{$logitem->GetCommitterEpoch()|date_format:"%d %b %Y, %R"} - {$logitem->GetTitle()|escape:'html'}</title>
         <author>{$logitem->GetAuthorEmail()|escape:'html'} ({$logitem->GetAuthorName()|escape:'html'})</author>
-        <pubDate>{$logitem->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
+        <pubDate>{$logitem->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('O')}</pubDate>
         <guid isPermaLink="true">{geturl fullurl=true project=$project action=commit hash=$logitem}</guid>
         <link>{geturl fullurl=true project=$project action=commit hash=$logitem}</link>
         <description>{foreach from=$logitem->GetComment() item=line}{$line|escape:'html'}&lt;br/&gt;{/foreach}</description>

@@ -31,7 +31,7 @@
      <tr>
        <td></td>
        <td>
-       {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+       {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('T')}
        {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
        {if $hourlocal < 6}
        (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()})
@@ -48,7 +48,7 @@
      </tr>
      <tr>
        <td></td>
-       <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()})</td>
+       <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('T')} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()})</td>
        <td></td>
      </tr>
      <tr>

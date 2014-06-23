@@ -60,5 +60,5 @@
   </div>
   <a href="{geturl project=$project action=rss}" class="rss_logo">{t}RSS{/t}</a>
   <a href="{geturl project=$project action=atom}" class="rss_logo">{t}Atom{/t}</a>
-  <span class="timestamp">{time()|date_format:"%a, %d %b %Y %H:%M %Z"}</span>
+  <span class="timestamp">{time()|date_format:"%a, %d %b %Y %H:%M"} {date('T')}</span>
 {/block}

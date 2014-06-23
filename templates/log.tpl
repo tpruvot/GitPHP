@@ -70,9 +70,9 @@
        {/if}
        <br />
      </div>
-     <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}] ({$rev->GetAuthorLocalEpoch()|date_format:"%d %b %H:%M:%S"} {$rev->GetAuthorTimezone()})</em><br />
+     <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('O')}] ({$rev->GetAuthorLocalEpoch()|date_format:"%d %b %H:%M:%S"} {$rev->GetAuthorTimezone()})</em><br />
      {if $rev->GetAuthorEpoch() != $rev->GetCommitterEpoch()}
-     <em>{$rev->GetCommitterName()} [{$rev->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}] ({$rev->GetCommitterLocalEpoch()|date_format:"%d %b %H:%M:%S"} {$rev->GetCommitterTimezone()})</em>
+     <em>{$rev->GetCommitterName()} [{$rev->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('O')}] ({$rev->GetCommitterLocalEpoch()|date_format:"%d %b %H:%M:%S"} {$rev->GetCommitterTimezone()})</em>
      {/if}
    </div>
    <div class="log_body">

@@ -6,7 +6,7 @@
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
 From: {$commit->GetAuthor()}
-Date: {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
+Date: {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S"} {date('O')}
 {if !$file}{* single commit diff *}
 {assign var=tag value=$commit->GetContainingTag()}
 {if $tag}
