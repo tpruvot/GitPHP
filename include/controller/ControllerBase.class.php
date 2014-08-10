@@ -97,6 +97,8 @@ abstract class GitPHP_ControllerBase
 
 		$this->InitializeProjectList();
 
+		$this->CheckHtmlDependencies();
+
 		$this->InitializeSmarty();
 
 		if (isset($this->params['project']) && !empty($this->params['project'])) {
@@ -269,6 +271,41 @@ abstract class GitPHP_ControllerBase
 				$this->tpl->caching_type = 'memcache';
 			}
 
+		}
+	}
+
+	/**
+	 * Check for outdated minimized js/css
+	 */
+	protected function CheckHtmlDependencies()
+	{
+		$tocheck = array();
+		$folders = array('js', 'css');
+
+		foreach ($folders as $dir) {
+			$files = GitPHP_Util::ListDir($dir);
+			foreach ($files as $f) {
+				if (strpos($f,'.min.') !== false)
+					$tocheck[] = $f;
+				elseif (strpos($f,'.gz') !== false)
+					$tocheck[] = $f;
+			}
+		}
+
+		foreach ($tocheck as $f) {
+			$srcfile = str_replace('.min.','.', $f);
+			$srcfile = preg_replace('/\.gz$/','', $srcfile);
+			if (!is_file($srcfile))
+				continue;
+			$dtmin = filemtime($f);
+			$dtmod = max(filemtime($srcfile), filectime($srcfile));
+			if ($dtmin < $dtmod) {
+				if (!is_writable($f) || !unlink($f)) {
+					$log = $this->GetLog();
+					if ($log)
+						$log->log("$f is outdated, please refresh it!");
+				}
+			}
 		}
 	}
 
