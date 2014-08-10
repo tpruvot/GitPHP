@@ -24,9 +24,9 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 	protected $default=array();
 
 	/**
-	 * TODO: support multiple local manifests (.repo/local_manifests folder)
+	 * .repo/local_manifests folder files
 	 */
-	protected $local_manifest='';
+	protected $local_manifests=array();
 
 	/**
 	 * Removed projects from main manifest
@@ -119,7 +119,7 @@ class GitPHP_ProjectListManifest extends GitPHP_ProjectListBase
 		}
 		foreach ($local_manifests as $local_manifest) {
 			if (is_file($local_manifest)) {
-				$this->local_manifest = $local_manifest;
+				$this->local_manifests[] = $local_manifest;
 				if ($this->IncludeLocalManifest($xml)) {
 
 					foreach ($this->removes as $project => $b) {
