@@ -17,7 +17,16 @@ class GitPHP_TagListLoad_Git extends GitPHP_RefListLoad_Git implements GitPHP_Ta
 	 */
 	public function Load($tagList)
 	{
-		return $this->GetRefs($tagList, 'tags');
+		list($tags, $commits) = $this->GetRefs($tagList, 'tags');
+		
+		foreach ($tags as $tag => $tagHash) {
+			if (empty($commits[$tag])) {
+				// tag has no dereferenced hash - must be a light tag
+				$commits[$tag] = $tagHash;
+			}
+		}
+		
+		return array($tags, $commits);
 	}
 
 	/**

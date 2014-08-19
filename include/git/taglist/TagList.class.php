@@ -96,12 +96,12 @@ class GitPHP_TagList extends GitPHP_RefList
 		foreach ($tagNames as $tag) {
 			if (isset($this->commits[$tag])) {
 				if ($this->commits[$tag] == $commitHash) {
-					$tagObj = $this->project->GetObjectManager()->GetTag($tag, $commitHash);
+					$tagObj = $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
 					$tagObj->SetCommitHash($this->commits[$tag]);
 					$tags[] = $tagObj;
 				}
 			} else {
-				$tagObj = $this->project->GetObjectManager()->GetTag($tag, $commitHash);
+				$tagObj = $this->project->GetObjectManager()->GetTag($tag, $this->refs[$tag]);
 				$tagCommitHash = $tagObj->GetCommitHash();
 				if (!empty($tagCommitHash)) {
 					$this->commits[$tag] = $tagCommitHash;
@@ -122,7 +122,7 @@ class GitPHP_TagList extends GitPHP_RefList
 		$this->dataLoaded = true;
 
 		list($this->refs, $this->commits) = $this->strategy->Load($this);
-		foreach ($this->refs as $ref => $hash) $this->invertedRefs[$hash][] = $ref;
+		foreach ($this->commits as $ref => $hash) $this->invertedRefs[$hash][] = $ref;
 	}
 
 	/**
