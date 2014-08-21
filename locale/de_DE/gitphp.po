@@ -439,7 +439,7 @@ msgstr "Verzeichnis"
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:185
 msgid "symlink"
-msgstr "symlink"
+msgstr "Symlink"
 
 # Used when an object is stored in a project but git doesn't know what type it is
 #: include/git/Blob.class.php:198
@@ -562,7 +562,7 @@ msgstr[1] "%1$d Sekunden alt"
 # Used to represent a modification time of right now
 #: include/smartyplugins/modifier.agestring.php:51
 msgid "right now"
-msgstr ""
+msgstr "gerade eben"
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
@@ -645,19 +645,19 @@ msgstr ""
 #: include/smartyplugins/cacheresource.memcache.php:85
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
-msgstr ""
+msgstr "Memcached oder die Memcache PHP Erweiterung ist notwendig für Memcache Unterstützung"
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
 #: templates/jsconst.tpl
 #: templates/projectlist.tpl
 msgid "No matches found for \"%1\""
-msgstr ""
+msgstr "Nichts gefunden zu \"%1\""
 
 # Label for the field to search the project list
 #: templates/projectlist.tpl
 msgid "Search projects"
-msgstr ""
+msgstr "Durchsuche Projekte"
 
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
@@ -674,7 +674,7 @@ msgstr ""
 # This will go back to showing all files in the commitdiff
 #: templates/commitdiff.tpl
 msgid "(show all)"
-msgstr ""
+msgstr "(alle anzeigen)"
 
 # Message displayed when diffing two binary files.
 # %1$s: the filename of the first file
@@ -687,7 +687,7 @@ msgstr ""
 # Used to label the url of the website of the project
 #: templates/project.tpl
 msgid "website"
-msgstr ""
+msgstr "Website"
 
 # This is the name of YOUR language, in your language.
 # Don't just translate the word "English".
