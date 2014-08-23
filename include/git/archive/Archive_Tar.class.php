@@ -50,7 +50,7 @@ class GitPHP_Archive_Tar implements GitPHP_ArchiveStrategy_Interface
 
 		$args = array();
 		$args[] = '--format=tar';
-		$args[] = '--prefix=' . $archive->GetPrefix();
+		$args[] = "--prefix='" . $archive->GetPrefix() . "'";
 		$args[] = $archive->GetObject()->GetHash();
 
 		$this->handle = $this->exe->Open($archive->GetProject()->GetPath(), GIT_ARCHIVE, $args);

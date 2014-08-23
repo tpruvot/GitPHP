@@ -78,10 +78,10 @@ class GitPHP_Util
 	public static function MakeSlug($str)
 	{
 		$from = array(
-			'/'
+			'/&'
 		);
 		$to = array(
-			'-'
+			'--'
 		);
 		return str_replace($from, $to, $str);
 	}
