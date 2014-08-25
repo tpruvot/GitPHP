@@ -71,9 +71,11 @@ define(["jquery", 'modules/resources', 'modules/hassearchreset'],
 			}
 
 			var projectOwner = row.find('td.projectOwner em').text();
-			return (projectOwner.length > 0) && (projectOwner.toLowerCase().indexOf(searchString) != -1);
+			if ((projectOwner.length > 0) && (projectOwner.toLowerCase().indexOf(searchString) != -1)) {
+				return true;
+			}
 
-
+			return false;
 		}
 
 		function noMatchesMessage(show, searchString) {
