@@ -130,9 +130,11 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
 				$data = array();
 				$data['project'] = $regs[1];
-				$owner = trim($regs[2]);
-				if (!empty($owner)) {
-					$data['owner'] = $owner;
+				if (isset($regs[2])){
+					$owner = trim($regs[2]);
+					if (!empty($owner)) {
+						$data['owner'] = $owner;
+					}
 				}
 				$this->fileContents[] = $data;
 			}
