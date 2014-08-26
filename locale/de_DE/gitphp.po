@@ -12,7 +12,7 @@ msgstr ""
 "PO-Revision-Date: 2010-11-23 18:54+0100\n"
 "Last-Translator: Andy Tandler <tandler@adaptik.de>\n"
 "Language-Team: German <tandler@adaptik.de>\n"
-"Language: de\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -109,7 +109,7 @@ msgstr "Vergleichen"
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
-msgstr "Autor der Änderung"
+msgstr "Eintragender"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
@@ -131,7 +131,7 @@ msgstr[1] "%1 dateien geändert:"
 # %2: the mode
 #: templates/commit.tpl
 msgid "new %1 with mode %2"
-msgstr ""
+msgstr "Neu %1 mit Modus %2"
 
 # Used to indicate a new object was added
 # %1: the type of object
@@ -153,7 +153,7 @@ msgstr "%1 gelöscht"
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3 -> %4"
-msgstr ""
+msgstr "geändert von %1 zu %2 Modus: %3 -> %4"
 
 # Used to indicate a file type changed, with only new file mode
 # (when old file type wasn't a normal file)
@@ -163,27 +163,27 @@ msgstr ""
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3"
-msgstr ""
+msgstr "geändert von %1 zu %2 Modus %3"
 
 # Used to indicate a file type changed
 # %1: the original file type
 # %2: the new file type
 #: templates/commit.tpl
 msgid "changed from %1 to %2"
-msgstr ""
+msgstr "geändert von %1 zu %2"
 
 # Used to indicate a file mode changed
 # %1: the original file mode
 # %2: the new file mode
 #: templates/commit.tpl
 msgid "changed mode: %1 -> %2"
-msgstr ""
+msgstr "geänderter Modus: %1 -> %2"
 
 # Used to indicate a file mode changed
 # %1: the new file mode
 #: templates/commit.tpl
 msgid "changed mode: %1"
-msgstr ""
+msgstr "geänderter Modus: %1"
 
 # Used to indicate a file mode changed
 #: templates/commit.tpl
@@ -202,7 +202,7 @@ msgstr "Unterschied"
 # %3: the new file mode
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr ""
+msgstr "verschoben von %1 mit %2%% der selbe Modus: %3"
 
 # Used to indicate a file was moved
 # This string should be HTML safe
@@ -210,7 +210,7 @@ msgstr ""
 # %2: the similarity as a percent number
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity"
-msgstr ""
+msgstr "verschoben von %1 mit %2%% das selbe"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
@@ -278,7 +278,7 @@ msgstr "Versionsstände"
 # Used as link to and title for page showing all heads in a project
 #: templates/title.tpl include/controller/Controller_Heads.class.php:76
 msgid "heads"
-msgstr ""
+msgstr "Heads"
 
 # Used when diffing a file, to indicate that it's been deleted
 #: templates/commitdiff.tpl
@@ -309,12 +309,12 @@ msgstr "Letzte Änderung"
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "Klone URL (clone)"
+msgstr "Clone URL"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "Patch URL (push)"
+msgstr "Push URL"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
@@ -428,8 +428,8 @@ msgstr "Ungültiger Suchparameter"
 # %1$s: the user's search string
 #: include/controller/Controller_Search.class.php:165
 #, php-format
-msgid "No matches for \"%1$s\""
-msgstr "Keine Ergebnisse für \"%1$s\""
+msgid "No matches for \"%1\""
+msgstr "Keine Ergebnisse für \"%1\""
 
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:179
@@ -439,7 +439,7 @@ msgstr "Verzeichnis"
 # A type of filesystem object stored in a project
 #: include/git/Blob.class.php:185
 msgid "symlink"
-msgstr "symlink"
+msgstr "Symlink"
 
 # Used when an object is stored in a project but git doesn't know what type it is
 #: include/git/Blob.class.php:198
@@ -466,7 +466,7 @@ msgstr "%1$s ist kein git repository"
 #: include/git/Project.class.php:220
 #, php-format
 msgid "%1$s is attempting directory traversal"
-msgstr ""
+msgstr "%1$s versucht eine Pfad Manipulation "
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
@@ -562,7 +562,7 @@ msgstr[1] "%1$d Sekunden alt"
 # Used to represent a modification time of right now
 #: include/smartyplugins/modifier.agestring.php:51
 msgid "right now"
-msgstr ""
+msgstr "gerade eben"
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
@@ -626,7 +626,7 @@ msgstr "Sprache:"
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
-msgstr ""
+msgstr "einstellen"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
@@ -645,19 +645,19 @@ msgstr ""
 #: include/smartyplugins/cacheresource.memcache.php:85
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
-msgstr ""
+msgstr "Memcached oder die Memcache PHP Erweiterung ist notwendig für Memcache Unterstützung"
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
 #: templates/jsconst.tpl
 #: templates/projectlist.tpl
 msgid "No matches found for \"%1\""
-msgstr ""
+msgstr "Nichts gefunden zu \"%1\""
 
 # Label for the field to search the project list
 #: templates/projectlist.tpl
 msgid "Search projects"
-msgstr ""
+msgstr "Durchsuche Projekte"
 
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
@@ -674,20 +674,20 @@ msgstr ""
 # This will go back to showing all files in the commitdiff
 #: templates/commitdiff.tpl
 msgid "(show all)"
-msgstr ""
+msgstr "(alle anzeigen)"
 
 # Message displayed when diffing two binary files.
 # %1$s: the filename of the first file
 # %2$s: the filename of the second file
 #: include/git/FileDiff.class.php:810
 #, php-format
-msgid "Binary files %1$s and %2$s differ"
-msgstr ""
+msgid "Binary files %1 and %2 differ"
+msgstr "Binäre Dateien %1 und %2 unterscheiden sich"
 
 # Used to label the url of the website of the project
 #: templates/project.tpl
 msgid "website"
-msgstr ""
+msgstr "Website"
 
 # This is the name of YOUR language, in your language.
 # Don't just translate the word "English".
