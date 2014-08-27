@@ -309,12 +309,12 @@ msgstr "Letzte Änderung"
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "Klone URL (clone)"
+msgstr "Clone URL"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "Patch URL (push)"
+msgstr "Push URL"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
