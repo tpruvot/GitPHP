@@ -131,7 +131,7 @@ msgstr[1] "%1 dateien geändert:"
 # %2: the mode
 #: templates/commit.tpl
 msgid "new %1 with mode %2"
-msgstr ""
+msgstr "Neu %1 mit Modus %2"
 
 # Used to indicate a new object was added
 # %1: the type of object
@@ -153,7 +153,7 @@ msgstr "%1 gelöscht"
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3 -> %4"
-msgstr ""
+msgstr "geändert von %1 zu %2 Modus: %3 -> %4"
 
 # Used to indicate a file type changed, with only new file mode
 # (when old file type wasn't a normal file)
@@ -163,27 +163,27 @@ msgstr ""
 # %4: the new file mode
 #: templates/commit.tpl
 msgid "changed from %1 to %2 mode: %3"
-msgstr ""
+msgstr "geändert von %1 zu %2 Modus %3"
 
 # Used to indicate a file type changed
 # %1: the original file type
 # %2: the new file type
 #: templates/commit.tpl
 msgid "changed from %1 to %2"
-msgstr ""
+msgstr "geändert von %1 zu %2"
 
 # Used to indicate a file mode changed
 # %1: the original file mode
 # %2: the new file mode
 #: templates/commit.tpl
 msgid "changed mode: %1 -> %2"
-msgstr ""
+msgstr "geänderter Modus: %1 -> %2"
 
 # Used to indicate a file mode changed
 # %1: the new file mode
 #: templates/commit.tpl
 msgid "changed mode: %1"
-msgstr ""
+msgstr "geänderter Modus: %1"
 
 # Used to indicate a file mode changed
 #: templates/commit.tpl
@@ -202,7 +202,7 @@ msgstr "Unterschied"
 # %3: the new file mode
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr ""
+msgstr "verschoben von %1 mit %2%% der selbe Modus: %3"
 
 # Used to indicate a file was moved
 # This string should be HTML safe
@@ -210,7 +210,7 @@ msgstr ""
 # %2: the similarity as a percent number
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity"
-msgstr ""
+msgstr "verschoben von %1 mit %2%% das selbe"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
@@ -278,7 +278,7 @@ msgstr "Versionsstände"
 # Used as link to and title for page showing all heads in a project
 #: templates/title.tpl include/controller/Controller_Heads.class.php:76
 msgid "heads"
-msgstr ""
+msgstr "Heads"
 
 # Used when diffing a file, to indicate that it's been deleted
 #: templates/commitdiff.tpl
@@ -309,12 +309,12 @@ msgstr "Letzte Änderung"
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "Klone URL (clone)"
+msgstr "Clone URL"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "Patch URL (push)"
+msgstr "Push URL"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
@@ -466,7 +466,7 @@ msgstr "%1$s ist kein git repository"
 #: include/git/Project.class.php:220
 #, php-format
 msgid "%1$s is attempting directory traversal"
-msgstr ""
+msgstr "%1$s versucht eine Pfad Manipulation "
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
@@ -626,7 +626,7 @@ msgstr "Sprache:"
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
-msgstr ""
+msgstr "einstellen"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
@@ -682,7 +682,7 @@ msgstr "(alle anzeigen)"
 #: include/git/FileDiff.class.php:810
 #, php-format
 msgid "Binary files %1 and %2 differ"
-msgstr ""
+msgstr "Binäre Dateien %1 und %2 unterscheiden sich"
 
 # Used to label the url of the website of the project
 #: templates/project.tpl
