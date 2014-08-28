@@ -18,16 +18,7 @@ class GitPHP_TagListLoad_Raw extends GitPHP_RefListLoad_Raw implements GitPHP_Ta
 	public function Load($tagList)
 	{
 		$tags = $this->GetRefs($tagList, 'tags');
-		$commits = array();
-		$objManager = $tagList->GetProject()->GetObjectManager();
-		foreach ($tags as $tag => $tagHash) {
-			$tagObj = $objManager->GetTag($tag, $tagHash);
-			$commitHash = $tagObj->GetCommitHash();
-			if (!empty($commitHash)) {
-				$commits[$tag] = $commitHash;
-			}
-		}
-		return array($tags, $commits);
+		return array($tags, null);
 	}
 
 	/**

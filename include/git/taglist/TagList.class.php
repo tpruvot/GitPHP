@@ -122,6 +122,21 @@ class GitPHP_TagList extends GitPHP_RefList
 		$this->dataLoaded = true;
 
 		list($this->refs, $this->commits) = $this->strategy->Load($this);
+		
+		if (!$this->commits) {
+			// dereference commits if the strategy doesn't do it for us
+			// TODO: is there a way to do this without introducing strategy specific logic in the core class?
+			$this->commits = array();
+			$objManager = $this->GetProject()->GetObjectManager();
+			foreach ($this->refs as $tag => $tagHash) {
+				$tagObj = $objManager->GetTag($tag, $tagHash);
+				$commitHash = $tagObj->GetCommitHash();
+				if (!empty($commitHash)) {
+					$this->commits[$tag] = $commitHash;
+				}
+			}
+		}
+		
 		foreach ($this->commits as $ref => $hash) $this->invertedRefs[$hash][] = $ref;
 	}
 
