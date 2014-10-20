@@ -53,6 +53,11 @@ class GitPHP_TreeDiff implements Iterator
 	protected $totalStat = -1;
 
 	/**
+	 * Show trailing spaces changes (diff -w)
+	 */
+	protected $whiteSpaces = true;
+
+	/**
 	 * Path filter for the Diff
 	 * @var string
 	 */
@@ -71,10 +76,11 @@ class GitPHP_TreeDiff implements Iterator
 	 * @param GitPHP_GitExe $exe executable
 	 * @param string $toHash to commit hash
 	 * @param string $fromHash from commit hash
-	 $ @param string $path Path filter to diff two revisions
+	 * @param string $path Path filter to diff two revisions
 	 * @param boolean $renames whether to detect file renames
+	 * @param boolean $spaces false to ignore white spaces (todo: merge to a single $options param)
 	 */
-	public function __construct($project, $exe, $toHash, $fromHash = '', $path = '', $renames = false)
+	public function __construct($project, $exe, $toHash, $fromHash = '', $path = '', $renames = false, $spaces = true)
 	{
 		if (!$project || is_string($project))
 			throw new Exception('Project is required');
@@ -101,6 +107,8 @@ class GitPHP_TreeDiff implements Iterator
 		$this->path = $path;
 
 		$this->renames = $renames;
+
+		$this->whiteSpaces = $spaces;
 	}
 
 	/**
@@ -135,6 +143,9 @@ class GitPHP_TreeDiff implements Iterator
 		if ($this->renames)
 			$args[] = '-M';
 
+		if (!$this->whiteSpaces)
+			$args[] = '-w';
+
 		if (empty($this->fromHash))
 			$args[] = '--root';
 		else
@@ -159,6 +170,7 @@ class GitPHP_TreeDiff implements Iterator
 					$file = $fileDiff->GetFromFile();
 					$mimetype = GitPHP_Mime::FileMime($file, true);
 					$fileDiff->isPicture = ($mimetype == 'image');
+					$fileDiff->whiteSpaces = $this->whiteSpaces;
 					if (!$fileDiff->isPicture) {
 						if (isset($this->fileStat[$file])) {
 							$arStat = $this->fileStat[$file];
@@ -188,6 +200,9 @@ class GitPHP_TreeDiff implements Iterator
 		$args[] = '-r';
 		if ($this->renames)
 			$args[] = '-M';
+
+		if (!$this->whiteSpaces)
+			$args[] = '-w';
 
 		if (empty($this->fromHash))
 			$args[] = '--root';

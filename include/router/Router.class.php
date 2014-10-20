@@ -245,6 +245,7 @@ class GitPHP_Router
 			'sort' => 'sort',
 			'lang' => 'l',
 			'redirect' => 'redirect',
+			'spaces' => 'spaces',
 		);
 	}
 
@@ -293,7 +294,7 @@ class GitPHP_Router
 
 		foreach ($queryvars as $var => $val) {
 
-			if (empty($val))
+			if (empty($val) && $val !== '0')
 				continue;
 
 			$param = array_search($var, $this->queryParameters);

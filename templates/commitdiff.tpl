@@ -31,6 +31,11 @@ GitPHPJSPaths.commitdiff = "commitdiff.min";
    <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent file=$file output=sidebyside}">{t}side by side{/t}</a>
    {/if}
    | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent file=$file output=plain}">{t}plain{/t}</a>
+
+   {if $sidebyside}
+   &nbsp;-&nbsp;<a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent file=$file output=sidebyside spaces=no}">{t}ignore spaces{/t}</a>
+   | <a href="{geturl project=$project action=commitdiff hash=$commit hashparent=$hashparent file=$file output=sidebyside}">{t}normal diff{/t}</a>
+   {/if}
  </div>
 
  {if !$file}{* hide commit title for aaa..bbb git-diff *}

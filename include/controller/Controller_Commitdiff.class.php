@@ -85,12 +85,21 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 			$this->tpl->assign('sidebyside', true);
 		}
 
+
+		$whiteSpaces = true;
+		if (isset($this->params['spaces'])) {
+			$whiteSpaces = intval($this->params['spaces']);
+		}
+		$this->tpl->assign('whitespaces', $whiteSpaces);
+
 		$treediff = new GitPHP_TreeDiff(
 			$this->GetProject(),
 			$this->exe,
 			$this->params['hash'],
 			(isset($this->params['hashparent']) ? $this->params['hashparent'] : ''),
-			(isset($this->params['file']) ? $this->params['file'] : '')
+			(isset($this->params['file']) ? $this->params['file'] : ''),
+			false, /* renames */
+			$whiteSpaces
 		);
 		$this->tpl->assign('treediff', $treediff);
 	}

@@ -114,6 +114,12 @@ class GitPHP_FileDiff
 	 */
 	protected $diffCount=0;
 
+	/**
+	 * Show trailing white spaces
+	 * @tpruvot
+	 */
+	public $whiteSpaces=true;
+
 	/** 
 	 * used for pictures in treediff
 	 * @tpruvot
@@ -553,7 +559,7 @@ class GitPHP_FileDiff
 	 *
 	 * @return an array of line elements (see above)
 	 */
-	public function GetDiffSplit()
+	public function GetDiffSplit($params=array())
 	{
 		if ($this->diffDataSplitRead) {
 			return $this->diffDataSplit;
@@ -564,6 +570,9 @@ class GitPHP_FileDiff
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);
 		unset($fromBlob);
+
+		if (!empty($params) && isset($params['whitespaces']))
+			$this->whiteSpaces = (int) $params['whitespaces'];
 
 		$diffLines = explode("\n", $this->GetDiffData(0, false));
 
@@ -655,8 +664,12 @@ class GitPHP_FileDiff
 				$mode = 'deleted';
 				$num++;
 			} else {
-				$mode = 'modified';
-				$num++;
+				if ($this->whiteSpaces || trim($d['left'][0]) != trim($d['right'][0])) {
+					$mode = 'modified';
+					$num++;
+				} else {
+					$mode = 'whitespaces';
+				}
 			}
 			$disp_num = $num;
 
@@ -756,7 +769,8 @@ class GitPHP_FileDiff
 				$output = '--- ' . $this->GetFromLabel($file) . "\n" . '+++ ' . $this->GetToLabel($file) . "\n";
 			}
 
-			$cacheKey = 'project|' . $this->project->GetProject() . '|diff|' . $context . '|' . $this->fromHash . '|' . $this->toHash;
+			$wsKey = $this->whiteSpaces ? '' : '|w';
+			$cacheKey = 'project|' . $this->project->GetProject().'|diff|'.$context.$wsKey.'|'.$this->fromHash.'|'.$this->toHash;
 			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 			if ($diffOutput === false) {
 
@@ -765,7 +779,6 @@ class GitPHP_FileDiff
 				} else {
 					$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
 				}
-
 				GitPHP_Cache::GetObjectCacheInstance()->Set($cacheKey, $diffOutput);
 			}
 			$output .= $diffOutput;

@@ -37,20 +37,29 @@
     {/foreach}
   {else}
     {foreach from=$diffsplit item=lineinfo}
+    {assign var=mod value=$lineinfo[0]}
     {assign var=lnl value=$lineinfo[3]}
     {assign var=lnr value=$lineinfo[4]}
     {assign var=num value=$lineinfo[5]}
-      {if $lineinfo[0]=='added'}
+      {if $mod=='added'}
       <tr class="{cycle values="light-codeadd,dark-codeadd"} diff-added diff-focus">
-      {elseif $lineinfo[0]=='deleted'}
+      {elseif $mod=='deleted'}
       <tr class="{cycle values="light-codedel,dark-codedel"} diff-deleted diff-focus">
-      {elseif $lineinfo[0]=='modified'}
+      {elseif $mod=='modified'}
         {if !$lineinfo[3]}
       <tr class="{cycle values="light-codeadd,dark-codeadd"} diff-modified diff-added diff-focus">
         {elseif !$lineinfo[4]}
       <tr class="{cycle values="light-codedel,dark-codedel"} diff-modified diff-deleted diff-focus">
         {else}
       <tr class="{cycle values="light-codemod,dark-codemod"} diff-modified diff-focus">
+        {/if}
+      {elseif $mod=='whitespaces'}
+        {if !$lineinfo[3]}
+      <tr class="{cycle values="light-codeadd,dark-codeadd"} diff-{$mod} diff-added">
+        {elseif !$lineinfo[4]}
+      <tr class="{cycle values="light-codedel,dark-codedel"} diff-{$mod} diff-deleted">
+        {else}
+      <tr class="{cycle values="light-codemod,dark-codemod"} diff-{$mod}">
         {/if}
       {else}
       <tr class="{cycle values="light-code,dark-code"}">

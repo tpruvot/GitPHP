@@ -735,6 +735,22 @@ div.diff_info {
 .diffTable tr.dark-codemod:hover td.diff-right {
 	background-color: #B1EFB1;
 }
+
+/* Modified, but only White Spaces changes (indent) */
+.diffTable tr.light-codemod.diff-whitespaces td {
+	background-color: transparent;
+}
+.diffTable tr.light-codemod.diff-whitespaces:hover td {
+	background-color: #edece6;
+}
+
+.diffTable tr.dark-codemod.diff-whitespaces td {
+	background-color: #f9f6f6;
+}
+.diffTable tr.dark-codemod.diff-whitespaces:hover td {
+	background-color: #edece6;
+}
+
 div.commit_tip {
 	font-family: sans-serif;
 	font-size: 10px;
