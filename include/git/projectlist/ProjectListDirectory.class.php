@@ -132,23 +132,30 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 		$this->Log(sprintf('Searching directory %1$s', $dir));
 
+		if (!GitPHP_Util::IsWindows() && (fileperms($dir) & 0111) == 0) {
+			$this->Log(sprintf('Folder %1$s is protected... mode %2$o', $dir, fileperms($dir)));
+		}
+
 		if ($dh = opendir($dir)) {
 			$trimlen = strlen(GitPHP_Util::AddSlash($this->projectRoot)) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
-
 				if (!GitPHP_Util::IsDir($fullPath) || $file == '.' || $file == '..')
 					continue;
-
-				elseif ( $this->repoSupport and $file == '.repo' )
+				elseif ($this->repoSupport && $file == '.repo')
 					; // check subfolders
-
-				elseif ( substr($file,-4) != '.git') {
+				elseif (substr($file,-4) != '.git') {
 					// working copy repositories (git clone)
 					if ( !$this->bareOnly && GitPHP_Util::IsDir($fullPath . '/.git') )
 						$fullPath .= '/.git';
 					elseif ($this->curlevel >= $this->sublevels or substr($file,0,1) == '.')
 						continue;
+				}
+
+				// check +x access on .git folder
+				if (!GitPHP_Util::IsWindows() && (fileperms($fullPath.'/.') & 0111) == 0) {
+					$this->Log(sprintf('Folder %1$s is protected... mode %2$o',
+						$fullPath, fileperms($fullPath)));
 				}
 
 				if (is_file($fullPath . '/HEAD') || is_file($fullPath . '/ORIG_HEAD')) {
